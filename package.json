@@ -25,7 +25,9 @@
 		"build:run": "tsc -p tsconfig.json"
 	},
 	"dependencies": {
-		"chalk": "2.1.x"
+		"chalk": "2.1.x",
+		"globby": "6.1.x",
+		"fs-extra": "4.0.x"
 	},
 	"devDependencies": {
 		"@types/node": "8.0.x",

@@ -1,1 +1,3 @@
-console.log( 'TODO' );
+import { inlineResources } from './src/tasks/inline-resources';
+
+inlineResources( '', '' );
