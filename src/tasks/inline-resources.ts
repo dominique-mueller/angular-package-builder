@@ -1,27 +1,41 @@
 import * as path from 'path';
 
-import * as fsExtra from 'fs-extra';
 import * as globby from 'globby';
 
 import { readFile } from './../utilities/read-file';
 import { writeFile } from './../utilities/write-file';
 import { cleanFolder } from './../utilities/clean-folder';
+import { AngularPackageBuilderConfig } from './../../index';
 
-const entryPath: string = 'example-library/lib';
-
-export function inlineResources( source: string, destination: string ): Promise<void> {
+/**
+ * Step 1: Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
+ *
+ * @param config - Confguration
+ */
+export function inlineResources( config: AngularPackageBuilderConfig ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		await cleanFolder( path.join( 'dist', 'inlined' ) );
+		// Clear the output folder first
+		await cleanFolder( config.folders.temporary.inline);
 
-		const filePaths: Array<string> = await getTypeScriptSourceFiles();
+		// Get all files
+		const filePaths: Array<string> = await getTypeScriptSourceFiles( config.folders.entry );
 
+		// Inline resources into source files, save changes into dist
 		await Promise.all(
-
-			// Map template paths to their content
 			filePaths.map( async( filePath: string ): Promise<string> => {
-				await inlineResource( filePath );
+
+				// Get paths
+				const fullPath: string = path.join( config.folders.entry, filePath );
+				const fullDistPath: string = path.join( config.folders.temporary.inline , filePath );
+
+				// Inline resources
+				const fileContent: string = await readFile( fullPath );
+				const fileContentInlined: string = await inlineTemplate( fullPath, fileContent );
+				await writeFile( fullDistPath, fileContentInlined );
+
 				return filePath;
+
 			} )
 		);
 
@@ -30,36 +44,35 @@ export function inlineResources( source: string, destination: string ): Promise<
 	} );
 }
 
-function getTypeScriptSourceFiles(): Promise<Array<string>> {
+/**
+ * Get all TypeScript source files (thus, not the unit tests)
+ *
+ * @param   entryFolder - Entry folder path
+ * @returns             - List of TypeScript source files
+ */
+function getTypeScriptSourceFiles( entryFolder: string ): Promise<Array<string>> {
 
-	// TODO: Read from gitignore
+	// Get files, using the entry folder as base (so we can easily keep the directory structure in the dist folder)
+	// TODO: Read in gitignore??
 	return globby( [
-		path.join( '**', '*.ts' ),
-		`!${ path.join( '**', '*.spec.ts' ) }`,
-		`!${ path.join( 'node_modules', '**' ) }`
+		path.join( '**', '*.ts' ), // Get all source files
+		`!${ path.join( '**', '*.spec.ts' ) }`, // Ignore unit tests
+		`!${ path.join( 'node_modules', '**' ) }` // ignore dependencies
 	], {
-		cwd: entryPath
+		cwd: entryFolder
 	} );
 
 }
 
-function inlineResource( filePath: string ): Promise<void> {
-	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
-
-		const fullPath: string = path.join( entryPath, filePath );
-		const fullDistPath: string = path.join( 'dist', 'inlined', filePath );
-
-		let fileContent: string = await readFile( fullPath );
-		fileContent = await inlineTemplate( fullPath, fileContent );
-		await writeFile( fullDistPath, fileContent );
-
-		resolve();
-
-	} );
-}
-
+/**
+ * Inline HTML templates
+ *
+ * @param   filePath    - File path
+ * @param   fileContent - File content
+ * @returns             - File content with inlined resources
+ */
 function inlineTemplate( filePath: string, fileContent: string ): Promise<string> {
-	return new Promise<string>( async( resolve: ( inlinedFileContent: string ) => void, reject: ( error: Error ) => void ) => {
+	return new Promise<string>( async( resolve: ( newFileContent: string ) => void, reject: ( error: Error ) => void ) => {
 
 		// Do not mutate the incoming parameter directly
 		let newFileContent: string = fileContent;
