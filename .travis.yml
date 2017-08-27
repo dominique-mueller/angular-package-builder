@@ -17,4 +17,4 @@ install:
   - npm install
 
 script:
-  - echo "TODO"
+  - npm run build:run
