@@ -1,0 +1,34 @@
+{
+	"name": "angular-package-builder",
+	"version": "1.0.0",
+	"author": {
+		"name": "Dominique Müller",
+		"email": "dominique.m.mueller@gmail.com",
+		"url": "https://www.devdom.io/"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dominique-mueller/angular-package-builder"
+	},
+	"homepage": "https://github.com/dominique-mueller/angular-package-builder",
+	"bugs": {
+		"url": "https://github.com/dominique-mueller/angular-package-builder/issues"
+	},
+	"keywords": [],
+	"main": "index.js",
+	"types": "index.d.ts",
+	"bin": {
+		"angular-package-builder": "bin/angular-package-builder.js"
+	},
+	"scripts": {
+		"build:run": "tsc -p tsconfig.json"
+	},
+	"dependencies": {
+		"chalk": "2.1.x"
+	},
+	"devDependencies": {
+		"@types/node": "8.0.x",
+		"typescript": "2.4.x"
+	}
+}
