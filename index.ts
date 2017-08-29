@@ -1,4 +1,5 @@
 import { inlineResources } from './src/tasks/inline-resources';
+import { compileTypescript } from './src/tasks/compile-typescript';
 
 import { resolvePath } from './src/utilities/resolve-path';
 
@@ -12,11 +13,12 @@ export interface AngularPackageBuilderConfig {
 			buildES5: string;
 			buildES2015: string;
 			bundles: string;
-		}
-	}
+		};
+	};
+	packageName: string;
 }
 
-const config: AngularPackageBuilderConfig = {
+const config: AngularPackageBuilderConfig = { // TODO: read
 	folders: {
 		entry: resolvePath( 'example-library/lib' ),
 		output: resolvePath( 'dist' ),
@@ -27,12 +29,22 @@ const config: AngularPackageBuilderConfig = {
 			buildES2015: resolvePath( 'dist-temp/library-es2016' ),
 			bundles: resolvePath( 'dist-temp/library-bundles' )
 		}
-	}
+	},
+	packageName: 'angular-notifier'
 };
 
 async function main() {
 
+	console.log( 'Inline resources ...' );
 	await inlineResources( config.folders.entry, config.folders.temporary.inline );
+
+	console.log( 'Compile TypeScript to JavaScript ...' );
+	await Promise.all( [
+		compileTypescript( config.packageName, 'ES5', config.folders.temporary.inline, config.folders.temporary.buildES5 ),
+		compileTypescript( config.packageName, 'ES2015', config.folders.temporary.inline, config.folders.temporary.buildES2015 )
+	] );
+
+	console.log( 'Done.' );
 
 }
 

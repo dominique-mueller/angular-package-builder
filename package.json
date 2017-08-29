@@ -25,12 +25,15 @@
 		"build:run": "tsc -p tsconfig.json"
 	},
 	"dependencies": {
+		"@angular/tsc-wrapped": "4.3.6",
 		"chalk": "2.1.x",
 		"globby": "6.1.x",
-		"fs-extra": "4.0.x"
+		"fs-extra": "4.0.x",
+		"vinyl": "2.1.x"
 	},
 	"devDependencies": {
 		"@types/node": "8.0.x",
+		"@types/vinyl": "2.0.x",
 		"typescript": "2.4.x"
 	}
 }
