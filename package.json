@@ -29,11 +29,15 @@
 		"chalk": "2.1.x",
 		"globby": "6.1.x",
 		"fs-extra": "4.0.x",
+		"typescript": "2.4.x",
 		"vinyl": "2.1.x"
 	},
 	"devDependencies": {
 		"@types/node": "8.0.x",
 		"@types/vinyl": "2.0.x",
-		"typescript": "2.4.x"
+		"@angular/core": "4.3.6",
+		"@angular/common": "4.3.6",
+		"angular-notifier": "2.0.0",
+		"rxjs": "5.4.3"
 	}
 }

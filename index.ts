@@ -18,7 +18,7 @@ export interface AngularPackageBuilderConfig {
 	packageName: string;
 }
 
-const config: AngularPackageBuilderConfig = { // TODO: read
+const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI params
 	folders: {
 		entry: resolvePath( 'example-library/lib' ),
 		output: resolvePath( 'dist' ),
@@ -35,17 +35,24 @@ const config: AngularPackageBuilderConfig = { // TODO: read
 
 async function main() {
 
-	console.log( 'Inline resources ...' );
-	await inlineResources( config.folders.entry, config.folders.temporary.inline );
+	console.log( '' );
+	console.log( '=== Angular Package Builder ===' );
+	console.log( '' );
 
-	console.log( 'Compile TypeScript to JavaScript ...' );
+	console.log( '> Inline resources ...' );
+	await inlineResources( config.folders.entry, config.folders.temporary.inline );
+	console.log( '  Done.' );
+
+	console.log( '> Compile TypeScript to JavaScript ...' );
 	await Promise.all( [
 		compileTypescript( config.packageName, 'ES5', config.folders.temporary.inline, config.folders.temporary.buildES5 ),
 		compileTypescript( config.packageName, 'ES2015', config.folders.temporary.inline, config.folders.temporary.buildES2015 )
 	] );
+	console.log( '  Done.' );
 
-	console.log( 'Done.' );
-
+	console.log( '' );
+	console.log( '=== Success ===' );
+	console.log( '' );
 }
 
 main();
