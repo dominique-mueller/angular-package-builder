@@ -14,19 +14,19 @@ export function compileTypescript( name: string, target: 'ES5' | 'ES2015', sourc
 		await cleanFolder( destinationPath );
 
 		// Create TypeScript configuration
-		const typescriptConfig: any = JSON.parse( fs.readFileSync( './../config/typescript.config.json', 'utf-8' ) ); // TODO: async + JSON parse
+		const typescriptConfig: any = JSON.parse( fs.readFileSync( 'src/config/typescript.config.json', 'utf-8' ) ); // TODO: async + JSON parse
 		typescriptConfig.compilerOptions.target = target;
 		typescriptConfig.compilerOptions.rootDir = sourcePath;
-		typescriptConfig.compilerOptions.outPath = destinationPath;
-		typescriptConfig.files.push( path.join( sourcePath ), 'index.ts' );
-		typescriptConfig.files.push( path.join( sourcePath ), 'typings.d.ts' );
+		typescriptConfig.compilerOptions.outDir = destinationPath;
+		typescriptConfig.files.push( path.join( sourcePath, 'index.ts' ) );
+		typescriptConfig.files.push( path.join( sourcePath, 'typings.d.ts' ) );
 		typescriptConfig.angularCompilerOptions.flatModuleId = name;
 		typescriptConfig.angularCompilerOptions.flatModuleOutFile = `${ name }.js`;
 
 		// Create virtual 'tsconfig.json' file
 		const typescriptConfigFile: AngularVinylFile = new VinylFile( {
 			contents: new Buffer( JSON.stringify( typescriptConfig ) ),
-			base: '.' // TODO: ...
+			path: '.' // TODO: ...
 		} );
 
 		// Run Angular-specific TypeScript compiler
