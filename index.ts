@@ -30,4 +30,10 @@ const config: AngularPackageBuilderConfig = {
 	}
 };
 
-inlineResources( config );
+async function main() {
+
+	await inlineResources( config.folders.entry, config.folders.temporary.inline );
+
+}
+
+main();

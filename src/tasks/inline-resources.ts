@@ -12,22 +12,22 @@ import { AngularPackageBuilderConfig } from './../../index';
  *
  * @param config - Confguration
  */
-export function inlineResources( config: AngularPackageBuilderConfig ): Promise<void> {
+export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Clear the output folder first
-		await cleanFolder( config.folders.temporary.inline);
+		await cleanFolder( destinationPath );
 
 		// Get all files
-		const filePaths: Array<string> = await getTypeScriptSourceFiles( config.folders.entry );
+		const filePaths: Array<string> = await getTypeScriptSourceFiles( sourcePath );
 
 		// Inline resources into source files, save changes into dist
 		await Promise.all(
 			filePaths.map( async( filePath: string ): Promise<string> => {
 
 				// Get paths
-				const fullPath: string = path.join( config.folders.entry, filePath );
-				const fullDistPath: string = path.join( config.folders.temporary.inline , filePath );
+				const fullPath: string = path.join( sourcePath, filePath );
+				const fullDistPath: string = path.join( destinationPath, filePath );
 
 				// Inline resources
 				const fileContent: string = await readFile( fullPath );
