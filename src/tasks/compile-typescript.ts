@@ -14,12 +14,15 @@ export function compileTypescript( name: string, target: 'ES5' | 'ES2015', sourc
 		await cleanFolder( destinationPath );
 
 		// Create TypeScript configuration
+		// TODO: Interface
 		const typescriptConfig: any = JSON.parse( fs.readFileSync( 'src/config/typescript.config.json', 'utf-8' ) ); // TODO: async + JSON parse
 		typescriptConfig.compilerOptions.target = target;
 		typescriptConfig.compilerOptions.rootDir = sourcePath;
 		typescriptConfig.compilerOptions.outDir = destinationPath;
-		typescriptConfig.files.push( path.join( sourcePath, 'index.ts' ) );
-		typescriptConfig.files.push( path.join( sourcePath, 'typings.d.ts' ) );
+		typescriptConfig.files = [
+			path.join( sourcePath, 'index.ts' ), // TODO: From config
+			path.join( sourcePath, 'typings.d.ts' ) // TODO: From config
+		];
 		typescriptConfig.angularCompilerOptions.flatModuleId = name;
 		typescriptConfig.angularCompilerOptions.flatModuleOutFile = `${ name }.js`;
 
