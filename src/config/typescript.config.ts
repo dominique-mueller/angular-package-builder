@@ -1,3 +1,5 @@
+import { TypescriptConfig } from './typescript.config.interface';
+
 /**
  * Get Typescript Config
  */
@@ -8,7 +10,7 @@ export function getTypescriptConfig(
 	flatModuleId: string,
 	flatModuleOutFile: string,
 	files: Array<string>
-	): any {
+	): TypescriptConfig {
 
 	return {
 		compilerOptions: {
