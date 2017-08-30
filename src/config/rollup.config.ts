@@ -1,12 +1,31 @@
 import { Options, Bundle, Warning, Plugin, WriteOptions } from 'rollup';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
 
-export function getRollupOutputConfig(): WriteOptions {
+// Similar to 'RollupWriteOptions' but with the latest definitions (no deprecated options)
+export interface RollupWriteOptions {
+	file: WriteOptions[ 'dest' ]; // Previously 'dest'
+	sourcemap?: WriteOptions[ 'sourceMap' ]; // Previously 'sourceMap'
+	sourceMapFile?: WriteOptions[ 'sourceMapFile' ];
+	format?: WriteOptions[ 'format' ];
+	exports?: WriteOptions[ 'exports' ];
+	moduleId?: WriteOptions[ 'moduleId' ];
+	moduleName?: WriteOptions[ 'moduleName' ];
+	globals?: WriteOptions[ 'globals' ];
+	indent?: WriteOptions[ 'indent' ];
+	interop?: WriteOptions[ 'interop' ];
+	banner?: WriteOptions[ 'banner' ];
+	footer?: WriteOptions[ 'footer' ];
+	intro?: WriteOptions[ 'intro' ];
+	outro?: WriteOptions[ 'outro' ];
+	useStrict?: WriteOptions[ 'useStrict' ];
+}
+
+export function getRollupOutputConfig(): RollupWriteOptions {
 
 	return {
 
-		dest: 'dist-temp/library-bundles',
-		sourceMap: true,
+		file: 'dist-temp/library-bundles',
+		sourcemap: true,
 		format: 'es',
 
 		// moduleId: '',
@@ -32,8 +51,9 @@ export function getRollupOutputConfig(): WriteOptions {
 
 }
 
-export interface RollupOptions { // Similar to 'Options' but with the latest definitions (no deprecated options)
-	input: Options[ 'entry' ];
+// Similar to 'Options' but with the latest definitions (no deprecated options)
+export interface RollupOptions {
+	input: Options[ 'entry' ]; // Previously 'entry'
 	cache?: Options[ 'cache' ];
 	external?: Options[ 'external' ];
 	paths?: Options[ 'paths' ];
