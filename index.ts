@@ -1,8 +1,6 @@
 import { inlineResources } from './src/tasks/inline-resources';
 import { compileTypescript } from './src/tasks/compile-typescript';
 
-import { getTypescriptConfigTemplate } from './src/config/typescript.config';
-
 import { resolvePath } from './src/utilities/resolve-path';
 
 export interface AngularPackageBuilderConfig {
@@ -28,7 +26,7 @@ const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI par
 			root: resolvePath( 'dist-temp' ),
 			inline: resolvePath( 'dist-temp/library-inline' ),
 			buildES5: resolvePath( 'dist-temp/library-es5' ),
-			buildES2015: resolvePath( 'dist-temp/library-es2016' ),
+			buildES2015: resolvePath( 'dist-temp/library-es2015' ),
 			bundles: resolvePath( 'dist-temp/library-bundles' )
 		}
 	},
