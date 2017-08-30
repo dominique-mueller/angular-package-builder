@@ -9,25 +9,23 @@ import { AngularPackageBuilderConfig } from './../../index';
 
 /**
  * Step 1: Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
- *
- * @param config - Confguration
  */
-export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
+export function inlineResources( source: string, destination: string ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Clear the output folder first
-		await cleanFolder( destinationPath );
+		await cleanFolder( destination );
 
 		// Get all files
-		const filePaths: Array<string> = await getTypeScriptSourceFiles( sourcePath );
+		const filePaths: Array<string> = await getTypeScriptSourceFiles( source );
 
 		// Inline resources into source files, save changes into dist
 		await Promise.all(
 			filePaths.map( async( filePath: string ): Promise<string> => {
 
 				// Get paths
-				const fullPath: string = path.join( sourcePath, filePath );
-				const fullDistPath: string = path.join( destinationPath, filePath );
+				const fullPath: string = path.join( source, filePath );
+				const fullDistPath: string = path.join( destination, filePath );
 
 				// Inline resources
 				const fileContent: string = await readFile( fullPath );

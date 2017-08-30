@@ -1,6 +1,8 @@
 import { inlineResources } from './src/tasks/inline-resources';
 import { compileTypescript } from './src/tasks/compile-typescript';
 
+import { getTypescriptConfigTemplate } from './src/config/typescript.config';
+
 import { resolvePath } from './src/utilities/resolve-path';
 
 export interface AngularPackageBuilderConfig {
@@ -45,8 +47,8 @@ async function main() {
 
 	console.log( '> Compile TypeScript to JavaScript ...' );
 	await Promise.all( [
-		compileTypescript( config.packageName, 'ES5', config.folders.temporary.inline, config.folders.temporary.buildES5 ),
-		compileTypescript( config.packageName, 'ES2015', config.folders.temporary.inline, config.folders.temporary.buildES2015 )
+		compileTypescript( config.folders.temporary.inline, config.folders.temporary.buildES5, config.packageName, 'ES5' ),
+		compileTypescript( config.folders.temporary.inline, config.folders.temporary.buildES2015, config.packageName, 'ES2015' )
 	] );
 	console.log( '  Done.' );
 

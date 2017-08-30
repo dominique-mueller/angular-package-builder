@@ -6,25 +6,21 @@ import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_fi
 import * as VinylFile from 'vinyl';
 
 import { cleanFolder } from './../utilities/clean-folder';
+import { getTypescriptConfig } from './../config/typescript.config';
 
-export function compileTypescript( name: string, target: 'ES5' | 'ES2015', sourcePath: string, destinationPath: string ): Promise<void> {
+export function compileTypescript( source: string, destination: string, name: string, target: 'ES5' | 'ES2015' ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Clear destination folder first
-		await cleanFolder( destinationPath );
+		await cleanFolder( destination );
 
 		// Create TypeScript configuration
-		// TODO: Interface
-		const typescriptConfig: any = JSON.parse( fs.readFileSync( 'src/config/typescript.config.json', 'utf-8' ) ); // TODO: async + JSON parse
-		typescriptConfig.compilerOptions.target = target;
-		typescriptConfig.compilerOptions.rootDir = sourcePath;
-		typescriptConfig.compilerOptions.outDir = destinationPath;
-		typescriptConfig.files = [
-			path.join( sourcePath, 'index.ts' ), // TODO: From config
-			path.join( sourcePath, 'typings.d.ts' ) // TODO: From config
+		const entryFiles: Array<string> = [
+			path.join( source, 'index.ts' ), // TODO: From config
+			path.join( source, 'typings.d.ts' ) // TODO: From config
 		];
-		typescriptConfig.angularCompilerOptions.flatModuleId = name;
-		typescriptConfig.angularCompilerOptions.flatModuleOutFile = `${ name }.js`;
+		// TODO: Interface
+		const typescriptConfig: any = getTypescriptConfig( target, source, destination, name, `${ name }.js`, entryFiles );
 
 		// Create virtual 'tsconfig.json' file
 		const typescriptConfigFile: AngularVinylFile = new VinylFile( {
