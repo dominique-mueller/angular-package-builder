@@ -6,13 +6,13 @@ export interface TypescriptConfig {
 		declaration?: boolean;
 		emitDecoratorMetadata?: boolean;
 		experimentalDecorators?: boolean;
+		inlineSources?: boolean;
 		lib?: Array<string>;
 		module?: string;
 		moduleResolution?: string;
 		outDir?: string;
 		rootDir?: string;
 		sourceMap?: boolean;
-		stripInternal?: boolean;
 		target?: string;
 		typeRoots?: Array<string>;
 		types?: Array<string>;

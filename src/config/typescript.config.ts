@@ -17,6 +17,7 @@ export function getTypescriptConfig(
 			declaration: true,
 			emitDecoratorMetadata: true,
 			experimentalDecorators: true,
+			inlineSources: true,
 			lib: [ // All of them
 				'dom',
 				'es2015',
@@ -29,7 +30,6 @@ export function getTypescriptConfig(
 			outDir,
 			rootDir,
 			sourceMap: true,
-			stripInternal: true,
 			target,
 			typeRoots: [
 				'node_modules/@types'

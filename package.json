@@ -25,14 +25,13 @@
 		"build:run": "tsc -p tsconfig.json"
 	},
 	"dependencies": {
-		"@angular/tsc-wrapped": "4.3.6",
+		"@angular/tsc-wrapped": "4.3.x",
 		"chalk": "2.1.x",
 		"globby": "6.1.x",
 		"fs-extra": "4.0.x",
 		"rollup": "0.49.x",
 		"rollup-plugin-node-resolve": "3.0.x",
-		"tsickle": "0.23.6",
-		"typescript": "2.4.2",
+		"typescript": "2.4.x",
 		"vinyl": "2.1.x"
 	},
 	"devDependencies": {
