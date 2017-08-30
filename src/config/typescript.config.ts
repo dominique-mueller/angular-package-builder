@@ -38,7 +38,8 @@ export function getTypescriptConfig(
 		},
 		files,
 		angularCompilerOptions: {
-			// annotateForClosureCompiler: true,
+			annotateForClosureCompiler: false, // For now, annotating for Closure Compiler only brings issues to the table :/
+			debug: true,
 			flatModuleId,
 			flatModuleOutFile,
 			skipTemplateCodegen: true,

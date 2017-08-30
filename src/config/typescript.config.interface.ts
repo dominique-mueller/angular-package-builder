@@ -20,6 +20,7 @@ export interface TypescriptConfig {
 	files?: Array<string>;
 	angularCompilerOptions?: {
 		annotateForClosureCompiler?: boolean;
+		debug?: boolean;
 		flatModuleId?: string;
 		flatModuleOutFile?: string;
 		skipTemplateCodegen?: boolean;

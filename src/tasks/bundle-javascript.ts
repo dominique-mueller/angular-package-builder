@@ -8,12 +8,8 @@ export function bundleJavascript( source: string, destination: string ): Promise
 		// Create the bundle
 		const rollupInputOptions: any = getRollupInputConfig(); // TODO: Interface + Params
 		const bundle: Bundle = await rollup( rollupInputOptions );
-		// console.log( bundle );
 
-		// generate code and a sourcemap
-		// const { code: string, map: SourceMap } = await bundle.generate( outputOptions );
-
-		// or write the bundle to disk
+		// Write bundle to dist
 		const rollupOutputOptions: any = getRollupOutputConfig(); // TODO: Interface + Params
 		await bundle.write( rollupOutputOptions );
 

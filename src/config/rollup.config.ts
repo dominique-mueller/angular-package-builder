@@ -25,7 +25,7 @@ export function getRollupOutputConfig(): RollupWriteOptions {
 	return {
 
 		exports: 'named', // We export multiple things
-		file: 'dist-temp/library-bundles/bundle.js',
+		file: 'dist-temp/library-bundles/angular-notifier.js',
 		sourcemap: true,
 		format: 'es',
 
@@ -36,17 +36,7 @@ export function getRollupOutputConfig(): RollupWriteOptions {
 			'@angular/core': 'angular.core',
 			'@angular/common': 'angular.common',
 			'rxjs/Subject': 'Rx'
-		},
-		// indent: '	'
-
-
-		// moduleId: '',
-		// name: `${opts.moduleName}`,
-		// file: opts.dest,
-		// format: opts.format,
-		// banner: '',
-		// globals: globals,
-		// sourcemap: true
+		}
 
 	};
 
