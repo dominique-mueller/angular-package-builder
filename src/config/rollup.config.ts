@@ -3,20 +3,20 @@ import * as nodeResolve from 'rollup-plugin-node-resolve';
 
 // Similar to 'RollupWriteOptions' but with the latest definitions (no deprecated options)
 export interface RollupWriteOptions {
-	file: WriteOptions[ 'dest' ]; // Previously 'dest'
-	sourcemap?: WriteOptions[ 'sourceMap' ]; // Previously 'sourceMap'
-	sourceMapFile?: WriteOptions[ 'sourceMapFile' ];
-	format?: WriteOptions[ 'format' ];
+	banner?: WriteOptions[ 'banner' ];
 	exports?: WriteOptions[ 'exports' ];
-	moduleId?: WriteOptions[ 'moduleId' ];
-	moduleName?: WriteOptions[ 'moduleName' ];
+	file: WriteOptions[ 'dest' ]; // Previously 'dest'
+	footer?: WriteOptions[ 'footer' ];
+	format?: WriteOptions[ 'format' ];
 	globals?: WriteOptions[ 'globals' ];
 	indent?: WriteOptions[ 'indent' ];
 	interop?: WriteOptions[ 'interop' ];
-	banner?: WriteOptions[ 'banner' ];
-	footer?: WriteOptions[ 'footer' ];
 	intro?: WriteOptions[ 'intro' ];
+	moduleId?: WriteOptions[ 'moduleId' ];
+	moduleName?: WriteOptions[ 'moduleName' ];
 	outro?: WriteOptions[ 'outro' ];
+	sourcemap?: WriteOptions[ 'sourceMap' ]; // Previously 'sourceMap'
+	sourceMapFile?: WriteOptions[ 'sourceMapFile' ];
 	useStrict?: WriteOptions[ 'useStrict' ];
 }
 
@@ -24,7 +24,8 @@ export function getRollupOutputConfig(): RollupWriteOptions {
 
 	return {
 
-		file: 'dist-temp/library-bundles',
+		exports: 'named', // We export multiple things
+		file: 'dist-temp/library-bundles/bundle.js',
 		sourcemap: true,
 		format: 'es',
 
@@ -53,23 +54,23 @@ export function getRollupOutputConfig(): RollupWriteOptions {
 
 // Similar to 'Options' but with the latest definitions (no deprecated options)
 export interface RollupOptions {
-	input: Options[ 'entry' ]; // Previously 'entry'
+	acorn?: Options[ 'acorn' ];
 	cache?: Options[ 'cache' ];
+	context?: Options[ 'context' ];
 	external?: Options[ 'external' ];
-	paths?: Options[ 'paths' ];
+	input: Options[ 'entry' ]; // Previously 'entry'
+	legacy?: Options[ 'legacy' ];
+	moduleContext?: Options[ 'moduleContext' ];
 	onwarn?: Options[ 'onwarn' ];
+	paths?: Options[ 'paths' ];
 	plugins?: Options[ 'plugins' ];
 	treeshake?: Options[ 'treeshake' ];
-	acorn?: Options[ 'acorn' ];
-	context?: Options[ 'context' ];
-	moduleContext?: Options[ 'moduleContext' ];
-	legacy?: Options[ 'legacy' ];
 }
 
 export function getRollupInputConfig(): RollupOptions {
 
 	return {
-		input: 'dist-temp/library-es2015/index.js', // Previously 'entry' which is now deprecated
+		input: 'dist-temp/library-es2015/angular-notifier.js', // Previously 'entry' which is now deprecated
 		external: [ // TODO: Dynamic
 			'@angular/core',
 			'@angular/common',

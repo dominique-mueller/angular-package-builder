@@ -38,7 +38,7 @@ export function getTypescriptConfig(
 		},
 		files,
 		angularCompilerOptions: {
-			annotateForClosureCompiler: true,
+			// annotateForClosureCompiler: true,
 			flatModuleId,
 			flatModuleOutFile,
 			skipTemplateCodegen: true,
