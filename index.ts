@@ -1,3 +1,4 @@
+import { bundleJavascript } from './src/tasks/bundle-javascript';
 import { inlineResources } from './src/tasks/inline-resources';
 import { compileTypescript } from './src/tasks/compile-typescript';
 
@@ -48,6 +49,10 @@ async function main() {
 		compileTypescript( config.folders.temporary.inline, config.folders.temporary.buildES5, config.packageName, 'ES5' ),
 		compileTypescript( config.folders.temporary.inline, config.folders.temporary.buildES2015, config.packageName, 'ES2015' )
 	] );
+	console.log( '  Done.' );
+
+	console.log( '> Create bundles ...' );
+	await bundleJavascript( '', '' );
 	console.log( '  Done.' );
 
 	console.log( '' );
