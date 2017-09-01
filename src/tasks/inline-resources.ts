@@ -2,10 +2,11 @@ import * as path from 'path';
 
 import * as globby from 'globby';
 
+import { AngularPackageBuilderConfig } from './../../index';
+import { cleanFolder } from './../utilities/clean-folder';
+import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
 import { writeFile } from './../utilities/write-file';
-import { cleanFolder } from './../utilities/clean-folder';
-import { AngularPackageBuilderConfig } from './../../index';
 
 /**
  * Step 1: Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
@@ -28,9 +29,10 @@ export function inlineResources( source: string, destination: string ): Promise<
 				const fullDistPath: string = path.join( destination, filePath );
 
 				// Inline resources
-				const fileContent: string = await readFile( fullPath );
-				const fileContentInlined: string = await inlineTemplate( fullPath, fileContent );
-				await writeFile( fullDistPath, fileContentInlined );
+				let fileContent: string = await readFile( fullPath );
+				fileContent = await inlineTemplate( fullPath, fileContent );
+				fileContent = normalizeLineEndings( fileContent ); // TODO: Extract into own step?? Or into writeFile?
+				await writeFile( fullDistPath, fileContent );
 
 				return filePath;
 

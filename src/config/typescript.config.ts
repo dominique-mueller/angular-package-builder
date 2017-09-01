@@ -25,8 +25,9 @@ export function getTypescriptConfig(
 				'es2017',
 				'esnext'
 			],
-			module: 'es2015',
+			module: 'ES2015',
 			moduleResolution: 'node',
+			newLine: 'LF', // Necessary to make closure compiler annotations work correctly
 			outDir,
 			rootDir,
 			sourceMap: true,
@@ -38,8 +39,7 @@ export function getTypescriptConfig(
 		},
 		files,
 		angularCompilerOptions: {
-			annotateForClosureCompiler: false, // For now, annotating for Closure Compiler only brings issues to the table :/
-			debug: true,
+			annotateForClosureCompiler: true, // Note: Only works with 'LF' line endings
 			flatModuleId,
 			flatModuleOutFile,
 			skipTemplateCodegen: true,

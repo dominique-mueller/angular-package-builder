@@ -10,6 +10,7 @@ export interface TypescriptConfig {
 		lib?: Array<string>;
 		module?: string;
 		moduleResolution?: string;
+		newLine?: 'CRLF' | 'LF';
 		outDir?: string;
 		rootDir?: string;
 		sourceMap?: boolean;
@@ -20,7 +21,6 @@ export interface TypescriptConfig {
 	files?: Array<string>;
 	angularCompilerOptions?: {
 		annotateForClosureCompiler?: boolean;
-		debug?: boolean;
 		flatModuleId?: string;
 		flatModuleOutFile?: string;
 		skipTemplateCodegen?: boolean;
