@@ -11,17 +11,12 @@ import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface
 export function getRollupInputConfig( sourcePath: string, name: string ): RollupInputConfig {
 
 	return {
-		input: path.join( sourcePath, `${ name }.js` ), // Previously 'entry' which is now deprecated
 		external: [ // TODO: Dynamic
 			'@angular/core',
 			'@angular/common',
 			'rxjs/Subject'
 		],
-		plugins: [
-			nodeResolve( {
-				module: true
-			} ),
-		],
+		input: path.join( sourcePath, `${ name }.js` ), // Previously 'entry' which is now deprecated
 		onwarn: ( warning ) => {
 
 			// TODO: Check if any of the following early exits are needed
@@ -37,8 +32,12 @@ export function getRollupInputConfig( sourcePath: string, name: string ): Rollup
 			// For everything else, log a warning
 			console.warn( warning.message );
 
-		}
-
+		},
+		plugins: [
+			nodeResolve( {
+				module: true
+			} ),
+		]
 	};
 
 }
@@ -49,21 +48,16 @@ export function getRollupInputConfig( sourcePath: string, name: string ): Rollup
 export function getRollupOutputConfig( destinationPath: string, name: string, format: 'es' | 'umd' ): RollupOutputConfig {
 
 	return {
-
 		exports: 'named', // We export multiple things
 		file: path.join( destinationPath, `${ name }.js` ),
-		sourcemap: true,
 		format,
-
-		// moduleId: '',
-		// moduleName: 'angular-notifier',
-
 		globals: { // TODO: Dynamic
 			'@angular/core': 'angular.core',
 			'@angular/common': 'angular.common',
 			'rxjs/Subject': 'Rx'
-		}
-
+		},
+		name, // Required for UMD bundles
+		sourcemap: true
 	};
 
 }

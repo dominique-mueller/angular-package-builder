@@ -31,7 +31,7 @@ export interface RollupOutputConfig {
 	interop?: WriteOptions[ 'interop' ];
 	intro?: WriteOptions[ 'intro' ];
 	moduleId?: WriteOptions[ 'moduleId' ];
-	moduleName?: WriteOptions[ 'moduleName' ];
+	name?: WriteOptions[ 'moduleName' ]; // Previously 'moduleName'
 	outro?: WriteOptions[ 'outro' ];
 	sourcemap?: WriteOptions[ 'sourceMap' ]; // Previously 'sourceMap'
 	sourceMapFile?: WriteOptions[ 'sourceMapFile' ];
