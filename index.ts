@@ -25,10 +25,10 @@ export interface AngularPackageBuilderConfig {
 	dependencies: Array<string>;
 }
 
-const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI params
+const config: AngularPackageBuilderConfig = {
 	entry: {
-		folder: resolvePath( 'example-library/lib' ),
-		file: 'index.ts'
+		folder: resolvePath( 'example-library/lib' ), // TODO: Read from CLI param
+		file: 'index.ts' // TODO: Read from CLI param
 	},
 	output: {
 		folder: resolvePath( 'dist' ),
@@ -42,8 +42,8 @@ const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI par
 			bundleUMD: resolvePath( 'dist-angular-package-builder/library-bundle-umd' )
 		}
 	},
-	packageName: 'angular-notifier',
-	dependencies: [
+	packageName: 'angular-notifier', // TODO: Get from package.json 'name'
+	dependencies: [ // TODO: Get from package.json 'peerDependencies'
 		'@angular/core',
 		'@angular/common',
 		'@angular/rxjs'
