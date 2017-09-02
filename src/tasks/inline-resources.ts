@@ -4,6 +4,7 @@ import * as globby from 'globby';
 
 import { AngularPackageBuilderConfig } from './../../index';
 import { cleanFolder } from './../utilities/clean-folder';
+import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
 import { writeFile } from './../utilities/write-file';
 
@@ -32,6 +33,10 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 				let fileContent: string = await readFile( absoluteSourceFilePath );
 				fileContent = await inlineTemplate( absoluteSourceFilePath, fileContent );
 				// TODO: Inline styles
+
+				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
+				// See <https://github.com/angular/tsickle/issues/596> for further details.
+				fileContent = normalizeLineEndings( fileContent );
 
 				await writeFile( absoluteDestinationFilePath, fileContent );
 
