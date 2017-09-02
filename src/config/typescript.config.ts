@@ -33,7 +33,7 @@ export function getTypescriptConfig( target: string, sourcePath: string, destina
 		},
 		files,
 		angularCompilerOptions: {
-			annotateForClosureCompiler: true, // Note: Only works with 'LF' line endings
+			annotateForClosureCompiler: false, // Note: Broken right now
 			flatModuleId: name,
 			flatModuleOutFile: `${ name }.js`,
 			skipTemplateCodegen: true,
