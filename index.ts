@@ -1,6 +1,6 @@
 import { bundleJavascript } from './src/tasks/bundle-javascript';
-import { inlineResources } from './src/tasks/inline-resources';
 import { compileTypescript } from './src/tasks/compile-typescript';
+import { inlineResources } from './src/tasks/inline-resources';
 
 import { resolvePath } from './src/utilities/resolve-path';
 
@@ -22,12 +22,13 @@ export interface AngularPackageBuilderConfig {
 		};
 	};
 	packageName: string;
+	dependencies: Array<string>;
 }
 
-const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI params
+const config: AngularPackageBuilderConfig = {
 	entry: {
-		folder: resolvePath( 'example-library/lib' ),
-		file: 'index.ts'
+		folder: resolvePath( 'example-library/lib' ), // TODO: Read from CLI param
+		file: 'index.ts' // TODO: Read from CLI param
 	},
 	output: {
 		folder: resolvePath( 'dist' ),
@@ -41,7 +42,12 @@ const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI par
 			bundleUMD: resolvePath( 'dist-angular-package-builder/library-bundle-umd' )
 		}
 	},
-	packageName: 'angular-notifier'
+	packageName: 'angular-notifier', // TODO: Get from package.json 'name'
+	dependencies: [ // TODO: Get from package.json 'peerDependencies'
+		'@angular/core',
+		'@angular/common',
+		'@angular/rxjs'
+	]
 };
 
 async function main() {
@@ -63,15 +69,16 @@ async function main() {
 
 	console.log( '> Create bundles ...' );
 	await Promise.all( [
-		await bundleJavascript( config.output.temporary.buildES2015, config.output.temporary.bundleFESM2015, config.packageName, 'ES' ),
-		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleFESM5, config.packageName, 'ES' ),
-		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleUMD, config.packageName, 'UMD' )
+		await bundleJavascript( config.output.temporary.buildES2015, config.output.temporary.bundleFESM2015, config.packageName, 'ES', config.dependencies ),
+		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleFESM5, config.packageName, 'ES', config.dependencies ),
+		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleUMD, config.packageName, 'UMD', config.dependencies )
 	] );
 	console.log( '  Done.' );
 
 	console.log( '' );
 	console.log( '=== Success ===' );
 	console.log( '' );
+
 }
 
 main();

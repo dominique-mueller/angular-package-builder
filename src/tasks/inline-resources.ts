@@ -100,8 +100,8 @@ function inlineTemplate( filePath: string, fileContent: string ): Promise<string
 				templatePaths.map( async( templatePath: string ): Promise<string> => {
 
 					// Read the template file
-					const absoluteTempaltePath: string = path.join( path.dirname( filePath ), templatePath );
-					const template: string = await readFile( absoluteTempaltePath );
+					const absoluteTemplatePath: string = path.join( path.dirname( filePath ), templatePath );
+					const template: string = await readFile( absoluteTemplatePath );
 
 					// Optimize the template file content
 					// TODO: Minify HTML for real? Or handle sourcemaps correctly?
