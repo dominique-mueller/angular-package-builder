@@ -32,13 +32,13 @@ const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI par
 	output: {
 		folder: resolvePath( 'dist' ),
 		temporary: {
-			root: resolvePath( 'dist-temp' ),
-			prepared: resolvePath( 'dist-temp/library-prepared' ),
-			buildES5: resolvePath( 'dist-temp/library-build-es5' ),
-			buildES2015: resolvePath( 'dist-temp/library-build-es2015' ),
-			bundleFESM2015: resolvePath( 'dist-temp/library-bundle-fesm2015' ),
-			bundleFESM5: resolvePath( 'dist-temp/library-bundle-fesm5' ),
-			bundleUMD: resolvePath( 'dist-temp/library-bundle-umd' )
+			root: resolvePath( 'dist-angular-package-builder' ),
+			prepared: resolvePath( 'dist-angular-package-builder/library-prepared' ),
+			buildES5: resolvePath( 'dist-angular-package-builder/library-build-es5' ),
+			buildES2015: resolvePath( 'dist-angular-package-builder/library-build-es2015' ),
+			bundleFESM2015: resolvePath( 'dist-angular-package-builder/library-bundle-fesm2015' ),
+			bundleFESM5: resolvePath( 'dist-angular-package-builder/library-bundle-fesm5' ),
+			bundleUMD: resolvePath( 'dist-angular-package-builder/library-bundle-umd' )
 		}
 	},
 	packageName: 'angular-notifier'
