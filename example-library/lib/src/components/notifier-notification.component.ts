@@ -74,7 +74,7 @@ export class NotifierNotificationComponent implements AfterViewInit {
 	/**
 	 * Native element reference, used for manipulating DOM properties
 	 */
-	private readonly element: HTMLElement;
+	private readonly element: any;
 
 	/**
 	 * Current notification height, calculated and cached here (#perfmatters)
@@ -181,7 +181,7 @@ export class NotifierNotificationComponent implements AfterViewInit {
 
 				// Animate notification in
 				this.renderer.setStyle( this.element, 'visibility', 'visible' );
-				const animation: Animation = this.element.animate( animationData.keyframes, animationData.options );
+				const animation: any = this.element.animate( animationData.keyframes, animationData.options );
 				animation.onfinish = () => {
 					this.startAutoHideTimer();
 					resolve(); // Done
@@ -213,7 +213,7 @@ export class NotifierNotificationComponent implements AfterViewInit {
 			// Are animations enabled?
 			if ( this.config.animations.enabled && this.config.animations.hide.speed > 0 ) {
 				const animationData: NotifierAnimationData = this.animationService.getAnimationData( 'hide', this.notification );
-				const animation: Animation = this.element.animate( animationData.keyframes, animationData.options );
+				const animation: any = this.element.animate( animationData.keyframes, animationData.options );
 				animation.onfinish = () => {
 					resolve(); // Done
 				};
@@ -262,7 +262,7 @@ export class NotifierNotificationComponent implements AfterViewInit {
 					}
 				};
 				this.elementShift = newElementShift;
-				const animation: Animation = this.element.animate( animationData.keyframes, animationData.options );
+				const animation: any = this.element.animate( animationData.keyframes, animationData.options );
 				animation.onfinish = () => {
 					resolve(); // Done
 				};

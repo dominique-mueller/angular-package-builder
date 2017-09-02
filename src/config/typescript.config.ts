@@ -3,20 +3,15 @@ import { TypescriptConfig } from './typescript.config.interface';
 /**
  * Get Typescript Config
  */
-export function getTypescriptConfig(
-	target: string,
-	rootDir: string,
-	outDir: string,
-	flatModuleId: string,
-	flatModuleOutFile: string,
-	files: Array<string>
-	): TypescriptConfig {
+export function getTypescriptConfig( target: string, sourcePath: string, destinationPath: string, name: string, files: Array<string> ):
+	TypescriptConfig {
 
 	return {
 		compilerOptions: {
 			declaration: true,
 			emitDecoratorMetadata: true,
 			experimentalDecorators: true,
+			inlineSources: true,
 			lib: [ // All of them
 				'dom',
 				'es2015',
@@ -24,12 +19,12 @@ export function getTypescriptConfig(
 				'es2017',
 				'esnext'
 			],
-			module: 'es2015',
+			module: 'ES2015',
 			moduleResolution: 'node',
-			outDir,
-			rootDir,
+			newLine: 'LF', // Necessary to make closure compiler annotations work correctly
+			outDir: destinationPath,
+			rootDir: sourcePath,
 			sourceMap: true,
-			stripInternal: true,
 			target,
 			typeRoots: [
 				'node_modules/@types'
@@ -38,9 +33,9 @@ export function getTypescriptConfig(
 		},
 		files,
 		angularCompilerOptions: {
-			annotateForClosureCompiler: true,
-			flatModuleId,
-			flatModuleOutFile,
+			annotateForClosureCompiler: false, // Note: Broken right now
+			flatModuleId: name,
+			flatModuleOutFile: `${ name }.js`,
 			skipTemplateCodegen: true,
 			strictMetadataEmit: true
 		}
