@@ -10,7 +10,7 @@ export interface AngularPackageBuilderConfig {
 		output: string;
 		temporary: {
 			root: string;
-			inline: string;
+			prepared: string;
 			buildES5: string;
 			buildES2015: string;
 			bundles: string;
@@ -25,7 +25,7 @@ const config: AngularPackageBuilderConfig = { // TODO: Read from files & CLI par
 		output: resolvePath( 'dist' ),
 		temporary: {
 			root: resolvePath( 'dist-temp' ),
-			inline: resolvePath( 'dist-temp/library-inline' ),
+			prepared: resolvePath( 'dist-temp/library-prepared' ),
 			buildES5: resolvePath( 'dist-temp/library-es5' ),
 			buildES2015: resolvePath( 'dist-temp/library-es2015' ),
 			bundles: resolvePath( 'dist-temp/library-bundles' )
@@ -41,13 +41,13 @@ async function main() {
 	console.log( '' );
 
 	console.log( '> Inline resources ...' );
-	await inlineResources( config.folders.entry, config.folders.temporary.inline );
+	await inlineResources( config.folders.entry, config.folders.temporary.prepared );
 	console.log( '  Done.' );
 
 	console.log( '> Compile TypeScript to JavaScript ...' );
 	await Promise.all( [
-		compileTypescript( config.folders.temporary.inline, config.folders.temporary.buildES5, config.packageName, 'ES5' ),
-		compileTypescript( config.folders.temporary.inline, config.folders.temporary.buildES2015, config.packageName, 'ES2015' )
+		compileTypescript( config.folders.temporary.prepared, config.folders.temporary.buildES5, config.packageName, 'ES5' ),
+		compileTypescript( config.folders.temporary.prepared, config.folders.temporary.buildES2015, config.packageName, 'ES2015' )
 	] );
 	console.log( '  Done.' );
 

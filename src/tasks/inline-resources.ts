@@ -11,28 +11,34 @@ import { writeFile } from './../utilities/write-file';
 /**
  * Step 1: Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
  */
-export function inlineResources( source: string, destination: string ): Promise<void> {
+export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Clear the output folder first
-		await cleanFolder( destination );
+		await cleanFolder( destinationPath );
 
 		// Get all files
-		const filePaths: Array<string> = await getTypeScriptSourceFiles( source );
+		// TODO: Exit with error if there are no files?
+		const filePaths: Array<string> = await getTypeScriptSourceFiles( sourcePath );
 
 		// Inline resources into source files, save changes into dist
 		await Promise.all(
 			filePaths.map( async( filePath: string ): Promise<string> => {
 
 				// Get paths
-				const fullPath: string = path.join( source, filePath );
-				const fullDistPath: string = path.join( destination, filePath );
+				const absoluteSourceFilePath: string = path.join( sourcePath, filePath );
+				const absoluteDestinationFilePath: string = path.join( destinationPath, filePath );
 
 				// Inline resources
-				let fileContent: string = await readFile( fullPath );
-				fileContent = await inlineTemplate( fullPath, fileContent );
-				fileContent = normalizeLineEndings( fileContent ); // TODO: Extract into own step?? Or into writeFile?
-				await writeFile( fullDistPath, fileContent );
+				let fileContent: string = await readFile( absoluteSourceFilePath );
+				fileContent = await inlineTemplate( absoluteSourceFilePath, fileContent );
+				// TODO: Inline styles
+
+				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
+				// See <https://github.com/angular/tsickle/issues/596> for further details.
+				fileContent = normalizeLineEndings( fileContent );
+
+				await writeFile( absoluteDestinationFilePath, fileContent );
 
 				return filePath;
 
@@ -47,19 +53,19 @@ export function inlineResources( source: string, destination: string ): Promise<
 /**
  * Get all TypeScript source files (thus, not the unit tests)
  *
- * @param   entryFolder - Entry folder path
- * @returns             - List of TypeScript source files
+ * @param   basePath - Base folder path
+ * @returns          - List of TypeScript source files
  */
-function getTypeScriptSourceFiles( entryFolder: string ): Promise<Array<string>> {
+function getTypeScriptSourceFiles( basePath: string ): Promise<Array<string>> {
 
 	// Get files, using the entry folder as base (so we can easily keep the directory structure in the dist folder)
-	// TODO: Read in gitignore??
+	// TODO: Read folder / files to be ignored from gitignore file?
 	return globby( [
 		path.join( '**', '*.ts' ), // Get all source files
 		`!${ path.join( '**', '*.spec.ts' ) }`, // Ignore unit tests
-		`!${ path.join( 'node_modules', '**' ) }` // ignore dependencies
+		`!${ path.join( 'node_modules', '**' ) }` // Ignore dependencies
 	], {
-		cwd: entryFolder
+		cwd: basePath
 	} );
 
 }
@@ -72,55 +78,53 @@ function getTypeScriptSourceFiles( entryFolder: string ): Promise<Array<string>>
  * @returns             - File content with inlined resources
  */
 function inlineTemplate( filePath: string, fileContent: string ): Promise<string> {
-	return new Promise<string>( async( resolve: ( newFileContent: string ) => void, reject: ( error: Error ) => void ) => {
+	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
 
-		// Do not mutate the incoming parameter directly
 		let newFileContent: string = fileContent;
-
-		// Regular expression for finding external template references
 		const externalTemplateRegExp: RegExp = /templateUrl:\s*'([^']+?\.html)'/g;
 
-		// Retrieve all template paths (while not updating the file content though)
+		// Retrieve all template file paths (while not updating the file content)
 		const templatePaths: Array<string> = [];
 		newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
 			templatePaths.push( templateUrl );
-			return templateUrl;
+			return templateUrl; // Don't change anythin
 		} );
 
 		// Only inline resources if necessary
 		if ( templatePaths.length > 0 ) {
 
+			// Read all template files
+			const templates: Array<string> = await Promise.all(
+
+				// Map template paths to their content
+				templatePaths.map( async( templatePath: string ): Promise<string> => {
+
+					// Read the template file
+					const absoluteTempaltePath: string = path.join( path.dirname( filePath ), templatePath );
+					const template: string = await readFile( absoluteTempaltePath );
+
+					// Optimize the template file content
+					// TODO: Minify HTML for real? Or handle sourcemaps correctly?
+					const minifiedTemplate: string = template.replace( /([\n\r]\s*)+/gm, '' );
+
+					return minifiedTemplate;
+
+				} )
+			);
+
 			// Load the templates
-			const templateFilesContent: { [ templatePath: string ]: string } =
+			const filesWithTemplates: { [ file: string ]: string } = templates
+				.reduce( ( filesWithTemplates: { [ file: string ]: string }, template: string, index: number ):
+					{ [ templatePath: string ]: string } => {
 
-				// Pre-load all template asynchronously
-				( await Promise.all(
+					filesWithTemplates[ templatePaths[ index ] ] = template; // Index works because the order stays the same
+					return filesWithTemplates;
 
-					// Map template paths to their content
-					templatePaths.map( async( templatePath: string ): Promise<string> => {
-
-						// Read the template file
-						const templateFilePath: string = path.join( path.dirname( filePath ), templatePath );
-						const templateFileContent: string = await readFile( templateFilePath );
-
-						// Optimize the template file content
-						const optimizedTemplateFileContent: string = templateFileContent // TODO: Minify HTML for real?
-							.replace( /([\n\r]\s*)+/gm, '' ); // Pretty much minifies the file
-
-						return optimizedTemplateFileContent;
-
-					} )
-				) )
-
-				// Convert array into object
-				.reduce( ( templateFilesContent: any, templateFileContent: string, index: number ): { [ templatePath: string ]: string } => {
-					templateFilesContent[ templatePaths[ index ] ] = templateFileContent; // Index works because the order stays the same
-					return templateFilesContent;
 				}, {} );
 
 			// Replace external template reference with inline template
 			newFileContent = newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
-				return `template: '${ templateFilesContent[ templateUrl ] }'`;
+				return `template: '${ filesWithTemplates[ templateUrl ] }'`;
 			} );
 
 		}

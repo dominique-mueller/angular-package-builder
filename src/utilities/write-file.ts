@@ -13,15 +13,12 @@ import { resolvePath } from './resolve-path';
 export function writeFile( filePath: string, fileContent: string | Object ): Promise<void> {
 	return new Promise<void>( ( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		// Resolve file path to an absolute one
-		const resolvedFilePath: string = resolvePath( filePath )
-
 		// Write file asynchronously; implicitely creates the file (and the directory) if necessary
-		fsExtra.outputFile( resolvedFilePath, fileContent, 'utf-8', ( writeFileError: NodeJS.ErrnoException | null ) => {
+		fsExtra.outputFile( filePath, fileContent, 'utf-8', ( writeFileError: NodeJS.ErrnoException | null ) => {
 
 			// Handle errors
 			if ( writeFileError ) {
-				reject( new Error( `An error occured while writing the file "${ resolvedFilePath }". [Code "${ writeFileError.code }", Number "${ writeFileError.errno }"]` ) );
+				reject( new Error( `An error occured while writing the file "${ filePath }". [Code "${ writeFileError.code }", Number "${ writeFileError.errno }"]` ) );
 				return;
 			}
 
