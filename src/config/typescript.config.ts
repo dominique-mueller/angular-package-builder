@@ -3,14 +3,8 @@ import { TypescriptConfig } from './typescript.config.interface';
 /**
  * Get Typescript Config
  */
-export function getTypescriptConfig(
-	target: string,
-	rootDir: string,
-	outDir: string,
-	flatModuleId: string,
-	flatModuleOutFile: string,
-	files: Array<string>
-	): TypescriptConfig {
+export function getTypescriptConfig( target: string, sourcePath: string, destinationPath: string, name: string, files: Array<string> ):
+	TypescriptConfig {
 
 	return {
 		compilerOptions: {
@@ -28,8 +22,8 @@ export function getTypescriptConfig(
 			module: 'ES2015',
 			moduleResolution: 'node',
 			newLine: 'LF', // Necessary to make closure compiler annotations work correctly
-			outDir,
-			rootDir,
+			outDir: destinationPath,
+			rootDir: sourcePath,
 			sourceMap: true,
 			target,
 			typeRoots: [
@@ -40,8 +34,8 @@ export function getTypescriptConfig(
 		files,
 		angularCompilerOptions: {
 			annotateForClosureCompiler: true, // Note: Only works with 'LF' line endings
-			flatModuleId,
-			flatModuleOutFile,
+			flatModuleId: name,
+			flatModuleOutFile: `${ name }.js`,
 			skipTemplateCodegen: true,
 			strictMetadataEmit: true
 		}

@@ -9,7 +9,7 @@ import { readFile } from './../utilities/read-file';
 import { writeFile } from './../utilities/write-file';
 
 /**
- * Step 1: Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
+ * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
  */
 export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
