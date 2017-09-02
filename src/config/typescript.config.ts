@@ -25,6 +25,7 @@ export function getTypescriptConfig( target: string, sourcePath: string, destina
 			outDir: destinationPath,
 			rootDir: sourcePath,
 			sourceMap: true,
+			sourceRoot: sourcePath,
 			target,
 			typeRoots: [
 				'node_modules/@types'
