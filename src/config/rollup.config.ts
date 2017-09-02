@@ -1,8 +1,8 @@
 import * as path from 'path';
 
 import { Options, Bundle, Warning, Plugin, WriteOptions } from 'rollup';
+import * as commonjs from 'rollup-plugin-commonjs';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
-import * as commonjsResolve from 'rollup-plugin-commonjs';
 
 import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
 import { angularDependencies } from './angular-dependencies';
@@ -21,7 +21,7 @@ export function getRollupInputConfig( sourcePath: string, name: string, dependen
 		},
 		plugins: [
 			nodeResolve(),
-			commonjsResolve()
+			commonjs()
 		]
 	};
 
@@ -30,11 +30,10 @@ export function getRollupInputConfig( sourcePath: string, name: string, dependen
 /**
  * Get Rollup Output Config
  */
-export function getRollupOutputConfig( destinationPath: string, name: string, format: 'es' | 'umd', dependencies: Array<string> ): RollupOutputConfig {
+export function getRollupOutputConfig( name: string, format: 'es' | 'umd', dependencies: Array<string> ): RollupOutputConfig {
 
 	return {
 		exports: 'named', // We export multiple things
-		file: path.join( destinationPath, `${ name }.js` ),
 		format,
 		globals: getRollupDependencies( dependencies ),
 		name, // Required for UMD bundles
