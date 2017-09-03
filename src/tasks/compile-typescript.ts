@@ -6,6 +6,7 @@ import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_fi
 import * as VinylFile from 'vinyl';
 
 import { cleanFolder } from './../utilities/clean-folder';
+import { getFiles } from './../utilities/get-files';
 import { getTypescriptConfig } from './../config/typescript.config';
 import { resolvePath } from './../utilities/resolve-path';
 import { TypescriptConfig } from './../config/typescript.config.interface';
@@ -19,10 +20,16 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 		// Clear destination folder first
 		await cleanFolder( destinationPath );
 
+		// Get additional TypeScript definition files
+		const filePatterns: Array<string> = [
+			path.join( '**', '*.d.ts' )
+		]
+		const typescriptDefinitionsFiles: Array<string> = await getFiles( filePatterns, sourcePath, true );
+
 		// Create TypeScript configuration
 		const entryFiles: Array<string> = [
-			path.join( sourcePath, sourceFile ) // Only one entry file is allowed
-			// TODO: Add '*.d.ts' files automatically
+			path.join( sourcePath, sourceFile ), // Only one entry file is allowed
+			...typescriptDefinitionsFiles // Additional TypeScript definition files (not counting as entry file)
 		];
 		const typescriptConfig: TypescriptConfig = getTypescriptConfig( target, sourcePath, destinationPath, name, entryFiles );
 
