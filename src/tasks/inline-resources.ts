@@ -1,9 +1,11 @@
 import * as path from 'path';
 
 import * as globby from 'globby';
+import * as htmlMinifier from 'html-minifier';
 
 import { AngularPackageBuilderConfig } from './../../index';
 import { cleanFolder } from './../utilities/clean-folder';
+import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
 import { writeFile } from './../utilities/write-file';
@@ -104,8 +106,7 @@ function inlineTemplate( filePath: string, fileContent: string ): Promise<string
 					const template: string = await readFile( absoluteTemplatePath );
 
 					// Optimize the template file content
-					// TODO: Minify HTML for real? Or handle sourcemaps correctly?
-					const minifiedTemplate: string = template.replace( /([\n\r]\s*)+/gm, '' );
+					const minifiedTemplate: string = minifyHTML( template );
 
 					return minifiedTemplate;
 
@@ -132,4 +133,11 @@ function inlineTemplate( filePath: string, fileContent: string ): Promise<string
 		resolve( newFileContent );
 
 	} );
+}
+
+/**
+ * Minify HTML
+ */
+function minifyHTML( content: string ): string {
+	return <string> htmlMinifier.minify( content, htmlMinifierConfig );
 }
