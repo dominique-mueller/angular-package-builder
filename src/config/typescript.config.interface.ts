@@ -14,6 +14,7 @@ export interface TypescriptConfig {
 		outDir?: string;
 		rootDir?: string;
 		sourceMap?: boolean;
+		sourceRoot?: string;
 		target?: string;
 		typeRoots?: Array<string>;
 		types?: Array<string>;

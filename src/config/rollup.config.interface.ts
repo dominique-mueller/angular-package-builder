@@ -1,4 +1,4 @@
-import { Options, WriteOptions } from 'rollup';
+import { Options, GenerateOptions } from 'rollup';
 
 /**
  * Rollup Input Config (similar to 'Options' yet with the latest definitions)
@@ -18,22 +18,21 @@ export interface RollupInputConfig {
 }
 
 /**
- * Rollup Output Config (similar to 'RollupWriteOptions' yet with the latest efinitions)
+ * Rollup Output Config (similar to 'GenerateOptions' yet with the latest efinitions)
  */
 export interface RollupOutputConfig {
-	banner?: WriteOptions[ 'banner' ];
-	exports?: WriteOptions[ 'exports' ];
-	file: WriteOptions[ 'dest' ]; // Previously 'dest'
-	footer?: WriteOptions[ 'footer' ];
-	format?: WriteOptions[ 'format' ];
-	globals?: WriteOptions[ 'globals' ];
-	indent?: WriteOptions[ 'indent' ];
-	interop?: WriteOptions[ 'interop' ];
-	intro?: WriteOptions[ 'intro' ];
-	moduleId?: WriteOptions[ 'moduleId' ];
-	name?: WriteOptions[ 'moduleName' ]; // Previously 'moduleName'
-	outro?: WriteOptions[ 'outro' ];
-	sourcemap?: WriteOptions[ 'sourceMap' ]; // Previously 'sourceMap'
-	sourceMapFile?: WriteOptions[ 'sourceMapFile' ];
-	useStrict?: WriteOptions[ 'useStrict' ];
+	banner?: GenerateOptions[ 'banner' ];
+	exports?: GenerateOptions[ 'exports' ];
+	footer?: GenerateOptions[ 'footer' ];
+	format?: GenerateOptions[ 'format' ];
+	globals?: GenerateOptions[ 'globals' ];
+	indent?: GenerateOptions[ 'indent' ];
+	interop?: GenerateOptions[ 'interop' ];
+	intro?: GenerateOptions[ 'intro' ];
+	moduleId?: GenerateOptions[ 'moduleId' ];
+	name?: GenerateOptions[ 'moduleName' ]; // Previously 'moduleName'
+	outro?: GenerateOptions[ 'outro' ];
+	sourcemap?: GenerateOptions[ 'sourceMap' ]; // Previously 'sourceMap'
+	sourceMapFile?: GenerateOptions[ 'sourceMapFile' ];
+	useStrict?: GenerateOptions[ 'useStrict' ];
 }

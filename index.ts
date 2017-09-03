@@ -62,8 +62,8 @@ async function main() {
 
 	console.log( '> Compile TypeScript to JavaScript ...' );
 	await Promise.all( [
-		compileTypescript( config.output.temporary.prepared, config.entry.file, config.output.temporary.buildES5, config.packageName, 'ES5' ),
-		compileTypescript( config.output.temporary.prepared, config.entry.file, config.output.temporary.buildES2015, config.packageName, 'ES2015' )
+		compileTypescript( config.output.temporary.prepared, config.entry.file, config.output.temporary.buildES2015, config.packageName, 'ES2015' ),
+		compileTypescript( config.output.temporary.prepared, config.entry.file, config.output.temporary.buildES5, config.packageName, 'ES5' )
 	] );
 	console.log( '  Done.' );
 
