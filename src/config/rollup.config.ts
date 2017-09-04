@@ -5,8 +5,8 @@ import * as commonjs from 'rollup-plugin-commonjs';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
 
 import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
-import { angularDependencies } from './angular-dependencies';
-import { rxjsDependencies } from './rxjs-dependencies';
+import { angularDependencies } from './../static/angular.dependencies';
+import { rxjsDependencies } from './../static/rxjs.dependencies';
 
 /**
  * Get Rollup Input Config
