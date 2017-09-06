@@ -79,17 +79,11 @@ async function main() {
 	] );
 	console.log( '  Done.' );
 
-	console.log( '> Create bundles ...' );
-	await Promise.all( [
-		await bundleJavascript( config.output.temporary.buildES2015, config.output.temporary.bundleFESM2015, config.packageName, 'ES2015', config.dependencies ),
-		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleFESM5, config.packageName, 'ES5', config.dependencies ),
-		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleUMD, config.packageName, 'UMD', config.dependencies )
-	] );
-	console.log( '  Done.' );
-
-	console.log( '> Create bundles ...' );
+	console.log( '> Composing package ...' );
 	await composePackage();
 	console.log( '  Done.' );
+
+	await cleanFolder( 'dist-angular-package-builder' );
 
 	console.log( '' );
 	console.log( '=== Success ===' );

@@ -3,12 +3,20 @@ import { copy } from '../utilities/copy';
 export function composePackage(): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		await copy( 'dist-angular-package-builder/library-bundle-es2015/**', 'dist' );
-		await copy( 'dist-angular-package-builder/library-bundle-es5/**', 'dist' );
-		await copy( 'dist-angular-package-builder/library-bundle-umd/**', 'dist' );
+		await Promise.all( [
 
-		await copy( 'dist-angular-package-builder/library-build-2015/**/*.d.ts', 'dist' );
-		await copy( 'dist-angular-package-builder/library-build-2015/**/*.metadata.json', 'dist' );
+			// Copy bundles
+			await copy( 'dist-angular-package-builder/library-bundle-fesm2015/**', 'dist' ),
+			await copy( 'dist-angular-package-builder/library-bundle-fesm5/**', 'dist' ),
+			await copy( 'dist-angular-package-builder/library-bundle-umd/**', 'dist' ),
+
+			// Copy type definitions and AoT metadata
+			await copy( 'dist-angular-package-builder/library-build-es2015/**/*.d.ts', 'dist' ),
+			await copy( 'dist-angular-package-builder/library-build-es2015/**/*.metadata.json', 'dist' )
+
+		] );
+
+		resolve();
 
 	} );
 }
