@@ -74,7 +74,7 @@ export class NotifierNotificationComponent implements AfterViewInit {
 	/**
 	 * Native element reference, used for manipulating DOM properties
 	 */
-	private readonly element: any;
+	private readonly element: HTMLElement;
 
 	/**
 	 * Current notification height, calculated and cached here (#perfmatters)

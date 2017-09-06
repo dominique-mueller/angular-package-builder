@@ -5,6 +5,7 @@ import * as htmlMinifier from 'html-minifier';
 
 import { AngularPackageBuilderConfig } from './../../index';
 import { cleanFolder } from './../utilities/clean-folder';
+import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
@@ -21,7 +22,11 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 
 		// Get all files
 		// TODO: Exit with error if there are no files?
-		const filePaths: Array<string> = await getTypeScriptSourceFiles( sourcePath );
+		const filePatterns: Array<string> = [
+			path.join( '**', '*.ts' ),
+			`!${ path.join( '**', '*.spec.ts' ) }`
+		]
+		const filePaths: Array<string> = await getFiles( filePatterns, sourcePath );
 
 		// Inline resources into source files, save changes into dist
 		await Promise.all(
@@ -50,26 +55,6 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 		resolve();
 
 	} );
-}
-
-/**
- * Get all TypeScript source files (thus, not the unit tests)
- *
- * @param   basePath - Base folder path
- * @returns          - List of TypeScript source files
- */
-function getTypeScriptSourceFiles( basePath: string ): Promise<Array<string>> {
-
-	// Get files, using the entry folder as base (so we can easily keep the directory structure in the dist folder)
-	// TODO: Read folder / files to be ignored from gitignore file?
-	return globby( [
-		path.join( '**', '*.ts' ), // Get all source files
-		`!${ path.join( '**', '*.spec.ts' ) }`, // Ignore unit tests
-		`!${ path.join( 'node_modules', '**' ) }` // Ignore dependencies
-	], {
-		cwd: basePath
-	} );
-
 }
 
 /**
