@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { main as tsc } from '@angular/tsc-wrapped';
+import * as proxyquire from 'proxyquire';
+import { fs as memfs, Volume, createFsFromVolume } from 'memfs';
+// import { main as tsc } from '@angular/tsc-wrapped';
 import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_file';
 import * as VinylFile from 'vinyl';
 
@@ -39,10 +41,28 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 			path: resolvePath( '.' ) // required!
 		} );
 
+		const inVolume = Volume.fromJSON( {}, '/' );
+		const inFs = createFsFromVolume( inVolume );
+		console.log( '----' );
+		console.log( inVolume.toJSON() );
+		const tsc = proxyquire( '@angular/tsc-wrapped', {
+			fs: {
+				writeFileSync: ( filePath, data ) => {
+					const what = path.join( path.relative( filePath, process.cwd() ), '..', 'metadata.json' );
+					console.log( what );
+					inFs.writeFileSync( what, data );
+				},
+				'@global': true
+			}
+		} ).main;
+
 		// Run Angular-specific TypeScript compiler
 		await tsc( typescriptConfigFile, {
 			basePath: resolvePath( '.' ) // required!
 		} );
+
+		console.log( '----' );
+		console.log( inVolume.toJSON() );
 
 		resolve();
 

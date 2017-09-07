@@ -30,6 +30,8 @@
 		"fs-extra": "4.0.x",
 		"globby": "6.1.x",
 		"html-minifier": "3.5.x",
+		"memfs": "2.5.x",
+		"proxyquire": "1.8.x",
 		"rollup-plugin-commonjs": "8.2.x",
 		"rollup-plugin-node-resolve": "3.0.x",
 		"rollup": "0.49.x",
