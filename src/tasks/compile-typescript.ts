@@ -42,16 +42,14 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 		} );
 
 		const inVolume = Volume.fromJSON( {}, '/' );
+		inVolume.mkdirpSync( process.cwd() );
+		inVolume.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-build-es2015' ) );
 		const inFs = createFsFromVolume( inVolume );
-		console.log( '----' );
-		console.log( inVolume.toJSON() );
 		const tsc = proxyquire( '@angular/tsc-wrapped', {
 			fs: {
-				writeFileSync: ( filePath, data ) => {
-					const what = path.join( path.relative( filePath, process.cwd() ), '..', 'metadata.json' );
-					console.log( what );
-					inFs.writeFileSync( what, data );
-				},
+				writeFileSync: inFs.writeFileSync,
+				lstatSync: inFs.lstatSync,
+				existsSync: inFs.existsSync,
 				'@global': true
 			}
 		} ).main;
@@ -63,6 +61,7 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 
 		console.log( '----' );
 		console.log( inVolume.toJSON() );
+		console.log( '----' );
 
 		resolve();
 
