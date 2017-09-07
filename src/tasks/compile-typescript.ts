@@ -45,13 +45,23 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 		inVolume.mkdirpSync( process.cwd() );
 		inVolume.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-build-es2015' ) );
 		const inFs = createFsFromVolume( inVolume );
+		const mockFs = Object.keys( fs ).reduce( ( all, method ) => {
+			all[ method ] = inFs[ method ];
+			return all;
+		}, {
+			'@global': true
+		} );
 		const tsc = proxyquire( '@angular/tsc-wrapped', {
-			fs: {
-				writeFileSync: inFs.writeFileSync,
-				lstatSync: inFs.lstatSync,
-				existsSync: inFs.existsSync,
-				'@global': true
-			}
+			fs: mockFs
+			// fs: {
+			// 	writeFileSync: inFs.writeFileSync,
+			// 	lstatSync: inFs.lstatSync,
+			// 	existsSync: inFs.existsSync,
+			// 	writeSync: inFs.writeSync,
+			// 	openSync: inFs.openSync,
+			// 	closeSync: inFs.closeSync,
+			// 	'@global': true
+			// }
 		} ).main;
 
 		// Run Angular-specific TypeScript compiler
@@ -60,7 +70,7 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 		} );
 
 		console.log( '----' );
-		console.log( inVolume.toJSON() );
+		console.log( Object.keys( inVolume.toJSON() ) );
 		console.log( '----' );
 
 		resolve();
