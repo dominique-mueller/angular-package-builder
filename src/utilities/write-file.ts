@@ -1,8 +1,6 @@
 import * as fsExtra from 'fs-extra';
 import * as path from 'path';
 
-import { resolvePath } from './resolve-path';
-
 /**
  * Write content into a file
  *

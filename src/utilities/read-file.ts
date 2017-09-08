@@ -1,8 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { resolvePath } from './resolve-path';
-
 /**
  * Read a file
  *

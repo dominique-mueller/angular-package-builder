@@ -4,7 +4,6 @@ import * as globby from 'globby';
 import * as htmlMinifier from 'html-minifier';
 
 import { AngularPackageBuilderConfig } from './../../index';
-import { cleanFolder } from './../utilities/clean-folder';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
@@ -16,9 +15,6 @@ import { writeFile } from './../utilities/write-file';
  */
 export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
-
-		// Clear the output folder first
-		await cleanFolder( destinationPath );
 
 		// Get all files
 		// TODO: Exit with error if there are no files?

@@ -1,7 +1,10 @@
-import { bundleJavascript } from './src/tasks/bundle-javascript';
-import { compileTypescript } from './src/tasks/compile-typescript';
-import { inlineResources } from './src/tasks/inline-resources';
+import * as path from 'path';
 
+import { bundleJavascript } from './src/tasks/bundle-javascript';
+import { cleanFolder } from './src/utilities/clean-folder';
+import { compileTypescript } from './src/tasks/compile-typescript';
+import { copy } from './src/utilities/copy';
+import { inlineResources } from './src/tasks/inline-resources';
 import { resolvePath } from './src/utilities/resolve-path';
 
 export interface AngularPackageBuilderConfig {
@@ -56,6 +59,9 @@ async function main() {
 	console.log( '=== Angular Package Builder ===' );
 	console.log( '' );
 
+	await cleanFolder( config.output.temporary.root );
+	await cleanFolder( config.output.folder );
+
 	console.log( '> Inline resources ...' );
 	await inlineResources( config.entry.folder, config.output.temporary.prepared );
 	console.log( '  Done.' );
@@ -69,11 +75,28 @@ async function main() {
 
 	console.log( '> Create bundles ...' );
 	await Promise.all( [
-		await bundleJavascript( config.output.temporary.buildES2015, config.output.temporary.bundleFESM2015, config.packageName, 'ES', config.dependencies ),
-		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleFESM5, config.packageName, 'ES', config.dependencies ),
+		await bundleJavascript( config.output.temporary.buildES2015, config.output.temporary.bundleFESM2015, config.packageName, 'ES2015', config.dependencies ),
+		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleFESM5, config.packageName, 'ES5', config.dependencies ),
 		await bundleJavascript( config.output.temporary.buildES5, config.output.temporary.bundleUMD, config.packageName, 'UMD', config.dependencies )
 	] );
 	console.log( '  Done.' );
+
+	console.log( '> Composing package ...' );
+	await Promise.all( [
+
+		// Copy bundles
+		await copy( path.join( config.output.temporary.bundleFESM2015, '**' ), config.output.folder ),
+		await copy( path.join( config.output.temporary.bundleFESM5, '**' ), config.output.folder ),
+		await copy( path.join( config.output.temporary.bundleUMD, '**' ), config.output.folder ),
+
+		// Copy type definitions and AoT metadata
+		await copy( path.join( config.output.temporary.buildES2015, '**', '*.d.ts' ), config.output.folder ),
+		await copy( path.join( config.output.temporary.buildES2015, '**', '*.metadata.json' ), config.output.folder )
+
+	] );
+	console.log( '  Done.' );
+
+	await cleanFolder( config.output.temporary.root );
 
 	console.log( '' );
 	console.log( '=== Success ===' );
