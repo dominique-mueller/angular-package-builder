@@ -1,9 +1,9 @@
 import * as path from 'path';
 
 import { bundleJavascript } from './src/tasks/bundle-javascript';
-import { cleanFolder } from './src/utilities/clean-folder';
 import { compileTypescript } from './src/tasks/compile-typescript';
 import { composePackage } from './src/tasks/compose-package';
+import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
 import { MemoryFileSystem } from 'src/utilities/memory-fs';
 import { resolvePath } from './src/utilities/resolve-path';
@@ -73,9 +73,9 @@ async function main() {
 	console.log( '' );
 
 	if ( config.debug ) {
-		await cleanFolder( config.temporary.folder );
+		await deleteFolder( config.temporary.folder );
 	}
-	await cleanFolder( config.output.folder );
+	await deleteFolder( config.output.folder );
 
 	console.log( '> Inline resources ...' );
 	await inlineResources( config, memoryFileSystem );
@@ -101,7 +101,7 @@ async function main() {
 	console.log( '  Done.' );
 
 	if ( config.debug ) {
-		await cleanFolder( config.temporary.folder );
+		await deleteFolder( config.temporary.folder );
 	}
 
 	console.log( '' );
