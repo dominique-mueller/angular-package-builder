@@ -21,7 +21,7 @@ export function compileTypescript( config: AngularPackageBuilderConfig, memoryFi
 			? ( await import( '@angular/tsc-wrapped' ) ).main
 			: ( proxyquire( '@angular/tsc-wrapped', { fs: memoryFileSystem.fs } ) ).main;
 		const getFiles = config.debug
-			? ( await import( './../utilities/get-files' ) )
+			? ( await import( './../utilities/get-files' ) ).getFiles
 			: ( proxyquire( './../utilities/get-files', { fs: memoryFileSystem.fs } ) ).getFiles;
 
 		// Get additional TypeScript definition files

@@ -15,10 +15,10 @@ export function bundleJavascript( config: AngularPackageBuilderConfig, memoryFil
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		const rollup = config.debug
-			? ( await import( 'rollup' ) )
+			? ( await import( 'rollup' ) ).rollup
 			: ( proxyquire( 'rollup', { fs: memoryFileSystem.fs } ) ).rollup;
 		const writeFile = config.debug
-			? ( await import( './../utilities/write-file' ) )
+			? ( await import( './../utilities/write-file' ) ).writeFile
 			: ( proxyquire( './../utilities/write-file', { fs: memoryFileSystem.fs } ) ).writeFile;
 
 		// Get information upfront

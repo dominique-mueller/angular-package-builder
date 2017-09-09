@@ -100,10 +100,6 @@ async function main() {
 	await composePackage( config, memoryFileSystem );
 	console.log( '  Done.' );
 
-	if ( config.debug ) {
-		await deleteFolder( config.temporary.folder );
-	}
-
 	console.log( '' );
 	console.log( '=== Success ===' );
 	console.log( '' );

@@ -18,7 +18,7 @@ export function inlineResources( config: AngularPackageBuilderConfig, memoryFile
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		const writeFile = config.debug
-			? ( await import( './../utilities/write-file' ) )
+			? ( await import( './../utilities/write-file' ) ).writeFile
 			: ( proxyquire( './../utilities/write-file', { fs: memoryFileSystem.fs } ) ).writeFile;
 
 		// Get all files

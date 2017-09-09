@@ -12,7 +12,7 @@ export function composePackage( config: AngularPackageBuilderConfig, memoryFileS
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		const copy = config.debug
-			? ( await import( './../utilities/copy' ) )
+			? ( await import( './../utilities/copy' ) ).copy
 			: ( proxyquire( './../utilities/copy', { fs: memoryFileSystem.fs } ) ).copy;
 
 		// Copy all files which should end up in the package
