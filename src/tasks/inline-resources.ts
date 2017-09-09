@@ -2,35 +2,38 @@ import * as path from 'path';
 
 import * as globby from 'globby';
 import * as htmlMinifier from 'html-minifier';
-
 import { AngularPackageBuilderConfig } from './../../index';
+import { dynamicImport } from './../utilities/dynamic-import';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
+import { MemoryFileSystem } from './../memory-file-system';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
-import { writeFile } from './../utilities/write-file';
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
  */
-export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
+export function inlineResources( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
+
+		// Import
+		const writeFile = ( await dynamicImport( './../utilities/write-file', memoryFileSystem ) ).writeFile;
 
 		// Get all files
 		// TODO: Exit with error if there are no files?
 		const filePatterns: Array<string> = [
-			path.join( '**', '*.ts' ),
+			path.join( '**', '*.ts' ), // Includes typing files
 			`!${ path.join( '**', '*.spec.ts' ) }`
-		]
-		const filePaths: Array<string> = await getFiles( filePatterns, sourcePath );
+		];
+		const filePaths: Array<string> = await getFiles( filePatterns, config.entry.folder );
 
 		// Inline resources into source files, save changes into dist
 		await Promise.all(
-			filePaths.map( async( filePath: string ): Promise<string> => {
+			filePaths.map( async( filePath: string ): Promise<void> => {
 
 				// Get paths
-				const absoluteSourceFilePath: string = path.join( sourcePath, filePath );
-				const absoluteDestinationFilePath: string = path.join( destinationPath, filePath );
+				const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
+				const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
 
 				// Inline resources
 				let fileContent: string = await readFile( absoluteSourceFilePath );
@@ -42,8 +45,6 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 				fileContent = normalizeLineEndings( fileContent );
 
 				await writeFile( absoluteDestinationFilePath, fileContent );
-
-				return filePath;
 
 			} )
 		);

@@ -1,5 +1,6 @@
-import * as fsExtra from 'fs-extra';
 import * as path from 'path';
+
+import * as fsExtra from 'fs-extra';
 
 /**
  * Write content into a file
