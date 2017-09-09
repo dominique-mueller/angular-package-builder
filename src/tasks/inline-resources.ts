@@ -57,7 +57,7 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 		);
 
 		console.log( '1 ----' );
-		console.log( Object.keys( memVol.toJSON() ) );
+		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '\n' ) );
 		console.log( '1 ----' );
 
 		resolve();

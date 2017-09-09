@@ -55,7 +55,7 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 		} );
 
 		console.log( '2 ----' );
-		console.log( Object.keys( memVol.toJSON() ) );
+		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '\n' ) );
 		console.log( '2 ----' );
 
 		resolve();

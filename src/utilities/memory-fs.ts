@@ -3,6 +3,8 @@ import * as path from 'path';
 
 import { Volume, createFsFromVolume } from 'memfs';
 
+import { writeFile } from './write-file';
+
 export const memVol = Volume.fromJSON( {}, '/' );
 memVol.mkdirpSync( process.cwd() );
 memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-prepared' ) );
@@ -45,3 +47,33 @@ const modifiedFsMapping = Object.assign( simpleFsMapping, {
 export const memFs = Object.assign( modifiedFsMapping, {
 	'@global': true // Monkey-patch nested imports as well
 } );
+
+export function persistFolder( persistPath: string ): Promise<void> {
+	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
+
+		console.log();
+
+		const normalizedPersistPath: string = `${ path.normalize( persistPath.replace( path.parse( persistPath ).root, '' ) ) }${ path.sep }`;
+
+		const memVolState: { [ path: string ]: string } = memVol.toJSON();
+		const filesToPersist: Array<string> = Object
+			.keys( memVolState )
+			.filter( ( filePath: string ) => {
+				const normalizedFilePath: string = path.normalize( filePath.replace( path.parse( filePath ).root, '' ) );
+				return normalizedFilePath.startsWith( normalizedPersistPath );
+			} );
+
+		console.log( filesToPersist );
+
+		await Promise.all(
+			filesToPersist.map( async( filePath: string ): Promise<string> => {
+				const absoluteFilePath: string = path.resolve( filePath );
+				await writeFile( filePath, memVolState[ filePath ] );
+				return filePath;
+			} )
+		);
+
+		resolve();
+
+	} );
+}

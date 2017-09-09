@@ -54,7 +54,7 @@ export function bundleJavascript( sourcePath: string, destinationPath: string, n
 		] );
 
 		console.log( '3 ----' );
-		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '' ) );
+		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '\n' ) );
 		console.log( '3 ----' );
 
 		resolve();

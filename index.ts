@@ -3,6 +3,7 @@ import * as path from 'path';
 import { bundleJavascript } from './src/tasks/bundle-javascript';
 import { cleanFolder } from './src/utilities/clean-folder';
 import { compileTypescript } from './src/tasks/compile-typescript';
+import { composePackage } from './src/tasks/compose-package';
 import { copy } from './src/utilities/copy';
 import { inlineResources } from './src/tasks/inline-resources';
 import { resolvePath } from './src/utilities/resolve-path';
@@ -61,7 +62,7 @@ async function main() {
 	console.log( '=== Angular Package Builder ===' );
 	console.log( '' );
 
-	await cleanFolder( config.output.temporary.root );
+	// await cleanFolder( config.output.temporary.root );
 	await cleanFolder( config.output.folder );
 
 	console.log( '> Inline resources ...' );
@@ -84,21 +85,10 @@ async function main() {
 	console.log( '  Done.' );
 
 	console.log( '> Composing package ...' );
-	// await Promise.all( [
-
-		// Copy bundles
-		// await copy( path.join( config.output.temporary.bundleFESM2015, '**' ), config.output.folder ),
-		// await copy( path.join( config.output.temporary.bundleFESM5, '**' ), config.output.folder ),
-		// await copy( path.join( config.output.temporary.bundleUMD, '**' ), config.output.folder ),
-
-		// // Copy type definitions and AoT metadata
-		// await copy( path.join( config.output.temporary.buildES2015, '**', '*.d.ts' ), config.output.folder ),
-		// await copy( path.join( config.output.temporary.buildES2015, '**', '*.metadata.json' ), config.output.folder )
-
-	// ] );
+	await composePackage( config );
 	console.log( '  Done.' );
 
-	await cleanFolder( config.output.temporary.root );
+	// await cleanFolder( config.output.temporary.root );
 
 	console.log( '' );
 	console.log( '=== Success ===' );
