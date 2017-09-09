@@ -5,24 +5,21 @@ import * as htmlMinifier from 'html-minifier';
 import * as proxyquire from 'proxyquire';
 
 import { AngularPackageBuilderConfig } from './../../index';
-import { memFs, memVol } from './../utilities/memory-fs';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
+import { MemoryFileSystem } from './../utilities/memory-fs';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
-// import { writeFile } from './../utilities/write-file';
-
-const debug: boolean = false;
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
  */
-export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
+export function inlineResources( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		const writeFile = debug
+		const writeFile = config.debug
 			? ( await import( './../utilities/write-file' ) )
-			: ( proxyquire( './../utilities/write-file', { fs: memFs } ) ).writeFile;
+			: ( proxyquire( './../utilities/write-file', { fs: memoryFileSystem.fs } ) ).writeFile;
 
 		// Get all files
 		// TODO: Exit with error if there are no files?
@@ -30,15 +27,15 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 			path.join( '**', '*.ts' ), // Includes typing files
 			`!${ path.join( '**', '*.spec.ts' ) }`
 		];
-		const filePaths: Array<string> = await getFiles( filePatterns, sourcePath );
+		const filePaths: Array<string> = await getFiles( filePatterns, config.entry.folder );
 
 		// Inline resources into source files, save changes into dist
 		await Promise.all(
-			filePaths.map( async( filePath: string ): Promise<string> => {
+			filePaths.map( async( filePath: string ): Promise<void> => {
 
 				// Get paths
-				const absoluteSourceFilePath: string = path.join( sourcePath, filePath );
-				const absoluteDestinationFilePath: string = path.join( destinationPath, filePath );
+				const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
+				const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
 
 				// Inline resources
 				let fileContent: string = await readFile( absoluteSourceFilePath );
@@ -51,14 +48,8 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 
 				await writeFile( absoluteDestinationFilePath, fileContent );
 
-				return filePath;
-
 			} )
 		);
-
-		console.log( '1 ----' );
-		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '\n' ) );
-		console.log( '1 ----' );
 
 		resolve();
 

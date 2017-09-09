@@ -5,75 +5,130 @@ import { Volume, createFsFromVolume } from 'memfs';
 
 import { writeFile } from './write-file';
 
-export const memVol = Volume.fromJSON( {}, '/' );
-memVol.mkdirpSync( process.cwd() );
-memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-prepared' ) );
-memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-build-es2015' ) );
-memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-build-es5' ) );
-memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-bundle-fesm2015' ) );
-memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-bundle-fesm2015' ) );
-memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-bundle-fesm5' ) );
-memVol.mkdirpSync( path.join( process.cwd(), 'dist-angular-package-builder', 'library-bundle-umd' ) );
-const memVolFs = createFsFromVolume( memVol );
+/**
+ * Memory File System
+ */
+export class MemoryFileSystem {
 
-// Simply map all fs calls to in-memory fs calls
-const simpleFsMapping = Object
-	.keys( fs )
-	.reduce( ( all: any, method: any ) => {
-		all[ method ] = memVolFs[ method ];
-		return all;
-	}, {} );
+	/**
+	 * Virtual volume
+	 */
+	public volume: Volume;
 
-// Modify the mapping for special cases; in particular:
-// - allow real filesystem access when interacting with stuff from the node_modules folder
-const modifiedFsMapping = Object.assign( simpleFsMapping, {
+	/**
+	 * Virtual filesystem (module), connected to the virtual volume
+	 */
+	public fs: { [ key: string ]: any }; // Operations are exactly the same as the ones from the NodeJS fs module
 
-	// Used by TypeScript when reading in definition files
-	statSync: ( path: string ) => {
-		return ( path.indexOf( 'node_modules' ) === -1 )
-			? memVolFs.statSync( path )
-			: fs.statSync( path );
-	},
-
-	// Used by TypeScript when reading in definition files
-	readFileSync: ( path: string, options: any ) => {
-		return ( path.indexOf( 'node_modules' ) === -1 )
-			? memVolFs.readFileSync( path, options )
-			: fs.readFileSync( path, options );
+	/**
+	 * Constructor
+	 *
+	 * @param [initialPaths=[]] - List of initially existing paths (preventing 'x does not exist' errors later on)
+	 */
+	constructor( initialPaths: Array<string> = [] ) {
+		this.volume = this.createVolume( initialPaths );
+		this.fs = this.createFs( this.volume );
 	}
 
-} );
+	/**
+	 * Create the virtual volume, create initial directory structure (if necesary)
+	 *
+	 * @param   initialPaths - List of initial paths
+	 * @returns              - Virtual volume
+	 */
+	private createVolume( initialPaths: Array<string> ): Volume {
+		const volume: Volume = Volume.fromJSON( {}, '/' );
+		initialPaths.forEach( ( initialPath: string ) => {
+			this.volume.mkdirpSync( initialPath );
+		} );
+		return volume;
+	}
 
-export const memFs = Object.assign( modifiedFsMapping, {
-	'@global': true // Monkey-patch nested imports as well
-} );
+	/**
+	 * Create the virtual filesystem for the given volume, plus setup the mappings (mocks)
+	 *
+	 * @param   volume - Virtual volume
+	 * @returns        - Virtual filesystem (module)
+	 */
+	private createFs( volume: Volume ): { [ key: string ]: any } {
 
-export function persistFolder( persistPath: string ): Promise<void> {
-	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
+		// Create filesystem for volume
+		const volumeFs: { [ key: string ]: any } = createFsFromVolume( volume );
 
-		console.log();
-
-		const normalizedPersistPath: string = `${ path.normalize( persistPath.replace( path.parse( persistPath ).root, '' ) ) }${ path.sep }`;
-
-		const memVolState: { [ path: string ]: string } = memVol.toJSON();
-		const filesToPersist: Array<string> = Object
-			.keys( memVolState )
-			.filter( ( filePath: string ) => {
-				const normalizedFilePath: string = path.normalize( filePath.replace( path.parse( filePath ).root, '' ) );
-				return normalizedFilePath.startsWith( normalizedPersistPath );
+		// Now, simply map all (original NodeJS) fs calls to in-memory (memfs) fs calls
+		const fsMapping = Object
+			.keys( fs )
+			.reduce( ( all: any, method: any ): { [ key: string ]: any } => {
+				all[ method ] = volumeFs[ method ];
+				return all;
+			}, {
+				'@global': true // Monkey-patch deeply nested imports as well, affecting the whole dependency tree
 			} );
 
-		console.log( filesToPersist );
+		// Then, override parts of the mapping for special cases; for now this only includes the ability to access the real filesystem when
+		// going into the 'node_modules' folder
+		const modifiedFsMapping = Object
+			.assign( fsMapping, {
 
-		await Promise.all(
-			filesToPersist.map( async( filePath: string ): Promise<string> => {
-				const absoluteFilePath: string = path.resolve( filePath );
-				await writeFile( filePath, memVolState[ filePath ] );
-				return filePath;
-			} )
-		);
+				// Used by TypeScript when reading in definition files
+				statSync: ( path: string ): fs.Stats => {
+					return ( path.indexOf( 'node_modules' ) === -1 )
+						? volumeFs.statSync( path )
+						: fs.statSync( path );
+				},
 
-		resolve();
+				// Used by TypeScript when reading in definition files
+				readFileSync: ( path: any, options: any ): any => {
+					return ( path.indexOf( 'node_modules' ) === -1 )
+						? volumeFs.readFileSync( path, options )
+						: fs.readFileSync( path, options );
+				}
 
-	} );
+			} );
+
+		return modifiedFsMapping;
+
+	}
+
+	/**
+	 * Persist the given path (folder) to the real filesystem
+	 *
+	 * @param   pathToPersist - Path (folder) to be persisted
+	 * @returns               - Promise, resolved when finished
+	 */
+	public persist( pathToPersist: string ): Promise<void> {
+		return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
+
+			const memVolState: { [ path: string ]: string } = this.volume.toJSON();
+			const normalizedPathToPersist: string = `${ this.normalizePath( pathToPersist ) }${ path.sep }`;
+
+			// Filter out files & folders which are outside the path to be persisted
+			const filesToPersist: Array<string> = Object
+				.keys( memVolState )
+				.filter( ( filePath: string ): boolean => {
+					return normalizedPathToPersist.startsWith( this.normalizePath( filePath ) );
+				} );
+
+			// Write the files to disk (creating folders if necessary)
+			await Promise.all(
+				filesToPersist.map( async( filePath: string ): Promise<void> => {
+					await writeFile( path.resolve( filePath ), memVolState[ filePath ] );
+				} )
+			);
+
+			resolve();
+
+		} );
+	}
+
+	/**
+	 * Normalize the given path; in particular, remove any information regarding partition / disk
+	 *
+	 * @param   originalPath - Original path
+	 * @returns              - Normalized path
+	 */
+	private normalizePath( originalPath: string ): string {
+		return path.normalize( originalPath.replace( path.parse( originalPath ).root, '' ) );
+	}
+
 }

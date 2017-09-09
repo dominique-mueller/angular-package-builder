@@ -1,38 +1,56 @@
 import * as path from 'path';
 
 import * as proxyquire from 'proxyquire';
-// import { rollup, Bundle } from 'rollup';
 import { Bundle } from 'rollup';
 
-import { memFs, memVol } from './../utilities/memory-fs';
+import { AngularPackageBuilderConfig } from './../../index';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
+import { MemoryFileSystem } from './../utilities/memory-fs';
 import { RollupInputConfig, RollupOutputConfig } from 'src/config/rollup.config.interface';
-// import { writesFile } from './../utilities/write-file';
-
-const debug: boolean = false;
 
 /**
  * Generate JavaScript bundle
  */
-export function bundleJavascript( sourcePath: string, destinationPath: string, name: string, format: 'ES5' | 'ES2015' | 'UMD',
-	dependencies: Array<string> ): Promise<void> {
+export function bundleJavascript( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		const rollup = debug
+		const rollup = config.debug
 			? ( await import( 'rollup' ) )
-			: ( proxyquire( 'rollup', { fs: memFs } ) ).rollup;
-
-		const writeFile = debug
+			: ( proxyquire( 'rollup', { fs: memoryFileSystem.fs } ) ).rollup;
+		const writeFile = config.debug
 			? ( await import( './../utilities/write-file' ) )
-			: ( proxyquire( './../utilities/write-file', { fs: memFs } ) ).writeFile;
+			: ( proxyquire( './../utilities/write-file', { fs: memoryFileSystem.fs } ) ).writeFile;
 
-		// Create the bundle
-		const rollupInputOptions: RollupInputConfig = getRollupInputConfig( sourcePath, name, dependencies );
+		// Get information upfront
+		let sourcePath: string;
+		let destinationPath: string;
+		let rollupFormat: 'es' | 'umd';
+		let bundleSuffix: string;
+		switch( target ) {
+			case 'ES2015':
+				sourcePath = config.temporary.buildES2015;
+				destinationPath = config.temporary.bundleFESM2015;
+				rollupFormat = 'es';
+				bundleSuffix = '';
+				break;
+			case 'ES5':
+				sourcePath = config.temporary.buildES5;
+				destinationPath = config.temporary.bundleFESM5;
+				rollupFormat = 'es';
+				bundleSuffix = '.es5';
+				break;
+			case 'UMD':
+				sourcePath = config.temporary.buildES5;
+				destinationPath = config.temporary.bundleUMD;
+				rollupFormat = 'umd';
+				bundleSuffix = '.umd';
+				break;
+		}
+
+		// Generate the bundle
+		const rollupInputOptions: RollupInputConfig = getRollupInputConfig( sourcePath, config.packageName, config.dependencies );
 		const bundle: Bundle = await rollup( <any> rollupInputOptions );
-
-		// Generate bundle
-		const rollupFormat: 'es' | 'umd' = format === 'UMD' ? 'umd' : 'es';
-		const rollupOutputOptions: RollupOutputConfig = getRollupOutputConfig( name, rollupFormat, dependencies );
+		const rollupOutputOptions: RollupOutputConfig = getRollupOutputConfig( config.packageName, rollupFormat, config.dependencies );
 		const { code, map } = await bundle.generate( <any> rollupOutputOptions );
 
 		// Re-write sourcemap URLs (absolute -> relative using Linux path type slashes)
@@ -43,19 +61,10 @@ export function bundleJavascript( sourcePath: string, destinationPath: string, n
 		} );
 
 		// Write bundle w/ sourcemaps to destination
-		const bundleSuffix: string = format === 'UMD'
-			? '.umd'
-			: format === 'ES5'
-			? '.es5'
-			: '';
 		await Promise.all( [
-			writeFile( path.join( destinationPath, `${ name }${ bundleSuffix }.js` ), code ),
-			writeFile( path.join( destinationPath, `${ name }${ bundleSuffix }.js.map` ), map )
+			writeFile( path.join( destinationPath, `${ config.packageName }${ bundleSuffix }.js` ), code ),
+			writeFile( path.join( destinationPath, `${ config.packageName }${ bundleSuffix }.js.map` ), map )
 		] );
-
-		console.log( '3 ----' );
-		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '\n' ) );
-		console.log( '3 ----' );
 
 		resolve();
 

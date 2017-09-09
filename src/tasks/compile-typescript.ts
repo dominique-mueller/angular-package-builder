@@ -1,45 +1,47 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as proxyquire from 'proxyquire';
-// import { main as tsc } from '@angular/tsc-wrapped';
 import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_file';
+import * as proxyquire from 'proxyquire';
 import * as VinylFile from 'vinyl';
 
-import { memFs, memVol } from './../utilities/memory-fs';
-// import { getFiles } from './../utilities/get-files';
+import { AngularPackageBuilderConfig } from './../../index';
 import { getTypescriptConfig } from './../config/typescript.config';
+import { MemoryFileSystem } from './../utilities/memory-fs';
 import { resolvePath } from './../utilities/resolve-path';
 import { TypescriptConfig } from './../config/typescript.config.interface';
-
-const debug: boolean = false;
 
 /**
  * Compile TypeScript into JavaScript
  */
-export function compileTypescript( sourcePath: string, sourceFile: string, destinationPath: string, name: string, target: 'ES5' | 'ES2015' ): Promise<void> {
+export function compileTypescript( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null, target: 'ES2015' | 'ES5' ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		const tsc = debug
+		const tsc = config.debug
 			? ( await import( '@angular/tsc-wrapped' ) ).main
-			: ( proxyquire( '@angular/tsc-wrapped', { fs: memFs } ) ).main;
-
-		const getFiles = debug
+			: ( proxyquire( '@angular/tsc-wrapped', { fs: memoryFileSystem.fs } ) ).main;
+		const getFiles = config.debug
 			? ( await import( './../utilities/get-files' ) )
-			: ( proxyquire( './../utilities/get-files', { fs: memFs } ) ).getFiles;
+			: ( proxyquire( './../utilities/get-files', { fs: memoryFileSystem.fs } ) ).getFiles;
 
 		// Get additional TypeScript definition files
 		const filePatterns: Array<string> = [
 			path.join( '**', '*.d.ts' )
 		]
-		const typescriptDefinitionsFiles: Array<string> = await getFiles( filePatterns, sourcePath, true );
+		const typescriptDefinitionsFiles: Array<string> = await getFiles( filePatterns, config.temporary.prepared, true );
 
 		// Create TypeScript configuration
 		const entryFiles: Array<string> = [
-			path.join( sourcePath, sourceFile ), // Only one entry file is allowed
+			path.join( config.temporary.prepared, config.entry.file ), // Only one entry file is allowed
 			...typescriptDefinitionsFiles // Additional TypeScript definition files (not counting as entry file)
 		];
-		const typescriptConfig: TypescriptConfig = getTypescriptConfig( target, sourcePath, destinationPath, name, entryFiles );
+		const typescriptConfig: TypescriptConfig = getTypescriptConfig(
+			target,
+			config.temporary.prepared,
+			target === 'ES2015' ? config.temporary.buildES2015 : config.temporary.buildES5,
+			config.packageName,
+			entryFiles
+		);
 
 		// Create virtual 'tsconfig.json' file
 		const typescriptConfigFile: AngularVinylFile = new VinylFile( {
@@ -47,16 +49,10 @@ export function compileTypescript( sourcePath: string, sourceFile: string, desti
 			path: resolvePath( '.' ) // required!
 		} );
 
-		process.on('unhandledRejection', r => console.log(r));
-
 		// Run Angular-specific TypeScript compiler
 		await tsc( typescriptConfigFile, {
 			basePath: resolvePath( '.' ) // required!
 		} );
-
-		console.log( '2 ----' );
-		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '\n' ) );
-		console.log( '2 ----' );
 
 		resolve();
 
