@@ -8,6 +8,7 @@ import { inlineResources } from './src/tasks/inline-resources';
 import { resolvePath } from './src/utilities/resolve-path';
 
 export interface AngularPackageBuilderConfig {
+	debug: boolean;
 	entry: {
 		folder: string;
 		file: string;
@@ -29,6 +30,7 @@ export interface AngularPackageBuilderConfig {
 }
 
 const config: AngularPackageBuilderConfig = {
+	debug: false,
 	entry: {
 		folder: resolvePath( 'example-library/lib' ), // TODO: Read from CLI param
 		file: 'index.ts' // TODO: Read from CLI param
@@ -69,7 +71,7 @@ async function main() {
 	console.log( '> Compile TypeScript to JavaScript ...' );
 	await Promise.all( [
 		compileTypescript( config.output.temporary.prepared, config.entry.file, config.output.temporary.buildES2015, config.packageName, 'ES2015' ),
-		// compileTypescript( config.output.temporary.prepared, config.entry.file, config.output.temporary.buildES5, config.packageName, 'ES5' )
+		compileTypescript( config.output.temporary.prepared, config.entry.file, config.output.temporary.buildES5, config.packageName, 'ES5' )
 	] );
 	console.log( '  Done.' );
 

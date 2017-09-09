@@ -2,13 +2,17 @@ import * as path from 'path';
 
 import * as globby from 'globby';
 import * as htmlMinifier from 'html-minifier';
+import * as proxyquire from 'proxyquire';
 
 import { AngularPackageBuilderConfig } from './../../index';
+import { memFs, memVol } from './../utilities/memory-fs';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
-import { writeFile } from './../utilities/write-file';
+// import { writeFile } from './../utilities/write-file';
+
+const debug: boolean = false;
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
@@ -16,12 +20,16 @@ import { writeFile } from './../utilities/write-file';
 export function inlineResources( sourcePath: string, destinationPath: string ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
+		const writeFile = debug
+			? ( await import( './../utilities/write-file' ) )
+			: ( proxyquire( './../utilities/write-file', { fs: memFs } ) ).writeFile;
+
 		// Get all files
 		// TODO: Exit with error if there are no files?
 		const filePatterns: Array<string> = [
-			path.join( '**', '*.ts' ),
+			path.join( '**', '*.ts' ), // Includes typing files
 			`!${ path.join( '**', '*.spec.ts' ) }`
-		]
+		];
 		const filePaths: Array<string> = await getFiles( filePatterns, sourcePath );
 
 		// Inline resources into source files, save changes into dist
@@ -47,6 +55,10 @@ export function inlineResources( sourcePath: string, destinationPath: string ): 
 
 			} )
 		);
+
+		console.log( '1 ----' );
+		console.log( Object.keys( memVol.toJSON() ) );
+		console.log( '1 ----' );
 
 		resolve();
 
