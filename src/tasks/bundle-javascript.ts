@@ -1,10 +1,15 @@
 import * as path from 'path';
 
-import { rollup, Bundle } from 'rollup';
+import * as proxyquire from 'proxyquire';
+// import { rollup, Bundle } from 'rollup';
+import { Bundle } from 'rollup';
 
+import { memFs, memVol } from './../utilities/memory-fs';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { RollupInputConfig, RollupOutputConfig } from 'src/config/rollup.config.interface';
-import { writeFile } from './../utilities/write-file';
+// import { writesFile } from './../utilities/write-file';
+
+const debug: boolean = false;
 
 /**
  * Generate JavaScript bundle
@@ -12,6 +17,14 @@ import { writeFile } from './../utilities/write-file';
 export function bundleJavascript( sourcePath: string, destinationPath: string, name: string, format: 'ES5' | 'ES2015' | 'UMD',
 	dependencies: Array<string> ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
+
+		const rollup = debug
+			? ( await import( 'rollup' ) )
+			: ( proxyquire( 'rollup', { fs: memFs } ) ).rollup;
+
+		const writeFile = debug
+			? ( await import( './../utilities/write-file' ) )
+			: ( proxyquire( './../utilities/write-file', { fs: memFs } ) ).writeFile;
 
 		// Create the bundle
 		const rollupInputOptions: RollupInputConfig = getRollupInputConfig( sourcePath, name, dependencies );
@@ -39,6 +52,10 @@ export function bundleJavascript( sourcePath: string, destinationPath: string, n
 			writeFile( path.join( destinationPath, `${ name }${ bundleSuffix }.js` ), code ),
 			writeFile( path.join( destinationPath, `${ name }${ bundleSuffix }.js.map` ), map )
 		] );
+
+		console.log( '3 ----' );
+		console.log( JSON.stringify( Object.keys( memVol.toJSON() ), null, '' ) );
+		console.log( '3 ----' );
 
 		resolve();
 
