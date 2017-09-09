@@ -7,7 +7,6 @@ import { fs as memfs, Volume, createFsFromVolume } from 'memfs';
 import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_file';
 import * as VinylFile from 'vinyl';
 
-import { cleanFolder } from './../utilities/clean-folder';
 import { getFiles } from './../utilities/get-files';
 import { getTypescriptConfig } from './../config/typescript.config';
 import { resolvePath } from './../utilities/resolve-path';
@@ -18,9 +17,6 @@ import { TypescriptConfig } from './../config/typescript.config.interface';
  */
 export function compileTypescript( sourcePath: string, sourceFile: string, destinationPath: string, name: string, target: 'ES5' | 'ES2015' ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
-
-		// Clear destination folder first
-		await cleanFolder( destinationPath );
 
 		// Get additional TypeScript definition files
 		const filePatterns: Array<string> = [
