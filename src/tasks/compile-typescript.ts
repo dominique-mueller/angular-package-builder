@@ -7,7 +7,7 @@ import * as VinylFile from 'vinyl';
 
 import { AngularPackageBuilderConfig } from './../../index';
 import { getTypescriptConfig } from './../config/typescript.config';
-import { MemoryFileSystem } from './../utilities/memory-fs';
+import { MemoryFileSystem } from './../memory-file-system';
 import { resolvePath } from './../utilities/resolve-path';
 import { TypescriptConfig } from './../config/typescript.config.interface';
 

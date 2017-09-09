@@ -7,7 +7,7 @@ import * as proxyquire from 'proxyquire';
 import { AngularPackageBuilderConfig } from './../../index';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
-import { MemoryFileSystem } from './../utilities/memory-fs';
+import { MemoryFileSystem } from './../memory-file-system';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
 

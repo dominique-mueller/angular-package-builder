@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as proxyquire from 'proxyquire';
 
 import { AngularPackageBuilderConfig } from './../../index';
-import { MemoryFileSystem } from '../utilities/memory-fs';
+import { MemoryFileSystem } from './../memory-file-system';
 
 /**
  * Compile TypeScript into JavaScript

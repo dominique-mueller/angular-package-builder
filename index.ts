@@ -5,7 +5,7 @@ import { compileTypescript } from './src/tasks/compile-typescript';
 import { composePackage } from './src/tasks/compose-package';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
-import { MemoryFileSystem } from './src/utilities/memory-fs';
+import { MemoryFileSystem } from './src/memory-file-system';
 import { resolvePath } from './src/utilities/resolve-path';
 
 export interface AngularPackageBuilderConfig {
