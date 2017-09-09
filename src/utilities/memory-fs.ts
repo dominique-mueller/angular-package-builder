@@ -39,7 +39,7 @@ export class MemoryFileSystem {
 	private createVolume( initialPaths: Array<string> ): Volume {
 		const volume: Volume = Volume.fromJSON( {}, '/' );
 		initialPaths.forEach( ( initialPath: string ) => {
-			this.volume.mkdirpSync( initialPath );
+			volume.mkdirpSync( initialPath );
 		} );
 		return volume;
 	}
@@ -100,13 +100,13 @@ export class MemoryFileSystem {
 		return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 			const memVolState: { [ path: string ]: string } = this.volume.toJSON();
-			const normalizedPathToPersist: string = `${ this.normalizePath( pathToPersist ) }${ path.sep }`;
+			const normalizedPathToPersist: string = `${ this.simplifyPath( pathToPersist ) }${ path.sep }`;
 
 			// Filter out files & folders which are outside the path to be persisted
 			const filesToPersist: Array<string> = Object
 				.keys( memVolState )
 				.filter( ( filePath: string ): boolean => {
-					return normalizedPathToPersist.startsWith( this.normalizePath( filePath ) );
+					return this.simplifyPath( filePath ).startsWith( normalizedPathToPersist );
 				} );
 
 			// Write the files to disk (creating folders if necessary)
@@ -122,12 +122,12 @@ export class MemoryFileSystem {
 	}
 
 	/**
-	 * Normalize the given path; in particular, remove any information regarding partition / disk
+	 * Simpliy (kinda normalize) the given path by removing any information regarding partition / disk
 	 *
 	 * @param   originalPath - Original path
 	 * @returns              - Normalized path
 	 */
-	private normalizePath( originalPath: string ): string {
+	private simplifyPath( originalPath: string ): string {
 		return path.normalize( originalPath.replace( path.parse( originalPath ).root, '' ) );
 	}
 
