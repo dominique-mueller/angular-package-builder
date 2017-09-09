@@ -1,9 +1,9 @@
 import * as path from 'path';
 
-import * as proxyquire from 'proxyquire';
 import { Bundle } from 'rollup';
 
 import { AngularPackageBuilderConfig } from './../../index';
+import { dynamicImport } from './../utilities/dynamic-import';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { MemoryFileSystem } from './../memory-file-system';
 import { RollupInputConfig, RollupOutputConfig } from 'src/config/rollup.config.interface';
@@ -14,12 +14,9 @@ import { RollupInputConfig, RollupOutputConfig } from 'src/config/rollup.config.
 export function bundleJavascript( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		const rollup = config.debug
-			? ( await import( 'rollup' ) ).rollup
-			: ( proxyquire( 'rollup', { fs: memoryFileSystem.fs } ) ).rollup;
-		const writeFile = config.debug
-			? ( await import( './../utilities/write-file' ) ).writeFile
-			: ( proxyquire( './../utilities/write-file', { fs: memoryFileSystem.fs } ) ).writeFile;
+		// Import
+		const rollup = ( await dynamicImport( 'rollup', memoryFileSystem ) ).rollup;
+		const writeFile = ( await dynamicImport( './../utilities/write-file', memoryFileSystem ) ).writeFile;
 
 		// Get information upfront
 		let sourcePath: string;

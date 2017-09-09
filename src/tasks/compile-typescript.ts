@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_file';
-import * as proxyquire from 'proxyquire';
 import * as VinylFile from 'vinyl';
 
 import { AngularPackageBuilderConfig } from './../../index';
+import { dynamicImport } from './../utilities/dynamic-import';
 import { getTypescriptConfig } from './../config/typescript.config';
 import { MemoryFileSystem } from './../memory-file-system';
 import { resolvePath } from './../utilities/resolve-path';
@@ -17,12 +17,9 @@ import { TypescriptConfig } from './../config/typescript.config.interface';
 export function compileTypescript( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null, target: 'ES2015' | 'ES5' ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		const tsc = config.debug
-			? ( await import( '@angular/tsc-wrapped' ) ).main
-			: ( proxyquire( '@angular/tsc-wrapped', { fs: memoryFileSystem.fs } ) ).main;
-		const getFiles = config.debug
-			? ( await import( './../utilities/get-files' ) ).getFiles
-			: ( proxyquire( './../utilities/get-files', { fs: memoryFileSystem.fs } ) ).getFiles;
+		// Import
+		const tsc = ( await dynamicImport( '@angular/tsc-wrapped', memoryFileSystem ) ).main;
+		const getFiles = ( await dynamicImport( './../utilities/get-files', memoryFileSystem ) ).getFiles;
 
 		// Get additional TypeScript definition files
 		const filePatterns: Array<string> = [

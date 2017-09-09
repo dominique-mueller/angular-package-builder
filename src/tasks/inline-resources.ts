@@ -2,9 +2,8 @@ import * as path from 'path';
 
 import * as globby from 'globby';
 import * as htmlMinifier from 'html-minifier';
-import * as proxyquire from 'proxyquire';
-
 import { AngularPackageBuilderConfig } from './../../index';
+import { dynamicImport } from './../utilities/dynamic-import';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { MemoryFileSystem } from './../memory-file-system';
@@ -17,9 +16,8 @@ import { readFile } from './../utilities/read-file';
 export function inlineResources( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		const writeFile = config.debug
-			? ( await import( './../utilities/write-file' ) ).writeFile
-			: ( proxyquire( './../utilities/write-file', { fs: memoryFileSystem.fs } ) ).writeFile;
+		// Import
+		const writeFile = ( await dynamicImport( './../utilities/write-file', memoryFileSystem ) ).writeFile;
 
 		// Get all files
 		// TODO: Exit with error if there are no files?

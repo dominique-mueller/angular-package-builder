@@ -1,8 +1,7 @@
 import * as path from 'path';
 
-import * as proxyquire from 'proxyquire';
-
 import { AngularPackageBuilderConfig } from './../../index';
+import { dynamicImport } from './../utilities/dynamic-import';
 import { MemoryFileSystem } from './../memory-file-system';
 
 /**
@@ -11,9 +10,8 @@ import { MemoryFileSystem } from './../memory-file-system';
 export function composePackage( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		const copy = config.debug
-			? ( await import( './../utilities/copy' ) ).copy
-			: ( proxyquire( './../utilities/copy', { fs: memoryFileSystem.fs } ) ).copy;
+		// Import
+		const copy = ( await dynamicImport( './../utilities/copy', memoryFileSystem ) ).copy;
 
 		// Copy all files which should end up in the package
 		await Promise.all( [
