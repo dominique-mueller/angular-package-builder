@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { Bundle } from 'rollup';
 
-import { AngularPackageBuilderConfig } from './../../index';
+import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { MemoryFileSystem } from './../memory-file-system';

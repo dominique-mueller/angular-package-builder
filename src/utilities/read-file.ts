@@ -7,8 +7,8 @@ import * as path from 'path';
  * @param   filePath - Path to the file
  * @returns          - Promise, resolves with File content (parsed if JSON)
  */
-export function readFile( filePath: string ): Promise<string> {
-	return new Promise<string>( ( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
+export function readFile( filePath: string ): Promise<string | any> {
+	return new Promise<string | any>( ( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
 
 		// Read file asynchronously
 		fs.readFile( filePath, 'utf-8', ( readFileError: NodeJS.ErrnoException | null, fileContent: string ) => {

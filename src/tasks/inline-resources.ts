@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import * as globby from 'globby';
 import * as htmlMinifier from 'html-minifier';
-import { AngularPackageBuilderConfig } from './../../index';
+
+import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
@@ -21,11 +21,12 @@ export function inlineResources( config: AngularPackageBuilderConfig, memoryFile
 
 		// Get all files
 		// TODO: Exit with error if there are no files?
-		const filePatterns: Array<string> = [
+		const sourceFilesPatterns: Array<string> = [
 			path.join( '**', '*.ts' ), // Includes typing files
-			`!${ path.join( '**', '*.spec.ts' ) }`
+			`!${ path.join( '**', '*.spec.ts' ) }`,
+			...config.ignored
 		];
-		const filePaths: Array<string> = await getFiles( filePatterns, config.entry.folder );
+		const filePaths: Array<string> = await getFiles( sourceFilesPatterns, config.entry.folder );
 
 		// Inline resources into source files, save changes into dist
 		await Promise.all(
