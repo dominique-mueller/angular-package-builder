@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import * as path from 'path';
 
 import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_file';

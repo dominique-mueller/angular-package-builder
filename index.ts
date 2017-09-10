@@ -1,22 +1,11 @@
-import * as path from 'path';
-
-import * as gitignore from 'parse-gitignore';
-
+import { AngularPackageBuilderConfig } from './src/interfaces/angular-package-builder-config.interface';
 import { bundleJavascript } from './src/tasks/bundle-javascript';
 import { compileTypescript } from './src/tasks/compile-typescript';
 import { composePackage } from './src/tasks/compose-package';
+import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
-import { createConfig } from './src/tasks/create-config';
-
 import { MemoryFileSystem } from './src/memory-file-system';
-
-import { resolvePath } from './src/utilities/resolve-path';
-import { readFile } from './src/utilities/read-file';
-import { getSafePackageName } from './src/utilities/get-safe-package-name';
-
-import { PackageJson } from './src/interfaces/package-json.interface';
-import { AngularPackageBuilderConfig } from './src/interfaces/angular-package-builder-config.interface';
 
 // TODO: Enable stack trace when debug is enabled; see code below
 // process.on('unhandledRejection', r => console.log(r));
@@ -32,7 +21,6 @@ async function main() {
 
 	// TODO: Remove this temporary test
 	config.packageName = 'angular-notifier';
-	console.log( config );
 
 	console.log( '  Done.' );
 
