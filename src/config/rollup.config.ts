@@ -12,10 +12,10 @@ import { rxjsDependencies } from './../static/rxjs.dependencies';
 /**
  * Get Rollup Input Config
  */
-export function getRollupInputConfig( sourcePath: string, name: string, dependencies: Array<string> ): RollupInputConfig {
+export function getRollupInputConfig( sourcePath: string, name: string, dependencies: { [ dependency: string ]: string } ): RollupInputConfig {
 
 	return {
-		external: Object.keys( getRollupDependencies( dependencies ) ),
+		external: Object.keys( dependencies ),
 		input: path.join( sourcePath, `${ name }.js` ), // Previously 'entry' which is now deprecated
 		onwarn: ( warning ) => {
 			console.warn( warning.message );
@@ -31,12 +31,12 @@ export function getRollupInputConfig( sourcePath: string, name: string, dependen
 /**
  * Get Rollup Output Config
  */
-export function getRollupOutputConfig( name: string, format: 'es' | 'umd', dependencies: Array<string> ): RollupOutputConfig {
+export function getRollupOutputConfig( name: string, format: 'es' | 'umd', dependencies: { [ dependency: string ]: string } ): RollupOutputConfig {
 
 	return {
 		exports: 'named', // We export multiple things
 		format,
-		globals: getRollupDependencies( dependencies ),
+		globals: dependencies,
 		name, // Required for UMD bundles
 		sourcemap: true
 	};
@@ -46,7 +46,7 @@ export function getRollupOutputConfig( name: string, format: 'es' | 'umd', depen
 /**
  * Get rollup dependency map
  */
-function getRollupDependencies( dependencies: Array<string> ): { [ dependency: string ]: string } {
+export function getRollupDependencies( dependencies: Array<string> ): { [ dependency: string ]: string } {
 
 	const otherDependencies: { [ dependency: string ]: string } = dependencies
 

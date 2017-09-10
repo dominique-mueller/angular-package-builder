@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { Bundle } from 'rollup';
 
-import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
+import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { MemoryFileSystem } from './../memory-file-system';
@@ -11,7 +11,11 @@ import { RollupInputConfig, RollupOutputConfig } from 'src/config/rollup.config.
 /**
  * Generate JavaScript bundle
  */
-export function bundleJavascript( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
+export function bundleJavascript(
+	config: AngularPackageBuilderInternalConfig,
+	memoryFileSystem: MemoryFileSystem,
+	target: 'ES2015' | 'ES5' | 'UMD'
+): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Import

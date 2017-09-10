@@ -3,7 +3,7 @@ import * as path from 'path';
 import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_file';
 import * as VinylFile from 'vinyl';
 
-import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
+import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getTypescriptConfig } from './../config/typescript.config';
 import { MemoryFileSystem } from './../memory-file-system';
@@ -13,7 +13,7 @@ import { TypescriptConfig } from './../config/typescript.config.interface';
 /**
  * Compile TypeScript into JavaScript
  */
-export function compileTypescript( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null, target: 'ES2015' | 'ES5' ): Promise<void> {
+export function compileTypescript( config: AngularPackageBuilderInternalConfig, memoryFileSystem: MemoryFileSystem | null, target: 'ES2015' | 'ES5' ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Import
@@ -40,7 +40,8 @@ export function compileTypescript( config: AngularPackageBuilderConfig, memoryFi
 			config.temporary.prepared,
 			destinationPath,
 			config.packageName,
-			entryFiles
+			entryFiles,
+			config.compilerOptions
 		);
 
 		// Create virtual 'tsconfig.json' file
