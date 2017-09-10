@@ -33,6 +33,8 @@
 		"globby": "6.1.x",
 		"html-minifier": "3.5.x",
 		"memfs": "2.5.x",
+		"parse-gitignore": "0.4.x",
+		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "1.8.x",
 		"rollup-plugin-commonjs": "8.2.x",
 		"rollup-plugin-node-resolve": "3.0.x",

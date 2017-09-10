@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { AngularPackageBuilderConfig } from './../../index';
+import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { MemoryFileSystem } from './../memory-file-system';
 

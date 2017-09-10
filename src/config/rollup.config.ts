@@ -4,8 +4,9 @@ import { Options, Bundle, Warning, Plugin, WriteOptions } from 'rollup';
 import * as commonjs from 'rollup-plugin-commonjs';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
 
-import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
 import { angularDependencies } from './../static/angular.dependencies';
+import { getSafeDependencyName } from './../utilities/get-safe-dependency-name';
+import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
 import { rxjsDependencies } from './../static/rxjs.dependencies';
 
 /**
@@ -60,20 +61,6 @@ function getRollupDependencies( dependencies: Array<string> ): { [ dependency: s
 			return dependencies;
 		}, {} );
 
-	return Object.assign( angularDependencies, rxjsDependencies, otherDependencies );
-
-}
-
-/**
- * Convert full package name into save dependency name
- */
-function getSafeDependencyName( dependency: string ): string {
-
-	return dependency
-		.replace( '@', '' ) // Remove the scope '@' sign
-		.replace( /\//g, '.' ) // Convert slashes into dots
-		.replace( /-([a-z])/g, ( value: string ) => { // Convert hyphenated case into camel case
-			return value[ 1 ].toUpperCase();
-		} );
+	return Object.assign( angularDependencies, rxjsDependencies, otherDependencies ); // Let dependencies overwrite pre-defined ones
 
 }

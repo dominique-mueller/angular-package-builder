@@ -1,5 +1,7 @@
 import { TypescriptConfig } from './typescript.config.interface';
 
+import { resolvePath } from './../utilities/resolve-path';
+
 /**
  * Get Typescript Config
  */
@@ -28,7 +30,7 @@ export function getTypescriptConfig( target: string, sourcePath: string, destina
 			sourceRoot: sourcePath,
 			target,
 			typeRoots: [
-				'node_modules/@types'
+				resolvePath( 'node_modules/@types' )
 			],
 			types: []
 		},

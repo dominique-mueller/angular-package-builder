@@ -14,13 +14,7 @@ export function getFiles( patterns: Array<string>, basePath: string, absolutePat
 	return new Promise<Array<string>>( async( resolve: ( files: Array<string> ) => void, reject: ( error: Error ) => void ) => {
 
 		// Get files, using the entry folder as base (so we can easily keep the directory structure in the dist folder)
-		let files: Array<string> = await globby( [
-			...patterns,
-			// TODO: Read folder / files to be ignored from gitignore file?
-			`!${ path.join( 'node_modules', '**' ) }`,
-			`!${ path.join( 'dist', '**' ) }`,
-			`!${ path.join( 'dist-angular-package-builder', '**' ) }`
-		], {
+		let files: Array<string> = await globby( patterns, {
 			cwd: basePath
 		} );
 
