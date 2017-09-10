@@ -3,21 +3,22 @@
  */
 export interface TypescriptConfig {
 	compilerOptions?: {
+		charset?: string;
 		declaration?: boolean;
 		emitDecoratorMetadata?: boolean;
 		experimentalDecorators?: boolean;
-		inlineSources?: boolean;
 		lib?: Array<string>;
 		module?: string;
 		moduleResolution?: string;
 		newLine?: 'CRLF' | 'LF';
 		outDir?: string;
+		pretty?: boolean;
 		rootDir?: string;
 		sourceMap?: boolean;
 		sourceRoot?: string;
 		target?: string;
 		typeRoots?: Array<string>;
-		types?: Array<string>;
+		[ key: string ]: any;
 	};
 	files?: Array<string>;
 	angularCompilerOptions?: {

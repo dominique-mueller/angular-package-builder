@@ -82,7 +82,14 @@ export class MemoryFileSystem {
 					return ( path.indexOf( 'node_modules' ) === -1 )
 						? volumeFs.readFileSync( path, options )
 						: fs.readFileSync( path, options );
-				}
+				},
+
+				// Used by TypeScript when reading in definition files
+				readdirSync: ( path: any, options: any ): any => {
+					return ( path.indexOf( 'node_modules' ) === -1 )
+						? volumeFs.readdirSync( path, options )
+						: fs.readdirSync( path, options );
+				},
 
 			} );
 

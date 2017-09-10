@@ -1,0 +1,161 @@
+{
+	"title": "JSON schema for the Angular Package Builder configuration file",
+	"$schema": "http://json-schema.org/draft-04/schema#",
+
+	"type": "object",
+	"properties": {
+		"entry": {
+			"description": "Path to the entry file",
+			"type": "string"
+		},
+		"output": {
+			"description": "Path to the output folder",
+			"type": "string"
+		},
+		"debug": {
+			"description": "Debug mode flag",
+			"type": "boolean"
+		},
+		"compilerOptions": {
+			"description": "TypeScript & Angular compiler options",
+			"properties": {
+				"allowJs": {
+					"description": "Allow javascript files to be compiled.",
+					"type": "boolean"
+				},
+				"allowSyntheticDefaultImports": {
+					"description": "Allow default imports from modules with no default export. This does not affect code emit, just typechecking.",
+					"type": "boolean"
+				},
+				"allowUnreachableCode": {
+					"description": "Do not report errors on unreachable code.",
+					"type": "boolean"
+				},
+				"allowUnusedLabels": {
+					"description": "Do not report errors on unused labels.",
+					"type": "boolean"
+				},
+				"alwaysStrict": {
+					"description": "Parse in strict mode and emit 'use strict' for each source file. Requires TypeScript version 2.1 or later.",
+					"type": "boolean"
+				},
+				"checkJs": {
+					"description": "Report errors in .js files. Requires TypeScript version 2.3 or later.",
+					"type": "boolean"
+				},
+				"downlevelIteration": {
+					"description": "Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. Requires TypeScript version 2.3 or later.",
+					"type": "boolean"
+				},
+				"forceConsistentCasingInFileNames": {
+					"description": "Disallow inconsistently-cased references to the same file.",
+					"type": "boolean"
+				},
+				"maxNodeModuleJsDepth": {
+					"default": 0,
+					"description": "The maximum dependency depth to search under node_modules and load JavaScript files. Only applicable with --allowJs.",
+					"type": "number"
+				},
+				"noFallthroughCasesInSwitch": {
+					"description": "Report errors for fallthrough cases in switch statement.",
+					"type": "boolean"
+				},
+				"noImplicitAny": {
+					"description": "Warn on expressions and declarations with an implied 'any' type.",
+					"type": "boolean"
+				},
+				"noImplicitReturns": {
+					"description": "Report error when not all code paths in function return a value.",
+					"type": "boolean"
+				},
+				"noImplicitThis": {
+					"description": "Raise error on 'this' expressions with an implied any type.",
+					"type": "boolean"
+				},
+				"noImplicitUseStrict": {
+					"description": "Do not emit 'use strict' directives in module output.",
+					"type": "boolean"
+				},
+				"noLib": {
+					"description": "Do not include the default library file (lib.d.ts).",
+					"type": "boolean"
+				},
+				"noStrictGenericChecks": {
+					"description": "Disable strict checking of generic signatures in function types.",
+					"type": "boolean"
+				},
+				"noUnusedLocals": {
+					"description": "Report errors on unused locals. Requires TypeScript version 2.0 or later.",
+					"type": "boolean"
+				},
+				"noUnusedParameters": {
+					"description": "Report errors on unused parameters. Requires TypeScript version 2.0 or later.",
+					"type": "boolean"
+				},
+				"preserveConstEnums": {
+					"description": "Do not erase const enum declarations in generated code.",
+					"type": "boolean"
+				},
+				"preserveSymlinks": {
+					"description": "Do not resolve symlinks to their real path; treat a symlinked file like a real one.",
+					"type": "boolean"
+				},
+				"removeComments": {
+					"description": "Do not emit comments to output.",
+					"type": "boolean"
+				},
+				"skipLibCheck": {
+					"description": "Skip type checking of declaration files. Requires TypeScript version 2.0 or later.",
+					"type": "boolean"
+				},
+				"strict": {
+					"description": "Enable all strict type checking options. Requires TypeScript version 2.3 or later.",
+					"type": "boolean"
+				},
+				"strictNullChecks": {
+					"description": "Enable strict null checks. Requires TypeScript version 2.0 or later.",
+					"type": "boolean"
+				},
+				"stripInternal": {
+					"description": "Do not emit declarations for code that has an '@internal' annotation.",
+					"type": "boolean"
+				},
+				"suppressExcessPropertyErrors": {
+					"description": "Suppress excess property checks for object literals.",
+					"type": "boolean"
+				},
+				"suppressImplicitAnyIndexErrors": {
+					"description": "Suppress noImplicitAny errors for indexing objects lacking index signatures.",
+					"type": "boolean"
+				},
+				"typeRoots": {
+					"description": "Specify list of directories for type definition files to be included. Requires TypeScript version 2.0 or later.",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"types": {
+					"description": "Type declaration files to be included in compilation. Requires TypeScript version 2.0 or later.",
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"annotateForClosureCompiler": {
+					"description": "Insert JSDoc type annotations needed by Closure Compiler",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"dependencies": {
+			"description": "Map of external dependencies (for rollup)",
+			"type": "object"
+		}
+	},
+	"required": [
+		"entry",
+		"output"
+	]
+}
