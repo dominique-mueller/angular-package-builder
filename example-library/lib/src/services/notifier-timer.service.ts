@@ -60,7 +60,7 @@ export class NotifierTimerService {
 	 * Pause the timer
 	 */
 	public pause(): void {
-		clearTimeout( this.timerId );
+		window.clearTimeout( this.timerId );
 		this.remaining -= new Date().getTime() - this.now;
 	}
 
@@ -69,7 +69,7 @@ export class NotifierTimerService {
 	 */
 	public continue(): void {
 		this.now = new Date().getTime();
-		this.timerId = setTimeout( () => {
+		this.timerId = window.setTimeout( () => {
 			this.finish();
 		}, this.remaining );
 	}
@@ -78,7 +78,7 @@ export class NotifierTimerService {
 	 * Stop the timer
 	 */
 	public stop(): void {
-		clearTimeout( this.timerId );
+		window.clearTimeout( this.timerId );
 		this.remaining = 0;
 	}
 
