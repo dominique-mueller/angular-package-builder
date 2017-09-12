@@ -9,6 +9,7 @@ import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { MemoryFileSystem } from './../memory-file-system';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
+import { AngularResourceAnalyzer } from './../angular-resource-analyzer';
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
@@ -38,14 +39,18 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 
 				// Inline resources
 				let fileContent: string = await readFile( absoluteSourceFilePath );
-				fileContent = await inlineTemplate( absoluteSourceFilePath, fileContent );
+				const angularResourceAnalyzer: AngularResourceAnalyzer =
+					new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
+				const result: any = angularResourceAnalyzer.analyze();
+				// const results: any = getExternalResourceInformation( absoluteSourceFilePath, fileContent );
+				// fileContent = await inlineTemplate( absoluteSourceFilePath, fileContent );
 				// TODO: Inline styles
 
 				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
 				// See <https://github.com/angular/tsickle/issues/596> for further details.
-				fileContent = normalizeLineEndings( fileContent );
+				// fileContent = normalizeLineEndings( fileContent );
 
-				await writeFile( absoluteDestinationFilePath, fileContent );
+				// await writeFile( absoluteDestinationFilePath, fileContent );
 
 			} )
 		);
