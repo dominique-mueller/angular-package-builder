@@ -1,9 +1,0 @@
-<ul>
-	<li class="notifier__container-list" *ngFor="let notification of notifications; trackBy: identifyNotification;">
-		<notifier-notification
-			[notification]="notification"
-			(ready)="onNotificationReady( $event )"
-			(dismiss)="onNotificationDismiss( $event )">
-		</notifier-notification>
-	</li>
-</ul>

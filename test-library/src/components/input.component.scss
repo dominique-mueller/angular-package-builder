@@ -1,0 +1,13 @@
+input {
+	display: block;
+}
+
+.input-container {
+	border: 1px solid #CCC;
+	padding: 1rem;
+
+	&:hover {
+		background-color: #EEE;
+	}
+
+}
