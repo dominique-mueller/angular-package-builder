@@ -1,13 +1,13 @@
 import * as path from 'path';
 
-import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
+import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { MemoryFileSystem } from './../memory-file-system';
 
 /**
  * Compile TypeScript into JavaScript
  */
-export function composePackage( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
+export function composePackage( config: AngularPackageBuilderInternalConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Import

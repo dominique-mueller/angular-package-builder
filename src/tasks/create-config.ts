@@ -2,27 +2,34 @@ import * as path from 'path';
 
 import * as gitignore from 'parse-gitignore'
 
-import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
+import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { getSafePackageName } from './../utilities/get-safe-package-name';
 import { PackageJson } from './../interfaces/package-json.interface';
 import { readFile } from './../utilities/read-file';
 import { resolvePath } from './../utilities/resolve-path';
+import { getRollupDependencies } from './../config/rollup.config';
 
 /**
  * Create Angular Package Builder Configuration
  */
-export function createConfig( entry: string, output: string, debug: boolean ): Promise<AngularPackageBuilderConfig> {
-	return new Promise<AngularPackageBuilderConfig>( async( resolve: ( config: AngularPackageBuilderConfig ) => void, reject: ( error: Error ) => void ) => {
+export function createConfig(
+	entry: string,
+	output: string,
+	debug: boolean = false,
+	dependencies: { [ dependency: string ]: string } = {},
+	compilerOptions: { [ option: string ]: any } = {}
+): Promise<AngularPackageBuilderInternalConfig> {
+	return new Promise<AngularPackageBuilderInternalConfig>( async( resolve: ( config: AngularPackageBuilderInternalConfig ) => void, reject: ( error: Error ) => void ) => {
 
 		// Initial configuration
-		const config: AngularPackageBuilderConfig = {
+		const config: AngularPackageBuilderInternalConfig = {
 			debug,
 			entry: {
-				file: '', // Configured later on
-				folder: '' // Configured later on
+				// file
+				// folder
 			},
 			output: {
-				folder: '' // Configured later on
+				// folder
 			},
 			temporary: {
 				folder: resolvePath( 'dist-angular-package-builder' ),
@@ -33,8 +40,9 @@ export function createConfig( entry: string, output: string, debug: boolean ): P
 				bundleFESM5: resolvePath( 'dist-angular-package-builder/library-bundle-fesm5' ),
 				bundleUMD: resolvePath( 'dist-angular-package-builder/library-bundle-umd' )
 			},
-			packageName: '', // Configured later on
-			dependencies: [] // Configured later on
+			// packageName
+			// dependencies
+			compilerOptions
 		};
 
 		// Set input & output details
@@ -44,19 +52,24 @@ export function createConfig( entry: string, output: string, debug: boolean ): P
 		config.entry.file = path.basename( entry );
 		config.output.folder = resolvePath( output );
 
-		// Read information from 'package.json' file
+		// Get package name from 'package.json' file
 		// TODO: Verify that package name actually exists
 		const packageJson: PackageJson = await readFile( 'package.json' );
 		config.packageName = getSafePackageName( packageJson.name );
+
+		// Get dependencies from 'package.json' file, create their mapping, finally merge with custom dependencies
+		const packageDependencies: Array<string> = [];
 		if ( packageJson.hasOwnProperty( 'dependencies' ) ) {
-			config.dependencies.push( ...Object.keys( packageJson.dependencies ) );
+			packageDependencies.push( ...Object.keys( packageJson.dependencies ) );
 		}
 		if ( packageJson.hasOwnProperty( 'peerDependencies' ) ) {
-			config.dependencies.push( ...Object.keys( packageJson.peerDependencies ) );
+			packageDependencies.push( ...Object.keys( packageJson.peerDependencies ) );
 		}
 		if ( packageJson.hasOwnProperty( 'optionalDependencies' ) ) {
-			config.dependencies.push( ...Object.keys( packageJson.optionalDependencies ) );
+			packageDependencies.push( ...Object.keys( packageJson.optionalDependencies ) );
 		}
+		const mappedPackageDependencies: { [ dependency: string ]: string } = getRollupDependencies( packageDependencies );
+		config.dependencies = Object.assign( mappedPackageDependencies, dependencies );
 
 		// Read information from '.gitignore' file
 		const alwaysIgnored: Array<string> = [

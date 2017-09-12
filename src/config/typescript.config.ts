@@ -1,14 +1,32 @@
-import { TypescriptConfig } from './typescript.config.interface';
+import * as deepmerge from 'deepmerge';
 
+import { TypescriptConfig } from './typescript.config.interface';
 import { resolvePath } from './../utilities/resolve-path';
 
 /**
  * Get Typescript Config
  */
-export function getTypescriptConfig( target: string, sourcePath: string, destinationPath: string, name: string, files: Array<string> ):
-	TypescriptConfig {
+export function getTypescriptConfig(
+	target: string,
+	sourcePath: string,
+	destinationPath: string,
+	name: string,
+	files: Array<string>,
+	customOptions: { [ option: string ]: any }
+): TypescriptConfig {
 
-	return {
+	// Create custom TypeScript options object
+	const customTypescriptOptions: TypescriptConfig = {};
+	if ( customOptions.hasOwnProperty( 'annotateForClosureCompiler' ) ) {
+		customTypescriptOptions.angularCompilerOptions = {
+			annotateForClosureCompiler: customOptions.annotateForClosureCompiler
+		};
+		delete customOptions.annotateForClosureCompiler;
+	}
+	customTypescriptOptions.compilerOptions = customOptions;
+
+	// Create default TypeScript options object
+	const defaultTypescriptOptions: TypescriptConfig = {
 		compilerOptions: {
 			// diagnostics: true, // TODO: Test for debug mode
 			// listFiles: true, // TODO: Test for debug mode
@@ -65,5 +83,8 @@ export function getTypescriptConfig( target: string, sourcePath: string, destina
 			strictMetadataEmit: true
 		}
 	};
+
+	// Return merge version
+	return deepmerge( defaultTypescriptOptions, customTypescriptOptions );
 
 }

@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import * as htmlMinifier from 'html-minifier';
 
-import { AngularPackageBuilderConfig } from './../interfaces/angular-package-builder-config.interface';
+import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
@@ -13,7 +13,7 @@ import { readFile } from './../utilities/read-file';
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
  */
-export function inlineResources( config: AngularPackageBuilderConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
+export function inlineResources( config: AngularPackageBuilderInternalConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Import

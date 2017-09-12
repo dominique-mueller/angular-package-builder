@@ -4,6 +4,10 @@
 
 	"type": "object",
 	"properties": {
+		"$schema": {
+			"description": "Path to this schema definition file",
+			"type": "string"
+		},
 		"entry": {
 			"description": "Path to the entry file",
 			"type": "string"
@@ -18,6 +22,7 @@
 		},
 		"compilerOptions": {
 			"description": "TypeScript & Angular compiler options",
+			"type": "object",
 			"properties": {
 				"allowJs": {
 					"description": "Allow javascript files to be compiled.",
@@ -147,13 +152,14 @@
 					"type": "boolean"
 				}
 			},
-			"type": "object"
+			"additionalProperties": false
 		},
 		"dependencies": {
 			"description": "Map of external dependencies (for rollup)",
 			"type": "object"
 		}
 	},
+	"additionalProperties": false,
 	"required": [
 		"entry",
 		"output"

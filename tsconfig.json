@@ -21,6 +21,7 @@
 		"sourceMap": true
 	},
 	"files": [
-		"index.ts"
+		"index.ts",
+		"typings.d.ts"
 	]
 }
