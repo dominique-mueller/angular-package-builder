@@ -39,10 +39,20 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 
 				// Inline resources
 				let fileContent: string = await readFile( absoluteSourceFilePath );
-				const angularResourceAnalyzer: AngularResourceAnalyzer =
-					new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
-				const result: any = angularResourceAnalyzer.analyze();
-				// const results: any = getExternalResourceInformation( absoluteSourceFilePath, fileContent );
+				const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
+				const externalResources: Array<any> = angularResourceAnalyzer.analyze();
+
+				console.log( externalResources );
+
+				const externalTemplates: Array<any> = externalResources
+					.filter( ( externalResource: any ) => {
+						return externalResource.type === 'template';
+					} );
+
+				if ( externalTemplates.length > 0 ) {
+					fileContent = await inlineTemplates( absoluteSourceFilePath, fileContent, externalTemplates );
+				}
+
 				// fileContent = await inlineTemplate( absoluteSourceFilePath, fileContent );
 				// TODO: Inline styles
 
@@ -60,6 +70,55 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 	} );
 }
 
+function inlineTemplates( filePath: string, fileContent: string, externalTemplates: Array<any> ): Promise<string> {
+	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
+
+		const externalTemplatesWithContent: Array<any> = await Promise.all(
+			externalTemplates.map( async( externalResource: any ): Promise<void> => {
+
+				// Read the template file
+				const absoluteTemplatePath: string = path.join( path.dirname( filePath ), externalResource.urls[ 0 ].url );
+				const template: string = await readFile( absoluteTemplatePath );
+
+				// Optimize the template file content
+				const minifiedTemplate: string = <string> htmlMinifier.minify( template, htmlMinifierConfig );
+
+				externalResource.content = `'${ minifiedTemplate }'`;
+				return externalResource;
+
+			} )
+		)
+
+		// const templateUrlLength: number = 'templateUrl'.length;
+		// const templateKeyDiff: number = templateUrlLength - 'template'.length;
+		let diffCounter: number = 0;
+		externalTemplatesWithContent.reduce( ( newFileContent: string, externalTemplate: any ) => {
+
+			// Get the interesting part of the file
+			// let inlineTemplate: string = fileContent.substring( externalTemplate.start, externalTemplate.end );
+
+			newFileContent = replaceAt( newFileContent, 'template', externalTemplate.key.start + diffCounter, externalTemplate.key.end + diffCounter );
+			diffCounter += -3;
+			console.log( newFileContent );
+
+			newFileContent = replaceAt( newFileContent, externalTemplate.content, externalTemplate.urls[ 0 ].start + diffCounter, externalTemplate.urls[ 0 ].end + diffCounter )
+			diffCounter += externalTemplate.content.length - externalTemplate.urls[ 0 ].url.length;
+			console.log( newFileContent );
+
+		}, fileContent );
+
+		// console.log( externalTemplatesWithContent );
+
+	} );
+}
+
+function replaceAt( fullContent: string, replacement: string, start: number, end: number ): string {
+	return `${ fullContent.substring( 0, start )}${ replacement }${ fullContent.substring( end, fullContent.length ) }`;
+}
+
+
+
+
 /**
  * Inline HTML templates
  *
@@ -67,65 +126,58 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
  * @param   fileContent - File content
  * @returns             - File content with inlined resources
  */
-function inlineTemplate( filePath: string, fileContent: string ): Promise<string> {
-	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
+// function inlineTemplate( filePath: string, fileContent: string ): Promise<string> {
+// 	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
 
-		let newFileContent: string = fileContent;
-		const externalTemplateRegExp: RegExp = /templateUrl:\s*'([^']+?\.html)'/g;
+// 		let newFileContent: string = fileContent;
+// 		const externalTemplateRegExp: RegExp = /templateUrl:\s*'([^']+?\.html)'/g;
 
-		// Retrieve all template file paths (while not updating the file content)
-		const templatePaths: Array<string> = [];
-		newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
-			templatePaths.push( templateUrl );
-			return templateUrl; // Don't change anythin
-		} );
+// 		// Retrieve all template file paths (while not updating the file content)
+// 		const templatePaths: Array<string> = [];
+// 		newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
+// 			templatePaths.push( templateUrl );
+// 			return templateUrl; // Don't change anythin
+// 		} );
 
-		// Only inline resources if necessary
-		if ( templatePaths.length > 0 ) {
+// 		// Only inline resources if necessary
+// 		if ( templatePaths.length > 0 ) {
 
-			// Read all template files
-			const templates: Array<string> = await Promise.all(
+// 			// Read all template files
+// 			const templates: Array<string> = await Promise.all(
 
-				// Map template paths to their content
-				templatePaths.map( async( templatePath: string ): Promise<string> => {
+// 				// Map template paths to their content
+// 				templatePaths.map( async( templatePath: string ): Promise<string> => {
 
-					// Read the template file
-					const absoluteTemplatePath: string = path.join( path.dirname( filePath ), templatePath );
-					const template: string = await readFile( absoluteTemplatePath );
+// 					// Read the template file
+// 					const absoluteTemplatePath: string = path.join( path.dirname( filePath ), templatePath );
+// 					const template: string = await readFile( absoluteTemplatePath );
 
-					// Optimize the template file content
-					const minifiedTemplate: string = minifyHTML( template );
+// 					// Optimize the template file content
+// 					const minifiedTemplate: string = minifyHTML( template );
 
-					return minifiedTemplate;
+// 					return minifiedTemplate;
 
-				} )
-			);
+// 				} )
+// 			);
 
-			// Load the templates
-			const filesWithTemplates: { [ file: string ]: string } = templates
-				.reduce( ( filesWithTemplates: { [ file: string ]: string }, template: string, index: number ):
-					{ [ templatePath: string ]: string } => {
+// 			// Load the templates
+// 			const filesWithTemplates: { [ file: string ]: string } = templates
+// 				.reduce( ( filesWithTemplates: { [ file: string ]: string }, template: string, index: number ):
+// 					{ [ templatePath: string ]: string } => {
 
-					filesWithTemplates[ templatePaths[ index ] ] = template; // Index works because the order stays the same
-					return filesWithTemplates;
+// 					filesWithTemplates[ templatePaths[ index ] ] = template; // Index works because the order stays the same
+// 					return filesWithTemplates;
 
-				}, {} );
+// 				}, {} );
 
-			// Replace external template reference with inline template
-			newFileContent = newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
-				return `template: '${ filesWithTemplates[ templateUrl ] }'`;
-			} );
+// 			// Replace external template reference with inline template
+// 			newFileContent = newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
+// 				return `template: '${ filesWithTemplates[ templateUrl ] }'`;
+// 			} );
 
-		}
+// 		}
 
-		resolve( newFileContent );
+// 		resolve( newFileContent );
 
-	} );
-}
-
-/**
- * Minify HTML
- */
-function minifyHTML( content: string ): string {
-	return <string> htmlMinifier.minify( content, htmlMinifierConfig );
-}
+// 	} );
+// }

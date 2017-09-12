@@ -6,7 +6,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmi
 @Component( {
 	changeDetection: ChangeDetectionStrategy.OnPush, // (#perfmatters)
 	selector: 'input',
-	templateUrl: './input.component.html',
+	templateUrl: /* './input.component.html' */ './input.component.html',
 	styleUrls: [
 		'./input.component.scss'
 	]

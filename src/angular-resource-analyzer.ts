@@ -35,30 +35,26 @@ export class AngularResourceAnalyzer {
 	/**
 	 * Analyze for focused / ignored tests
 	 */
-	public analyze(): Promise<any> {
-		return new Promise<any>(
-			async( resolve: ( result: any ) => void, reject: ( error: Error ) => void ) => {
+	public analyze(): Array<any> {
 
-			// Create source file
-			let sourceFile: typescript.SourceFile;
-			try {
-				sourceFile = typescript.createSourceFile(
-					path.basename( this.filePath ),
-					this.fileContent,
-					typescript.ScriptTarget.Latest,
-					true
-				);
-			} catch ( error ) {
-				reject( error );
-				return;
-			}
+		// Create source file
+		let sourceFile: typescript.SourceFile;
+		try {
+			sourceFile = typescript.createSourceFile(
+				path.basename( this.filePath ),
+				this.fileContent,
+				typescript.ScriptTarget.Latest,
+				true
+			);
+		} catch ( error ) {
+			throw new Error( error );
+		}
 
-			// Run analysis
-			this.analyzeNodeAndChildrenForExternalResources( sourceFile );
+		// Run analysis
+		this.analyzeNodeAndChildrenForExternalResources( sourceFile );
 
-			console.log( this.externalResources );
+		return this.externalResources;
 
-		} );
 	}
 
 	private analyzeNodeAndChildrenForExternalResources( currentNode: typescript.Node ): void {
@@ -91,10 +87,18 @@ export class AngularResourceAnalyzer {
 				// Collect as external resource
 				this.externalResources.push( {
 					type: 'template',
-					urls: [
-						( <any> currentNode ).initializer.text
-					],
-					node: currentNode
+					key: {
+						start: ( <any> currentNode ).name.getStart(),
+						end: ( <any> currentNode ).name.getEnd()
+					},
+					urls: [ {
+						url: ( <any> currentNode ).initializer.text,
+						start: ( <any> currentNode ).initializer.getStart(),
+						end: ( <any> currentNode ).initializer.getEnd()
+					} ]
+					// node: currentNode,
+					// start: currentNode.getStart(),
+					// end: currentNode.getEnd()
 				} );
 
 			// Styles
@@ -125,7 +129,9 @@ export class AngularResourceAnalyzer {
 				this.externalResources.push( {
 					type: 'styles',
 					urls: styleUrls,
-					node: currentNode
+					// node: currentNode,
+					start: currentNode.getStart(),
+					end: currentNode.getEnd()
 				} );
 
 			}
