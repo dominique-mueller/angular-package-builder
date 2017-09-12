@@ -42,6 +42,8 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 				const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
 				const externalResources: Array<any> = angularResourceAnalyzer.analyze();
 
+				// TODO: Validate that resource endings are known!!
+
 				console.log( externalResources );
 
 				const externalTemplates: Array<any> = externalResources
@@ -71,6 +73,7 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 function inlineTemplates( filePath: string, fileContent: string, externalTemplates: Array<any> ): Promise<string> {
 	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
 
+		// TODO: Generatize to also read in SASS files
 		const externalTemplatesWithContent: Array<any> = await Promise.all(
 			externalTemplates.map( async( externalResource: any ): Promise<void> => {
 
@@ -108,6 +111,7 @@ function inlineTemplates( filePath: string, fileContent: string, externalTemplat
 	} );
 }
 
+// TODO: Move into analyzer, pass node instead of start + end
 function replaceAt( fullContent: string, replacement: string, start: number, end: number ): string {
 	return `${ fullContent.substring( 0, start )}${ replacement }${ fullContent.substring( end, fullContent.length ) }`;
 }
