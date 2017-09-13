@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 import * as htmlMinifier from 'html-minifier';
+import * as typescript from 'typescript';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
@@ -33,35 +34,26 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 		await Promise.all(
 			filePaths.map( async( filePath: string ): Promise<void> => {
 
-				// Get paths
+				// Read file
 				const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
 				const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
-
-				// Inline resources
 				let fileContent: string = await readFile( absoluteSourceFilePath );
+
+				// Find resources
 				const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
 				const externalResources: Array<any> = angularResourceAnalyzer.analyze();
 
-				// TODO: Validate that resource endings are known!!
-
+				// Inline resources
 				if ( externalResources.length > 0 ) {
-					// console.log( 'BEFORE' );
-					// console.log( externalResources );
-					// console.log( '' );
-					// console.log( '--------------------------------------' );
-					// console.log( '' );
 					const externalResourcesWithContent: Array<any> = await loadExternalResources( externalResources, absoluteSourceFilePath );
-					const result: string = inlineExternalResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
-					console.log( result );
-					// console.log( test );
-
+					fileContent = inlineExternalResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
 				}
 
 				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
 				// See <https://github.com/angular/tsickle/issues/596> for further details.
-				// fileContent = normalizeLineEndings( fileContent );
+				fileContent = normalizeLineEndings( fileContent );
 
-				// await writeFile( absoluteDestinationFilePath, fileContent );
+				await writeFile( absoluteDestinationFilePath, fileContent );
 
 			} )
 		);
@@ -71,28 +63,21 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 	} );
 }
 
+/**
+ * Inline external resources into the source file
+ */
 function inlineExternalResources( externalResources: Array<any>, fileContent: string, filePath: string ): string {
 
 	let currentPositionCorrection: number = 0;
 	return externalResources.reduce( ( newFileContent: string, externalResource: any ): string => {
 
 		// Replace key
-		newFileContent = replaceAt(
-			newFileContent,
-			externalResource.newKey,
-			externalResource.node.getStart() + currentPositionCorrection,
-			externalResource.node.getEnd() + currentPositionCorrection
-		);
+		newFileContent = replaceAt( newFileContent, externalResource.newKey, externalResource.node, currentPositionCorrection );
 		currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
 
 		// Replace value(s)
 		newFileContent = externalResource.urls.reduce( ( newFileContent: string, url: any ): string => {
-			newFileContent = replaceAt(
-				newFileContent,
-				`\`${ url.content }\``,
-				url.node.getStart() + currentPositionCorrection,
-				url.node.getEnd() + currentPositionCorrection
-			);
+			newFileContent = replaceAt( newFileContent, `\`${ url.content }\``, url.node, currentPositionCorrection );
 			currentPositionCorrection += url.content.length - url.url.length;
 			return newFileContent;
 		}, newFileContent );
@@ -103,6 +88,9 @@ function inlineExternalResources( externalResources: Array<any>, fileContent: st
 
 }
 
+/**
+ * Load all external resources
+ */
 async function loadExternalResources( externalResources: Array<any>, filePath: string ): Promise<Array<any>> {
 
 	return Promise.all(
@@ -120,7 +108,7 @@ async function loadExternalResources( externalResources: Array<any>, filePath: s
 }
 
 /**
- * Load external template
+ * Load and prepare a external resource
  */
 async function loadExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
 
@@ -160,7 +148,14 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 
 }
 
-// TODO: Move into analyzer, pass node instead of start + end
-function replaceAt( fullContent: string, replacement: string, start: number, end: number ): string {
-	return `${ fullContent.substring( 0, start )}${ replacement }${ fullContent.substring( end, fullContent.length ) }`;
+/**
+ * Replace part of a string, based on a node and a additional position correction
+ * TODO: Move into analyzer?
+ */
+function replaceAt( fullContent: string, replacement: string, node: typescript.Node, positionCorrection: number = 0 ): string {
+	return [
+		fullContent.substring( 0, node.getStart() + positionCorrection ),
+		replacement,
+		fullContent.substring( node.getEnd() + positionCorrection, fullContent.length )
+	].join( '' );
 }

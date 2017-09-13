@@ -33,7 +33,7 @@ export class AngularResourceAnalyzer {
 	}
 
 	/**
-	 * Analyze for focused / ignored tests
+	 * Analyze for external resources
 	 */
 	public analyze(): Array<any> {
 
@@ -51,24 +51,30 @@ export class AngularResourceAnalyzer {
 		}
 
 		// Run analysis
-		this.analyzeNodeAndChildrenForExternalResources( sourceFile );
+		this.analyzeNodeForComponentDecorators( sourceFile );
 
 		return this.externalResources;
 
 	}
 
-	private analyzeNodeAndChildrenForExternalResources( currentNode: typescript.Node ): void {
+	/**
+	 * Analyzer recursively for external resources
+	 */
+	private analyzeNodeForComponentDecorators( currentNode: typescript.Node ): void {
 
 		// Analyze function / identifier names only
 		if ( currentNode.kind === typescript.SyntaxKind.Decorator && ( <any> currentNode ).expression.expression.text === 'Component' ) {
-			this.analyzeComponentDecoratorForExternalResources( currentNode );
+			this.analyzeComponentDecoratorNodeForExternalResources( currentNode );
 		}
 
-		typescript.forEachChild( currentNode, this.analyzeNodeAndChildrenForExternalResources.bind( this ) ); // Recursion, keeping 'this' reference
+		typescript.forEachChild( currentNode, this.analyzeNodeForComponentDecorators.bind( this ) ); // Recursion, keeping 'this' reference
 
 	}
 
-	private analyzeComponentDecoratorForExternalResources( currentNode: typescript.Node ): any {
+	/**
+	 * Analyzer a component decorator for external resources
+	 */
+	private analyzeComponentDecoratorNodeForExternalResources( currentNode: typescript.Node ): any {
 
 		if ( currentNode.kind === typescript.SyntaxKind.PropertyAssignment ) {
 
@@ -134,7 +140,7 @@ export class AngularResourceAnalyzer {
 
 		}
 
-		typescript.forEachChild( currentNode, this.analyzeComponentDecoratorForExternalResources.bind( this ) );
+		typescript.forEachChild( currentNode, this.analyzeComponentDecoratorNodeForExternalResources.bind( this ) );
 
 	}
 
