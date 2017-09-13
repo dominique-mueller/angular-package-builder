@@ -87,18 +87,11 @@ export class AngularResourceAnalyzer {
 				// Collect as external resource
 				this.externalResources.push( {
 					type: 'template',
-					key: {
-						start: ( <any> currentNode ).name.getStart(),
-						end: ( <any> currentNode ).name.getEnd()
-					},
+					node: ( <any> currentNode ).name,
 					urls: [ {
 						url: ( <any> currentNode ).initializer.text,
-						start: ( <any> currentNode ).initializer.getStart(),
-						end: ( <any> currentNode ).initializer.getEnd()
+						node: ( <any> currentNode ).initializer
 					} ]
-					// node: currentNode,
-					// start: currentNode.getStart(),
-					// end: currentNode.getEnd()
 				} );
 
 			// Styles
@@ -114,8 +107,11 @@ export class AngularResourceAnalyzer {
 
 				// Get the actual text
 				const styleUrls: Array<string> = ( <any> currentNode ).initializer.elements
-					.map( ( element: any ): string => {
-						return element.text;
+					.map( ( element: any ): any => {
+						return {
+							url: element.text,
+							node: element
+						};
 					} );
 
 				// Handle errors
@@ -127,11 +123,9 @@ export class AngularResourceAnalyzer {
 
 				// Collect as external resource
 				this.externalResources.push( {
-					type: 'styles',
+					type: 'style',
+					node: ( <any> currentNode ).name,
 					urls: styleUrls,
-					// node: currentNode,
-					start: currentNode.getStart(),
-					end: currentNode.getEnd()
 				} );
 
 			}

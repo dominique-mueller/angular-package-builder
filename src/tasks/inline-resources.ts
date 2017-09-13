@@ -29,7 +29,7 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 		];
 		const filePaths: Array<string> = await getFiles( sourceFilesPatterns, config.entry.folder );
 
-		// Inline resources into source files, save changes into dist
+		// Inline resources into source files
 		await Promise.all(
 			filePaths.map( async( filePath: string ): Promise<void> => {
 
@@ -44,17 +44,18 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 
 				// TODO: Validate that resource endings are known!!
 
-				console.log( externalResources );
+				if ( externalResources.length > 0 ) {
+					// console.log( 'BEFORE' );
+					// console.log( externalResources );
+					// console.log( '' );
+					// console.log( '--------------------------------------' );
+					// console.log( '' );
+					const externalResourcesWithContent: Array<any> = await loadExternalResources( externalResources, absoluteSourceFilePath );
+					const result: any = await inlineResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
+					// console.log( 'AFTER' );
+					// console.log( test );
 
-				const externalTemplates: Array<any> = externalResources
-					.filter( ( externalResource: any ) => {
-						return externalResource.type === 'template';
-					} );
-
-				if ( externalTemplates.length > 0 ) {
-					fileContent = await inlineTemplates( absoluteSourceFilePath, fileContent, externalTemplates );
 				}
-				// TODO: Inline styles
 
 				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
 				// See <https://github.com/angular/tsickle/issues/596> for further details.
@@ -70,45 +71,83 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 	} );
 }
 
-function inlineTemplates( filePath: string, fileContent: string, externalTemplates: Array<any> ): Promise<string> {
+function inlineResources( externalResources: Array<any>, fileContent: string, filePath: string ): Promise<string> {
 	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
 
-		// TODO: Generatize to also read in SASS files
-		const externalTemplatesWithContent: Array<any> = await Promise.all(
-			externalTemplates.map( async( externalResource: any ): Promise<void> => {
+		// const templateKeyDiff: number = 'template'.length - 'templateUrl'.length;
+		// let diffCounter: number = 0;
+		// const newFileContent: string = externalTemplatesWithContent.reduce( ( newFileContent: string, externalTemplate: any ) => {
 
-				// Read the template file
-				const absoluteTemplatePath: string = path.join( path.dirname( filePath ), externalResource.urls[ 0 ].url );
-				const template: string = await readFile( absoluteTemplatePath );
+		// 	newFileContent = replaceAt( newFileContent, 'template', externalTemplate.key.start + diffCounter, externalTemplate.key.end + diffCounter );
+		// 	diffCounter += templateKeyDiff;
+		// 	// console.log( newFileContent );
 
-				// Optimize the template file content
-				const minifiedTemplate: string = <string> htmlMinifier.minify( template, htmlMinifierConfig );
+		// 	newFileContent = replaceAt( newFileContent, externalTemplate.content, externalTemplate.urls[ 0 ].start + diffCounter, externalTemplate.urls[ 0 ].end + diffCounter )
+		// 	diffCounter += externalTemplate.content.length - externalTemplate.urls[ 0 ].url.length;
+		// 	// console.log( newFileContent );
 
-				externalResource.content = `'${ minifiedTemplate }'`; // TODO: Use the correct quotemarks
-				return externalResource;
+		// }, fileContent );
 
-			} )
-		)
-
-		// TODO: Combine inline html + sass (because of order + diff)
-
-		const templateKeyDiff: number = 'template'.length - 'templateUrl'.length;
-		let diffCounter: number = 0;
-		const newFileContent: string = externalTemplatesWithContent.reduce( ( newFileContent: string, externalTemplate: any ) => {
-
-			newFileContent = replaceAt( newFileContent, 'template', externalTemplate.key.start + diffCounter, externalTemplate.key.end + diffCounter );
-			diffCounter += templateKeyDiff;
-			console.log( newFileContent );
-
-			newFileContent = replaceAt( newFileContent, externalTemplate.content, externalTemplate.urls[ 0 ].start + diffCounter, externalTemplate.urls[ 0 ].end + diffCounter )
-			diffCounter += externalTemplate.content.length - externalTemplate.urls[ 0 ].url.length;
-			console.log( newFileContent );
-
-		}, fileContent );
-
-		resolve( newFileContent );
+		// resolve( newFileContent );
 
 	} );
+}
+
+async function loadExternalResources( externalResources: Array<any>, filePath: string ): Promise<Array<any>> {
+
+	return Promise.all(
+		externalResources.map( async( externalResource: any ): Promise<any> => {
+			externalResource.urls = await Promise.all(
+				externalResource.urls.map( async( url: any ): Promise<any> => {
+					url.content = await loadExternalResource( url.url, filePath );
+					return url;
+				} )
+			);
+			return externalResource;
+		} )
+	);
+
+}
+
+/**
+ * Load external template
+ */
+async function loadExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
+
+	// Read the resource file
+	const absoluteTemplatePath: string = path.join( path.dirname( filePath ), resourceUrl );
+	const resource: string = await readFile( absoluteTemplatePath );
+
+	// Prepare files, based on file type
+	const fileType: string = path.extname( resourceUrl ).substring( 1 );
+	let preparedResource: string;
+	switch ( fileType ) {
+
+		// External HTML templates
+		case 'html':
+			preparedResource = htmlMinifier.minify( resource, htmlMinifierConfig );
+			break;
+
+		// External CSS files
+		case 'css':
+			preparedResource = resource.replace( '\n\r', ' ' ); // TODO: ...
+			break;
+
+		// External SASS files
+		case 'scss':
+			preparedResource = resource.replace( '\n\r', ' ' ); // TODO: ...
+			break;
+
+		// TODO: What about .sass or .less??
+
+		// Unknown resource types
+		default:
+			throw new Error( 'Unsupported external resource.' );
+
+	}
+
+	return preparedResource;
+
 }
 
 // TODO: Move into analyzer, pass node instead of start + end
