@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 import * as htmlMinifier from 'html-minifier';
+import * as typescript from 'typescript';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
@@ -9,6 +10,7 @@ import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { MemoryFileSystem } from './../memory-file-system';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
+import { AngularResourceAnalyzer } from './../angular-resource-analyzer';
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
@@ -28,18 +30,24 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 		];
 		const filePaths: Array<string> = await getFiles( sourceFilesPatterns, config.entry.folder );
 
-		// Inline resources into source files, save changes into dist
+		// Inline resources into source files
 		await Promise.all(
 			filePaths.map( async( filePath: string ): Promise<void> => {
 
-				// Get paths
+				// Read file
 				const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
 				const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
+				let fileContent: string = await readFile( absoluteSourceFilePath );
+
+				// Find resources
+				const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
+				const externalResources: Array<any> = angularResourceAnalyzer.analyze();
 
 				// Inline resources
-				let fileContent: string = await readFile( absoluteSourceFilePath );
-				fileContent = await inlineTemplate( absoluteSourceFilePath, fileContent );
-				// TODO: Inline styles
+				if ( externalResources.length > 0 ) {
+					const externalResourcesWithContent: Array<any> = await loadExternalResources( externalResources, absoluteSourceFilePath );
+					fileContent = inlineExternalResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
+				}
 
 				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
 				// See <https://github.com/angular/tsickle/issues/596> for further details.
@@ -56,71 +64,98 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 }
 
 /**
- * Inline HTML templates
- *
- * @param   filePath    - File path
- * @param   fileContent - File content
- * @returns             - File content with inlined resources
+ * Inline external resources into the source file
  */
-function inlineTemplate( filePath: string, fileContent: string ): Promise<string> {
-	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
+function inlineExternalResources( externalResources: Array<any>, fileContent: string, filePath: string ): string {
 
-		let newFileContent: string = fileContent;
-		const externalTemplateRegExp: RegExp = /templateUrl:\s*'([^']+?\.html)'/g;
+	let currentPositionCorrection: number = 0;
+	return externalResources.reduce( ( newFileContent: string, externalResource: any ): string => {
 
-		// Retrieve all template file paths (while not updating the file content)
-		const templatePaths: Array<string> = [];
-		newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
-			templatePaths.push( templateUrl );
-			return templateUrl; // Don't change anythin
-		} );
+		// Replace key
+		newFileContent = replaceAt( newFileContent, externalResource.newKey, externalResource.node, currentPositionCorrection );
+		currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
 
-		// Only inline resources if necessary
-		if ( templatePaths.length > 0 ) {
+		// Replace value(s)
+		newFileContent = externalResource.urls.reduce( ( newFileContent: string, url: any ): string => {
+			newFileContent = replaceAt( newFileContent, `\`${ url.content }\``, url.node, currentPositionCorrection );
+			currentPositionCorrection += url.content.length - url.url.length;
+			return newFileContent;
+		}, newFileContent );
 
-			// Read all template files
-			const templates: Array<string> = await Promise.all(
+		return newFileContent;
 
-				// Map template paths to their content
-				templatePaths.map( async( templatePath: string ): Promise<string> => {
+	}, fileContent );
 
-					// Read the template file
-					const absoluteTemplatePath: string = path.join( path.dirname( filePath ), templatePath );
-					const template: string = await readFile( absoluteTemplatePath );
-
-					// Optimize the template file content
-					const minifiedTemplate: string = minifyHTML( template );
-
-					return minifiedTemplate;
-
-				} )
-			);
-
-			// Load the templates
-			const filesWithTemplates: { [ file: string ]: string } = templates
-				.reduce( ( filesWithTemplates: { [ file: string ]: string }, template: string, index: number ):
-					{ [ templatePath: string ]: string } => {
-
-					filesWithTemplates[ templatePaths[ index ] ] = template; // Index works because the order stays the same
-					return filesWithTemplates;
-
-				}, {} );
-
-			// Replace external template reference with inline template
-			newFileContent = newFileContent.replace( externalTemplateRegExp, ( match: string, templateUrl: string ): string => {
-				return `template: '${ filesWithTemplates[ templateUrl ] }'`;
-			} );
-
-		}
-
-		resolve( newFileContent );
-
-	} );
 }
 
 /**
- * Minify HTML
+ * Load all external resources
  */
-function minifyHTML( content: string ): string {
-	return <string> htmlMinifier.minify( content, htmlMinifierConfig );
+async function loadExternalResources( externalResources: Array<any>, filePath: string ): Promise<Array<any>> {
+
+	return Promise.all(
+		externalResources.map( async( externalResource: any ): Promise<any> => {
+			externalResource.urls = await Promise.all(
+				externalResource.urls.map( async( url: any ): Promise<any> => {
+					url.content = await loadExternalResource( url.url, filePath );
+					return url;
+				} )
+			);
+			return externalResource;
+		} )
+	);
+
+}
+
+/**
+ * Load and prepare a external resource
+ */
+async function loadExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
+
+	// Read the resource file
+	const absoluteTemplatePath: string = path.join( path.dirname( filePath ), resourceUrl );
+	const resource: string = await readFile( absoluteTemplatePath );
+
+	// Prepare files, based on file type
+	const fileType: string = path.extname( resourceUrl ).substring( 1 );
+	let preparedResource: string;
+	switch ( fileType ) {
+
+		// External HTML templates
+		case 'html':
+			preparedResource = htmlMinifier.minify( resource, htmlMinifierConfig );
+			break;
+
+		// External CSS files
+		case 'css':
+			preparedResource = resource.replace( /([\n\r]\s*)+/gm, '' ) // TODO: ...
+			break;
+
+		// External SASS files
+		case 'scss':
+			preparedResource = resource.replace( /([\n\r]\s*)+/gm, '' ) // TODO: ...
+			break;
+
+		// TODO: What about .sass or .less??
+
+		// Unknown resource types
+		default:
+			throw new Error( 'Unsupported external resource.' );
+
+	}
+
+	return preparedResource;
+
+}
+
+/**
+ * Replace part of a string, based on a node and a additional position correction
+ * TODO: Move into analyzer?
+ */
+function replaceAt( fullContent: string, replacement: string, node: typescript.Node, positionCorrection: number = 0 ): string {
+	return [
+		fullContent.substring( 0, node.getStart() + positionCorrection ),
+		replacement,
+		fullContent.substring( node.getEnd() + positionCorrection, fullContent.length )
+	].join( '' );
 }
