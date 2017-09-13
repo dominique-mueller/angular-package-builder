@@ -86,7 +86,8 @@ export class AngularResourceAnalyzer {
 
 				// Collect as external resource
 				this.externalResources.push( {
-					type: 'template',
+					oldKey: 'templateUrl',
+					newKey: 'template',
 					node: ( <any> currentNode ).name,
 					urls: [ {
 						url: ( <any> currentNode ).initializer.text,
@@ -123,7 +124,8 @@ export class AngularResourceAnalyzer {
 
 				// Collect as external resource
 				this.externalResources.push( {
-					type: 'style',
+					oldKey: 'styleUrls',
+					newKey: 'styles',
 					node: ( <any> currentNode ).name,
 					urls: styleUrls,
 				} );

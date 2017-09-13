@@ -51,8 +51,8 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 					// console.log( '--------------------------------------' );
 					// console.log( '' );
 					const externalResourcesWithContent: Array<any> = await loadExternalResources( externalResources, absoluteSourceFilePath );
-					const result: any = await inlineResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
-					// console.log( 'AFTER' );
+					const result: string = inlineExternalResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
+					console.log( result );
 					// console.log( test );
 
 				}
@@ -71,26 +71,39 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 	} );
 }
 
-function inlineResources( externalResources: Array<any>, fileContent: string, filePath: string ): Promise<string> {
-	return new Promise<string>( async( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
+function inlineExternalResources( externalResources: Array<any>, fileContent: string, filePath: string ): string {
 
-		// const templateKeyDiff: number = 'template'.length - 'templateUrl'.length;
-		// let diffCounter: number = 0;
-		// const newFileContent: string = externalTemplatesWithContent.reduce( ( newFileContent: string, externalTemplate: any ) => {
+	// const templateKeyDiff: number = 'template'.length - 'templateUrl'.length;
+	// const styleKeyDiff: number = 'styles'.length - 'styleUrls'.length;
+	let currentPositionCorrection: number = 0;
+	const quotemark: string = '\'';
+	return externalResources.reduce( ( newFileContent: string, externalResource: any ): string => {
 
-		// 	newFileContent = replaceAt( newFileContent, 'template', externalTemplate.key.start + diffCounter, externalTemplate.key.end + diffCounter );
-		// 	diffCounter += templateKeyDiff;
-		// 	// console.log( newFileContent );
+		// Replace key
+		newFileContent = replaceAt(
+			newFileContent,
+			externalResource.newKey,
+			externalResource.node.getStart() + currentPositionCorrection,
+			externalResource.node.getEnd() + currentPositionCorrection
+		);
+		currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
 
-		// 	newFileContent = replaceAt( newFileContent, externalTemplate.content, externalTemplate.urls[ 0 ].start + diffCounter, externalTemplate.urls[ 0 ].end + diffCounter )
-		// 	diffCounter += externalTemplate.content.length - externalTemplate.urls[ 0 ].url.length;
-		// 	// console.log( newFileContent );
+		newFileContent = externalResource.urls.reduce( ( newFileContent: string, url: any ): string => {
+			console.log( url.content );
+			newFileContent = replaceAt(
+				newFileContent,
+				`${ quotemark }${ url.content }${ quotemark }`,
+				url.node.getStart() + currentPositionCorrection,
+				url.node.getEnd() + currentPositionCorrection
+			);
+			currentPositionCorrection += url.content.length - url.url.length;
+			return newFileContent;
+		}, newFileContent );
 
-		// }, fileContent );
+		return newFileContent;
 
-		// resolve( newFileContent );
+	}, fileContent );
 
-	} );
 }
 
 async function loadExternalResources( externalResources: Array<any>, filePath: string ): Promise<Array<any>> {
@@ -130,12 +143,12 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 
 		// External CSS files
 		case 'css':
-			preparedResource = resource.replace( '\n\r', ' ' ); // TODO: ...
+			preparedResource = resource.replace( /([\n\r]\s*)+/gm, '' ) // TODO: ...
 			break;
 
 		// External SASS files
 		case 'scss':
-			preparedResource = resource.replace( '\n\r', ' ' ); // TODO: ...
+			preparedResource = resource.replace( /([\n\r]\s*)+/gm, '' ) // TODO: ...
 			break;
 
 		// TODO: What about .sass or .less??
