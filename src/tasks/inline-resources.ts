@@ -73,10 +73,7 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 
 function inlineExternalResources( externalResources: Array<any>, fileContent: string, filePath: string ): string {
 
-	// const templateKeyDiff: number = 'template'.length - 'templateUrl'.length;
-	// const styleKeyDiff: number = 'styles'.length - 'styleUrls'.length;
 	let currentPositionCorrection: number = 0;
-	const quotemark: string = '\'';
 	return externalResources.reduce( ( newFileContent: string, externalResource: any ): string => {
 
 		// Replace key
@@ -88,11 +85,11 @@ function inlineExternalResources( externalResources: Array<any>, fileContent: st
 		);
 		currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
 
+		// Replace value(s)
 		newFileContent = externalResource.urls.reduce( ( newFileContent: string, url: any ): string => {
-			console.log( url.content );
 			newFileContent = replaceAt(
 				newFileContent,
-				`${ quotemark }${ url.content }${ quotemark }`,
+				`\`${ url.content }\``,
 				url.node.getStart() + currentPositionCorrection,
 				url.node.getEnd() + currentPositionCorrection
 			);
