@@ -18,7 +18,7 @@ import { AngularResourceAnalyzer } from './../angular-resource-analyzer';
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
  */
 export function inlineResources( config: AngularPackageBuilderInternalConfig, memoryFileSystem: MemoryFileSystem | null ): Promise<void> {
-	return new Promise<void>( async ( resolve: () => void, reject: ( error: Error ) => void ) => {
+	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Import
 		const writeFile = ( await dynamicImport( './../utilities/write-file', memoryFileSystem ) ).writeFile;
@@ -27,14 +27,14 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 		// TODO: Exit with error if there are no files?
 		const sourceFilesPatterns: Array<string> = [
 			path.join( '**', '*.ts' ), // Includes typing files
-			`!${path.join( '**', '*.spec.ts' )}`,
+			`!${ path.join( '**', '*.spec.ts' ) }`,
 			...config.ignored
 		];
 		const filePaths: Array<string> = await getFiles( sourceFilesPatterns, config.entry.folder );
 
 		// Inline resources into source files
 		await Promise.all(
-			filePaths.map( async ( filePath: string ): Promise<void> => {
+			filePaths.map( async( filePath: string ): Promise<void> => {
 
 				// Read file
 				const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
@@ -79,7 +79,7 @@ function inlineExternalResources( externalResources: Array<any>, fileContent: st
 
 		// Replace value(s)
 		newFileContent = externalResource.urls.reduce( ( newFileContent: string, url: any ): string => {
-			newFileContent = replaceAt( newFileContent, `\`${url.content}\``, url.node, currentPositionCorrection );
+			newFileContent = replaceAt( newFileContent, `\`${ url.content }\``, url.node, currentPositionCorrection );
 			currentPositionCorrection += url.content.length - url.url.length;
 			return newFileContent;
 		}, newFileContent );
@@ -96,9 +96,9 @@ function inlineExternalResources( externalResources: Array<any>, fileContent: st
 async function loadExternalResources( externalResources: Array<any>, filePath: string ): Promise<Array<any>> {
 
 	return Promise.all(
-		externalResources.map( async ( externalResource: any ): Promise<any> => {
+		externalResources.map( async( externalResource: any ): Promise<any> => {
 			externalResource.urls = await Promise.all(
-				externalResource.urls.map( async ( url: any ): Promise<any> => {
+				externalResource.urls.map( async( url: any ): Promise<any> => {
 					url.content = await loadExternalResource( url.url, filePath );
 					return url;
 				} )
