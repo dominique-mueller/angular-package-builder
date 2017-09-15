@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@angular/tsc-wrapped": "4.3.6",
 		"chalk": "2.1.x",
+		"clean-css": "4.1.x",
 		"cpx": "1.5.x",
 		"del": "3.0.x",
 		"deepmerge": "1.5.x",
@@ -35,6 +36,7 @@
 		"html-minifier": "3.5.x",
 		"jsonschema": "1.2.x",
 		"memfs": "2.5.x",
+		"node-sass": "4.5.x",
 		"parse-gitignore": "0.4.x",
 		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "1.8.x",

@@ -1,6 +1,8 @@
 import * as path from 'path';
 
+import * as CleanCSS from 'clean-css';
 import * as htmlMinifier from 'html-minifier';
+import * as sass from 'node-sass';
 import * as typescript from 'typescript';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
@@ -114,29 +116,27 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 
 	// Read the resource file
 	const absoluteTemplatePath: string = path.join( path.dirname( filePath ), resourceUrl );
-	const resource: string = await readFile( absoluteTemplatePath );
+	let resource: string = await readFile( absoluteTemplatePath );
 
 	// Prepare files, based on file type
 	const fileType: string = path.extname( resourceUrl ).substring( 1 );
-	let preparedResource: string;
 	switch ( fileType ) {
 
 		// External HTML templates
 		case 'html':
-			preparedResource = htmlMinifier.minify( resource, htmlMinifierConfig );
+			resource = minifyHtml( resource );
 			break;
 
 		// External CSS files
 		case 'css':
-			preparedResource = resource.replace( /([\n\r]\s*)+/gm, '' ) // TODO: ...
+			resource = minifyCss( resource );
 			break;
 
 		// External SASS files
 		case 'scss':
-			preparedResource = resource.replace( /([\n\r]\s*)+/gm, '' ) // TODO: ...
+			resource = await compileSass( resource );
+			resource = minifyCss( resource );
 			break;
-
-		// TODO: What about .sass or .less??
 
 		// Unknown resource types
 		default:
@@ -144,8 +144,38 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 
 	}
 
-	return preparedResource;
+	return resource;
 
+}
+
+function minifyHtml( htmlContent: string ): string {
+	return htmlMinifier.minify( htmlContent, htmlMinifierConfig );
+}
+
+function minifyCss( cssContent: string ): string {
+
+	const result: any = new CleanCSS( {
+		level: 0 // No optimization
+	} ).minify( cssContent );
+
+	return result.styles;
+
+}
+
+function compileSass( sassContent: string ): Promise<string> {
+	return new Promise<string>( ( resolve: ( cssContent: string ) => void, reject: ( error: Error ) => void ) => {
+
+		// Compile SASS into CSS
+		sass.render( {
+			data: sassContent,
+			outputStyle: 'expanded' // We will minify later on
+		}, ( error: Error, sassRenderResult: any ) => {
+
+			resolve( sassRenderResult.css.toString() );
+
+		} );
+
+	} );
 }
 
 /**
