@@ -3,18 +3,11 @@ import * as path from 'path';
 
 import * as typescript from 'typescript';
 
-export interface AngularResource {
-	oldKey: string;
-	newKey: string;
-	node: typescript.Node;
-	urls: Array<AngularResourceUrl>;
-}
+import { AngularResource } from './angular-resource.interface';
+import { AngularResourceUrl } from './angular-resource-url.interface';
 
-export interface AngularResourceUrl {
-	url: string;
-	node: typescript.Node;
-	content?: string;
-}
+export { AngularResource } from './angular-resource.interface';
+export { AngularResourceUrl } from './angular-resource-url.interface';
 
 /**
  * Angular Resource Analyzer

@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
-import { MemoryFileSystem } from './../memory-file-system';
+import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
 
 /**
  * Compile TypeScript into JavaScript

@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { Volume, createFsFromVolume } from 'memfs';
 
-import { writeFile } from './utilities/write-file';
+import { writeFile } from './../utilities/write-file';
 
 /**
  * Memory File System

@@ -5,7 +5,7 @@ import { Bundle } from 'rollup';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
-import { MemoryFileSystem } from './../memory-file-system';
+import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
 import { RollupInputConfig, RollupOutputConfig } from 'src/config/rollup.config.interface';
 
 /**

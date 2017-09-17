@@ -1,18 +1,16 @@
 import * as path from 'path';
 
-import * as CleanCSS from 'clean-css';
-import * as htmlMinifier from 'html-minifier';
-import * as sass from 'node-sass';
-import * as typescript from 'typescript';
-
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
+import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from './../angular-resource-analyzer/angular-resource-analyzer';
+import { compileSass } from './../resources/compile-sass';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
-import { MemoryFileSystem } from './../memory-file-system';
+import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
+import { minifyCss } from './../resources/minify-css';
+import { minifyHtml } from './../resources/minify-html';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
-import { AngularResourceAnalyzer } from './../angular-resource-analyzer';
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
@@ -43,11 +41,12 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 
 				// Find resources
 				const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
-				const externalResources: Array<any> = angularResourceAnalyzer.getExternalResources();
+				const externalResources: Array<AngularResource> = angularResourceAnalyzer.getExternalResources();
 
 				// Inline resources
 				if ( externalResources.length > 0 ) {
-					const externalResourcesWithContent: Array<any> = await loadExternalResources( externalResources, absoluteSourceFilePath );
+					const externalResourcesWithContent: Array<AngularResource> =
+						await loadExternalResources( externalResources, absoluteSourceFilePath );
 					fileContent = angularResourceAnalyzer.inlineExternalResources( externalResourcesWithContent );
 				}
 
@@ -55,6 +54,7 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 				// See <https://github.com/angular/tsickle/issues/596> for further details.
 				fileContent = normalizeLineEndings( fileContent );
 
+				// Write file
 				await writeFile( absoluteDestinationFilePath, fileContent );
 
 			} )
@@ -68,12 +68,12 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 /**
  * Load all external resources
  */
-async function loadExternalResources( externalResources: Array<any>, filePath: string ): Promise<Array<any>> {
+async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ): Promise<Array<AngularResource>> {
 
 	return Promise.all(
-		externalResources.map( async( externalResource: any ): Promise<any> => {
+		externalResources.map( async( externalResource: AngularResource ): Promise<AngularResource> => {
 			externalResource.urls = await Promise.all(
-				externalResource.urls.map( async( url: any ): Promise<any> => {
+				externalResource.urls.map( async( url: AngularResourceUrl ): Promise<AngularResourceUrl> => {
 					url.content = await loadExternalResource( url.url, filePath );
 					return url;
 				} )
@@ -94,6 +94,7 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 	let resource: string = await readFile( absoluteTemplatePath );
 
 	// Prepare files, based on file type
+	// Note: We minify to squash the resource into a single line, so that the sourcemaps don't break
 	const fileType: string = path.extname( resourceUrl ).substring( 1 );
 	switch ( fileType ) {
 
@@ -121,34 +122,4 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 
 	return resource;
 
-}
-
-function minifyHtml( htmlContent: string ): string {
-	return htmlMinifier.minify( htmlContent, htmlMinifierConfig );
-}
-
-function minifyCss( cssContent: string ): string {
-
-	const result: any = new CleanCSS( {
-		level: 0 // No optimization
-	} ).minify( cssContent );
-
-	return result.styles;
-
-}
-
-function compileSass( sassContent: string ): Promise<string> {
-	return new Promise<string>( ( resolve: ( cssContent: string ) => void, reject: ( error: Error ) => void ) => {
-
-		// Compile SASS into CSS
-		sass.render( {
-			data: sassContent,
-			outputStyle: 'expanded' // We will minify later on
-		}, ( error: Error, sassRenderResult: any ) => {
-
-			resolve( sassRenderResult.css.toString() );
-
-		} );
-
-	} );
 }
