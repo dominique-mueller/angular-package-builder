@@ -43,12 +43,12 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 
 				// Find resources
 				const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
-				const externalResources: Array<any> = angularResourceAnalyzer.analyze();
+				const externalResources: Array<any> = angularResourceAnalyzer.getExternalResources();
 
 				// Inline resources
 				if ( externalResources.length > 0 ) {
 					const externalResourcesWithContent: Array<any> = await loadExternalResources( externalResources, absoluteSourceFilePath );
-					fileContent = inlineExternalResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
+					fileContent = angularResourceAnalyzer.inlineExternalResources( externalResourcesWithContent );
 				}
 
 				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
@@ -63,31 +63,6 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 		resolve();
 
 	} );
-}
-
-/**
- * Inline external resources into the source file
- */
-function inlineExternalResources( externalResources: Array<any>, fileContent: string, filePath: string ): string {
-
-	let currentPositionCorrection: number = 0;
-	return externalResources.reduce( ( newFileContent: string, externalResource: any ): string => {
-
-		// Replace key
-		newFileContent = replaceAt( newFileContent, externalResource.newKey, externalResource.node, currentPositionCorrection );
-		currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
-
-		// Replace value(s)
-		newFileContent = externalResource.urls.reduce( ( newFileContent: string, url: any ): string => {
-			newFileContent = replaceAt( newFileContent, `\`${ url.content }\``, url.node, currentPositionCorrection );
-			currentPositionCorrection += url.content.length - url.url.length;
-			return newFileContent;
-		}, newFileContent );
-
-		return newFileContent;
-
-	}, fileContent );
-
 }
 
 /**
@@ -176,16 +151,4 @@ function compileSass( sassContent: string ): Promise<string> {
 		} );
 
 	} );
-}
-
-/**
- * Replace part of a string, based on a node and a additional position correction
- * TODO: Move into analyzer?
- */
-function replaceAt( fullContent: string, replacement: string, node: typescript.Node, positionCorrection: number = 0 ): string {
-	return [
-		fullContent.substring( 0, node.getStart() + positionCorrection ),
-		replacement,
-		fullContent.substring( node.getEnd() + positionCorrection, fullContent.length )
-	].join( '' );
 }

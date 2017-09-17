@@ -3,6 +3,19 @@ import * as path from 'path';
 
 import * as typescript from 'typescript';
 
+export interface AngularResource {
+	oldKey: string;
+	newKey: string;
+	node: typescript.Node;
+	urls: Array<AngularResourceUrl>;
+}
+
+export interface AngularResourceUrl {
+	url: string;
+	node: typescript.Node;
+	content?: string;
+}
+
 /**
  * Angular Resource Analyzer
  */
@@ -11,12 +24,17 @@ export class AngularResourceAnalyzer {
 	/**
 	 * List of found external resources
 	 */
-	private externalResources: Array<any>;
+	private externalResources: Array<AngularResource>;
 
 	/**
 	 * Relative path of the file to be tested
 	 */
 	private readonly filePath: string;
+
+	/**
+	 * File name
+	 */
+	private readonly fileName: string;
 
 	/**
 	 * File content
@@ -29,45 +47,70 @@ export class AngularResourceAnalyzer {
 	constructor( filePath: string, fileContent: string ) {
 		this.externalResources = [];
 		this.filePath = filePath;
+		this.fileName = path.basename( filePath );
 		this.fileContent = fileContent;
 	}
 
 	/**
 	 * Analyze for external resources
 	 */
-	public analyze(): Array<any> {
+	public getExternalResources(): Array<AngularResource> {
 
 		// Create source file
 		let sourceFile: typescript.SourceFile;
 		try {
-			sourceFile = typescript.createSourceFile(
-				path.basename( this.filePath ),
-				this.fileContent,
-				typescript.ScriptTarget.Latest,
-				true
-			);
+			sourceFile = typescript.createSourceFile( this.fileName, this.fileContent, typescript.ScriptTarget.Latest, true );
 		} catch ( error ) {
 			throw new Error( error );
 		}
 
-		// Run analysis
+		// Run analysis (result will be saved into class properties, necessary due to recursive analysis process)
 		this.analyzeNodeForComponentDecorators( sourceFile );
 
+		// Return results
 		return this.externalResources;
 
 	}
 
 	/**
-	 * Analyzer recursively for external resources
+	 * Inline external resources into the source file
 	 */
+	public inlineExternalResources( externalResources: Array<AngularResource> ): string {
+
+		let currentPositionCorrection: number = 0;
+		return externalResources.reduce( ( fileContent: string, externalResource: AngularResource ): string => {
+
+			// Replace key
+			fileContent = this.replaceAtNode( fileContent, externalResource.newKey, externalResource.node, currentPositionCorrection );
+			currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
+
+			// Replace value(s)
+			fileContent = externalResource.urls.reduce( ( fileContent: string, url: AngularResourceUrl ): string => {
+				fileContent = this.replaceAtNode( fileContent, `\`${ url.content }\``, url.node, currentPositionCorrection );
+				currentPositionCorrection += url.content.length - url.url.length;
+				return fileContent;
+			}, fileContent );
+
+			return fileContent;
+
+		}, this.fileContent );
+
+	}
+
+	 /**
+	  * Analyzer recursively for external resources
+	  *
+	  * @param currentNode - Current node to analyze
+	  */
 	private analyzeNodeForComponentDecorators( currentNode: typescript.Node ): void {
 
-		// Analyze function / identifier names only
+		// Check if the current Node is an Angular Component Decorator
 		if ( currentNode.kind === typescript.SyntaxKind.Decorator && ( <any> currentNode ).expression.expression.text === 'Component' ) {
 			this.analyzeComponentDecoratorNodeForExternalResources( currentNode );
 		}
 
-		typescript.forEachChild( currentNode, this.analyzeNodeForComponentDecorators.bind( this ) ); // Recursion, keeping 'this' reference
+		// Continue analysis recursively for all children
+		typescript.forEachChild( currentNode, this.analyzeNodeForComponentDecorators.bind( this ) ); // Bind to keep the 'this' reference
 
 	}
 
@@ -76,6 +119,7 @@ export class AngularResourceAnalyzer {
 	 */
 	private analyzeComponentDecoratorNodeForExternalResources( currentNode: typescript.Node ): any {
 
+		// Check the decorator parameters
 		if ( currentNode.kind === typescript.SyntaxKind.PropertyAssignment ) {
 
 			// Templates
@@ -113,8 +157,8 @@ export class AngularResourceAnalyzer {
 				}
 
 				// Get the actual text
-				const styleUrls: Array<string> = ( <any> currentNode ).initializer.elements
-					.map( ( element: any ): any => {
+				const styleUrls: Array<AngularResourceUrl> = ( <any> currentNode ).initializer.elements
+					.map( ( element: any ): AngularResourceUrl => {
 						return {
 							url: element.text,
 							node: element
@@ -122,8 +166,8 @@ export class AngularResourceAnalyzer {
 					} );
 
 				// Handle errors
-				styleUrls.forEach( ( styleUrl: any ) => {
-					if ( styleUrl === '' || styleUrl === 'undefined' || styleUrl === undefined ) {
+				styleUrls.forEach( ( styleUrl: AngularResourceUrl ) => {
+					if ( styleUrl.url === '' || styleUrl.url === 'undefined' || styleUrl.url === undefined ) {
 						throw new Error( 'Invalid styleUrls.' );
 					}
 				} );
@@ -140,8 +184,20 @@ export class AngularResourceAnalyzer {
 
 		}
 
+		// Continue analysis recursively for all children
 		typescript.forEachChild( currentNode, this.analyzeComponentDecoratorNodeForExternalResources.bind( this ) );
 
+	}
+
+	/**
+	 * Replace the text of a node within the file content, optionally with a position correction
+	 */
+	private replaceAtNode( fileContent: string, replacement: string, node: typescript.Node, positionCorrection: number = 0 ): string {
+		return [
+			fileContent.substring( 0, node.getStart() + positionCorrection ),
+			replacement,
+			fileContent.substring( node.getEnd() + positionCorrection, fileContent.length )
+		].join( '' );
 	}
 
 }

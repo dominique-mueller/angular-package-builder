@@ -82,28 +82,28 @@ async function main() {
 	await inlineResources( config, memoryFileSystem );
 	console.log( '  Done.' );
 
-	console.log( '> Compile TypeScript to JavaScript ...' );
-	await Promise.all( [
-		compileTypescript( config, memoryFileSystem, 'ES2015' ),
-		compileTypescript( config, memoryFileSystem, 'ES5' )
-	] );
-	console.log( '  Done.' );
+	// console.log( '> Compile TypeScript to JavaScript ...' );
+	// await Promise.all( [
+	// 	compileTypescript( config, memoryFileSystem, 'ES2015' ),
+	// 	compileTypescript( config, memoryFileSystem, 'ES5' )
+	// ] );
+	// console.log( '  Done.' );
 
-	console.log( '> Create bundles ...' );
-	await Promise.all( [
-		bundleJavascript( config, memoryFileSystem, 'ES2015' ),
-		bundleJavascript( config, memoryFileSystem, 'ES5' ),
-		bundleJavascript( config, memoryFileSystem, 'UMD' )
-	] );
-	console.log( '  Done.' );
+	// console.log( '> Create bundles ...' );
+	// await Promise.all( [
+	// 	bundleJavascript( config, memoryFileSystem, 'ES2015' ),
+	// 	bundleJavascript( config, memoryFileSystem, 'ES5' ),
+	// 	bundleJavascript( config, memoryFileSystem, 'UMD' )
+	// ] );
+	// console.log( '  Done.' );
 
-	console.log( '> Composing package ...' );
-	await composePackage( config, memoryFileSystem );
-	console.log( '  Done.' );
+	// console.log( '> Composing package ...' );
+	// await composePackage( config, memoryFileSystem );
+	// console.log( '  Done.' );
 
-	console.log( '' );
-	console.log( '=== Success ===' );
-	console.log( '' );
+	// console.log( '' );
+	// console.log( '=== Success ===' );
+	// console.log( '' );
 
 }
 
