@@ -1,6 +1,6 @@
 import * as proxyquire from 'proxyquire';
 
-import { MemoryFileSystem } from './../memory-file-system';
+import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
 
 /**
  * Dynamically import a module, change filesystem if necessary

@@ -1,18 +1,16 @@
 import * as path from 'path';
 
-import * as CleanCSS from 'clean-css';
-import * as htmlMinifier from 'html-minifier';
-import * as sass from 'node-sass';
-import * as typescript from 'typescript';
-
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
+import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from './../angular-resource-analyzer/angular-resource-analyzer';
+import { compileSass } from './../resources/compile-sass';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
-import { MemoryFileSystem } from './../memory-file-system';
+import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
+import { minifyCss } from './../resources/minify-css';
+import { minifyHtml } from './../resources/minify-html';
 import { normalizeLineEndings } from './../utilities/normalize-line-endings';
 import { readFile } from './../utilities/read-file';
-import { AngularResourceAnalyzer } from './../angular-resource-analyzer';
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
@@ -43,18 +41,20 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 
 				// Find resources
 				const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
-				const externalResources: Array<any> = angularResourceAnalyzer.analyze();
+				const externalResources: Array<AngularResource> = angularResourceAnalyzer.getExternalResources();
 
 				// Inline resources
 				if ( externalResources.length > 0 ) {
-					const externalResourcesWithContent: Array<any> = await loadExternalResources( externalResources, absoluteSourceFilePath );
-					fileContent = inlineExternalResources( externalResourcesWithContent, fileContent, absoluteSourceFilePath );
+					const externalResourcesWithContent: Array<AngularResource> =
+						await loadExternalResources( externalResources, absoluteSourceFilePath );
+					fileContent = angularResourceAnalyzer.inlineExternalResources( externalResourcesWithContent );
 				}
 
 				// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
 				// See <https://github.com/angular/tsickle/issues/596> for further details.
 				fileContent = normalizeLineEndings( fileContent );
 
+				// Write file
 				await writeFile( absoluteDestinationFilePath, fileContent );
 
 			} )
@@ -66,39 +66,14 @@ export function inlineResources( config: AngularPackageBuilderInternalConfig, me
 }
 
 /**
- * Inline external resources into the source file
- */
-function inlineExternalResources( externalResources: Array<any>, fileContent: string, filePath: string ): string {
-
-	let currentPositionCorrection: number = 0;
-	return externalResources.reduce( ( newFileContent: string, externalResource: any ): string => {
-
-		// Replace key
-		newFileContent = replaceAt( newFileContent, externalResource.newKey, externalResource.node, currentPositionCorrection );
-		currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
-
-		// Replace value(s)
-		newFileContent = externalResource.urls.reduce( ( newFileContent: string, url: any ): string => {
-			newFileContent = replaceAt( newFileContent, `\`${ url.content }\``, url.node, currentPositionCorrection );
-			currentPositionCorrection += url.content.length - url.url.length;
-			return newFileContent;
-		}, newFileContent );
-
-		return newFileContent;
-
-	}, fileContent );
-
-}
-
-/**
  * Load all external resources
  */
-async function loadExternalResources( externalResources: Array<any>, filePath: string ): Promise<Array<any>> {
+async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ): Promise<Array<AngularResource>> {
 
 	return Promise.all(
-		externalResources.map( async( externalResource: any ): Promise<any> => {
+		externalResources.map( async( externalResource: AngularResource ): Promise<AngularResource> => {
 			externalResource.urls = await Promise.all(
-				externalResource.urls.map( async( url: any ): Promise<any> => {
+				externalResource.urls.map( async( url: AngularResourceUrl ): Promise<AngularResourceUrl> => {
 					url.content = await loadExternalResource( url.url, filePath );
 					return url;
 				} )
@@ -119,6 +94,7 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 	let resource: string = await readFile( absoluteTemplatePath );
 
 	// Prepare files, based on file type
+	// Note: We minify to squash the resource into a single line, so that the sourcemaps don't break
 	const fileType: string = path.extname( resourceUrl ).substring( 1 );
 	switch ( fileType ) {
 
@@ -146,46 +122,4 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 
 	return resource;
 
-}
-
-function minifyHtml( htmlContent: string ): string {
-	return htmlMinifier.minify( htmlContent, htmlMinifierConfig );
-}
-
-function minifyCss( cssContent: string ): string {
-
-	const result: any = new CleanCSS( {
-		level: 0 // No optimization
-	} ).minify( cssContent );
-
-	return result.styles;
-
-}
-
-function compileSass( sassContent: string ): Promise<string> {
-	return new Promise<string>( ( resolve: ( cssContent: string ) => void, reject: ( error: Error ) => void ) => {
-
-		// Compile SASS into CSS
-		sass.render( {
-			data: sassContent,
-			outputStyle: 'expanded' // We will minify later on
-		}, ( error: Error, sassRenderResult: any ) => {
-
-			resolve( sassRenderResult.css.toString() );
-
-		} );
-
-	} );
-}
-
-/**
- * Replace part of a string, based on a node and a additional position correction
- * TODO: Move into analyzer?
- */
-function replaceAt( fullContent: string, replacement: string, node: typescript.Node, positionCorrection: number = 0 ): string {
-	return [
-		fullContent.substring( 0, node.getStart() + positionCorrection ),
-		replacement,
-		fullContent.substring( node.getEnd() + positionCorrection, fullContent.length )
-	].join( '' );
 }

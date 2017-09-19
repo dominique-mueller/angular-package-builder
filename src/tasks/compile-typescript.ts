@@ -6,7 +6,7 @@ import * as VinylFile from 'vinyl';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getTypescriptConfig } from './../config/typescript.config';
-import { MemoryFileSystem } from './../memory-file-system';
+import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
 import { resolvePath } from './../utilities/resolve-path';
 import { TypescriptConfig } from './../config/typescript.config.interface';
 

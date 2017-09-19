@@ -10,7 +10,7 @@ import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
-import { MemoryFileSystem } from './src/memory-file-system';
+import { MemoryFileSystem } from './src/memory-file-system/memory-file-system';
 import { readFile } from './src/utilities/read-file';
 import { resolvePath } from './src/utilities/resolve-path';
 
