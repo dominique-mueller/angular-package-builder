@@ -14,7 +14,7 @@ export class StoreService {
 	/**
 	 * Data
 	 */
-	private data: TestInterface;
+	private data: any;
 
 	/**
 	 * Constructor

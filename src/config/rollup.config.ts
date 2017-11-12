@@ -1,18 +1,22 @@
 import * as path from 'path';
 
 import { Options, Bundle, Warning, Plugin, WriteOptions } from 'rollup';
-import * as commonjs from 'rollup-plugin-commonjs';
+// import * as commonjs from 'rollup-plugin-commonjs';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
 
 import { angularDependencies } from './../static/angular.dependencies';
 import { getSafeDependencyName } from './../utilities/get-safe-dependency-name';
 import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
 import { rxjsDependencies } from './../static/rxjs.dependencies';
+import { dynamicImport } from '../utilities/dynamic-import';
+import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
 
 /**
  * Get Rollup Input Config
  */
-export function getRollupInputConfig( sourcePath: string, name: string, dependencies: { [ dependency: string ]: string } ): RollupInputConfig {
+export async function getRollupInputConfig( sourcePath: string, name: string, dependencies: { [ dependency: string ]: string }, memoryFileSystem: MemoryFileSystem ): Promise<RollupInputConfig> {
+
+	const commonjs = ( await dynamicImport( 'rollup-plugin-commonjs', memoryFileSystem ) );
 
 	return {
 		external: Object.keys( dependencies ),

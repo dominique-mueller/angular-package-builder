@@ -13,6 +13,9 @@ export function composePackage( config: AngularPackageBuilderInternalConfig, mem
 		// Import
 		const copy = ( await dynamicImport( './../utilities/copy', memoryFileSystem ) ).copy;
 
+		// console.info( config.output.folder );
+		console.info( path.join( config.temporary.bundleFESM2015, '**' ) );
+
 		// Copy all files which should end up in the package
 		await Promise.all( [
 
@@ -28,6 +31,8 @@ export function composePackage( config: AngularPackageBuilderInternalConfig, mem
 			copy( path.join( config.temporary.buildES2015, '**', '*.metadata.json' ), config.output.folder )
 
 		] );
+
+		console.log( Object.keys( memoryFileSystem.volume.toJSON() ) );
 
 		// Persist the files
 		if ( !config.debug ) {

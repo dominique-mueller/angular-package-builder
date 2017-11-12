@@ -89,7 +89,7 @@ export class MemoryFileSystem {
 					return ( path.indexOf( 'node_modules' ) === -1 )
 						? volumeFs.readdirSync( path, options )
 						: fs.readdirSync( path, options );
-				},
+				}
 
 			} );
 

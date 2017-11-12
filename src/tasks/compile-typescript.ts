@@ -1,7 +1,6 @@
 import * as path from 'path';
 
-import { VinylFile as AngularVinylFile } from '@angular/tsc-wrapped/src/vinyl_file';
-import * as VinylFile from 'vinyl';
+import { ParsedConfiguration } from '@angular/compiler-cli';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
@@ -17,8 +16,9 @@ export function compileTypescript( config: AngularPackageBuilderInternalConfig, 
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Import
-		const tsc = ( await dynamicImport( '@angular/tsc-wrapped', memoryFileSystem ) ).main;
+		const { readConfiguration, performCompilation } = ( await dynamicImport( '@angular/compiler-cli', memoryFileSystem ) );
 		const getFiles = ( await dynamicImport( './../utilities/get-files', memoryFileSystem ) ).getFiles;
+		const writeFile = ( await dynamicImport( './../utilities/write-file', memoryFileSystem ) ).writeFile;
 
 		// Get information upfront
 		const destinationPath: string = target === 'ES2015' ? config.temporary.buildES2015 : config.temporary.buildES5;
@@ -30,7 +30,7 @@ export function compileTypescript( config: AngularPackageBuilderInternalConfig, 
 		]
 		const typescriptDefinitionsFiles: Array<string> = await getFiles( typeDefinitionFilesPatterns, config.temporary.prepared, true );
 
-		// Create TypeScript configuration
+		// Create TypeScript configuration and write to disk
 		const entryFiles: Array<string> = [
 			path.join( config.temporary.prepared, config.entry.file ), // Only one entry file is allowed!
 			...typescriptDefinitionsFiles // Additional TypeScript definition files (not counting as entry file)
@@ -43,17 +43,12 @@ export function compileTypescript( config: AngularPackageBuilderInternalConfig, 
 			entryFiles,
 			config.compilerOptions
 		);
+		const typescriptConfigPath: string = path.join( config.temporary.folder, `tsconfig.${ target }.json` );
+		await writeFile( typescriptConfigPath, JSON.stringify( typescriptConfig ) );
 
-		// Create virtual 'tsconfig.json' file
-		const typescriptConfigFile: AngularVinylFile = new VinylFile( {
-			contents: new Buffer( JSON.stringify( typescriptConfig ) ),
-			path: resolvePath( '.' ) // required!
-		} );
-
-		// Run Angular-specific TypeScript compiler
-		await tsc( typescriptConfigFile, {
-			basePath: resolvePath( '.' ) // required!
-		} );
+		// Run Angular compiler
+		const compilerConfig: ParsedConfiguration = readConfiguration( typescriptConfigPath );
+		const { diagnostics, program } = performCompilation( compilerConfig );
 
 		resolve();
 

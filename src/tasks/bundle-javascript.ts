@@ -49,7 +49,7 @@ export function bundleJavascript(
 		}
 
 		// Generate the bundle
-		const rollupInputOptions: RollupInputConfig = getRollupInputConfig( sourcePath, config.packageName, config.dependencies );
+		const rollupInputOptions: RollupInputConfig = await getRollupInputConfig( sourcePath, config.packageName, config.dependencies, memoryFileSystem );
 		const bundle: Bundle = await rollup( <any> rollupInputOptions );
 		const rollupOutputOptions: RollupOutputConfig = getRollupOutputConfig( config.packageName, rollupFormat, config.dependencies );
 		const { code, map } = await bundle.generate( <any> rollupOutputOptions );
