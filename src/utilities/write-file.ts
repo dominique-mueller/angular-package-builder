@@ -14,13 +14,10 @@ export function writeFile( filePath: string, fileContent: string | Object ): Pro
 
 		// Write file asynchronously; implicitely creates the file (and the directory) if necessary
 		fsExtra.outputFile( filePath, fileContent, 'utf-8', ( writeFileError: NodeJS.ErrnoException | null ) => {
-
-			// Handle errors
 			if ( writeFileError ) {
 				reject( new Error( `An error occured while writing the file "${ filePath }". [Code "${ writeFileError.code }", Number "${ writeFileError.errno }"]` ) );
 				return;
 			}
-
 			resolve();
 
 		} );
