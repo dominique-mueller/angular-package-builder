@@ -22,7 +22,14 @@ export async function getRollupInputConfig( sourcePath: string, name: string, de
 		external: Object.keys( dependencies ),
 		input: path.join( sourcePath, `${ name }.js` ), // Previously 'entry' which is now deprecated
 		onwarn: ( warning ) => {
-			console.warn( warning.message );
+
+			// Ignore rewriting of 'this' to 'undefined' (might be an Angular-specific problem)
+			// - Error message explanation: https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
+			// - Workaround: https://github.com/rollup/rollup/issues/794#issuecomment-270803587
+			if ( warning.code !== 'THIS_IS_UNDEFINED' ) {
+				console.warn( warning.message );
+			}
+
 		},
 		plugins: [
 			nodeResolve(),
