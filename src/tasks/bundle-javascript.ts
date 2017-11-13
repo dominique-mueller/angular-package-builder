@@ -6,7 +6,7 @@ import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-pac
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
-import { RollupInputConfig, RollupOutputConfig } from 'src/config/rollup.config.interface';
+import { RollupInputConfig, RollupOutputConfig } from '../config/rollup.config.interface';
 
 /**
  * Generate JavaScript bundle

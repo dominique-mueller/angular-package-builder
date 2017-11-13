@@ -16,7 +16,7 @@ export function compileTypescript( config: AngularPackageBuilderInternalConfig, 
 	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
 
 		// Import
-		const { readConfiguration, performCompilation } = ( await dynamicImport( '@angular/compiler-cli', memoryFileSystem ) );
+		const { main } = ( await dynamicImport( '@angular/compiler-cli/src/main', memoryFileSystem ) ); // Please ignore this import ...
 		const getFiles = ( await dynamicImport( './../utilities/get-files', memoryFileSystem ) ).getFiles;
 		const writeFile = ( await dynamicImport( './../utilities/write-file', memoryFileSystem ) ).writeFile;
 
@@ -47,8 +47,14 @@ export function compileTypescript( config: AngularPackageBuilderInternalConfig, 
 		await writeFile( typescriptConfigPath, JSON.stringify( typescriptConfig ) );
 
 		// Run Angular compiler
-		const compilerConfig: ParsedConfiguration = readConfiguration( typescriptConfigPath );
-		const { diagnostics, program } = performCompilation( compilerConfig );
+		let error: string;
+		const exitCode: number = main( [ '-p', typescriptConfigPath ], ( errorMessage: string ) => {
+			error = errorMessage;
+		} );
+
+		if ( exitCode !== 0 ) {
+			throw new Error( error );
+		}
 
 		resolve();
 
