@@ -1,17 +1,24 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { DataService } from '../data/data.service';
 
 /**
  * Input component
  */
 @Component( {
-	changeDetection: ChangeDetectionStrategy.OnPush, // (#perfmatters)
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	selector: 'input',
-	templateUrl: /* './input.component.html' */ './input.component.html',
+	templateUrl: './input.component.html',
 	styleUrls: [
 		'./input.component.scss'
 	]
 } )
 export class InputComponent implements AfterViewInit {
+
+	/**
+	 * Data service ID
+	 */
+	@Input()
+	public id: string;
 
 	/**
 	 * Model
@@ -37,28 +44,28 @@ export class InputComponent implements AfterViewInit {
 	private isInitialized: boolean;
 
 	/**
-	 * Angular renderer
-	 */
-	private readonly renderer: Renderer2;
-
-	/**
 	 * Native element reference, used for manipulating DOM properties
 	 */
 	private readonly element: HTMLElement;
 
 	/**
+	 * Data service
+	 */
+	private readonly dataService: DataService;
+
+	/**
 	 * Constructor
 	 *
-	 * @param elementRef - Reference to the component's element
-	 * @param renderer   - Angular renderer
+	 * @param elementRef  - Reference to the component's element
+	 * @param dataService - Data service
 	 */
-	constructor( elementRef: ElementRef, renderer: Renderer2 ) {
+	constructor( elementRef: ElementRef, dataService: DataService ) {
 		this.model = '';
 		this.label = '';
 		this.modelChange = new EventEmitter<string>();
 		this.isInitialized = false;
-		this.renderer = renderer;
 		this.element = elementRef.nativeElement;
+		this.dataService = dataService;
 	}
 
 	/**
@@ -74,7 +81,8 @@ export class InputComponent implements AfterViewInit {
 	 * @param newModel - New model
 	 */
 	public onChange( newModel: string ): void {
-		this.modelChange.emit( newModel )
+		this.modelChange.emit( newModel );
+		this.dataService.setData( this.id, newModel );
 	}
 
 }

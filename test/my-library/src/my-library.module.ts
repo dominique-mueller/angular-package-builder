@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { InputComponent } from './components/input.component';
-import { StoreService } from './services/store.service';
+import { InputComponent } from './input/input.component';
+import { DataService } from './data/data.service';
 
 /**
  * Notifier module
@@ -18,7 +18,7 @@ import { StoreService } from './services/store.service';
 		CommonModule
 	],
 	providers: [
-		StoreService
+		DataService
 	]
 } )
-export class TestLibraryModule {}
+export class MyLibraryModule {}

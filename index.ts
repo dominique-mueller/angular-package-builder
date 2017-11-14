@@ -10,7 +10,7 @@ import { log } from './src/log';
 // TODO: Enable stack trace when debug is enabled; see code below
 // process.on('unhandledRejection', r => console.log(r));
 
-async function main() {
+export async function main() {
 
 	log();
 	log( 'title', 'Angular Package Builder' );
@@ -70,4 +70,4 @@ async function main() {
 
 }
 
-main();
+// main();
