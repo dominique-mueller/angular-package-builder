@@ -18,5 +18,5 @@ install:
 
 script:
   - npm run build:run
-  - npm install -g ts-node
+  - npm install -g ts-node typescript
   - ts-node index.ts
