@@ -22,7 +22,7 @@
 		"angular-package-builder": "bin/angular-package-builder.js"
 	},
 	"scripts": {
-		"build:run": "tsc -p tsconfig.json"
+		"build": "tsc -p tsconfig.json"
 	},
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",
