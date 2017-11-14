@@ -1,13 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as gitignore from 'parse-gitignore';
 import { Schema, validate, ValidatorResult } from 'jsonschema';
+import * as gitignore from 'parse-gitignore';
 
 import { AngularPackageBuilderConfig } from '../interfaces/angular-package-builder-config.interface';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
 import { getSafePackageName } from './../utilities/get-safe-package-name';
+import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
 import { PackageJson } from './../interfaces/package-json.interface';
 import { readFile } from './../utilities/read-file';
 import { resolvePath } from './../utilities/resolve-path';
@@ -77,8 +78,19 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	}
 
 	// Get information from '.gitignore' file
-	const projectIgnored: Array<string> = gitignore( resolvePath( '.gitignore' ), alwaysIgnored );
+	const projectIgnored: Array<string> = gitignore( resolvePath( '.gitignore' ), alwaysIgnored )
+		.map( ( projectIgnoredItem: string ): string => {
+			return `!${ projectIgnoredItem }`;
+		} );
 	config.ignored = [ ...config.ignored, ...projectIgnored ];
+
+	// Setup virtual file system
+	if ( !config.debug ) {
+		config.memoryFileSystem = new MemoryFileSystem( [
+			config.output.folder,
+			...Object.values( config.temporary )
+		] );
+	}
 
 	return config;
 
@@ -107,6 +119,7 @@ function getInitialConfig(): AngularPackageBuilderInternalConfig {
 			bundleFESM5: resolvePath( 'dist-angular-package-builder/library-bundle-fesm5' ),
 			bundleUMD: resolvePath( 'dist-angular-package-builder/library-bundle-umd' )
 		},
+		memoryFileSystem: null,
 		packageName: '',
 		dependencies: {},
 		compilerOptions: {},

@@ -1,30 +1,30 @@
 import * as path from 'path';
 
 import { Options, Bundle, Warning, Plugin, WriteOptions } from 'rollup';
-import * as nodeResolve from 'rollup-plugin-node-resolve';
 
 import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
+import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from '../utilities/dynamic-import';
-import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
 
 /**
  * Get Rollup Input Config
  */
-export async function getRollupInputConfig( sourcePath: string, name: string, dependencies: { [ dependency: string ]: string }, memoryFileSystem: MemoryFileSystem ): Promise<RollupInputConfig> {
+export async function getRollupInputConfig( sourcePath: string, config: AngularPackageBuilderInternalConfig ): Promise<RollupInputConfig> {
 
-	const commonjs = ( await dynamicImport( 'rollup-plugin-commonjs', memoryFileSystem ) );
+	const commonjs = await dynamicImport( 'rollup-plugin-commonjs', config.memoryFileSystem );
+	const nodeResolve = await dynamicImport( 'rollup-plugin-node-resolve', config.memoryFileSystem );
 
 	return {
-		external: Object.keys( dependencies ),
-		input: path.join( sourcePath, `${ name }.js` ), // Previously 'entry' which is now deprecated
-		onwarn: ( warning ) => {
+		external: Object.keys( config.dependencies ),
+		input: path.join( sourcePath, `${ config.packageName }.js` ), // Previously 'entry' which is now deprecated
+		onwarn: ( warning ): void => {
 
 			// Ignore rewriting of 'this' to 'undefined' (might be an Angular-specific problem)
 			// - Error message explanation: https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
 			// - Workaround: https://github.com/rollup/rollup/issues/794#issuecomment-270803587
-			if ( warning.code !== 'THIS_IS_UNDEFINED' ) {
-				console.warn( warning.message );
-			}
+			// if ( warning.code !== 'THIS_IS_UNDEFINED' ) {
+			// 	console.warn( warning.message );
+			// }
 
 		},
 		plugins: [
@@ -38,13 +38,13 @@ export async function getRollupInputConfig( sourcePath: string, name: string, de
 /**
  * Get Rollup Output Config
  */
-export function getRollupOutputConfig( name: string, format: 'es' | 'umd', dependencies: { [ dependency: string ]: string } ): RollupOutputConfig {
+export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPackageBuilderInternalConfig ): RollupOutputConfig {
 
 	return {
 		exports: 'named', // We export multiple things
 		format,
-		globals: dependencies,
-		name, // Required for UMD bundles
+		globals: config.dependencies,
+		name: config.packageName, // Required for UMD bundles
 		sourcemap: true
 	};
 

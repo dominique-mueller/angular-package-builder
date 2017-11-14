@@ -5,58 +5,43 @@ import { ParsedConfiguration } from '@angular/compiler-cli';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getTypescriptConfig } from './../config/typescript.config';
-import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
 import { resolvePath } from './../utilities/resolve-path';
 import { TypescriptConfig } from './../config/typescript.config.interface';
 
 /**
  * Compile TypeScript into JavaScript
  */
-export function compileTypescript( config: AngularPackageBuilderInternalConfig, memoryFileSystem: MemoryFileSystem | null, target: 'ES2015' | 'ES5' ): Promise<void> {
-	return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
+export async function compileTypescript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' ): Promise<void> {
 
-		// Import
-		const { main } = ( await dynamicImport( '@angular/compiler-cli/src/main', memoryFileSystem ) ); // Please ignore this import ...
-		const getFiles = ( await dynamicImport( './../utilities/get-files', memoryFileSystem ) ).getFiles;
-		const writeFile = ( await dynamicImport( './../utilities/write-file', memoryFileSystem ) ).writeFile;
+	// Import
+	const { main } = await dynamicImport( '@angular/compiler-cli/src/main', config.memoryFileSystem );
+	const { getFiles } = await dynamicImport( './../utilities/get-files', config.memoryFileSystem );
+	const { writeFile } = await dynamicImport( './../utilities/write-file', config.memoryFileSystem );
 
-		// Get information upfront
-		const destinationPath: string = target === 'ES2015' ? config.temporary.buildES2015 : config.temporary.buildES5;
+	// Get TypeScript-related information
+	const typeDefinitionFilesPatterns: Array<string> = [
+		path.join( '**', '*.d.ts' ),
+		...config.ignored
+	]
+	const typescriptDefinitionsFiles: Array<string> = await getFiles( typeDefinitionFilesPatterns, config.temporary.prepared, true );
+	const destinationPath: string = target === 'ES2015' ? config.temporary.buildES2015 : config.temporary.buildES5;
+	const entryFiles: Array<string> = [
+		path.join( config.temporary.prepared, config.entry.file ), // Only one entry file is allowed!
+		...typescriptDefinitionsFiles // Additional TypeScript definition files (those do not count as entry files)
+	];
 
-		// Get additional TypeScript definition files
-		const typeDefinitionFilesPatterns: Array<string> = [
-			path.join( '**', '*.d.ts' ),
-			...config.ignored
-		]
-		const typescriptDefinitionsFiles: Array<string> = await getFiles( typeDefinitionFilesPatterns, config.temporary.prepared, true );
+	// Create and write TypeScript configuration
+	const typescriptConfig: TypescriptConfig = getTypescriptConfig( target, destinationPath, entryFiles, config );
+	const typescriptConfigPath: string = path.join( config.temporary.folder, `tsconfig.${ target }.json` );
+	await writeFile( typescriptConfigPath, typescriptConfig );
 
-		// Create TypeScript configuration and write to disk
-		const entryFiles: Array<string> = [
-			path.join( config.temporary.prepared, config.entry.file ), // Only one entry file is allowed!
-			...typescriptDefinitionsFiles // Additional TypeScript definition files (not counting as entry file)
-		];
-		const typescriptConfig: TypescriptConfig = getTypescriptConfig(
-			target,
-			config.temporary.prepared,
-			destinationPath,
-			config.packageName,
-			entryFiles,
-			config.compilerOptions
-		);
-		const typescriptConfigPath: string = path.join( config.temporary.folder, `tsconfig.${ target }.json` );
-		await writeFile( typescriptConfigPath, JSON.stringify( typescriptConfig ) );
-
-		// Run Angular compiler
-		let error: string;
-		const exitCode: number = main( [ '-p', typescriptConfigPath ], ( errorMessage: string ) => {
-			error = errorMessage;
-		} );
-
-		if ( exitCode !== 0 ) {
-			throw new Error( error );
-		}
-
-		resolve();
-
+	// Run Angular compiler (synchronous process!), passing in the tsconfig file as the project
+	let error: string;
+	const exitCode: number = main( [ '-p', typescriptConfigPath ], ( errorMessage: string ) => {
+		error = errorMessage;
 	} );
+	if ( exitCode !== 0 ) {
+		throw new Error( error );
+	}
+
 }
