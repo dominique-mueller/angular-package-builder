@@ -268,6 +268,8 @@ export const rxjsDependencies: { [ dependency: string ]: string } = {
 
 	'rxjs/symbol/iterator': 'Rx.Symbol',
 	'rxjs/symbol/observable': 'Rx.Symbol',
-	'rxjs/symbol/rxSubscriber': 'Rx.Symbol'
+	'rxjs/symbol/rxSubscriber': 'Rx.Symbol',
+
+	'rxjs/operators': 'Rx.operators'
 
 };

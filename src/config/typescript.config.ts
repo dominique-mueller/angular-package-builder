@@ -57,6 +57,7 @@ export function getTypescriptConfig(
 				annotateForClosureCompiler: true, // Note: Only works with 'LF' line endings
 				flatModuleId: config.packageName,
 				flatModuleOutFile: `${ config.packageName }.js`,
+				preserveWhitespaces: false,
 				skipTemplateCodegen: true,
 				strictMetadataEmit: true
 			},
