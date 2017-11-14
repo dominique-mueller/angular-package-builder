@@ -8,16 +8,9 @@ import * as parsePackageJsonName from 'parse-packagejson-name';
  */
 export function getSafePackageName( originalPackageName: string ): string {
 
-	// Parse package name
 	return parsePackageJsonName( originalPackageName ).fullName
-
-		// Replace unsafe characters with a hyphen
-		.replace( /[^A-Za-z-]/g, '-' )
-
-		// Remove hyphens at beginning and end of package name
-		.replace( /^\-+|\-+$/g, '' )
-
-		// Convert to lowercase (just to be sure)
-		.toLowerCase();
+		.replace( /[^A-Za-z-]/g, '-' ) // Replace unsafe characters with a hyphen
+		.replace( /^\-+|\-+$/g, '' ) // Remove hyphens at beginning and end of package name
+		.toLowerCase(); // Convert to lowercase (just to be sure)
 
 }

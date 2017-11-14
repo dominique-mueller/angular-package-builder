@@ -12,17 +12,18 @@ import * as fsExtra from 'fs-extra';
 export function writeFile( filePath: string, fileContent: string | Object ): Promise<void> {
 	return new Promise<void>( ( resolve: () => void, reject: ( error: Error ) => void ) => {
 
-		// Write file asynchronously; implicitely creates the file (and the directory) if necessary
-		fsExtra.outputFile( filePath, fileContent, 'utf-8', ( writeFileError: NodeJS.ErrnoException | null ) => {
+		// Automatically stringify objects
+		const preparedFileContent: string = ( typeof fileContent === 'string' )
+		? fileContent
+		: `${ JSON.stringify( fileContent, null, '	' ) }\n`; // Indentation using tabs, empty line at the end
 
-			// Handle errors
+		// Write file asynchronously; implicitely creates the file if necessary
+		fsExtra.outputFile( filePath, preparedFileContent, 'utf-8', ( writeFileError: NodeJS.ErrnoException | null ) => {
 			if ( writeFileError ) {
-				reject( new Error( `An error occured while writing the file "${ filePath }". [Code "${ writeFileError.code }", Number "${ writeFileError.errno }"]` ) );
+				reject( new Error( `An error occured while reading the file "${ filePath }". [Code "${ writeFileError.code }", Number "${ writeFileError.errno }"]` ) );
 				return;
 			}
-
 			resolve();
-
 		} );
 
 	} );

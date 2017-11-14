@@ -1,6 +1,6 @@
 {
 	"$schema": "./src/angular-package-builder.schema.json",
-	"entry": "test-library/index.ts",
-	"output": "dist",
+	"entryFile": "test-library/index.ts",
+	"outputDir": "dist",
 	"debug": false
 }

@@ -9,25 +9,16 @@ import * as parsePackageJsonName from 'parse-packagejson-name';
 export function getSafeDependencyName( originalDependencyName: string ): string {
 
 	// Parse package name
-	const parsedDependencyName: any = parsePackageJsonName( originalDependencyName );
+	const { scope, fullName, projectName, moduleName }: any = parsePackageJsonName( originalDependencyName );
 
-	// Get scope
-	const scope: string = parsedDependencyName.scope === null
-		? ''
-		: `${ parsedDependencyName.scope }.`; // Dot as divider
-
-	// Get name
-	const name: string = parsedDependencyName.fullName
-
-		// Convert hyphenated case into camel case
-		.replace( /-([a-z])/g, ( value: string ) => {
+	// Get safe name
+	const safeFullName: string = fullName
+		.replace( /-([a-z])/g, ( value: string ): string => { // Convert hyphenated case into camel case
 			return value[ 1 ].toUpperCase();
 		} )
-
-		// Remove unsafe characters
-		.replace( /[^A-Za-z]/g, '' );
+		.replace( /[^A-Za-z]/g, '' ); // Remove unsafe characters
 
 	// Return safe dependency name
-	return `${ scope }${ name }`;
+	return scope ? `${ scope }.${ safeFullName }` : safeFullName;
 
 }

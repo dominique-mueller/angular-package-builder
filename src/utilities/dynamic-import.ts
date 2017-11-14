@@ -10,7 +10,9 @@ import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
  * @returns
  */
 export async function dynamicImport( moduleToImport: string, memoryFileSystem: MemoryFileSystem | null ): Promise<any> {
-	return ( memoryFileSystem === null )
+	return memoryFileSystem === null
 		? import( moduleToImport )
-		: ( <any> proxyquire )( moduleToImport, { fs: memoryFileSystem.fs } );
+		: proxyquire( moduleToImport, {
+			fs: memoryFileSystem.fs // Mock the file system
+		} );
 }

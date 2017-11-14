@@ -1,3 +1,5 @@
+import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
+
 /**
  * Angular Package Builder Internal Configuration Interface (derived from Angular Package Builder Config)
  */
@@ -19,8 +21,10 @@ export interface AngularPackageBuilderInternalConfig {
 		bundleFESM5?: string;
 		bundleUMD?: string;
 	};
+	memoryFileSystem?: MemoryFileSystem | null;
 	packageName?: string;
 	dependencies?: { [ dependency: string ]: string };
 	compilerOptions?: { [ option: string ]: any };
+	angularCompilerOptions?: { [ option: string ]: any };
 	ignored?: Array<string>;
 }
