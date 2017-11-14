@@ -54,13 +54,13 @@ async function main() {
 	] );
 	console.log( '  Done.' );
 
-	// console.log( '> Composing package ...' );
-	// await composePackage( config, memoryFileSystem );
-	// console.log( '  Done.' );
+	console.log( '> Composing package ...' );
+	await composePackage( config );
+	console.log( '  Done.' );
 
-	// console.log( '' );
-	// console.log( '=== Success ===' );
-	// console.log( '' );
+	console.log( '' );
+	console.log( '=== Success ===' );
+	console.log( '' );
 
 }
 

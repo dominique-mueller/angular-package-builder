@@ -41,7 +41,6 @@ export async function getRollupInputConfig( sourcePath: string, config: AngularP
 export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPackageBuilderInternalConfig ): RollupOutputConfig {
 
 	return {
-		exports: 'named', // We export multiple things
 		format,
 		globals: config.dependencies,
 		name: config.packageName, // Required for UMD bundles

@@ -48,12 +48,13 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	const rollupOutputOptions: RollupOutputConfig = getRollupOutputConfig( rollupFormat, config );
 
 	// Generate the bundle
-	const bundle: Bundle = await rollup( <any> rollupInputOptions );
-	const { code, map } = await bundle.generate( <any> rollupOutputOptions );
+	const bundle: Bundle = await rollup( rollupInputOptions );
+	const { code, map } = await bundle.generate( rollupOutputOptions );
 
 	// Re-write sourcemap URLs (absolute -> relative using Linux path type slashes)
 	map.sources = map.sources.map( ( source: string ): string => {
-		return ( path.relative( sourcePath, source ) )
+		return path
+			.relative( sourcePath, source )
 			.split( '\\' )
 			.join( '/' );
 	} );
