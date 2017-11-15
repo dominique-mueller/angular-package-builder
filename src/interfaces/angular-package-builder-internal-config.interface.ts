@@ -24,7 +24,7 @@ export interface AngularPackageBuilderInternalConfig {
 	memoryFileSystem?: MemoryFileSystem | null;
 	packageName?: string;
 	dependencies?: { [ dependency: string ]: string };
-	compilerOptions?: { [ option: string ]: any };
+	typescriptCompilerOptions?: { [ option: string ]: any };
 	angularCompilerOptions?: { [ option: string ]: any };
 	ignored?: Array<string>;
 }

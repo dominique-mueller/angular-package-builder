@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 import { Bundle } from 'rollup';
+import * as parsePackageJsonName from 'parse-packagejson-name';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
@@ -27,19 +28,19 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 			sourcePath = config.temporary.buildES2015;
 			destinationPath = config.temporary.bundleFESM2015;
 			rollupFormat = 'es';
-			bundleSuffix = '.es2015';
+			bundleSuffix = 'es2015';
 			break;
 		case 'ES5':
 			sourcePath = config.temporary.buildES5;
 			destinationPath = config.temporary.bundleFESM5;
 			rollupFormat = 'es';
-			bundleSuffix = '.es5';
+			bundleSuffix = 'es5';
 			break;
 		case 'UMD':
 			sourcePath = config.temporary.buildES5;
 			destinationPath = config.temporary.bundleUMD;
 			rollupFormat = 'umd';
-			bundleSuffix = '.umd';
+			bundleSuffix = 'umd';
 			break;
 	}
 
@@ -60,9 +61,10 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	} );
 
 	// Write bundle w/ sourcemaps to destination
+	const fileName: string = `${ parsePackageJsonName( config.packageName ).fullName }.${ bundleSuffix }`;
 	await Promise.all( [
-		writeFile( path.join( destinationPath, `${ config.packageName }${ bundleSuffix }.js` ), code ),
-		writeFile( path.join( destinationPath, `${ config.packageName }${ bundleSuffix }.js.map` ), map )
+		writeFile( path.join( destinationPath, `${ fileName }.js` ), code ),
+		writeFile( path.join( destinationPath, `${ fileName }.js.map` ), map )
 	] );
 
 }
