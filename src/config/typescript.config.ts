@@ -1,7 +1,6 @@
 import * as parsePackageJsonName from 'parse-packagejson-name';
 
 import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
-import { resolvePath } from './../utilities/resolve-path';
 import { TypescriptConfig } from './typescript.config.interface';
 
 /**
