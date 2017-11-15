@@ -48,19 +48,16 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 		ignored: []
 	};
 
-	// Get information from 'package.json' file
+	// Get package name and dependencies from 'package.json' file
 	// TODO: Verify that package name actually exists
 	const packageJson: PackageJson = await readFile( 'package.json' );
 	config.packageName = packageJson.name;
-
-	// Derive dependencies from 'package.json' file
 	const packageDependencies: Array<string> = [
 		...Object.keys( packageJson.dependencies || {} ),
 		...Object.keys( packageJson.peerDependencies || {} ),
 		...Object.keys( packageJson.optionalDependencies || {} )
 	];
-	const mappedPackageDependencies: { [ dependency: string ]: string } = getDependencyMap( packageDependencies );
-	config.dependencies = { ...mappedPackageDependencies, ...config.dependencies };
+	config.dependencies = getDependencyMap( packageDependencies );
 
 	// Get custom project configuration
 	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
@@ -100,14 +97,13 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	}
 
 	// Get information from '.gitignore' file
-	const projectIgnored: Array<string> = gitignore( path.join( cwd, '.gitignore' ), alwaysIgnored )
+	config.ignored = gitignore( path.join( cwd, '.gitignore' ), alwaysIgnored )
 		.map( ( ignoredPattern: string ): string => {
 			return path.relative( cwd, ignoredPattern ).replace( /\\/g, '/' );
 		} )
 		.map( ( ignoredPattern: string ): string => {
 			return `!${ ignoredPattern }`;
 		} );
-	config.ignored = [ ...config.ignored, ...projectIgnored ];
 
 	// Setup virtual file system
 	if ( !config.debug ) {
