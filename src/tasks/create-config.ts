@@ -7,7 +7,6 @@ import * as gitignore from 'parse-gitignore';
 import { AngularPackageBuilderConfig } from '../interfaces/angular-package-builder-config.interface';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
-import { getSafePackageName } from './../utilities/get-safe-package-name';
 import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
 import { PackageJson } from './../interfaces/package-json.interface';
 import { readFile } from './../utilities/read-file';
@@ -26,7 +25,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	// Get information from 'package.json' file
 	// TODO: Verify that package name actually exists
 	const packageJson: PackageJson = await readFile( 'package.json' );
-	config.packageName = getSafePackageName( packageJson.name );
+	config.packageName = packageJson.name;
 
 	// Derive dependencies from 'package.json' file
 	const packageDependencies: Array<string> = [
@@ -57,17 +56,16 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 		// TODO: Verify that the entry is a TypeScript file (file ending)
 		config.entry.folder = resolvePath( path.dirname( projectConfig.entryFile ) );
 		config.entry.file = path.basename( projectConfig.entryFile );
-		config.output.folder = resolvePath( projectConfig.outputDir );
 
-		// Set compilation-specific configuration
-		config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
-		config.compilerOptions = { ...config.compilerOptions, ...( projectConfig.compilerOptions || {} ) };
-		config.angularCompilerOptions = { ...config.angularCompilerOptions, ...( projectConfig.angularCompilerOptions || {} ) };
-
-		// Set debug flag
+		if ( projectConfig.outDir ) {
+			config.output.folder = resolvePath( projectConfig.outDir );
+		}
 		if ( projectConfig.hasOwnProperty( 'debug' ) ) {
 			config.debug = projectConfig.debug;
 		}
+		config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
+		config.typescriptCompilerOptions = { ...config.typescriptCompilerOptions, ...( projectConfig.typescriptCompilerOptions || {} ) };
+		config.angularCompilerOptions = { ...config.angularCompilerOptions, ...( projectConfig.angularCompilerOptions || {} ) };
 
 		// Get ignored files
 		alwaysIgnored.push(
@@ -108,7 +106,7 @@ function getInitialConfig(): AngularPackageBuilderInternalConfig {
 			// folder
 		},
 		output: {
-			// folder
+			folder: resolvePath( 'dist' ),
 		},
 		temporary: {
 			folder: resolvePath( 'dist-angular-package-builder' ),
@@ -122,7 +120,7 @@ function getInitialConfig(): AngularPackageBuilderInternalConfig {
 		memoryFileSystem: null,
 		packageName: '',
 		dependencies: {},
-		compilerOptions: {},
+		typescriptCompilerOptions: {},
 		angularCompilerOptions: {},
 		ignored: []
 	};

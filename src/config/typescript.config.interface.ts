@@ -25,7 +25,9 @@ export interface TypescriptConfig {
 		annotateForClosureCompiler?: boolean;
 		flatModuleId?: string;
 		flatModuleOutFile?: string;
+		preserveWhitespaces?: boolean;
 		skipTemplateCodegen?: boolean;
 		strictMetadataEmit?: boolean;
+		[ key: string ]: any;
 	};
 }

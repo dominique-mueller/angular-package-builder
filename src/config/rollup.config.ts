@@ -1,5 +1,6 @@
 import * as path from 'path';
 
+import * as parsePackageJsonName from 'parse-packagejson-name';
 import { Options, Bundle, Warning, Plugin, WriteOptions } from 'rollup';
 
 import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
@@ -16,7 +17,7 @@ export async function getRollupInputConfig( sourcePath: string, config: AngularP
 
 	return {
 		external: Object.keys( config.dependencies ),
-		input: path.join( sourcePath, `${ config.packageName }.js` ), // Previously 'entry' which is now deprecated
+		input: path.join( sourcePath, `${ parsePackageJsonName( config.packageName ).fullName }.js` ), // Previously 'entry' which is now deprecated
 		onwarn: ( warning ): void => {
 
 			// Ignore rewriting of 'this' to 'undefined' (might be an Angular-specific problem)
@@ -43,7 +44,7 @@ export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPack
 	return {
 		format,
 		globals: config.dependencies,
-		name: config.packageName, // Required for UMD bundles
+		name: parsePackageJsonName( config.packageName ).fullName, // Required for UMD bundles
 		sourcemap: true
 	};
 

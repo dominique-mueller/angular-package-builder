@@ -33,7 +33,6 @@
 		"chalk": "2.3.x",
 		"clean-css": "4.1.x",
 		"cpx": "1.5.x",
-		"deepmerge": "2.0.x",
 		"del": "3.0.x",
 		"fs-extra": "4.0.x",
 		"globby": "6.1.x",
