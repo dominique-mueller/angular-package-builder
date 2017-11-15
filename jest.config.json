@@ -12,6 +12,7 @@
 		"json"
 	],
 	"rootDir": ".",
+	"setupTestFrameworkScriptFile": "<rootDir>/jest.setup.ts",
 	"transform": {
 		"^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
 	},

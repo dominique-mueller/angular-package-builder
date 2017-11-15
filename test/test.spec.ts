@@ -8,6 +8,13 @@ describe( 'TEST ', () => {
 	let originalProcessCwd: () => string;
 	const projectPath: string = path.resolve( process.cwd(), 'test', 'my-library' );
 
+	jest.resetModules();
+
+	// Hide logging output
+	jest.spyOn( console, 'log' ).mockImplementation( () => {
+		return;
+	} );
+
 	// Setup
 	beforeAll( () => {
 		originalProcessCwd = process.cwd

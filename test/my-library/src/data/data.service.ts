@@ -16,7 +16,6 @@ export class DataService {
 	 */
 	constructor() {
 		this.data = {};
-		window.stuff = this;
 	}
 
 	/**
