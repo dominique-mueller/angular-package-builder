@@ -38,9 +38,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Get custom project configuration
 	const angularPackageJsonFilePath: string = resolvePath( '.angular-package.json' );
-	const alwaysIgnored: Array<string> = [
-		'node_modules'
-	];
+	const alwaysIgnored: Array<string> = [];
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
 
 		// Read and validate config file
@@ -77,8 +75,11 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Get information from '.gitignore' file
 	const projectIgnored: Array<string> = gitignore( resolvePath( '.gitignore' ), alwaysIgnored )
-		.map( ( projectIgnoredItem: string ): string => {
-			return `!${ projectIgnoredItem }`;
+		.map( ( ignoredPattern: string ): string => {
+			return path.relative( process.cwd(), ignoredPattern ).replace( /\\/g, '/' );
+		} )
+		.map( ( ignoredPattern: string ): string => {
+			return `!${ ignoredPattern }`;
 		} );
 	config.ignored = [ ...config.ignored, ...projectIgnored ];
 
