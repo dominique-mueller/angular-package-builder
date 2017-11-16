@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import * as cpx from 'cpx';
 
 /**

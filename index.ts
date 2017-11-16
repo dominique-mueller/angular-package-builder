@@ -49,6 +49,7 @@ async function main() {
 			bundleJavascript( config, 'UMD' )
 		] );
 
+
 		log( 'step', 'Compose package' );
 		await composePackage( config );
 

@@ -61,7 +61,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Get custom project configuration
 	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
-	const alwaysIgnored: Array<string> = [];
+	const implicitelyIgnored: Array<string> = [];
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
 
 		// Read and validate config file
@@ -85,24 +85,21 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 			config.debug = projectConfig.debug;
 		}
 		config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
-		config.typescriptCompilerOptions = { ...config.typescriptCompilerOptions, ...( projectConfig.typescriptCompilerOptions || {} ) };
-		config.angularCompilerOptions = { ...config.angularCompilerOptions, ...( projectConfig.angularCompilerOptions || {} ) };
+		config.typescriptCompilerOptions = projectConfig.typescriptCompilerOptions || {};
+		config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
 
 		// Get ignored files
-		alwaysIgnored.push(
-			path.relative( cwd, config.output.folder ).replace( /\\/g, '/' ), // Relative path!
-			path.relative( cwd, config.temporary.folder ).replace( /\\/g, '/' ) // Relative path!
+		implicitelyIgnored.push(
+			path.relative( cwd, config.output.folder ),
+			path.relative( cwd, config.temporary.folder )
 		);
 
 	}
 
 	// Get information from '.gitignore' file
-	config.ignored = gitignore( path.join( cwd, '.gitignore' ), alwaysIgnored )
-		.map( ( ignoredPattern: string ): string => {
-			return path.relative( cwd, ignoredPattern ).replace( /\\/g, '/' );
-		} )
-		.map( ( ignoredPattern: string ): string => {
-			return `!${ ignoredPattern }`;
+	config.ignored = gitignore( path.join( cwd, '.gitignore' ), implicitelyIgnored )
+		.map( ( ignored: string ): string => {
+			return `!${ ignored }`; // Make it a glob!
 		} );
 
 	// Setup virtual file system

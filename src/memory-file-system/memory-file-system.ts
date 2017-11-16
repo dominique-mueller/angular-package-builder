@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { Volume, createFsFromVolume } from 'memfs';
 
@@ -103,39 +103,37 @@ export class MemoryFileSystem {
 	 * @param   pathToPersist - Path (folder) to be persisted
 	 * @returns               - Promise, resolved when finished
 	 */
-	public persist( pathToPersist: string ): Promise<void> {
-		return new Promise<void>( async( resolve: () => void, reject: ( error: Error ) => void ) => {
+	public async persist( pathToPersist: string ): Promise<void> {
 
-			const memVolState: { [ path: string ]: string } = this.volume.toJSON();
-			const normalizedPathToPersist: string = `${ this.simplifyPath( pathToPersist ) }${ path.sep }`;
+		const memVolState: { [ path: string ]: string } = this.volume.toJSON();
+		const normalizedPathToPersist: string = this.getVirtualPath( pathToPersist );
 
-			// Filter out files & folders which are outside the path to be persisted
-			const filesToPersist: Array<string> = Object
-				.keys( memVolState )
-				.filter( ( filePath: string ): boolean => {
-					return this.simplifyPath( filePath ).startsWith( normalizedPathToPersist );
-				} );
+		// Filter out files & folders which are outside the path to be persisted
+		const filesToPersist: Array<string> = Object
+			.keys( memVolState )
+			.filter( ( filePath: string ): boolean => {
+				return filePath.startsWith( normalizedPathToPersist );
+			} );
 
-			// Write the files to disk (creating folders if necessary)
-			await Promise.all(
-				filesToPersist.map( async( filePath: string ): Promise<void> => {
-					await writeFile( path.resolve( filePath ), memVolState[ filePath ] );
-				} )
-			);
+		// Write the files to disk (creating folders if necessary)
+		await Promise.all(
+			filesToPersist.map( async( filePath: string ): Promise<void> => {
+				await writeFile( path.join( filePath ), memVolState[ filePath ] );
+			} )
+		);
 
-			resolve();
-
-		} );
 	}
 
 	/**
-	 * Simpliy (kinda normalize) the given path by removing any information regarding partition / disk
+	 * Get virtual path to folder (no partition information, starts and ends with path separator)
 	 *
 	 * @param   originalPath - Original path
 	 * @returns              - Normalized path
 	 */
-	private simplifyPath( originalPath: string ): string {
-		return path.normalize( originalPath.replace( path.parse( originalPath ).root, '' ) );
+	private getVirtualPath( originalPath: string ): string {
+		return originalPath[ 0 ] === path.sep
+			? `${ originalPath }${ path.sep }`
+			: `${ path.sep }${ originalPath.split( path.sep ).slice( 1 ).join( path.sep ) }${ path.sep }`;
 	}
 
 }
