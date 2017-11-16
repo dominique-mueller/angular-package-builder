@@ -23,7 +23,8 @@
 	},
 	"scripts": {
 		"build": "tsc -p tsconfig.json",
-		"test:1": "cd test/my-library && ts-node test.prepare.ts && jest --config ../../jest.config.json test.spec.ts && cd ../.."
+		"ppretest": "cd test/my-library && ts-node ../../test.prepare.ts && cd ../..",
+		"test": "jest --config jest.config.json --runInBand --no-cache"
 	},
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",

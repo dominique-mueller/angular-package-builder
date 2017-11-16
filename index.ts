@@ -50,8 +50,6 @@ export async function main() {
 		log( 'step', 'Compose package' );
 		await composePackage( config );
 
-		console.log( Object.keys( config.memoryFileSystem.volume.toJSON() ) );
-
 		const finishTime = new Date().getTime();
 		const processTime = ( ( finishTime - startTime ) / 1000 ).toFixed( 2 );
 
