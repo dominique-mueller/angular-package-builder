@@ -9,60 +9,97 @@ const readFileAsync = promisify( fs.readFile );
 /**
  * Unit Test
  */
-describe( 'TEST ', () => {
+describe( 'Angular Package: Metadata', () => {
 
-	describe( '"metadata.json"', () => {
+	let metadataJsonFile: string = '';
+	let metadataJsonFileContent: any | null = null;
 
-		let metadataJsonFile: string = '';
-		let metadataJsonFileContent: any | null = null;
+	it ( 'should exist', async() => {
 
-		it ( 'should create the file', async() => {
+		let currentError: Error | null = null;
+		try {
+			metadataJsonFile = await readFileAsync( 'test/my-library/dist/my-library.metadata.json', 'utf-8' );
+		} catch ( error ) {
+			currentError = error;
+		}
 
-			let currentError: Error | null = null;
-			try {
-				metadataJsonFile = await readFileAsync( 'test/my-library/dist/my-library.metadata.json', 'utf-8' );
-			} catch ( error ) {
-				currentError = error;
-			}
+		expect( currentError ).toBeNull();
+		expect( metadataJsonFile.length ).toBeGreaterThan( 0 );
 
-			expect( currentError ).toBeNull();
-			expect( metadataJsonFile.length ).toBeGreaterThan( 0 );
+	} );
 
-		} );
+	it ( 'should be valid JSON', async() => {
 
-		it ( 'should generate valid JSON', async() => {
+		let currentError: Error | null = null;
+		try {
+			metadataJsonFileContent = JSON.parse( metadataJsonFile );
+		} catch ( error ) {
+			currentError = error;
+		}
 
-			let currentError: Error | null = null;
-			try {
-				metadataJsonFileContent = JSON.parse( metadataJsonFile );
-				console.log( metadataJsonFileContent );
-			} catch ( error ) {
-				currentError = error;
-			}
+		expect( currentError ).toBeNull();
+		expect( metadataJsonFileContent ).toEqual( expect.objectContaining( {} ) );
 
-			expect( currentError ).toBeNull();
-			expect( metadataJsonFileContent ).toEqual( expect.objectContaining( {} ) );
+		expect( JSON.stringify( metadataJsonFileContent ) ).toBe( metadataJsonFile );
 
-		} );
+	} );
 
-		it ( 'should contain the correct version', async() => {
+	it ( 'should contain minified JSON', async() => {
 
-			expect( metadataJsonFileContent.version ).toBe( 4 );
+		expect( JSON.stringify( metadataJsonFileContent ) ).toBe( metadataJsonFile );
 
-		} );
+	} );
 
-		it ( 'should contain the correct export name', async() => {
+	it ( 'should contain the correct metadata version', async() => {
 
-			expect( metadataJsonFileContent.importAs ).toBe( 'my-library' );
+		expect( metadataJsonFileContent.version ).toBe( 4 );
 
-		} );
+	} );
 
-		it ( 'should contain all metadata', async() => {
+	it ( 'should contain the correct import name', async() => {
 
-			expect( Object.keys( metadataJsonFileContent.metadata ).length ).toBe( 3 );
-			expect( Object.keys( metadataJsonFileContent.origins ).length ).toBe( 3 );
+		expect( metadataJsonFileContent.importAs ).toBe( 'my-library' );
 
-		} );
+	} );
+
+	it ( 'should contain all meta information', async() => {
+
+		const metadata: Array<string> = Object.keys( metadataJsonFileContent.metadata );
+		const origins: Array<string> = Object.keys( metadataJsonFileContent.origins );
+
+		expect( metadataJsonFileContent.__symbolic ).toBe( 'module' );
+
+		expect( metadata.length ).toBe( 3 );
+		expect( metadataJsonFileContent.metadata[ 'MyLibraryModule' ] ).toEqual( expect.objectContaining( {
+			__symbolic: expect.any( String ),
+			decorators: expect.any( Array ),
+			members: expect.any( Object )
+		} ) );
+		expect( metadataJsonFileContent.metadata[ 'DataService' ] ).toEqual( expect.objectContaining( {
+			__symbolic: expect.any( String ),
+			decorators: expect.any( Array ),
+			members: expect.any( Object )
+		} ) );
+		expect( metadataJsonFileContent.metadata[ 'InputComponent' ] ).toEqual( expect.objectContaining( {
+			__symbolic: expect.any( String ),
+			decorators: expect.any( Array ),
+			members: expect.any( Object )
+		} ) );
+
+		expect( origins.length ).toBe( 3 );
+		expect( metadataJsonFileContent.origins[ 'MyLibraryModule' ] ).toBe( './my-library.module' );
+		expect( metadataJsonFileContent.origins[ 'DataService' ] ).toBe( './data/data.service' );
+		expect( metadataJsonFileContent.origins[ 'InputComponent' ] ).toBe( './input/input.component' );
+
+	} );
+
+} );
+
+describe( 'Angular Package: TODO', () => {
+
+	it ( 'should TODO', async() => {
+
+		expect( true ).toBe( true );
 
 	} );
 
