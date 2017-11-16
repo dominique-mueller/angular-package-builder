@@ -73,6 +73,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 		}
 
 		// Set input & output details
+		// TODO: Verify path syntax
 		// TODO: Verify that the entry is a file that actually exists
 		// TODO: Verify that the entry is a TypeScript file (file ending)
 		config.entry.folder = path.dirname( projectConfig.entryFile );
