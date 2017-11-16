@@ -21,8 +21,8 @@ export class DataService {
 	/**
 	 * Get data
 	 *
-	 * @param   key  - Key
-	 * @param   data - Data
+	 * @param key  - Key
+	 * @param data - Data
 	 */
 	public setData( key: string, data: any ): void {
 		this.data[ key ] = data;

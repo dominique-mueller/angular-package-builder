@@ -6,7 +6,7 @@ import { DataService } from '../data/data.service';
  */
 @Component( {
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	selector: 'input',
+	selector: 'my-input',
 	templateUrl: './input.component.html',
 	styleUrls: [
 		'./input.component.scss'

@@ -50,7 +50,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Get package name and dependencies from 'package.json' file
 	// TODO: Verify that package name actually exists
-	const packageJson: PackageJson = await readFile( 'package.json' );
+	const packageJson: PackageJson = await readFile( path.join( cwd, 'package.json' ) );
 	config.packageName = packageJson.name;
 	const packageDependencies: Array<string> = [
 		...Object.keys( packageJson.dependencies || {} ),
@@ -61,7 +61,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Get custom project configuration
 	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
-	const implicitelyIgnored: Array<string> = [];
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
 
 		// Read and validate config file
@@ -76,8 +75,8 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 		// TODO: Verify path syntax
 		// TODO: Verify that the entry is a file that actually exists
 		// TODO: Verify that the entry is a TypeScript file (file ending)
-		config.entry.folder = path.dirname( projectConfig.entryFile );
-		config.entry.file = path.basename( projectConfig.entryFile );
+		config.entry.folder = path.dirname( path.join( cwd, projectConfig.entryFile ) );
+		config.entry.file = path.basename( path.join( cwd, projectConfig.entryFile ) );
 
 		if ( projectConfig.outDir ) {
 			config.output.folder = path.join( cwd, projectConfig.outDir );
@@ -90,18 +89,20 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 		config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
 
 		// Get ignored files
-		implicitelyIgnored.push(
-			path.relative( cwd, config.output.folder ),
-			path.relative( cwd, config.temporary.folder )
+		config.ignored.push(
+			`!${ path.relative( cwd, config.output.folder ) }`,
+			`!${ path.relative( cwd, config.temporary.folder ) }`
 		);
 
 	}
 
 	// Get information from '.gitignore' file
-	config.ignored = gitignore( path.join( cwd, '.gitignore' ), implicitelyIgnored )
-		.map( ( ignored: string ): string => {
-			return `!${ ignored }`; // Make it a glob!
-		} );
+	config.ignored.push(
+		...gitignore( path.join( cwd, '.gitignore' ) )
+			.map( ( ignored: string ): string => {
+				return `!${ ignored }`;
+			} )
+	);
 
 	// Setup virtual file system
 	if ( !config.debug ) {

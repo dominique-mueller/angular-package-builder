@@ -1,4 +1,4 @@
-import * as cpx from 'cpx';
+import * as copy from 'copy';
 
 /**
  * Copy a file or a folder (recursively)
@@ -7,15 +7,16 @@ import * as cpx from 'cpx';
  * @param   desinationPath - Path to the destination folder
  * @returns                - Promise, resolves with File content (parsed if JSON)
  */
-export function copy( sourcePattern: string, destinationPath: string ): Promise<void> {
+export function copyFiles( sourcePattern: string, destinationPath: string ): Promise<void> {
 	return new Promise<void>( ( resolve: () => void, reject: ( error: Error ) => void ): void => {
 
-		// Copy asynchronously
-		cpx.copy( sourcePattern, destinationPath, ( copyFileError: Error | null ): void => {
+		copy( sourcePattern, destinationPath, ( copyFileError: Error | null, files ) => {
 			if ( copyFileError ) {
 				reject( new Error( `An error occured while copying everything matching "${ sourcePattern }" to "${ destinationPath }". [${ copyFileError.message }]` ) );
 				return;
 			}
+			// console.log( files.length );
+			// console.log( files[ 0 ].path );
 			resolve();
 		} );
 

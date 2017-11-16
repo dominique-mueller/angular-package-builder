@@ -1,6 +1,6 @@
 {
 	"collectCoverage": true,
-	"collectCoverageFrom" : [
+	"collectCoverageFrom": [
 		"src/**/*.ts",
 		"!src/**/*.interface.ts"
 	],
