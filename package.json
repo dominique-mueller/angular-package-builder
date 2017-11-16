@@ -23,7 +23,7 @@
 	},
 	"scripts": {
 		"build": "tsc -p tsconfig.json",
-		"test": "jest --config jest.config.json --runInBand --no-cache"
+		"test:1": "cd test/my-library && ts-node test.prepare.ts && jest --config ../../jest.config.json test.spec.ts && cd ../.."
 	},
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",
@@ -33,7 +33,7 @@
 	"dependencies": {
 		"chalk": "2.3.x",
 		"clean-css": "4.1.x",
-		"copy": "0.3.x",
+		"cpx": "1.5.x",
 		"del": "3.0.x",
 		"fs-extra": "4.0.x",
 		"globby": "6.1.x",

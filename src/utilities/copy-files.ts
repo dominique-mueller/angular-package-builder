@@ -1,4 +1,5 @@
-import * as copy from 'copy';
+// import * as copy from 'copy';
+import { copy } from 'cpx';
 
 /**
  * Copy a file or a folder (recursively)
@@ -10,13 +11,11 @@ import * as copy from 'copy';
 export function copyFiles( sourcePattern: string, destinationPath: string ): Promise<void> {
 	return new Promise<void>( ( resolve: () => void, reject: ( error: Error ) => void ): void => {
 
-		copy( sourcePattern, destinationPath, ( copyFileError: Error | null, files ) => {
-			if ( copyFileError ) {
-				reject( new Error( `An error occured while copying everything matching "${ sourcePattern }" to "${ destinationPath }". [${ copyFileError.message }]` ) );
+		copy( sourcePattern, destinationPath, ( copyFilesError: Error | null ) => {
+			if ( copyFilesError ) {
+				reject( new Error( `An error occured while copying everything matching "${ sourcePattern }" to "${ destinationPath }". [${ copyFilesError.message }]` ) );
 				return;
 			}
-			// console.log( files.length );
-			// console.log( files[ 0 ].path );
 			resolve();
 		} );
 
