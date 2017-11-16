@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import * as globby from 'globby';
 

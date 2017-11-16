@@ -12,7 +12,7 @@
 			"description": "Path to the entry file",
 			"type": "string"
 		},
-		"outputDir": {
+		"outDir": {
 			"description": "Path to the output folder",
 			"type": "string"
 		},
@@ -20,7 +20,7 @@
 			"description": "Debug mode flag",
 			"type": "boolean"
 		},
-		"compilerOptions": {
+		"typescriptCompilerOptions": {
 			"description": "TypeScript compiler options",
 			"type": "object"
 		},
@@ -35,7 +35,6 @@
 	},
 	"additionalProperties": false,
 	"required": [
-		"entryFile",
-		"outputDir"
+		"entryFile"
 	]
 }

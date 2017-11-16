@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';

@@ -16,7 +16,7 @@ export interface AngularPackageBuilderConfig {
 	/**
 	 * Output directory
 	 */
-	outputDir?: string;
+	outDir?: string;
 
 	/**
 	 * Debug flag
@@ -26,7 +26,7 @@ export interface AngularPackageBuilderConfig {
 	/**
 	 * TypeScript compiler options
 	 */
-	compilerOptions?: { [ option: string ]: any };
+	typescriptCompilerOptions?: { [ option: string ]: any };
 
 	/**
 	 * Angular compiler options
