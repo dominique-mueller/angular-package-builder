@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { Schema, validate, ValidatorResult } from 'jsonschema';
 import * as gitignore from 'parse-gitignore';
@@ -10,7 +10,6 @@ import { getDependencyMap } from '../utilities/get-dependency-map';
 import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
 import { PackageJson } from './../interfaces/package-json.interface';
 import { readFile } from './../utilities/read-file';
-import { resolvePath } from './../utilities/resolve-path';
 
 import * as angularPackageSchema from '../angular-package.schema.json';
 
@@ -19,26 +18,50 @@ import * as angularPackageSchema from '../angular-package.schema.json';
  */
 export async function createConfig(): Promise<AngularPackageBuilderInternalConfig> {
 
-	// Initial configuration
-	const config: AngularPackageBuilderInternalConfig = getInitialConfig();
+	// Get current working directory path (must be normalized manually)
+	const cwd: string = process.cwd().replace( /\\/g, '/' );
 
-	// Get information from 'package.json' file
+	// Initial configuration
+	const config: AngularPackageBuilderInternalConfig = {
+		debug: false,
+		entry: {
+			// file
+			// folder
+		},
+		output: {
+			folder: path.join( cwd, 'dist' ),
+		},
+		temporary: {
+			folder: path.join( cwd, 'dist-angular-package-builder' ),
+			prepared: path.join( cwd, 'dist-angular-package-builder', 'library-prepared' ),
+			buildES5: path.join( cwd, 'dist-angular-package-builder', 'library-build-es5' ),
+			buildES2015: path.join( cwd, 'dist-angular-package-builder', 'library-build-es2015' ),
+			bundleFESM2015: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-fesm2015' ),
+			bundleFESM5: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-fesm5' ),
+			bundleUMD: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-umd' )
+		},
+		memoryFileSystem: null,
+		packageName: '',
+		dependencies: {},
+		typescriptCompilerOptions: {},
+		angularCompilerOptions: {},
+		ignored: []
+	};
+
+	// Get package name and dependencies from 'package.json' file
 	// TODO: Verify that package name actually exists
 	const packageJson: PackageJson = await readFile( 'package.json' );
 	config.packageName = packageJson.name;
-
-	// Derive dependencies from 'package.json' file
 	const packageDependencies: Array<string> = [
 		...Object.keys( packageJson.dependencies || {} ),
 		...Object.keys( packageJson.peerDependencies || {} ),
 		...Object.keys( packageJson.optionalDependencies || {} )
 	];
-	const mappedPackageDependencies: { [ dependency: string ]: string } = getDependencyMap( packageDependencies );
-	config.dependencies = { ...mappedPackageDependencies, ...config.dependencies };
+	config.dependencies = getDependencyMap( packageDependencies );
 
 	// Get custom project configuration
-	const angularPackageJsonFilePath: string = resolvePath( '.angular-package.json' );
-	const alwaysIgnored: Array<string> = [];
+	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
+	const implicitelyIgnored: Array<string> = [];
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
 
 		// Read and validate config file
@@ -50,38 +73,35 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 		}
 
 		// Set input & output details
+		// TODO: Verify path syntax
 		// TODO: Verify that the entry is a file that actually exists
 		// TODO: Verify that the entry is a TypeScript file (file ending)
-		config.entry.folder = resolvePath( path.dirname( projectConfig.entryFile ) );
+		config.entry.folder = path.dirname( projectConfig.entryFile );
 		config.entry.file = path.basename( projectConfig.entryFile );
 
 		if ( projectConfig.outDir ) {
-			config.output.folder = resolvePath( projectConfig.outDir );
+			config.output.folder = path.join( cwd, projectConfig.outDir );
 		}
 		if ( projectConfig.hasOwnProperty( 'debug' ) ) {
 			config.debug = projectConfig.debug;
 		}
 		config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
-		config.typescriptCompilerOptions = { ...config.typescriptCompilerOptions, ...( projectConfig.typescriptCompilerOptions || {} ) };
-		config.angularCompilerOptions = { ...config.angularCompilerOptions, ...( projectConfig.angularCompilerOptions || {} ) };
+		config.typescriptCompilerOptions = projectConfig.typescriptCompilerOptions || {};
+		config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
 
 		// Get ignored files
-		alwaysIgnored.push(
-			path.relative( process.cwd(), config.output.folder ).replace( /\\/g, '/' ), // Relative path!
-			path.relative( process.cwd(), config.temporary.folder ).replace( /\\/g, '/' ) // Relative path!
+		implicitelyIgnored.push(
+			path.relative( cwd, config.output.folder ),
+			path.relative( cwd, config.temporary.folder )
 		);
 
 	}
 
 	// Get information from '.gitignore' file
-	const projectIgnored: Array<string> = gitignore( resolvePath( '.gitignore' ), alwaysIgnored )
-		.map( ( ignoredPattern: string ): string => {
-			return path.relative( process.cwd(), ignoredPattern ).replace( /\\/g, '/' );
-		} )
-		.map( ( ignoredPattern: string ): string => {
-			return `!${ ignoredPattern }`;
+	config.ignored = gitignore( path.join( cwd, '.gitignore' ), implicitelyIgnored )
+		.map( ( ignored: string ): string => {
+			return `!${ ignored }`; // Make it a glob!
 		} );
-	config.ignored = [ ...config.ignored, ...projectIgnored ];
 
 	// Setup virtual file system
 	if ( !config.debug ) {
@@ -92,38 +112,5 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	}
 
 	return config;
-
-}
-
-/**
- * Get initial config
- */
-function getInitialConfig(): AngularPackageBuilderInternalConfig {
-
-	return {
-		debug: false,
-		entry: {
-			// file
-			// folder
-		},
-		output: {
-			folder: resolvePath( 'dist' ),
-		},
-		temporary: {
-			folder: resolvePath( 'dist-angular-package-builder' ),
-			prepared: resolvePath( 'dist-angular-package-builder/library-prepared' ),
-			buildES5: resolvePath( 'dist-angular-package-builder/library-build-es5' ),
-			buildES2015: resolvePath( 'dist-angular-package-builder/library-build-es2015' ),
-			bundleFESM2015: resolvePath( 'dist-angular-package-builder/library-bundle-fesm2015' ),
-			bundleFESM5: resolvePath( 'dist-angular-package-builder/library-bundle-fesm5' ),
-			bundleUMD: resolvePath( 'dist-angular-package-builder/library-bundle-umd' )
-		},
-		memoryFileSystem: null,
-		packageName: '',
-		dependencies: {},
-		typescriptCompilerOptions: {},
-		angularCompilerOptions: {},
-		ignored: []
-	};
 
 }

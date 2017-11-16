@@ -7,6 +7,8 @@ import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
 import { log } from './src/log';
 
+import { posix as path } from 'path';
+
 // TODO: Enable stack trace when debug is enabled; see code below
 // process.on('unhandledRejection', r => console.log(r));
 
@@ -25,7 +27,6 @@ async function main() {
 		// TODO: Remove package name overwrite
 		const config: AngularPackageBuilderInternalConfig = await createConfig();
 		config.packageName = 'test-library';
-		// console.log( config );
 
 		if ( config.debug ) {
 			await deleteFolder( config.temporary.folder );
@@ -47,6 +48,7 @@ async function main() {
 			bundleJavascript( config, 'ES5' ),
 			bundleJavascript( config, 'UMD' )
 		] );
+
 
 		log( 'step', 'Compose package' );
 		await composePackage( config );

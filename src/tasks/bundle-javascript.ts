@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { Bundle } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
@@ -52,12 +52,17 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	const bundle: Bundle = await rollup( rollupInputOptions );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
-	// Re-write sourcemap URLs (absolute -> relative using Linux path type slashes)
+	// Re-write sourcemap URLs
 	map.sources = map.sources.map( ( source: string ): string => {
-		return path
-			.relative( sourcePath, source )
-			.split( '\\' )
-			.join( '/' );
+
+		// Fix issue with virtual file system regarding missing disk volume numbers
+		const fixedSource: string = source[ 0 ] === path.sep
+			? `${ sourcePath.split( path.sep )[ 0 ] }${ source }`
+			: source;
+
+		// Rewrite absolute to relative path
+		return path.relative( sourcePath, fixedSource );
+
 	} );
 
 	// Write bundle w/ sourcemaps to destination
