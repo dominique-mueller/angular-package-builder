@@ -26,7 +26,8 @@
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
 		"pretest": "npm run build && cd test/my-library && node ../../test.prepare.js && cd ../..",
-		"test": "jest --config jest.config.json --runInBand --no-cache"
+		"test": "jest --config jest.config.json --runInBand --no-cache",
+		"dev": "cd test/my-library && ts-node ../../test.prepare.ts && cd ../.."
 	},
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",

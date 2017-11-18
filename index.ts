@@ -1,3 +1,5 @@
+import { posix as path } from 'path';
+
 import { AngularPackageBuilderInternalConfig } from './src/interfaces/angular-package-builder-internal-config.interface';
 import { bundleJavascript } from './src/tasks/bundle-javascript';
 import { compileTypescript } from './src/tasks/compile-typescript';
@@ -6,6 +8,8 @@ import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
 import { log } from './src/log';
+import { MemoryFileSystem } from './src/memory-file-system/memory-file-system';
+
 
 // TODO: Enable stack trace when debug is enabled; see code below
 // process.on('unhandledRejection', r => console.log(r));
@@ -22,12 +26,14 @@ export async function main() {
 
 		log( 'step', 'Configuration' );
 		// TODO: Read CLI arguments, overwrite by passing in as argument
-		// TODO: Remove package name overwrite
 		const config: AngularPackageBuilderInternalConfig = await createConfig();
-		// config.packageName = 'test-library';
 
+		// Setup virtual file system
 		if ( config.debug ) {
 			await deleteFolder( config.temporary.folder );
+		} else {
+			config.memoryFileSystem = new MemoryFileSystem();
+			await config.memoryFileSystem.fill( config.entry.folder );
 		}
 		await deleteFolder( config.output.folder );
 
@@ -50,6 +56,10 @@ export async function main() {
 		log( 'step', 'Compose package' );
 		await composePackage( config );
 
+		if ( !config.debug ) {
+			await config.memoryFileSystem.persist( config.output.folder );
+		}
+
 		const finishTime = new Date().getTime();
 		const processTime = ( ( finishTime - startTime ) / 1000 ).toFixed( 2 );
 
@@ -68,5 +78,3 @@ export async function main() {
 	}
 
 }
-
-// main();
