@@ -27,9 +27,4 @@ export async function composePackage( config: AngularPackageBuilderInternalConfi
 
 	] );
 
-	// Persist the files
-	if ( !config.debug ) {
-		await config.memoryFileSystem.persist( config.output.folder );
-	}
-
 }

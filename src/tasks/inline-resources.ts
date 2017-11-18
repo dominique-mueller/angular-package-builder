@@ -8,8 +8,6 @@ import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { minifyCss } from './../resources/minify-css';
 import { minifyHtml } from './../resources/minify-html';
-import { normalizeLineEndings } from './../utilities/normalize-line-endings';
-import { readFile } from './../utilities/read-file';
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
@@ -17,6 +15,7 @@ import { readFile } from './../utilities/read-file';
 export async function inlineResources( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
 	// Import
+	const { readFile } = await dynamicImport( './../utilities/read-file', config.memoryFileSystem );
 	const { writeFile } = await dynamicImport( './../utilities/write-file', config.memoryFileSystem );
 
 	// Get all files
@@ -44,13 +43,9 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 			// Inline resources
 			if ( externalResources.length > 0 ) {
 				const externalResourcesWithContent: Array<AngularResource> =
-					await loadExternalResources( externalResources, absoluteSourceFilePath );
+					await loadExternalResources( externalResources, absoluteSourceFilePath, readFile );
 				fileContent = angularResourceAnalyzer.inlineExternalResources( externalResourcesWithContent );
 			}
-
-			// We have to normalize line endings here (to LF) because of an OS compatibility issue in tsickle
-			// See <https://github.com/angular/tsickle/issues/596> for further details.
-			fileContent = normalizeLineEndings( fileContent );
 
 			// Write file
 			await writeFile( absoluteDestinationFilePath, fileContent );
@@ -63,13 +58,13 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 /**
  * Load all external resources
  */
-async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ): Promise<Array<AngularResource>> {
+async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string, readFile: any ): Promise<Array<AngularResource>> {
 
 	return Promise.all(
 		externalResources.map( async( externalResource: AngularResource ): Promise<AngularResource> => {
 			externalResource.urls = await Promise.all(
 				externalResource.urls.map( async( url: AngularResourceUrl ): Promise<AngularResourceUrl> => {
-					url.content = await loadExternalResource( url.url, filePath );
+					url.content = await loadExternalResource( url.url, filePath, readFile );
 					return url;
 				} )
 			);
@@ -82,7 +77,7 @@ async function loadExternalResources( externalResources: Array<AngularResource>,
 /**
  * Load and prepare a external resource
  */
-async function loadExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
+async function loadExternalResource( resourceUrl: string, filePath: string, readFile: any ): Promise<string> {
 
 	// Read the resource file
 	const absoluteTemplatePath: string = path.join( path.dirname( filePath ), resourceUrl );

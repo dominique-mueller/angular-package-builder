@@ -7,7 +7,6 @@ import * as gitignore from 'parse-gitignore';
 import { AngularPackageBuilderConfig } from '../interfaces/angular-package-builder-config.interface';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
-import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
 import { PackageJson } from './../interfaces/package-json.interface';
 import { readFile } from './../utilities/read-file';
 
@@ -23,6 +22,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Initial configuration
 	const config: AngularPackageBuilderInternalConfig = {
+		cwd,
 		debug: false,
 		entry: {
 			// file
@@ -103,14 +103,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 				return `!${ ignored }`;
 			} )
 	);
-
-	// Setup virtual file system
-	if ( !config.debug ) {
-		config.memoryFileSystem = new MemoryFileSystem( [
-			config.output.folder,
-			...Object.values( config.temporary )
-		] );
-	}
 
 	return config;
 

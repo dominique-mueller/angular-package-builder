@@ -4,6 +4,7 @@ import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
  * Angular Package Builder Internal Configuration Interface (derived from Angular Package Builder Config)
  */
 export interface AngularPackageBuilderInternalConfig {
+	cwd?: string;
 	debug?: boolean;
 	entry?: {
 		folder?: string;

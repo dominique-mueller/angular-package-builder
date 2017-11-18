@@ -12,8 +12,8 @@ export function writeFile( filePath: string, fileContent: string | Object ): Pro
 
 		// Automatically stringify objects
 		const preparedFileContent: string = ( typeof fileContent === 'string' )
-		? fileContent
-		: `${ JSON.stringify( fileContent, null, '	' ) }\n`; // Indentation using tabs, empty line at the end
+			? fileContent
+			: `${ JSON.stringify( fileContent, null, '	' ) }\n`; // Indentation using tabs, empty line at the end
 
 		// Write file asynchronously; implicitely creates the file if necessary
 		fsExtra.outputFile( filePath, preparedFileContent, 'utf-8', ( writeFileError: NodeJS.ErrnoException | null ) => {
