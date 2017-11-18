@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { posix as path } from 'path';
 
 import { Volume, createFsFromVolume } from 'memfs';
+import * as unixify from 'unixify';
 
 import { getFiles } from '../utilities/get-files';
 import { normalizeLineEndings } from '../utilities/normalize-line-endings';
@@ -11,6 +12,8 @@ import { writeFile } from './../utilities/write-file';
 /**
  * Memory File System
  *
+ * - Absolute paths are automatically being converted into the unix format. For instance, Windows partition information get removed
+ *   ('C:/' gets transformed into '/').
  * - When filling up the memory file system, we also normalize line endings (to LF). This is necessary to ensure the compatibility with
  *   Windows at all time as sometimes tools are not optimized for it. For instance, tsickle seems to run into issues when CRLF is being
  *   used (see https://github.com/angular/tsickle/issues/596).
@@ -18,14 +21,14 @@ import { writeFile } from './../utilities/write-file';
 export class MemoryFileSystem {
 
 	/**
-	 * Virtual volume
+	 * Virtual volume, containing our files
 	 */
-	public volume: Volume;
+	public readonly volume: Volume;
 
 	/**
-	 * Virtual filesystem (module), connected to the virtual volume
+	 * Virtual file system module, connected to the virtual volume
 	 */
-	public fs: { [ key: string ]: any }; // Operations are exactly the same as the ones from the NodeJS fs module
+	public readonly fs: { [ key: string ]: any }; // Operations are exactly mapped to the ones from the NodeJS fs module
 
 	/**
 	 * Constructor
@@ -38,11 +41,11 @@ export class MemoryFileSystem {
 	/**
 	 * Fill memory file system with contents from the given folder
 	 *
-	 * @param folderPath - Absolute path to folder
+	 * @param folderPath - Absolute path to folder from which to load in the files
 	 */
 	public async fill( folderPath: string ): Promise<void> {
 
-		// Find files, on the actual disk
+		// Find all 'interesting' files -- on the actual disk
 		const fileGlobs: Array<string> = [
 			path.join( folderPath, '**', '*.ts' ),
 			`!${ path.join( folderPath, '**', '*.spec.ts' ) }`,
@@ -56,14 +59,14 @@ export class MemoryFileSystem {
 		];
 		const filePaths: Array<string> = await getFiles( fileGlobs, '' );
 
-		// Read files, from the actual disk
+		// Read files -- from the actual disk
 		const fileContents: Array<string> = await Promise.all(
 			filePaths.map( ( file: string ): Promise<string> => {
 				return readFile( file );
 			} )
 		);
 
-		// Write files, to memory file system (synchronously, cause nothing is async in the virtual disk)
+		// Write files -- to memory file system (synchronously, cause nothing is async in the virtual disk)
 		filePaths.forEach( ( file: string, index: number ): void => {
 			this.volume.mkdirpSync( path.dirname( file ) );
 			this.volume.writeFileSync( file, normalizeLineEndings( fileContents[ index ] ), 'utf-8' );
@@ -74,40 +77,29 @@ export class MemoryFileSystem {
 	/**
 	 * Persist the given path (folder) to the real filesystem
 	 *
-	 * @param   pathToPersist - Path (folder) to be persisted
-	 * @returns               - Promise, resolved when finished
+	 * @param   folderPath - Path (folder) to be persisted
+	 * @returns            - Promise, resolved when finished
 	 */
-	public async persist( pathToPersist: string ): Promise<void> {
+	public async persist( folderPath: string ): Promise<void> {
 
-		const memVolState: { [ path: string ]: string } = this.volume.toJSON();
-		const normalizedPathToPersist: string = this.getVirtualPath( pathToPersist );
+		// Get full volume content
+		const volumeContent: { [ path: string ]: string } = this.volume.toJSON();
 
-		// Filter out files & folders which are outside the path to be persisted
-		const filesToPersist: Array<string> = Object
-			.keys( memVolState )
+		//  Get list of files to persist
+		const normalizedFolderPath: string = `${ unixify( folderPath ) }${ path.sep }`;
+		const files: Array<string> = Object
+			.keys( volumeContent )
 			.filter( ( filePath: string ): boolean => {
-				return filePath.startsWith( normalizedPathToPersist );
+				return filePath.startsWith( normalizedFolderPath ); // The cheap kind of globbing ...
 			} );
 
-		// Write the files to disk (creating folders if necessary)
+		// Write the files -- to actual disk
 		await Promise.all(
-			filesToPersist.map( async( filePath: string ): Promise<void> => {
-				await writeFile( path.join( filePath ), memVolState[ filePath ] );
+			files.map( async( filePath: string ): Promise<void> => {
+				await writeFile( path.join( filePath ), volumeContent[ filePath ] );
 			} )
 		);
 
-	}
-
-	/**
-	 * Get virtual path to folder (no partition information, starts and ends with path separator)
-	 *
-	 * @param   originalPath - Original path
-	 * @returns              - Normalized path
-	 */
-	private getVirtualPath( originalPath: string ): string {
-		return originalPath[ 0 ] === path.sep
-			? `${ originalPath }${ path.sep }`
-			: `${ path.sep }${ originalPath.split( path.sep ).slice( 1 ).join( path.sep ) }${ path.sep }`;
 	}
 
 	/**
@@ -144,17 +136,17 @@ export class MemoryFileSystem {
 		// going into the 'node_modules' folder
 		const fsFunctionMappingWithExceptions = { ...fsFunctionMapping, ...{
 			statSync: ( path: string ): fs.Stats => {
-				return ( path.indexOf( 'node_modules' ) === -1 )
+				return ( path.indexOf( 'node_modules' ) === -1 ) // Allow real access to 'node_modules' folder
 					? volumeFs.statSync( path )
 					: fs.statSync( path );
 			},
 			readFileSync: ( path: any, options: any ): any => {
-				return ( path.indexOf( 'node_modules' ) === -1 )
+				return ( path.indexOf( 'node_modules' ) === -1 ) // Allow real access to 'node_modules' folder
 					? volumeFs.readFileSync( path, options )
 					: fs.readFileSync( path, options );
 			},
 			readdirSync: ( path: any, options: any ): any => {
-				return ( path.indexOf( 'node_modules' ) === -1 )
+				return ( path.indexOf( 'node_modules' ) === -1 ) // Allow real access to 'node_modules' folder
 					? volumeFs.readdirSync( path, options )
 					: fs.readdirSync( path, options );
 			}
