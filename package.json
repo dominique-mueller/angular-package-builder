@@ -22,9 +22,12 @@
 		"angular-package-builder": "bin/angular-package-builder.js"
 	},
 	"scripts": {
-		"build": "tsc -p tsconfig.json",
-		"ppretest": "cd test/my-library && ts-node ../../test.prepare.ts && cd ../..",
+		"build": "tsc -p tsconfig.json && copyfiles \"src/**/*.json\" \"bin/**\" dist",
+		"clean": "rimraf -r dist/**",
+		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
+		"pretest": "cd test/my-library && ts-node ../../test.prepare.ts && cd ../..",
 		"test": "jest --config jest.config.json --runInBand --no-cache",
+		"pretest:watch": "cd test/my-library && ts-node ../../test.prepare.ts && cd ../..",
 		"test:watch": "jest --config jest.config.json --runInBand --no-cache --watchAll"
 	},
 	"peerDependencies": {
@@ -60,8 +63,11 @@
 		"@types/node-sass": "3.10.x",
 		"@types/node": "8.0.x",
 		"@types/rollup": "0.41.x",
+		"automatic-release": "1.1.x",
 		"babel-jest": "21.2.0",
+		"copyfiles": "1.2.x",
 		"jest": "21.2.x",
+		"rimraf": "2.6.x",
 		"rxjs": "5.5.x",
 		"ts-jest": "21.2.x",
 		"typescript": "2.4.x"
