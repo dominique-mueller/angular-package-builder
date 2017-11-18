@@ -25,7 +25,7 @@
 		"build": "tsc -p tsconfig.json && copyfiles \"src/**/*.json\" \"bin/**\" dist",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
-		"pretest": "cd test/my-library && node ../../test.prepare.js && cd ../..",
+		"pretest": "npm run build && cd test/my-library && node ../../test.prepare.js && cd ../..",
 		"test": "jest --config jest.config.json --runInBand --no-cache"
 	},
 	"peerDependencies": {
