@@ -1,0 +1,4 @@
+<label class="lib-input__container">
+	<span class="lib-input__label">{{ label }}</span>
+	<input class="lib-input__field" #input type="text" [value]="model" (change)="onChange( input.value )">
+</label>

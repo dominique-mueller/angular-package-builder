@@ -5,6 +5,10 @@
 /dist
 /dist-angular-package-builder
 
+# Tests
+/test/my-library/dist
+/test/my-library/dist-angular-package-builder
+
 # Development
 /.vscode
 

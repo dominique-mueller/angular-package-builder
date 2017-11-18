@@ -1,0 +1,15 @@
+{
+	"name": "my-library",
+	"version": "1.0.0",
+	"private": true,
+	"dependencies": {
+		"@angular/core": "5.0.x",
+		"@angular/common": "5.0.x",
+		"@angular/compiler": "5.0.x",
+		"rxjs": "5.5.x"
+	},
+	"devDependencies": {
+		"@angular/compiler-cli": "5.0.x",
+		"typescript": "2.4.x"
+	}
+}

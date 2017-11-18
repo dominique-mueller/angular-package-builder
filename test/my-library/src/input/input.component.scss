@@ -1,0 +1,21 @@
+lib-input {
+	display: block;
+}
+
+.lib-input {
+
+	&__container {
+		padding: 1rem;
+	}
+
+	&__label {
+		color: #333;
+		font-size: 1.4rem;
+		cursor: pointer;
+	}
+
+	&__field {
+		border: 1px solid #999;
+	}
+
+}
