@@ -28,7 +28,6 @@ export async function main() {
 		// TODO: Read CLI arguments, overwrite by passing in as argument
 		const config: AngularPackageBuilderInternalConfig = await createConfig();
 
-		// Setup virtual file system
 		if ( config.debug ) {
 			await deleteFolder( config.temporary.folder );
 		} else {
@@ -40,13 +39,13 @@ export async function main() {
 		log( 'step', 'Inline resources' );
 		await inlineResources( config );
 
-		log( 'step', 'Compile TypeScript into JavaScript' );
+		log( 'step', 'Compile TypeScript into JavaScript (ES2015, ES5)' );
 		await Promise.all( [
 			compileTypescript( config, 'ES2015' ),
 			compileTypescript( config, 'ES5' )
 		] );
 
-		log( 'step', 'Create JavaScript bundles' );
+		log( 'step', 'Create JavaScript bundles (ES2015, ES5, UMD)' );
 		await Promise.all( [
 			bundleJavascript( config, 'ES2015' ),
 			bundleJavascript( config, 'ES5' ),
