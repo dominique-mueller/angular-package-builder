@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { InputComponent } from './input/input.component';
-import { DataService } from './data/data.service';
+import { LIBInputComponent } from './input/input.component';
+import { LIBDataService } from './data/data.service';
 
 /**
  * Notifier module
  */
 @NgModule( {
 	declarations: [
-		InputComponent
+		LIBInputComponent
 	],
 	exports: [
-		InputComponent
+		LIBInputComponent
 	],
 	imports: [
 		CommonModule
 	],
 	providers: [
-		DataService
+		LIBDataService
 	]
 } )
-export class MyLibraryModule {}
+export class LIBModule {}

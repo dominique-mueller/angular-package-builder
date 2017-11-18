@@ -1,4 +1,8 @@
 {
+	"moduleDirectories": [
+		"node_modules",
+		"test/my-library/dist"
+	],
 	"moduleFileExtensions": [
 		"js",
 		"ts",
@@ -7,6 +11,7 @@
 	"rootDir": ".",
 	"setupTestFrameworkScriptFile": "<rootDir>/jest.setup.ts",
 	"transform": {
+		"^.+\\.js$": "babel-jest",
 		"^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
 	},
 	"testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
