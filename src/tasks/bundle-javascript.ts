@@ -1,13 +1,12 @@
 import { posix as path } from 'path';
 
-import { Bundle } from 'rollup';
+import { Bundle, Options, GenerateOptions } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
-import { RollupInputConfig, RollupOutputConfig } from '../config/rollup.config.interface';
 
 /**
  * Generate JavaScript bundle
@@ -45,8 +44,8 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	}
 
 	// Get rollup configuration
-	const rollupInputOptions: RollupInputConfig = await getRollupInputConfig( sourcePath, config );
-	const rollupOutputOptions: RollupOutputConfig = getRollupOutputConfig( rollupFormat, config );
+	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, config );
+	const rollupOutputOptions: GenerateOptions = getRollupOutputConfig( rollupFormat, config );
 
 	// Generate the bundle
 	const bundle: Bundle = await rollup( rollupInputOptions );

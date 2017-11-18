@@ -1,16 +1,15 @@
 import { posix as path } from 'path';
 
 import * as parsePackageJsonName from 'parse-packagejson-name';
-import { Options, Bundle, Warning, Plugin, WriteOptions } from 'rollup';
+import { Options, Bundle, Warning, Plugin, WriteOptions, GenerateOptions } from 'rollup';
 
-import { RollupInputConfig, RollupOutputConfig } from './rollup.config.interface';
 import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from '../utilities/dynamic-import';
 
 /**
  * Get Rollup Input Config
  */
-export async function getRollupInputConfig( sourcePath: string, config: AngularPackageBuilderInternalConfig ): Promise<RollupInputConfig> {
+export async function getRollupInputConfig( sourcePath: string, config: AngularPackageBuilderInternalConfig ): Promise<Options> {
 
 	const commonjs = await dynamicImport( 'rollup-plugin-commonjs', config.memoryFileSystem );
 	const nodeResolve = await dynamicImport( 'rollup-plugin-node-resolve', config.memoryFileSystem );
@@ -39,7 +38,7 @@ export async function getRollupInputConfig( sourcePath: string, config: AngularP
 /**
  * Get Rollup Output Config
  */
-export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPackageBuilderInternalConfig ): RollupOutputConfig {
+export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPackageBuilderInternalConfig ): GenerateOptions {
 
 	return {
 		format,
