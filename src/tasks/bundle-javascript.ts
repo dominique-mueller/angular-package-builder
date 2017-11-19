@@ -49,6 +49,7 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	const rollupOutputOptions: GenerateOptions = getRollupOutputConfig( rollupFormat, config );
 
 	// Generate the bundle
+	// TODO: Error handling
 	const bundle: Bundle = await rollup( rollupInputOptions );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 

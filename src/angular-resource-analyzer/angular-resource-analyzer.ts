@@ -118,7 +118,11 @@ export class AngularResourceAnalyzer {
 	  * @param currentNode - Current node to analyze
 	  */
 	private analyzeNodeForComponentDecorators( currentNode: typescript.Node ): void {
-		if ( currentNode.kind === typescript.SyntaxKind.Decorator && ( <any> currentNode ).expression.expression.text === 'Component' ) {
+		if (
+			currentNode.kind === typescript.SyntaxKind.Decorator &&
+			( <any> currentNode ).expression.expression &&
+			( <any> currentNode ).expression.expression.text === 'Component'
+		) {
 			this.analyzeComponentDecoratorNodeForExternalResources( currentNode );
 		}
 		typescript.forEachChild( currentNode, this.analyzeNodeForComponentDecorators.bind( this ) ); // Bind to keep the 'this' reference

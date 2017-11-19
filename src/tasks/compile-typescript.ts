@@ -39,12 +39,31 @@ export async function compileTypescript( config: AngularPackageBuilderInternalCo
 	await writeFile( typescriptConfigPath, typescriptConfig );
 
 	// Run Angular compiler (synchronous process!), passing in the tsconfig file as the project
-	let error: string;
-	const exitCode: number = angularCompilerCli( [ '-p', typescriptConfigPath ], ( errorMessage: string ) => {
-		error = errorMessage;
+	let errors: string;
+	const exitCode: number = angularCompilerCli( [ '-p', typescriptConfigPath ], ( angularCompilerCliError: string ): void => {
+		errors = angularCompilerCliError;
 	} );
 	if ( exitCode !== 0 ) {
-		throw new Error( error );
+
+		// Fix path, add prefix to messages
+		const errorMessages: Array<string> = errors
+			.split( '\n' )
+			.filter( ( error: string ): boolean => {
+				return error !== '';
+			} )
+			.map( ( error: string ): string => {
+				return error.replace( config.temporary.prepared.split( path.sep ).pop(), config.entry.folder.split( path.sep ).pop() );
+			} )
+			.map( ( error: string ): string => {
+				return errors.indexOf( 'warning TS0' ) !== -1 ? `[tsickle] ${ error }` : `[TypeScript] ${ error }`;
+			} );
+
+		// Throw error
+		throw new Error( [
+			`An error occured while trying to compile the TypeScript sources using the Angular Compiler.`,
+			...errorMessages
+		].join( '\n' ) );
+
 	}
 
 }

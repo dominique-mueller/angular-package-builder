@@ -20,16 +20,12 @@ export async function getRollupInputConfig( sourcePath: string, config: AngularP
 	return {
 		external: Object.keys( config.dependencies ),
 		input: path.join( sourcePath, `${ parsePackageJsonName( config.packageName ).fullName }.js` ), // Previously 'entry' which is now deprecated
-		onwarn: ( warning ): void => {
+		// onwarn: ( warning ): void => {
 
-			// Ignore rewriting of 'this' to 'undefined' (might be an Angular-specific problem)
-			// - Error message explanation: https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
-			// - Workaround: https://github.com/rollup/rollup/issues/794#issuecomment-270803587
-			// if ( warning.code !== 'THIS_IS_UNDEFINED' ) {
-			// 	console.warn( warning.message );
-			// }
+		// 	console.warn( 'ROLLUP' );
+		// 	console.warn( warning );
 
-		},
+		// },
 		plugins: [
 			nodeResolve(),
 			commonjs()

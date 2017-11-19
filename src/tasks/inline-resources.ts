@@ -3,9 +3,9 @@ import { posix as path } from 'path';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from './../angular-resource-analyzer/angular-resource-analyzer';
 import { compileSass } from './../resources/compile-sass';
-import { importWithFs } from './../utilities/import-with-fs';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
+import { importWithFs } from './../utilities/import-with-fs';
 import { minifyCss } from './../resources/minify-css';
 import { minifyHtml } from './../resources/minify-html';
 
