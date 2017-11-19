@@ -8,6 +8,7 @@ import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { importWithFs } from './../utilities/import-with-fs';
 import { minifyCss } from './../resources/minify-css';
 import { minifyHtml } from './../resources/minify-html';
+import Logger from '../logger/logger';
 
 let readFile: any;
 let writeFile: any;
@@ -27,38 +28,62 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 		...config.ignored
 	];
 	const filePaths: Array<string> = await getFiles( sourceFilesPatterns, config.entry.folder );
+	Logger.debug( 'Patterns for finding source files:' );
+	Logger.debug( sourceFilesPatterns );
+	Logger.debug( '' );
+	Logger.debug( 'Found source files (relative path):' );
+	Logger.debug( filePaths );
+	Logger.debug( '' );
 
 	// Inline resources into source files
+	const logLines: any = {};
+	Logger.debug( 'Inline resources' );
 	await Promise.all(
 		filePaths.map( async( filePath: string ): Promise<void> => {
 
 			// Read file
+			logLines[ filePath ] = [];
 			const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
 			const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
+			logLines[ filePath ].push( `Read file at "${ absoluteSourceFilePath }"` );
 			const fileContent: string = await readFile( absoluteSourceFilePath );
 
 			// Find external resources
 			const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
 			const externalResources: Array<AngularResource> = angularResourceAnalyzer.getExternalResources();
+			const numberOfResourceFiles: number = externalResources.reduce(
+				( numberOfResourceFiles: number, externalResource: AngularResource ): number => {
+				return numberOfResourceFiles + externalResource.urls.length;
+			}, 0 );
+			logLines[ filePath ].push( `Found ${ externalResources.length } external resources, total of ${ numberOfResourceFiles } files` );
 
 			// Load external resources
-			const externalResourcesLoaded: Array<AngularResource> = await loadExternalResources( externalResources, absoluteSourceFilePath );
+			const externalResourcesLoaded: Array<AngularResource> =
+				await loadExternalResources( externalResources, absoluteSourceFilePath, logLines[ filePath ] );
 
 			// Inline external resources
+			logLines[ filePath ].push( `Inline loaded resources` );
 			const fileContentWithInlinedResources: string = angularResourceAnalyzer.inlineExternalResources( externalResourcesLoaded );
 
 			// Write file
+			logLines[ filePath ].push( `Write file to "${ absoluteDestinationFilePath }"` );
 			await writeFile( absoluteDestinationFilePath, fileContentWithInlinedResources );
 
 		} )
 	);
+	Object.keys( logLines ).forEach( ( filePath: string ): void => {
+		Logger.debug( `  "${ filePath }"` );
+		logLines[ filePath ].forEach( ( logLine: string ): void => {
+			Logger.debug( `    -> ${ logLine }` );
+		} );
+	} );
 
 }
 
 /**
  * Load all external resources
  */
-async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ): Promise<Array<AngularResource>> {
+async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string, logLine: any ): Promise<Array<AngularResource>> {
 
 	return Promise.all(
 
@@ -68,7 +93,7 @@ async function loadExternalResources( externalResources: Array<AngularResource>,
 
 				// Load all resource URLs
 				externalResource.urls.map( async( url: AngularResourceUrl ): Promise<AngularResourceUrl> => {
-					url.content = await loadAndPrepareExternalResource( url.url, filePath );
+					url.content = await loadAndPrepareExternalResource( url.url, filePath, logLine );
 					return url;
 				} )
 
@@ -83,13 +108,14 @@ async function loadExternalResources( externalResources: Array<AngularResource>,
 /**
  * Load and prepare a external resource
  */
-async function loadAndPrepareExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
+async function loadAndPrepareExternalResource( resourceUrl: string, filePath: string, logLine: any ): Promise<string> {
 
 	// Read the resource file
 	const resourcePath: string = path.join( path.dirname( filePath ), resourceUrl );
 	let resource: string;
 	try {
 		resource = await readFile( resourcePath );
+		logLine.push( `Read external resource from "${ resourcePath }"` );
 	} catch( error ) {
 		throw new Error( [
 			`The external resource at "${ resourcePath }" does not exist, or cannot be read.`,
@@ -104,17 +130,20 @@ async function loadAndPrepareExternalResource( resourceUrl: string, filePath: st
 
 		// External HTML templates
 		case 'html':
+			logLine.push( 'Minify HTML resource' );
 			resource = minifyHtml( resource );
 			break;
 
 		// External CSS files
 		case 'css':
+			logLine.push( 'Minify CSS resource' );
 			resource = minifyCss( resource );
 			break;
 
 		// External SASS files
 		case 'scss':
 		case 'sass':
+			logLine.push( 'Compile SASS resource' );
 			resource = await compileSass( resource );
 			resource = minifyCss( resource );
 			break;

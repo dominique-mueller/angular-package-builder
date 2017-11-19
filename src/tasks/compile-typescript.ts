@@ -3,9 +3,10 @@ import { posix as path } from 'path';
 import { ParsedConfiguration } from '@angular/compiler-cli';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { importWithFs } from './../utilities/import-with-fs';
 import { getTypescriptConfig } from './../config/typescript.config';
+import { importWithFs } from './../utilities/import-with-fs';
 import { TypescriptConfig } from './../config/typescript.config.interface';
+import Logger from '../logger/logger';
 
 let angularCompilerCli: any;
 let getFiles: any;
@@ -37,12 +38,17 @@ export async function compileTypescript( config: AngularPackageBuilderInternalCo
 	const typescriptConfig: TypescriptConfig = getTypescriptConfig( target, destinationPath, entryFiles, config );
 	const typescriptConfigPath: string = path.join( config.temporary.folder, `tsconfig.${ target }.json` );
 	await writeFile( typescriptConfigPath, typescriptConfig );
+	Logger.debug( `TypeScript Configuration at "${ typescriptConfigPath }":` );
+	Logger.debug( typescriptConfig );
+	Logger.debug( '' );
 
 	// Run Angular compiler (synchronous process!), passing in the tsconfig file as the project
+	Logger.debug( 'Compile TypeScript to JavaScript using the Angular Compiler CLI ...' );
 	let errors: string;
 	const exitCode: number = angularCompilerCli( [ '-p', typescriptConfigPath ], ( angularCompilerCliError: string ): void => {
 		errors = angularCompilerCliError;
 	} );
+	Logger.debug( '' );
 	if ( exitCode !== 0 ) {
 
 		// Fix path, add prefix to messages

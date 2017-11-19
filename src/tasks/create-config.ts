@@ -8,6 +8,7 @@ import { AngularPackageBuilderConfig } from '../interfaces/angular-package-build
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
 import { readFile } from './../utilities/read-file';
+import Logger from '../logger/logger';
 
 import * as angularPackageSchema from '../angular-package.schema.json';
 
@@ -18,6 +19,9 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Get current working directory path (must be normalized manually)
 	const cwd: string = process.cwd().replace( /\\/g, '/' );
+	Logger.debug( 'Current working directory (cwd):' )
+	Logger.debug( cwd )
+	Logger.debug( '' )
 
 	// Initial configuration
 	const config: AngularPackageBuilderInternalConfig = {
@@ -70,6 +74,9 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	// Get custom project configuration
 	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
+
+		Logger.debug( 'Found ".angular-package.json" configuration file!' )
+		Logger.debug( '' )
 
 		// Read and validate config file
 		const projectConfig: AngularPackageBuilderConfig = await readFile( angularPackageJsonFilePath );
@@ -125,6 +132,10 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 				return `!${ ignored }`;
 			} )
 	);
+
+	Logger.debug( 'Internal Angular Package Builder Configuration:' )
+	Logger.debug( config )
+	Logger.debug( '' )
 
 	return config;
 
