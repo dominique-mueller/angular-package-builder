@@ -21,6 +21,11 @@ import { writeFile } from './../utilities/write-file';
 export class MemoryFileSystem {
 
 	/**
+	 * Active flag
+	 */
+	public isActive: boolean;
+
+	/**
 	 * Virtual volume, containing our files
 	 */
 	public readonly volume: Volume;
@@ -34,6 +39,7 @@ export class MemoryFileSystem {
 	 * Constructor
 	 */
 	constructor() {
+		this.isActive = false;
 		this.volume = this.createVolume();
 		this.fs = this.createFs( this.volume );
 	}
@@ -54,7 +60,6 @@ export class MemoryFileSystem {
 			path.join( folderPath, '**', '*.html' ),
 			path.join( folderPath, '**', '*.sass' ),
 			path.join( folderPath, '**', '*.scss' ),
-			path.join( folderPath, '**', '*.less' ),
 			path.join( folderPath, '**', '*.css' )
 		];
 		const filePaths: Array<string> = await getFiles( fileGlobs, '' );
@@ -157,3 +162,12 @@ export class MemoryFileSystem {
 	}
 
 }
+
+// Export as singleton
+let memoryFileSystemInstance: MemoryFileSystem;
+export default ( () => {
+	if ( !memoryFileSystemInstance ) {
+		memoryFileSystemInstance = new MemoryFileSystem();
+	}
+	return memoryFileSystemInstance;
+} )();

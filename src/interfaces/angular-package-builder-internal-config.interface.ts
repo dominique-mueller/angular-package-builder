@@ -5,7 +5,6 @@ import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
  */
 export interface AngularPackageBuilderInternalConfig {
 	cwd?: string;
-	debug?: boolean;
 	entry?: {
 		folder?: string;
 		file?: string;
@@ -22,7 +21,6 @@ export interface AngularPackageBuilderInternalConfig {
 		bundleFESM5?: string;
 		bundleUMD?: string;
 	};
-	memoryFileSystem?: MemoryFileSystem | null;
 	packageName?: string;
 	dependencies?: { [ dependency: string ]: string };
 	typescriptCompilerOptions?: { [ option: string ]: any };

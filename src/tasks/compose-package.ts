@@ -1,15 +1,16 @@
 import { posix as path } from 'path';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { dynamicImport } from './../utilities/dynamic-import';
+import { importWithFs } from './../utilities/import-with-fs';
+
+let copyFiles: any;
 
 /**
  * Compile TypeScript into JavaScript
  */
 export async function composePackage( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
-	// Import
-	const { copyFiles } = await dynamicImport( './../utilities/copy-files', config.memoryFileSystem );
+	copyFiles = ( await importWithFs( './../utilities/copy-files' ) ).copyFiles;
 
 	// Copy all files which should end up in the package
 	await Promise.all( [

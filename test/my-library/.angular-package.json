@@ -1,5 +1,4 @@
 {
 	"entryFile": "src/index.ts",
-	"outDir": "dist",
-	"debug": false
+	"outDir": "dist"
 }

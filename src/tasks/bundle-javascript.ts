@@ -2,20 +2,22 @@ import { posix as path } from 'path';
 
 import { Bundle, Options, GenerateOptions } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
+import * as unixify from 'unixify';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { dynamicImport } from './../utilities/dynamic-import';
+import { importWithFs } from './../utilities/import-with-fs';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
-import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
+
+let rollup: any;
+let writeFile: any;
 
 /**
  * Generate JavaScript bundle
  */
 export async function bundleJavascript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 
-	// Import
-	const { rollup } = await dynamicImport( 'rollup', config.memoryFileSystem );
-	const { writeFile } = await dynamicImport( './../utilities/write-file', config.memoryFileSystem );
+	rollup = ( await importWithFs( 'rollup' ) ).rollup;
+	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
 
 	// Get information upfront
 	let sourcePath: string;
@@ -44,7 +46,7 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	}
 
 	// Get rollup configuration
-	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, config );
+	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, target, config );
 	const rollupOutputOptions: GenerateOptions = getRollupOutputConfig( rollupFormat, config );
 
 	// Generate the bundle
@@ -52,16 +54,9 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
 	// Re-write sourcemap URLs
+	const normalizedSourcePath: string = unixify( sourcePath );
 	map.sources = map.sources.map( ( source: string ): string => {
-
-		// Fix issue with virtual file system regarding missing disk volume numbers
-		const fixedSource: string = source[ 0 ] === path.sep
-			? `${ sourcePath.split( path.sep )[ 0 ] }${ source }`
-			: source;
-
-		// Rewrite absolute to relative path
-		return path.relative( sourcePath, fixedSource );
-
+		return path.relative( normalizedSourcePath, unixify( source ) );
 	} );
 
 	// Write bundle w/ sourcemaps to destination

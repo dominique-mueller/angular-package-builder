@@ -4,27 +4,31 @@ import * as parsePackageJsonName from 'parse-packagejson-name';
 import { Options, Bundle, Warning, Plugin, WriteOptions, GenerateOptions } from 'rollup';
 
 import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
-import { dynamicImport } from '../utilities/dynamic-import';
+import { importWithFs } from '../utilities/import-with-fs';
+import Logger from '../logger/logger';
+
+let commonjs: any;
+let nodeResolve: any;
 
 /**
  * Get Rollup Input Config
  */
-export async function getRollupInputConfig( sourcePath: string, config: AngularPackageBuilderInternalConfig ): Promise<Options> {
+export async function getRollupInputConfig( sourcePath: string, target: 'ES2015' | 'ES5' | 'UMD',
+	config: AngularPackageBuilderInternalConfig ): Promise<Options> {
 
-	const commonjs = await dynamicImport( 'rollup-plugin-commonjs', config.memoryFileSystem );
-	const nodeResolve = await dynamicImport( 'rollup-plugin-node-resolve', config.memoryFileSystem );
+	commonjs = await importWithFs( 'rollup-plugin-commonjs' );
+	nodeResolve = await importWithFs( 'rollup-plugin-node-resolve' );
 
 	return {
 		external: Object.keys( config.dependencies ),
 		input: path.join( sourcePath, `${ parsePackageJsonName( config.packageName ).fullName }.js` ), // Previously 'entry' which is now deprecated
 		onwarn: ( warning ): void => {
 
-			// Ignore rewriting of 'this' to 'undefined' (might be an Angular-specific problem)
-			// - Error message explanation: https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
-			// - Workaround: https://github.com/rollup/rollup/issues/794#issuecomment-270803587
-			// if ( warning.code !== 'THIS_IS_UNDEFINED' ) {
-			// 	console.warn( warning.message );
-			// }
+			// Print prettier warning log
+			const betterWarningMessage: string = warning.message
+				.replace( /\\/g, '/' )
+				.replace( sourcePath.split( path.sep ).slice( -2 ).join( path.sep ), config.entry.folder.split( path.sep ).pop() );
+			Logger.warn( `${ warning.code } – ${ betterWarningMessage } (${ target } target)` );
 
 		},
 		plugins: [

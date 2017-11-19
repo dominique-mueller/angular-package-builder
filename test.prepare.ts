@@ -1,5 +1,9 @@
 // Import and run Angular Pacakge Builder
 ( async() => {
-    const angularPackageBuilder = await import( './index' );
-    angularPackageBuilder.main();
+    try {
+        const angularPackageBuilder = await import( './index' );
+        await angularPackageBuilder.main();
+    } catch( error ) {
+        // Do nothing
+    }
 } )();

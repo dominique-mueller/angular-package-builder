@@ -19,11 +19,6 @@ export interface AngularPackageBuilderConfig {
 	outDir?: string;
 
 	/**
-	 * Debug flag
-	 */
-	debug?: boolean;
-
-	/**
 	 * TypeScript compiler options
 	 */
 	typescriptCompilerOptions?: { [ option: string ]: any };
