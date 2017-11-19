@@ -11,15 +11,13 @@ export class Logger {
 	/**
 	 * Debug mode flag
 	 */
-	private readonly isDebugMode: boolean;
+	public debugMode: boolean;
 
 	/**
 	 * Constructor
-	 *
-	 * @param debug - Debug mode flag
 	 */
-	constructor( debug: boolean = false ) {
-		this.isDebugMode = debug;
+	constructor() {
+		this.debugMode = false;
 	}
 
 	/**
@@ -28,7 +26,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public debug( message: string ): void {
-		if ( this.isDebugMode ) {
+		if ( this.debugMode ) {
 			console.log( message );
 		}
 	}
@@ -78,16 +76,11 @@ export class Logger {
 
 }
 
-/**
- * Create logger functionality
- *
- * @param debug - Debug mode flag
- */
-export function createLogger( debug: boolean ) {
-	logger = new Logger( debug );
-}
-
-/**
- * Logger instance
- */
-export let logger: Logger;
+// Export as singleton
+let loggerInstance: Logger;
+export default ( () => {
+	if ( !loggerInstance ) {
+		loggerInstance = new Logger();
+	}
+	return loggerInstance;
+} )();

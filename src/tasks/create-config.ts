@@ -39,7 +39,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 			bundleFESM5: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-fesm5' ),
 			bundleUMD: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-umd' )
 		},
-		memoryFileSystem: null,
 		packageName: '',
 		dependencies: {},
 		typescriptCompilerOptions: {},

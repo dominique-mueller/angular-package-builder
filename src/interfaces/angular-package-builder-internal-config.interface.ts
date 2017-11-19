@@ -21,7 +21,6 @@ export interface AngularPackageBuilderInternalConfig {
 		bundleFESM5?: string;
 		bundleUMD?: string;
 	};
-	memoryFileSystem?: MemoryFileSystem | null;
 	packageName?: string;
 	dependencies?: { [ dependency: string ]: string };
 	typescriptCompilerOptions?: { [ option: string ]: any };

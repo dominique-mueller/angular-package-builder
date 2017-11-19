@@ -15,8 +15,8 @@ import { minifyHtml } from './../resources/minify-html';
 export async function inlineResources( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
 	// Import
-	const { readFile } = await dynamicImport( './../utilities/read-file', config.memoryFileSystem );
-	const { writeFile } = await dynamicImport( './../utilities/write-file', config.memoryFileSystem );
+	const { readFile } = await dynamicImport( './../utilities/read-file' );
+	const { writeFile } = await dynamicImport( './../utilities/write-file' );
 
 	// Get all files
 	// TODO: Exit with error if there are no files?

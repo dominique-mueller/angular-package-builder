@@ -6,7 +6,6 @@ import * as parsePackageJsonName from 'parse-packagejson-name';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { dynamicImport } from './../utilities/dynamic-import';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
-import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
 
 /**
  * Generate JavaScript bundle
@@ -14,8 +13,8 @@ import { MemoryFileSystem } from './../memory-file-system/memory-file-system';
 export async function bundleJavascript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 
 	// Import
-	const { rollup } = await dynamicImport( 'rollup', config.memoryFileSystem );
-	const { writeFile } = await dynamicImport( './../utilities/write-file', config.memoryFileSystem );
+	const { rollup } = await dynamicImport( 'rollup' );
+	const { writeFile } = await dynamicImport( './../utilities/write-file' );
 
 	// Get information upfront
 	let sourcePath: string;

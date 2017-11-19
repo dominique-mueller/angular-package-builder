@@ -9,7 +9,7 @@ import { dynamicImport } from './../utilities/dynamic-import';
 export async function composePackage( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
 	// Import
-	const { copyFiles } = await dynamicImport( './../utilities/copy-files', config.memoryFileSystem );
+	const { copyFiles } = await dynamicImport( './../utilities/copy-files' );
 
 	// Copy all files which should end up in the package
 	await Promise.all( [

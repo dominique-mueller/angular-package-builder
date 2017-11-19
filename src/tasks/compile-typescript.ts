@@ -13,9 +13,9 @@ import { TypescriptConfig } from './../config/typescript.config.interface';
 export async function compileTypescript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' ): Promise<void> {
 
 	// Import
-	const { main } = await dynamicImport( '@angular/compiler-cli/src/main', config.memoryFileSystem );
-	const { getFiles } = await dynamicImport( './../utilities/get-files', config.memoryFileSystem );
-	const { writeFile } = await dynamicImport( './../utilities/write-file', config.memoryFileSystem );
+	const { main } = await dynamicImport( '@angular/compiler-cli/src/main' );
+	const { getFiles } = await dynamicImport( './../utilities/get-files' );
+	const { writeFile } = await dynamicImport( './../utilities/write-file' );
 
 	// Get TypeScript-related information
 	const typeDefinitionFilesPatterns: Array<string> = [
