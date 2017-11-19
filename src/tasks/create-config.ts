@@ -19,9 +19,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 	// Get current working directory path (must be normalized manually)
 	const cwd: string = process.cwd().replace( /\\/g, '/' );
-	Logger.debug( 'Current working directory (cwd):' )
-	Logger.debug( cwd )
-	Logger.debug( '' )
 
 	// Initial configuration
 	const config: AngularPackageBuilderInternalConfig = {
@@ -75,7 +72,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
 
-		Logger.debug( 'Found ".angular-package.json" configuration file!' )
+		Logger.debug( `Found Angular Package Builder configuration file at "${ angularPackageJsonFilePath }"` )
 		Logger.debug( '' )
 
 		// Read and validate config file

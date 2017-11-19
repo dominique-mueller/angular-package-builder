@@ -13,7 +13,7 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 		compilerOptions: {
 			...{
 				declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
-				diagnostics: !!process.env.DEBUG,
+				diagnostics: process.env.DEBUG === 'ENABLED',
 				emitDecoratorMetadata: true, // Keep metadata about decorators
 				experimentalDecorators: true, // Enable decorators
 				lib: [ // Use all of them (for maximum compatibility)
@@ -28,8 +28,8 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 					'dom.iterable',
 					'scripthost'
 				],
-				listEmittedFiles: !!process.env.DEBUG,
-				listFiles: !!process.env.DEBUG,
+				listEmittedFiles: process.env.DEBUG === 'ENABLED',
+				listFiles: process.env.DEBUG === 'ENABLED',
 				module: 'ES2015', // Always generate ES6 modules, meaning use 'import' and 'export'
 				moduleResolution: 'node', // Module resolution strategy
 				newLine: 'LF', // Always use 'LF' as line endings in order to make closure compiler annotations work correctly
@@ -39,7 +39,7 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 				sourceMap: true, // Emit sourcemap files
 				sourceRoot: config.temporary.prepared,
 				target,
-				traceResolution: !!process.env.DEBUG
+				traceResolution: process.env.DEBUG === 'ENABLED'
 			},
 			...validateTypescriptCompilerOptions( config.typescriptCompilerOptions )
 		},

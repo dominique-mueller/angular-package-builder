@@ -16,8 +16,8 @@ import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 export async function main() {
 
 	// TODO: Get as CLI command
-	const debug: boolean = true;
-	process.env.DEBUG = debug ? 'DEBUG' : undefined;
+	const debug: boolean = false;
+	process.env.DEBUG = debug ? 'ENABLED' : 'DISABLED';
 
 	const startTime = new Date().getTime();
 
@@ -47,7 +47,7 @@ export async function main() {
 
 		// Step 2: Compilation (in parallel if not DEBUG)
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			Logger.task( 'Compile to JavaScript ES2015' );
 			await compileTypescript( config, 'ES2015' );
 			Logger.task( 'Compile to JavaScript ES5' );
@@ -61,7 +61,7 @@ export async function main() {
 
 		// Step 3: Bundling (in parallel if not DEBUG)
 		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			Logger.task( 'Create ES2015 bundle' );
 			await bundleJavascript( config, 'ES2015' );
 			Logger.task( 'Create ES5 bundle' );

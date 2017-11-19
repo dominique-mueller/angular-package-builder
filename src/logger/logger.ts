@@ -14,7 +14,7 @@ export class Logger {
 	 * @param messages - List of messages
 	 */
 	public debug( ...messages: Array<any> ): void {
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			console.log( ...messages );
 		}
 	}
@@ -25,7 +25,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public task( message: string ): void {
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			console.log( '' );
 			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
 			console.log( `/// ${ message }` );
@@ -42,7 +42,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public success( message: string ): void {
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
 			console.log( `/// ${ message }` );
 			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
@@ -57,7 +57,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public warn( message: string ): void {
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
 			console.log( `/// WARNING: ${ message }` );
 			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
@@ -73,7 +73,7 @@ export class Logger {
 	 */
 	public error( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
 			console.log( `/// ERROR: ${ messageTitle }` );
 			console.log( `///        ${ messageBody.join( '\n       ' ) }` );
@@ -90,7 +90,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public title( message: string ): void {
-		if ( !!process.env.DEBUG ) {
+		if ( process.env.DEBUG === 'ENABLED' ) {
 			console.log( `${ message } [DEBUG MODE ENABLED]` );
 		} else {
 			console.log( chalk.white.bold.underline( message ) );
