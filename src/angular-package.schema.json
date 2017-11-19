@@ -29,8 +29,5 @@
 			"type": "object"
 		}
 	},
-	"additionalProperties": false,
-	"required": [
-		"entryFile"
-	]
+	"additionalProperties": false
 }

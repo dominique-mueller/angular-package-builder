@@ -21,7 +21,7 @@ export function readFile( filePath: string ): Promise<string | any> {
 
 			// Automatically parse JSON files into JavaScript objects
 			let parsedFileContent: string | any = fileContent;
-			if ( path.extname( filePath ).replace( '.', '' ).toLowerCase() === 'json' ) {
+			if ( path.extname( filePath ).substring( 1 ).toLowerCase() === 'json' ) {
 				try {
 					parsedFileContent = JSON.parse( fileContent );
 				} catch ( jsonParseError ) {

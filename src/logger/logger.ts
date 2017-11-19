@@ -44,7 +44,9 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public error( message: string ): void {
-		console.log( chalk.red.bold( message ) );
+		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
+		console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
+		console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );
 	}
 
 	/**
