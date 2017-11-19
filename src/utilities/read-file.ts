@@ -22,15 +22,12 @@ export function readFile( filePath: string ): Promise<string | any> {
 			// Automatically parse JSON files into JavaScript objects
 			let parsedFileContent: string | any = fileContent;
 			if ( path.extname( filePath ).replace( '.', '' ).toLowerCase() === 'json' ) {
-
-				// Safely try to parse the file as JSON
 				try {
 					parsedFileContent = JSON.parse( fileContent );
 				} catch ( jsonParseError ) {
 					reject( new Error( `An error occured while parsing the file "${ filePath }" as JSON. [${ ( <Error> jsonParseError ).message }]` ) );
 					return;
 				}
-
 			}
 
 			resolve( parsedFileContent );

@@ -3,20 +3,22 @@ import { posix as path } from 'path';
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from './../angular-resource-analyzer/angular-resource-analyzer';
 import { compileSass } from './../resources/compile-sass';
-import { dynamicImport } from './../utilities/dynamic-import';
+import { importWithFs } from './../utilities/import-with-fs';
 import { getFiles } from './../utilities/get-files';
 import { htmlMinifierConfig } from './../config/html-minifier.config';
 import { minifyCss } from './../resources/minify-css';
 import { minifyHtml } from './../resources/minify-html';
+
+let readFile: any;
+let writeFile: any;
 
 /**
  * Inline resources (HTML templates for now); this also copies files without resources as well as typing definitions files.
  */
 export async function inlineResources( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
-	// Import
-	const { readFile } = await dynamicImport( './../utilities/read-file' );
-	const { writeFile } = await dynamicImport( './../utilities/write-file' );
+	readFile = ( await importWithFs( './../utilities/read-file' ) ).readFile;
+	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
 
 	// Get all files
 	// TODO: Exit with error if there are no files?
@@ -43,7 +45,7 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 			// Inline resources
 			if ( externalResources.length > 0 ) {
 				const externalResourcesWithContent: Array<AngularResource> =
-					await loadExternalResources( externalResources, absoluteSourceFilePath, readFile );
+					await loadExternalResources( externalResources, absoluteSourceFilePath );
 				fileContent = angularResourceAnalyzer.inlineExternalResources( externalResourcesWithContent );
 			}
 
@@ -58,13 +60,13 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 /**
  * Load all external resources
  */
-async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string, readFile: any ): Promise<Array<AngularResource>> {
+async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ): Promise<Array<AngularResource>> {
 
 	return Promise.all(
 		externalResources.map( async( externalResource: AngularResource ): Promise<AngularResource> => {
 			externalResource.urls = await Promise.all(
 				externalResource.urls.map( async( url: AngularResourceUrl ): Promise<AngularResourceUrl> => {
-					url.content = await loadExternalResource( url.url, filePath, readFile );
+					url.content = await loadExternalResource( url.url, filePath );
 					return url;
 				} )
 			);
@@ -77,7 +79,7 @@ async function loadExternalResources( externalResources: Array<AngularResource>,
 /**
  * Load and prepare a external resource
  */
-async function loadExternalResource( resourceUrl: string, filePath: string, readFile: any ): Promise<string> {
+async function loadExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
 
 	// Read the resource file
 	const absoluteTemplatePath: string = path.join( path.dirname( filePath ), resourceUrl );

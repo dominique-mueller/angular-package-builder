@@ -4,17 +4,19 @@ import { Bundle, Options, GenerateOptions } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { dynamicImport } from './../utilities/dynamic-import';
+import { importWithFs } from './../utilities/import-with-fs';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
+
+let rollup: any;
+let writeFile: any;
 
 /**
  * Generate JavaScript bundle
  */
 export async function bundleJavascript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 
-	// Import
-	const { rollup } = await dynamicImport( 'rollup' );
-	const { writeFile } = await dynamicImport( './../utilities/write-file' );
+	rollup = ( await importWithFs( 'rollup' ) ).rollup;
+	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
 
 	// Get information upfront
 	let sourcePath: string;

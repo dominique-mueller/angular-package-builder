@@ -7,7 +7,7 @@ import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
-import Logger from './src/logger';
+import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 
 // TODO: Enable stack trace when debug is enabled; see code below
@@ -17,9 +17,9 @@ export async function main() {
 
 	// TODO: Get as CLI command
 	const debug: boolean = false;
+	process.env.DEBUG = debug ? 'DEBUG' : undefined;
 
 	const startTime = new Date().getTime();
-	Logger.debugMode = debug;
 
 	Logger.empty();
 	Logger.title( 'Angular Package Builder' );

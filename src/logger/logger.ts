@@ -8,17 +8,6 @@ const arrowSymbol = process.platform === 'win32' ? '→' : '➜';
  */
 export class Logger {
 
-	/**
-	 * Debug mode flag
-	 */
-	public debugMode: boolean;
-
-	/**
-	 * Constructor
-	 */
-	constructor() {
-		this.debugMode = false;
-	}
 
 	/**
 	 * Log debug message
@@ -26,7 +15,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public debug( message: string ): void {
-		if ( this.debugMode ) {
+		if ( !!process.env.DEBUG ) {
 			console.log( message );
 		}
 	}

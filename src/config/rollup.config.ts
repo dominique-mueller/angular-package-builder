@@ -4,15 +4,18 @@ import * as parsePackageJsonName from 'parse-packagejson-name';
 import { Options, Bundle, Warning, Plugin, WriteOptions, GenerateOptions } from 'rollup';
 
 import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
-import { dynamicImport } from '../utilities/dynamic-import';
+import { importWithFs } from '../utilities/import-with-fs';
+
+let commonjs: any;
+let nodeResolve: any;
 
 /**
  * Get Rollup Input Config
  */
 export async function getRollupInputConfig( sourcePath: string, config: AngularPackageBuilderInternalConfig ): Promise<Options> {
 
-	const commonjs = await dynamicImport( 'rollup-plugin-commonjs', config.memoryFileSystem );
-	const nodeResolve = await dynamicImport( 'rollup-plugin-node-resolve', config.memoryFileSystem );
+	commonjs = await importWithFs( 'rollup-plugin-commonjs' );
+	nodeResolve = await importWithFs( 'rollup-plugin-node-resolve' );
 
 	return {
 		external: Object.keys( config.dependencies ),
