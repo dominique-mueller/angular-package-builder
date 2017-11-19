@@ -45,20 +45,36 @@ export async function main() {
 		Logger.task( 'Inline resources' );
 		await inlineResources( config );
 
-		// Step 2: Compilation
+		// Step 2: Compilation (in parallel if not DEBUG)
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
-		await Promise.all( [
-			compileTypescript( config, 'ES2015' ),
-			compileTypescript( config, 'ES5' )
-		] );
+		if ( !!process.env.DEBUG ) {
+			Logger.task( 'Compile to JavaScript ES2015' );
+			await compileTypescript( config, 'ES2015' );
+			Logger.task( 'Compile to JavaScript ES5' );
+			await compileTypescript( config, 'ES5' );
+		} else {
+			await Promise.all( [
+				compileTypescript( config, 'ES2015' ),
+				compileTypescript( config, 'ES5' )
+			] );
+		}
 
-		// Step 3: Bundling
+		// Step 3: Bundling (in parallel if not DEBUG)
 		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
-		await Promise.all( [
-			bundleJavascript( config, 'ES2015' ),
-			bundleJavascript( config, 'ES5' ),
-			bundleJavascript( config, 'UMD' )
-		] );
+		if ( !!process.env.DEBUG ) {
+			Logger.task( 'Create ES2015 bundle' );
+			await bundleJavascript( config, 'ES2015' );
+			Logger.task( 'Create ES5 bundle' );
+			await bundleJavascript( config, 'ES5' );
+			Logger.task( 'Create UMD bundle' );
+			await bundleJavascript( config, 'UMD' );
+		} else {
+			await Promise.all( [
+				bundleJavascript( config, 'ES2015' ),
+				bundleJavascript( config, 'ES5' ),
+				bundleJavascript( config, 'UMD' )
+			] );
+		}
 
 		// Finishing up
 		Logger.task( 'Compose package' );

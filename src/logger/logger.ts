@@ -11,11 +11,11 @@ export class Logger {
 	/**
 	 * Log debug message
 	 *
-	 * @param message - Message
+	 * @param messages - List of messages
 	 */
-	public debug( message: string ): void {
+	public debug( ...messages: Array<any> ): void {
 		if ( !!process.env.DEBUG ) {
-			console.log( message );
+			console.log( ...messages );
 		}
 	}
 
