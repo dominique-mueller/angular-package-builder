@@ -60,7 +60,6 @@ export class MemoryFileSystem {
 			path.join( folderPath, '**', '*.html' ),
 			path.join( folderPath, '**', '*.sass' ),
 			path.join( folderPath, '**', '*.scss' ),
-			path.join( folderPath, '**', '*.less' ),
 			path.join( folderPath, '**', '*.css' )
 		];
 		const filePaths: Array<string> = await getFiles( fileGlobs, '' );

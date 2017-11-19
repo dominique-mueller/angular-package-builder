@@ -35,38 +35,50 @@ export class AngularResourceAnalyzer {
 	private readonly fileContent: string;
 
 	/**
-	 * Constructor
+	 * Source file
+	 */
+	private readonly sourceFile: typescript.SourceFile;
+
+	/**
+	 * Constuctor
+	 *
+	 * @param filePath    - File path
+	 * @param fileContent - File content
 	 */
 	constructor( filePath: string, fileContent: string ) {
+
 		this.externalResources = [];
 		this.filePath = filePath;
 		this.fileName = path.basename( filePath );
 		this.fileContent = fileContent;
+
+		// Create source file
+		try {
+			this.sourceFile = typescript.createSourceFile( this.fileName, this.fileContent, typescript.ScriptTarget.Latest, true );
+		} catch ( error ) {
+			throw new Error( [
+				`An error occured while trying to parse the file "${ this.fileName }" as a TypeScript source file.`,
+				error.message
+			].join( '\n' ) );
+		}
+
 	}
 
 	/**
-	 * Analyze for external resources
+	 * Analyze file for external resources
+	 *
+	 * @returns - List of external resources (content not loaded)
 	 */
 	public getExternalResources(): Array<AngularResource> {
-
-		// Create source file
-		let sourceFile: typescript.SourceFile;
-		try {
-			sourceFile = typescript.createSourceFile( this.fileName, this.fileContent, typescript.ScriptTarget.Latest, true );
-		} catch ( error ) {
-			throw new Error( error );
-		}
-
-		// Run analysis (result will be saved into class properties, necessary due to recursive analysis process)
-		this.analyzeNodeForComponentDecorators( sourceFile );
-
-		// Return results
+		this.analyzeNodeForComponentDecorators( this.sourceFile );
 		return this.externalResources;
-
 	}
 
 	/**
 	 * Inline external resources into the source file
+	 *
+	 * @param   externalResources - List of external resources, with the content loaded
+	 * @returns                   - File with resources inlined
 	 */
 	public inlineExternalResources( externalResources: Array<AngularResource> ): string {
 
@@ -74,12 +86,22 @@ export class AngularResourceAnalyzer {
 		return externalResources.reduce( ( fileContent: string, externalResource: AngularResource ): string => {
 
 			// Replace key
-			fileContent = this.replaceAtNode( fileContent, externalResource.newKey, externalResource.node, currentPositionCorrection );
+			fileContent = this.replaceAtNode(
+				fileContent,
+				externalResource.newKey,
+				externalResource.node.getStart() + currentPositionCorrection,
+				externalResource.node.getEnd() + currentPositionCorrection
+			);
 			currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
 
 			// Replace value(s)
 			fileContent = externalResource.urls.reduce( ( fileContent: string, url: AngularResourceUrl ): string => {
-				fileContent = this.replaceAtNode( fileContent, `\`${ url.content }\``, url.node, currentPositionCorrection );
+				fileContent = this.replaceAtNode(
+					fileContent,
+					`\`${ url.content }\``,
+					url.node.getStart() + currentPositionCorrection,
+					url.node.getEnd() + currentPositionCorrection
+				);
 				currentPositionCorrection += url.content.length - url.url.length;
 				return fileContent;
 			}, fileContent );
@@ -96,21 +118,18 @@ export class AngularResourceAnalyzer {
 	  * @param currentNode - Current node to analyze
 	  */
 	private analyzeNodeForComponentDecorators( currentNode: typescript.Node ): void {
-
-		// Check if the current Node is an Angular Component Decorator
 		if ( currentNode.kind === typescript.SyntaxKind.Decorator && ( <any> currentNode ).expression.expression.text === 'Component' ) {
 			this.analyzeComponentDecoratorNodeForExternalResources( currentNode );
 		}
-
-		// Continue analysis recursively for all children
 		typescript.forEachChild( currentNode, this.analyzeNodeForComponentDecorators.bind( this ) ); // Bind to keep the 'this' reference
-
 	}
 
 	/**
 	 * Analyzer a component decorator for external resources
+	 *
+	 * @param currentNode - Current node to analyze
 	 */
-	private analyzeComponentDecoratorNodeForExternalResources( currentNode: typescript.Node ): any {
+	private analyzeComponentDecoratorNodeForExternalResources( currentNode: typescript.Node ): void {
 
 		// Check the decorator parameters
 		if ( currentNode.kind === typescript.SyntaxKind.PropertyAssignment ) {
@@ -120,11 +139,17 @@ export class AngularResourceAnalyzer {
 
 				// Handle errors
 				if (
-					( <any> currentNode ).initializer.text === '' ||
-					( <any> currentNode ).initializer.text === 'undefined' ||
-					( <any> currentNode ).initializer.text === undefined
+					( <any> currentNode ).initializer.text === '' || // empty string
+					( <any> currentNode ).initializer.text === 'undefined' || // undefined
+					( <any> currentNode ).initializer.text === undefined // null
 				) {
-					throw new Error( 'Invalid templateUrl.' );
+					this.throwError( currentNode, `The component in "${ this.fileName }" has an empty template URL.` );
+				}
+				if ( !( <string> ( <any> currentNode ).initializer.text ).endsWith( '.html' ) ) {
+					this.throwError( currentNode, [
+						`The component in "${ this.fileName }" has a template URL with a missing / unsupported file format.`,
+						'Make sure the template URL points to a ".html" file.'
+					].join( '\n' ) );
 				}
 
 				// Collect as external resource
@@ -146,7 +171,7 @@ export class AngularResourceAnalyzer {
 					!( <any> currentNode ).initializer.hasOwnProperty( 'elements' ) ||
 					( <any> currentNode ).initializer.elements.length === 0
 				) {
-					throw new Error( 'Invalid styleUrls.' );
+					this.throwError( currentNode, `The component in "${ this.fileName }" has an empty list of style URLs.` );
 				}
 
 				// Get the actual text
@@ -160,8 +185,18 @@ export class AngularResourceAnalyzer {
 
 				// Handle errors
 				styleUrls.forEach( ( styleUrl: AngularResourceUrl ) => {
-					if ( styleUrl.url === '' || styleUrl.url === 'undefined' || styleUrl.url === undefined ) {
-						throw new Error( 'Invalid styleUrls.' );
+					if (
+						styleUrl.url === '' || // empty string
+						styleUrl.url === 'undefined' || // undefined
+						styleUrl.url === undefined // null
+					) {
+						this.throwError( styleUrl.node, `The component in "${ this.fileName }" has an empty style URL.` );
+					}
+					if ( !( styleUrl.url.endsWith( '.css' ) || styleUrl.url.endsWith( '.sass' ) || styleUrl.url.endsWith( '.scss' ) ) ) {
+ 						this.throwError( styleUrl.node, [
+							`The component in "${ this.fileName }" has a style URL with a missing / unsupported file format.`,
+							'Make sure the style URL points to a ".css", ".scss" or ".sass" file.'
+						].join( '\n' ) );
 					}
 				} );
 
@@ -183,14 +218,34 @@ export class AngularResourceAnalyzer {
 	}
 
 	/**
-	 * Replace the text of a node within the file content, optionally with a position correction
+	 * Replace the text of a node within the file content
+	 *
+	 * @param   fileContent            - File content
+	 * @param   replacement            - Text to place in
+	 * @param   from                   - Start point
+	 * @param   to                     - End point
+	 * @returns                        - New file content
 	 */
-	private replaceAtNode( fileContent: string, replacement: string, node: typescript.Node, positionCorrection: number = 0 ): string {
+	private replaceAtNode( fileContent: string, replacement: string, from: number, to: number ): string {
 		return [
-			fileContent.substring( 0, node.getStart() + positionCorrection ),
+			fileContent.substring( 0, from ),
 			replacement,
-			fileContent.substring( node.getEnd() + positionCorrection, fileContent.length )
+			fileContent.substring( to, fileContent.length )
 		].join( '' );
+	}
+
+	/**
+	 * Throw error with error details
+	 *
+	 * @param node    - Node
+	 * @param message - Message
+	 */
+	private throwError( node: typescript.Node, message: string ): void {
+		const { character, line }: typescript.LineAndCharacter = this.sourceFile.getLineAndCharacterOfPosition( node.getStart() );
+		throw new Error( [
+			message,
+			`Details: ${ this.filePath } at ${ line + 1 }:${ character + 1 }: "${ node.getText() }"`
+		].join( '\n' ) );
 	}
 
 }

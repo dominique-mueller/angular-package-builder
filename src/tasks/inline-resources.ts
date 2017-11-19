@@ -21,7 +21,6 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
 
 	// Get all files
-	// TODO: Exit with error if there are no files?
 	const sourceFilesPatterns: Array<string> = [
 		path.join( '**', '*.ts' ), // Includes source and typing files
 		`!${ path.join( '**', '*.spec.ts' ) }`, // Exclude tests
@@ -36,21 +35,20 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 			// Read file
 			const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
 			const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
-			let fileContent: string = await readFile( absoluteSourceFilePath );
+			const fileContent: string = await readFile( absoluteSourceFilePath );
 
-			// Find and inline resources
+			// Find external resources
 			const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
 			const externalResources: Array<AngularResource> = angularResourceAnalyzer.getExternalResources();
 
-			// Inline resources
-			if ( externalResources.length > 0 ) {
-				const externalResourcesWithContent: Array<AngularResource> =
-					await loadExternalResources( externalResources, absoluteSourceFilePath );
-				fileContent = angularResourceAnalyzer.inlineExternalResources( externalResourcesWithContent );
-			}
+			// Load external resources
+			const externalResourcesLoaded: Array<AngularResource> = await loadExternalResources( externalResources, absoluteSourceFilePath );
+
+			// Inline external resources
+			const fileContentWithInlinedResources: string = angularResourceAnalyzer.inlineExternalResources( externalResourcesLoaded );
 
 			// Write file
-			await writeFile( absoluteDestinationFilePath, fileContent );
+			await writeFile( absoluteDestinationFilePath, fileContentWithInlinedResources );
 
 		} )
 	);
@@ -63,15 +61,21 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ): Promise<Array<AngularResource>> {
 
 	return Promise.all(
+
+		// Load all resources
 		externalResources.map( async( externalResource: AngularResource ): Promise<AngularResource> => {
 			externalResource.urls = await Promise.all(
+
+				// Load all resource URLs
 				externalResource.urls.map( async( url: AngularResourceUrl ): Promise<AngularResourceUrl> => {
-					url.content = await loadExternalResource( url.url, filePath );
+					url.content = await loadAndPrepareExternalResource( url.url, filePath );
 					return url;
 				} )
+
 			);
 			return externalResource;
 		} )
+
 	);
 
 }
@@ -79,11 +83,19 @@ async function loadExternalResources( externalResources: Array<AngularResource>,
 /**
  * Load and prepare a external resource
  */
-async function loadExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
+async function loadAndPrepareExternalResource( resourceUrl: string, filePath: string ): Promise<string> {
 
 	// Read the resource file
-	const absoluteTemplatePath: string = path.join( path.dirname( filePath ), resourceUrl );
-	let resource: string = await readFile( absoluteTemplatePath );
+	const resourcePath: string = path.join( path.dirname( filePath ), resourceUrl );
+	let resource: string;
+	try {
+		resource = await readFile( resourcePath );
+	} catch( error ) {
+		throw new Error( [
+			`The external resource at "${ resourcePath }" does not exist, or cannot be read.`,
+			error.message
+		].join( '\n' ) );
+	}
 
 	// Prepare files, based on file type
 	// Note: We minify to squash the resource into a single line, so that the sourcemaps don't break
@@ -102,13 +114,10 @@ async function loadExternalResource( resourceUrl: string, filePath: string ): Pr
 
 		// External SASS files
 		case 'scss':
+		case 'sass':
 			resource = await compileSass( resource );
 			resource = minifyCss( resource );
 			break;
-
-		// Unknown resource types
-		default:
-			throw new Error( 'Unsupported external resource.' );
 
 	}
 
