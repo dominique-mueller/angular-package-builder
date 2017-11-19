@@ -16,10 +16,6 @@
 			"description": "Path to the output folder",
 			"type": "string"
 		},
-		"debug": {
-			"description": "Debug mode flag",
-			"type": "boolean"
-		},
 		"typescriptCompilerOptions": {
 			"description": "TypeScript compiler options",
 			"type": "object"

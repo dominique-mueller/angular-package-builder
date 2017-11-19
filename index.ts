@@ -7,28 +7,31 @@ import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { inlineResources } from './src/tasks/inline-resources';
-import { log } from './src/log';
+import { logger, createLogger } from './src/logger';
 import { MemoryFileSystem } from './src/memory-file-system/memory-file-system';
-
 
 // TODO: Enable stack trace when debug is enabled; see code below
 // process.on('unhandledRejection', r => console.log(r));
 
 export async function main() {
 
-	log();
-	log( 'title', 'Angular Package Builder' );
-	log();
+	// TODO: Get as CLI command
+	const debug: boolean = false;
 
 	const startTime = new Date().getTime();
+	createLogger( debug );
+
+	logger.empty();
+	logger.title( 'Angular Package Builder' );
+	logger.empty();
 
 	try {
 
-		log( 'step', 'Configuration' );
 		// TODO: Read CLI arguments, overwrite by passing in as argument
+		logger.task( 'Configuration' );
 		const config: AngularPackageBuilderInternalConfig = await createConfig();
 
-		if ( config.debug ) {
+		if ( debug ) {
 			await deleteFolder( config.temporary.folder );
 		} else {
 			config.memoryFileSystem = new MemoryFileSystem();
@@ -36,41 +39,41 @@ export async function main() {
 		}
 		await deleteFolder( config.output.folder );
 
-		log( 'step', 'Inline resources' );
+		logger.task( 'Inline resources' );
 		await inlineResources( config );
 
-		log( 'step', 'Compile TypeScript into JavaScript (ES2015, ES5)' );
+		logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
 		await Promise.all( [
 			compileTypescript( config, 'ES2015' ),
 			compileTypescript( config, 'ES5' )
 		] );
 
-		log( 'step', 'Create JavaScript bundles (ES2015, ES5, UMD)' );
+		logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
 		await Promise.all( [
 			bundleJavascript( config, 'ES2015' ),
 			bundleJavascript( config, 'ES5' ),
 			bundleJavascript( config, 'UMD' )
 		] );
 
-		log( 'step', 'Compose package' );
+		logger.task( 'Compose package' );
 		await composePackage( config );
 
-		if ( !config.debug ) {
+		if ( !debug ) {
 			await config.memoryFileSystem.persist( config.output.folder );
 		}
 
 		const finishTime = new Date().getTime();
 		const processTime = ( ( finishTime - startTime ) / 1000 ).toFixed( 2 );
 
-		log();
-		log( 'success', `Angular package build is successful! [${ processTime } seconds]` );
-		log();
+		logger.empty();
+		logger.success( `Angular package build is successful! [${ processTime } seconds]` );
+		logger.empty();
 
 	} catch ( error ) {
 
-		log();
-		log( 'error', ( <Error> error ).message );
-		log();
+		logger.empty();
+		logger.error( ( <Error> error ).message );
+		logger.empty();
 
 		throw new Error( error );
 

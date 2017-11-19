@@ -23,7 +23,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	// Initial configuration
 	const config: AngularPackageBuilderInternalConfig = {
 		cwd,
-		debug: false,
 		entry: {
 			// file
 			// folder
@@ -80,9 +79,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 
 		if ( projectConfig.outDir ) {
 			config.output.folder = path.join( cwd, projectConfig.outDir );
-		}
-		if ( projectConfig.hasOwnProperty( 'debug' ) ) {
-			config.debug = projectConfig.debug;
 		}
 		config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
 		config.typescriptCompilerOptions = projectConfig.typescriptCompilerOptions || {};

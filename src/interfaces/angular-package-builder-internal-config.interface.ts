@@ -5,7 +5,6 @@ import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
  */
 export interface AngularPackageBuilderInternalConfig {
 	cwd?: string;
-	debug?: boolean;
 	entry?: {
 		folder?: string;
 		file?: string;
