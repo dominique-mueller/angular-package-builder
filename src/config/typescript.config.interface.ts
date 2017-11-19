@@ -3,21 +3,23 @@
  */
 export interface TypescriptConfig {
 	compilerOptions?: {
-		charset?: string;
 		declaration?: boolean;
+		diagnostics?: boolean;
 		emitDecoratorMetadata?: boolean;
 		experimentalDecorators?: boolean;
 		lib?: Array<string>;
+		listEmittedFiles?: boolean;
+		listFiles?: boolean;
 		module?: string;
 		moduleResolution?: string;
-		newLine?: 'CRLF' | 'LF';
+		newLine?: string;
 		outDir?: string;
 		pretty?: boolean;
 		rootDir?: string;
 		sourceMap?: boolean;
 		sourceRoot?: string;
 		target?: string;
-		typeRoots?: Array<string>;
+		traceResolution?: boolean;
 		[ key: string ]: any;
 	};
 	files?: Array<string>;

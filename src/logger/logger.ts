@@ -8,7 +8,6 @@ const arrowSymbol = process.platform === 'win32' ? '→' : '➜';
  */
 export class Logger {
 
-
 	/**
 	 * Log debug message
 	 *
@@ -26,7 +25,15 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public task( message: string ): void {
-		console.log( chalk.white.bold( `  ${ arrowSymbol } ${ message }` ) );
+		if ( !!process.env.DEBUG ) {
+			console.log( '' );
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( `/// ${ message }` );
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( '' );
+		} else {
+			console.log( chalk.white.bold( `  ${ arrowSymbol } ${ message }` ) );
+		}
 	}
 
 	/**
@@ -35,7 +42,13 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public success( message: string ): void {
-		console.log( chalk.green.bold( message ) );
+		if ( !!process.env.DEBUG ) {
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( `/// ${ message }` );
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+		} else {
+			console.log( chalk.green.bold( message ) );
+		}
 	}
 
 	/**
@@ -44,7 +57,13 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public warn( message: string ): void {
-		console.log( chalk.yellow.bold( `    WARNING: ${ message }` ) );
+		if ( !!process.env.DEBUG ) {
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( `/// WARNING: ${ message }` );
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+		} else {
+			console.log( chalk.yellow.bold( `    WARNING: ${ message }` ) );
+		}
 	}
 
 	/**
@@ -54,8 +73,15 @@ export class Logger {
 	 */
 	public error( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
-		console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
-		console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );
+		if ( !!process.env.DEBUG ) {
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( `/// ERROR: ${ messageTitle }` );
+			console.log( `///        ${ messageBody.join( '\n       ' ) }` );
+			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+		} else {
+			console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
+			console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );
+		}
 	}
 
 	/**
@@ -64,7 +90,11 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public title( message: string ): void {
-		console.log( chalk.white.bold.underline( message ) );
+		if ( !!process.env.DEBUG ) {
+			console.log( `${ message } [DEBUG MODE ENABLED]` );
+		} else {
+			console.log( chalk.white.bold.underline( message ) );
+		}
 	}
 
 	/**

@@ -16,7 +16,7 @@ import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 export async function main() {
 
 	// TODO: Get as CLI command
-	const debug: boolean = false;
+	const debug: boolean = true;
 	process.env.DEBUG = debug ? 'DEBUG' : undefined;
 
 	const startTime = new Date().getTime();

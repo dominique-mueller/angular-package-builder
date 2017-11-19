@@ -25,9 +25,9 @@
 		"build": "tsc -p tsconfig.json && copyfiles \"src/**/*.json\" \"bin/**\" dist",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
-		"pretest": "npm run build && cd test/my-library && node ../test.prepare.js",
+		"pretest": "npm run build && cd test/my-library && node ../../test/test.prepare.js",
 		"test": "jest --config jest.config.json --runInBand --no-cache",
-		"quick": "cd test/my-library && ts-node ../test.prepare.ts"
+		"quick": "cd test/my-library && ts-node ../../test/test.prepare.ts"
 	},
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",

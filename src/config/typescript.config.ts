@@ -12,11 +12,8 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 	return {
 		compilerOptions: {
 			...{
-				// diagnostics: true, // TODO: Test for debug mode
-				// listFiles: true, // TODO: Test for debug mode
-				// traceResolution: true, // TODO: Test for debug mode
-				// listEmittedFiles: true, // TODO: Test for debug mode
 				declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
+				diagnostics: !!process.env.DEBUG,
 				emitDecoratorMetadata: true, // Keep metadata about decorators
 				experimentalDecorators: true, // Enable decorators
 				lib: [ // Use all of them (for maximum compatibility)
@@ -31,6 +28,8 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 					'dom.iterable',
 					'scripthost'
 				],
+				listEmittedFiles: !!process.env.DEBUG,
+				listFiles: !!process.env.DEBUG,
 				module: 'ES2015', // Always generate ES6 modules, meaning use 'import' and 'export'
 				moduleResolution: 'node', // Module resolution strategy
 				newLine: 'LF', // Always use 'LF' as line endings in order to make closure compiler annotations work correctly
@@ -40,6 +39,7 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 				sourceMap: true, // Emit sourcemap files
 				sourceRoot: config.temporary.prepared,
 				target,
+				traceResolution: !!process.env.DEBUG
 			},
 			...validateTypescriptCompilerOptions( config.typescriptCompilerOptions )
 		},
