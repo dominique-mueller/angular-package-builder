@@ -2,6 +2,7 @@ import { posix as path } from 'path';
 
 import { Bundle, Options, GenerateOptions } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
+import * as unixify from 'unixify';
 
 import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
 import { importWithFs } from './../utilities/import-with-fs';
@@ -45,25 +46,17 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	}
 
 	// Get rollup configuration
-	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, config );
+	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, target, config );
 	const rollupOutputOptions: GenerateOptions = getRollupOutputConfig( rollupFormat, config );
 
 	// Generate the bundle
-	// TODO: Error handling
 	const bundle: Bundle = await rollup( rollupInputOptions );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
 	// Re-write sourcemap URLs
+	const normalizedSourcePath: string = unixify( sourcePath );
 	map.sources = map.sources.map( ( source: string ): string => {
-
-		// Fix issue with virtual file system regarding missing disk volume numbers
-		const fixedSource: string = source[ 0 ] === path.sep
-			? `${ sourcePath.split( path.sep )[ 0 ] }${ source }`
-			: source;
-
-		// Rewrite absolute to relative path
-		return path.relative( sourcePath, fixedSource );
-
+		return path.relative( normalizedSourcePath, unixify( source ) );
 	} );
 
 	// Write bundle w/ sourcemaps to destination

@@ -39,6 +39,15 @@ export class Logger {
 	}
 
 	/**
+	 * Warn message
+	 *
+	 * @param message - Message
+	 */
+	public warn( message: string ): void {
+		console.log( chalk.yellow.bold( `    WARNING: ${ message }` ) );
+	}
+
+	/**
 	 * Error message
 	 *
 	 * @param message - Message

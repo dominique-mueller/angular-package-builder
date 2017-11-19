@@ -27,10 +27,12 @@ export async function main() {
 
 	try {
 
+		// Preparation
 		// TODO: Read CLI arguments, overwrite by passing in as argument
 		Logger.task( 'Configuration' );
 		const config: AngularPackageBuilderInternalConfig = await createConfig();
 
+		// FILE SYSTEM
 		if ( debug ) {
 			await deleteFolder( config.temporary.folder );
 		} else {
@@ -39,15 +41,18 @@ export async function main() {
 		}
 		await deleteFolder( config.output.folder );
 
+		// Step 1: Inline resources
 		Logger.task( 'Inline resources' );
 		await inlineResources( config );
 
+		// Step 2: Compilation
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
 		await Promise.all( [
 			compileTypescript( config, 'ES2015' ),
 			compileTypescript( config, 'ES5' )
 		] );
 
+		// Step 3: Bundling
 		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
 		await Promise.all( [
 			bundleJavascript( config, 'ES2015' ),
@@ -55,9 +60,11 @@ export async function main() {
 			bundleJavascript( config, 'UMD' )
 		] );
 
+		// Finishing up
 		Logger.task( 'Compose package' );
 		await composePackage( config );
 
+		// FILE SYSTEM
 		if ( !debug ) {
 			await MemoryFileSystem.persist( config.output.folder );
 		}
@@ -75,7 +82,7 @@ export async function main() {
 		Logger.error( ( <Error> error ).message );
 		Logger.empty();
 
-		throw new Error( error );
+		throw new Error( error.message );
 
 	}
 
