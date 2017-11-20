@@ -8,7 +8,6 @@ import { AngularPackageBuilderConfig } from '../angular-package-builder-config.i
 import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
 import { readFile } from '../utilities/read-file';
-import Logger from '../logger/logger';
 
 import * as angularPackageSchema from '../angular-package.schema.json';
 
@@ -72,10 +71,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
 
-		Logger.debug( '' )
-		Logger.debug( `Found Angular Package Builder configuration file at "${ angularPackageJsonFilePath }"` )
-		Logger.debug( '' )
-
 		// Read and validate config file
 		const projectConfig: AngularPackageBuilderConfig = await readFile( angularPackageJsonFilePath );
 		const validatorResult: ValidatorResult = validate( projectConfig, <Schema> angularPackageSchema );
@@ -130,10 +125,6 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 				return `!${ ignored }`;
 			} )
 	);
-
-	Logger.debug( 'Internal Angular Package Builder Configuration:' )
-	Logger.debug( config )
-	Logger.debug( '' )
 
 	return config;
 

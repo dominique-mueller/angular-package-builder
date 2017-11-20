@@ -15,11 +15,11 @@ export async function main() {
 	// TODO: Get as CLI command
 	const debug: boolean = false;
 	process.env.DEBUG = debug ? 'ENABLED' : 'DISABLED';
+	const startTime = new Date().getTime();
 
 	Logger.empty();
 	Logger.title( 'Angular Package Builder' );
 	Logger.empty();
-	const startTime = new Date().getTime();
 
 	try {
 
@@ -40,39 +40,18 @@ export async function main() {
 
 		// Step 2: Compile TypeScript into JavaScript (in parallel if not DEBUG)
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			Logger.debug( '' );
-			Logger.task( 'Compile to JavaScript ES2015' );
-			await compileTypescript( config, 'ES2015' );
-			Logger.debug( '' );
-			Logger.task( 'Compile to JavaScript ES5' );
-			await compileTypescript( config, 'ES5' );
-		} else {
-			await Promise.all( [
-				compileTypescript( config, 'ES2015' ),
-				compileTypescript( config, 'ES5' )
-			] );
-		}
+		await Promise.all( [
+			compileTypescript( config, 'ES2015' ),
+			compileTypescript( config, 'ES5' )
+		] );
 
 		// Step 3: Create JavaScript bundles (in parallel if not DEBUG)
 		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			Logger.debug( '' );
-			Logger.task( 'Create ES2015 bundle' );
-			await bundleJavascript( config, 'ES2015' );
-			Logger.debug( '' );
-			Logger.task( 'Create ES5 bundle' );
-			await bundleJavascript( config, 'ES5' );
-			Logger.debug( '' );
-			Logger.task( 'Create UMD bundle' );
-			await bundleJavascript( config, 'UMD' );
-		} else {
-			await Promise.all( [
-				bundleJavascript( config, 'ES2015' ),
-				bundleJavascript( config, 'ES5' ),
-				bundleJavascript( config, 'UMD' )
-			] );
-		}
+		await Promise.all( [
+			bundleJavascript( config, 'ES2015' ),
+			bundleJavascript( config, 'ES5' ),
+			bundleJavascript( config, 'UMD' )
+		] );
 
 		// Finishing up
 		Logger.task( 'Compose package' );

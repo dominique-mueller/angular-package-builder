@@ -9,27 +9,12 @@ const arrowSymbol = process.platform === 'win32' ? '→' : '➜';
 export class Logger {
 
 	/**
-	 * Log debug message
-	 *
-	 * @param messages - List of messages
-	 */
-	public debug( ...messages: Array<any> ): void {
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( ...messages );
-		}
-	}
-
-	/**
 	 * Task message
 	 *
 	 * @param message - Message
 	 */
 	public task( message: string ): void {
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( `///// ${ message } /////` );
-		} else {
-			console.log( chalk.white.bold( `  ${ arrowSymbol } ${ message }` ) );
-		}
+		console.log( chalk.white.bold( `  ${ arrowSymbol } ${ message }` ) );
 	}
 
 	/**
@@ -38,11 +23,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public success( message: string ): void {
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( `>>>>> ${ message }` );
-		} else {
-			console.log( chalk.green.bold( message ) );
-		}
+		console.log( chalk.green.bold( message ) );
 	}
 
 	/**
@@ -51,11 +32,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public warn( message: string ): void {
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( `>>>>> WARNING: ${ message }` );
-		} else {
-			console.log( chalk.yellow.bold( `    WARNING: ${ message }` ) );
-		}
+		console.log( chalk.yellow.bold( `    WARNING: ${ message }` ) );
 	}
 
 	/**
@@ -65,13 +42,8 @@ export class Logger {
 	 */
 	public error( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( `>>>>> ERROR: ${ messageTitle }` );
-			console.log( `             ${ messageBody.join( '\n       ' ) }` );
-		} else {
-			console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
-			console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );
-		}
+		console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
+		console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );
 	}
 
 	/**
@@ -81,7 +53,7 @@ export class Logger {
 	 */
 	public title( message: string ): void {
 		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( `${ message } [DEBUG MODE ENABLED]` );
+			console.log( chalk.white.bold.underline( message ), '[DEBUG MODE ENABLED]' );
 		} else {
 			console.log( chalk.white.bold.underline( message ) );
 		}

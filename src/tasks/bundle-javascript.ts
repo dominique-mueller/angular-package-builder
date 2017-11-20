@@ -7,7 +7,6 @@ import * as unixify from 'unixify';
 import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { importWithFs } from '../utilities/import-with-fs';
-import Logger from '../logger/logger';
 
 let rollup: any;
 let writeFile: any;
@@ -20,7 +19,7 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	rollup = ( await importWithFs( 'rollup' ) ).rollup;
 	writeFile = ( await importWithFs( '../utilities/write-file' ) ).writeFile;
 
-	// Get information upfront
+	// Get general configuration
 	let sourcePath: string;
 	let destinationPath: string;
 	let rollupFormat: 'es' | 'umd';
@@ -46,47 +45,25 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 			break;
 	}
 
-	// Get rollup input configuration
+	// Get rollup configurations
 	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, target, config );
-	Logger.debug( '' );
-	Logger.debug( 'Rollup Input Configuration:', rollupInputOptions );
-	Logger.debug( '' );
-
-	// Get rollup output configuration
 	const rollupOutputOptions: GenerateOptions = getRollupOutputConfig( rollupFormat, config );
-	Logger.debug( 'Rollup Output Configuration:', rollupOutputOptions );
-	Logger.debug( '' );
 
-	// Generate the bundle
-	Logger.debug( 'Create bundle ...' );
+	// Generate the bundle (code & sourcemap)
 	const bundle: Bundle = await rollup( rollupInputOptions );
-	Logger.debug( 'Bundle imports:', ( <any> bundle ).imports );
-	Logger.debug( 'Bundle exports:', ( <any> bundle ).exports );
-	Logger.debug( '' );
-	Logger.debug( 'Generate code and sourcemap ...' );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
-	Logger.debug( '' );
 
-	// Re-write sourcemap URLs
-	Logger.debug( 'Rewrite sourcemap paths ...' );
+	// Re-write sourcemap URLs (absolute -> relative)
 	const normalizedSourcePath: string = unixify( sourcePath );
 	map.sources = map.sources.map( ( sourcePath: string ): string => {
-		const rewrittenSourcePath: string = path.relative( normalizedSourcePath, unixify( sourcePath ) );
-		Logger.debug( `  "${ sourcePath }" -> "${ rewrittenSourcePath }"` );
-		return rewrittenSourcePath;
+		return path.relative( normalizedSourcePath, unixify( sourcePath ) );
 	} );
-	Logger.debug( '' );
 
-	// Write bundle w/ sourcemaps to destination
+	// Write bundle and sourcemap to disk
 	const fileName: string = `${ parsePackageJsonName( config.packageName ).fullName }.${ bundleSuffix }`;
-	const bundlePath: string = path.join( destinationPath, `${ fileName }.js` );
-	const sourcemapPath: string = path.join( destinationPath, `${ fileName }.js.map` );
-	Logger.debug( `Write bundle to "${ bundlePath }"` );
-	Logger.debug( `Write sourcemap to "${ sourcemapPath }"` );
 	await Promise.all( [
-		writeFile( bundlePath, code ),
-		writeFile( sourcemapPath, map )
+		writeFile( path.join( destinationPath, `${ fileName }.js` ), code ),
+		writeFile( path.join( destinationPath, `${ fileName }.js.map` ), map )
 	] );
-	Logger.debug( '' );
 
 }

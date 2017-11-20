@@ -2,7 +2,6 @@
  * Angular Dependencies
  */
 export const angularDependencies: { [ dependency: string ]: string } = {
-
 	'@angular/animations': 'ng.animations',
 	'@angular/core': 'ng.core',
 	'@angular/common': 'ng.common',
@@ -27,5 +26,4 @@ export const angularDependencies: { [ dependency: string ]: string } = {
 	'@angular/platform-browser': 'ng.platformBrowser',
 	'@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
 	'@angular/platform-browser/animations': 'ng.platformBrowser.animations'
-
 };

@@ -1,6 +1,7 @@
 import * as parsePackageJsonName from 'parse-packagejson-name';
 
 import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import Logger from '../logger/logger';
 
 /**
  * Get Typescript Config
@@ -34,8 +35,7 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 				rootDir: config.temporary.prepared,
 				sourceMap: true, // Emit sourcemap files
 				sourceRoot: config.temporary.prepared,
-				target,
-				traceResolution: process.env.DEBUG === 'ENABLED'
+				target
 			},
 			...validateTypescriptCompilerOptions( config.typescriptCompilerOptions )
 		},
@@ -75,7 +75,7 @@ function validateTypescriptCompilerOptions( typescriptCompilerOptions: { [ optio
 	const { newCompilerOptions, removedCompilerOptions } = validateOptions( typescriptCompilerOptions, typescriptCompilerOptionsBlacklist );
 
 	if ( removedCompilerOptions.length > 0 ) {
-		console.warn( `INVALID COMPILER OPTIONS: ${ removedCompilerOptions.join( ', ' ) }` );
+		Logger.warn( `Invalid TypeScript compiler options: ${ removedCompilerOptions.join( ', ' ) }` );
 	}
 
 	return newCompilerOptions;
@@ -95,7 +95,7 @@ function validateAngularCompilerOptions( angularCompilerOptions: { [ option: str
 	const { newCompilerOptions, removedCompilerOptions } = validateOptions( angularCompilerOptions, angularCompilerOptionsBlacklist );
 
 	if ( removedCompilerOptions.length > 0 ) {
-		console.warn( `INVALID COMPILER OPTIONS: ${ removedCompilerOptions.join( ', ' ) }` );
+		Logger.warn( `Invalid Angular compiler options: ${ removedCompilerOptions.join( ', ' ) }` );
 	}
 
 	return newCompilerOptions;

@@ -2,7 +2,6 @@
  * RxJS Dependencies
  */
 export const rxjsDependencies: { [ dependency: string ]: string } = {
-
 	'rxjs/AnonymousSubject': 'Rx',
 	'rxjs/AsyncSubject': 'Rx',
 	'rxjs/BehaviorSubject': 'Rx',
@@ -18,7 +17,6 @@ export const rxjsDependencies: { [ dependency: string ]: string } = {
 	'rxjs/Subscriber': 'Rx',
 	'rxjs/Subscription': 'Rx',
 	'rxjs/TeardownLogic': 'Rx',
-
 	'rxjs/add/observable/bindCallback': 'Rx.Observable',
 	'rxjs/add/observable/bindNodeCallback': 'Rx.Observable',
 	'rxjs/add/observable/combineLatest': 'Rx.Observable',
@@ -40,7 +38,6 @@ export const rxjsDependencies: { [ dependency: string ]: string } = {
 	'rxjs/add/observable/timer': 'Rx.Observable',
 	'rxjs/add/observable/webSocket': 'Rx.Observable',
 	'rxjs/add/observable/zip': 'Rx.Observable',
-
 	'rxjs/add/operator/audit': 'Rx.Observable.prototype',
 	'rxjs/add/operator/auditTime': 'Rx.Observable.prototype',
 	'rxjs/add/operator/buffer': 'Rx.Observable.prototype',
@@ -141,7 +138,6 @@ export const rxjsDependencies: { [ dependency: string ]: string } = {
 	'rxjs/add/operator/withLatestFrom': 'Rx.Observable.prototype',
 	'rxjs/add/operator/zipAll': 'Rx.Observable.prototype',
 	'rxjs/add/operator/zipProto': 'Rx.Observable.prototype',
-
 	'rxjs/observable/bindCallback': 'Rx.Observable',
 	'rxjs/observable/bindNodeCallback': 'Rx.Observable',
 	'rxjs/observable/combineLatest': 'Rx.Observable',
@@ -164,7 +160,6 @@ export const rxjsDependencies: { [ dependency: string ]: string } = {
 	'rxjs/observable/timer': 'Rx.Observable',
 	'rxjs/observable/using': 'Rx.Observable',
 	'rxjs/observable/zip': 'Rx.Observable',
-
 	'rxjs/operator/audit': 'Rx.Observable.prototype',
 	'rxjs/operator/auditTime': 'Rx.Observable.prototype',
 	'rxjs/operator/buffer': 'Rx.Observable.prototype',
@@ -265,11 +260,8 @@ export const rxjsDependencies: { [ dependency: string ]: string } = {
 	'rxjs/operator/withLatestFrom': 'Rx.Observable.prototype',
 	'rxjs/operator/zipAll': 'Rx.Observable.prototype',
 	'rxjs/operator/zipProto': 'Rx.Observable.prototype',
-
 	'rxjs/symbol/iterator': 'Rx.Symbol',
 	'rxjs/symbol/observable': 'Rx.Symbol',
 	'rxjs/symbol/rxSubscriber': 'Rx.Symbol',
-
 	'rxjs/operators': 'Rx.operators'
-
 };
