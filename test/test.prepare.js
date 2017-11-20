@@ -5,5 +5,5 @@ angularPackageBuilder.main()
         // Do nothing
     } )
     .catch( () => {
-        // Do nothing
+        console.error( error );
     } );

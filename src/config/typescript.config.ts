@@ -1,7 +1,6 @@
 import * as parsePackageJsonName from 'parse-packagejson-name';
 
-import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
-import { TypescriptConfig } from './typescript.config.interface';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
 
 /**
  * Get Typescript Config
@@ -13,7 +12,6 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 		compilerOptions: {
 			...{
 				declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
-				diagnostics: process.env.DEBUG === 'ENABLED',
 				emitDecoratorMetadata: true, // Keep metadata about decorators
 				experimentalDecorators: true, // Enable decorators
 				lib: [ // Use all of them (for maximum compatibility)
@@ -28,8 +26,6 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 					'dom.iterable',
 					'scripthost'
 				],
-				listEmittedFiles: process.env.DEBUG === 'ENABLED',
-				listFiles: process.env.DEBUG === 'ENABLED',
 				module: 'ES2015', // Always generate ES6 modules, meaning use 'import' and 'export'
 				moduleResolution: 'node', // Module resolution strategy
 				newLine: 'LF', // Always use 'LF' as line endings in order to make closure compiler annotations work correctly
@@ -65,10 +61,6 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 function validateTypescriptCompilerOptions( typescriptCompilerOptions: { [ option: string ]: any } ): { [ option: string ]: any } {
 
 	const typescriptCompilerOptionsBlacklist: Array<string> = [
-		'diagnostics',
-		'listFiles',
-		'traceResolution',
-		'listEmittedFiles',
 		'declaration',
 		'emitDecoratorMetadata',
 		'experimentalDecorators',
@@ -143,3 +135,37 @@ function validateOptions( compilerOptions: { [ option: string ]: any }, compiler
 	};
 
 }
+
+/**
+ * TypeScript Config Interface
+ */
+export interface TypescriptConfig {
+	compilerOptions?: {
+		declaration?: boolean;
+		emitDecoratorMetadata?: boolean;
+		experimentalDecorators?: boolean;
+		lib?: Array<string>;
+		module?: string;
+		moduleResolution?: string;
+		newLine?: string;
+		outDir?: string;
+		pretty?: boolean;
+		rootDir?: string;
+		sourceMap?: boolean;
+		sourceRoot?: string;
+		target?: string;
+		traceResolution?: boolean;
+		[ key: string ]: any;
+	};
+	files?: Array<string>;
+	angularCompilerOptions?: {
+		annotateForClosureCompiler?: boolean;
+		flatModuleId?: string;
+		flatModuleOutFile?: string;
+		preserveWhitespaces?: boolean;
+		skipTemplateCodegen?: boolean;
+		strictMetadataEmit?: boolean;
+		[ key: string ]: any;
+	};
+}
+

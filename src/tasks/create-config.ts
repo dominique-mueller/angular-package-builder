@@ -4,10 +4,10 @@ import { posix as path } from 'path';
 import { Schema, validate, ValidatorResult, ValidationError } from 'jsonschema';
 import * as gitignore from 'parse-gitignore';
 
-import { AngularPackageBuilderConfig } from '../interfaces/angular-package-builder-config.interface';
-import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderConfig } from '../angular-package-builder-config.interface';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
-import { readFile } from './../utilities/read-file';
+import { readFile } from '../utilities/read-file';
 import Logger from '../logger/logger';
 
 import * as angularPackageSchema from '../angular-package.schema.json';
@@ -72,6 +72,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
 	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
 
+		Logger.debug( '' )
 		Logger.debug( `Found Angular Package Builder configuration file at "${ angularPackageJsonFilePath }"` )
 		Logger.debug( '' )
 

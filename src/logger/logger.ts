@@ -26,11 +26,7 @@ export class Logger {
 	 */
 	public task( message: string ): void {
 		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( '' );
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
-			console.log( `/// ${ message }` );
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
-			console.log( '' );
+			console.log( `///// ${ message } /////` );
 		} else {
 			console.log( chalk.white.bold( `  ${ arrowSymbol } ${ message }` ) );
 		}
@@ -43,9 +39,7 @@ export class Logger {
 	 */
 	public success( message: string ): void {
 		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
-			console.log( `/// ${ message }` );
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( `>>>>> ${ message }` );
 		} else {
 			console.log( chalk.green.bold( message ) );
 		}
@@ -58,9 +52,7 @@ export class Logger {
 	 */
 	public warn( message: string ): void {
 		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
-			console.log( `/// WARNING: ${ message }` );
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( `>>>>> WARNING: ${ message }` );
 		} else {
 			console.log( chalk.yellow.bold( `    WARNING: ${ message }` ) );
 		}
@@ -74,10 +66,8 @@ export class Logger {
 	public error( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
 		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
-			console.log( `/// ERROR: ${ messageTitle }` );
-			console.log( `///        ${ messageBody.join( '\n       ' ) }` );
-			console.log( '/////////////////////////////////////////////////////////////////////////////////////////' );
+			console.log( `>>>>> ERROR: ${ messageTitle }` );
+			console.log( `             ${ messageBody.join( '\n       ' ) }` );
 		} else {
 			console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
 			console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );

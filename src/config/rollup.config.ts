@@ -3,7 +3,7 @@ import { posix as path } from 'path';
 import * as parsePackageJsonName from 'parse-packagejson-name';
 import { Options, Bundle, Warning, Plugin, WriteOptions, GenerateOptions } from 'rollup';
 
-import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
 import { importWithFs } from '../utilities/import-with-fs';
 import Logger from '../logger/logger';
 

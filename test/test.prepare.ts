@@ -4,6 +4,6 @@
         const angularPackageBuilder = await import( './../index' );
         await angularPackageBuilder.main();
     } catch( error ) {
-        // Do nothing
+        console.error( error );
     }
 } )();

@@ -1,13 +1,12 @@
 import { posix as path } from 'path';
 
-import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from './../angular-resource-analyzer/angular-resource-analyzer';
-import { compileSass } from './../resources/compile-sass';
-import { getFiles } from './../utilities/get-files';
-import { htmlMinifierConfig } from './../config/html-minifier.config';
-import { importWithFs } from './../utilities/import-with-fs';
-import { minifyCss } from './../resources/minify-css';
-import { minifyHtml } from './../resources/minify-html';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from '../angular-resource-analyzer/angular-resource-analyzer';
+import { compileSass } from '../resources/compile-sass';
+import { getFiles } from '../utilities/get-files';
+import { importWithFs } from '../utilities/import-with-fs';
+import { minifyCss } from '../resources/minify-css';
+import { minifyHtml } from '../resources/minify-html';
 import Logger from '../logger/logger';
 
 let readFile: any;
@@ -18,34 +17,35 @@ let writeFile: any;
  */
 export async function inlineResources( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
-	readFile = ( await importWithFs( './../utilities/read-file' ) ).readFile;
-	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
+	readFile = ( await importWithFs( '../utilities/read-file' ) ).readFile;
+	writeFile = ( await importWithFs( '../utilities/write-file' ) ).writeFile;
 
-	// Get all files
-	const sourceFilesPatterns: Array<string> = [
+	// Get patterns for source files
+	const sourceFilePatterns: Array<string> = [
 		path.join( '**', '*.ts' ), // Includes source and typing files
 		`!${ path.join( '**', '*.spec.ts' ) }`, // Exclude tests
-		...config.ignored
+		...config.ignored // Exclude ignored files & folders
 	];
-	const filePaths: Array<string> = await getFiles( sourceFilesPatterns, config.entry.folder );
-	Logger.debug( 'Patterns for finding source files:' );
-	Logger.debug( sourceFilesPatterns );
 	Logger.debug( '' );
-	Logger.debug( 'Found source files (relative path):' );
-	Logger.debug( filePaths );
+	Logger.debug( 'Patterns for source files:', sourceFilePatterns );
+	Logger.debug( '' );
+
+	// Get paths for source files
+	const sourceFilePaths: Array<string> = await getFiles( sourceFilePatterns, config.entry.folder );
+	Logger.debug( 'Found source files:', sourceFilePaths );
 	Logger.debug( '' );
 
 	// Inline resources into source files
-	const logLines: any = {};
-	Logger.debug( 'Inline resources' );
+	Logger.debug( 'Inline resources ...' );
+	const logMessages: { [ sourceFilePath: string ]: Array<string> } = {};
 	await Promise.all(
-		filePaths.map( async( filePath: string ): Promise<void> => {
+		sourceFilePaths.map( async( sourceFilePath: string ): Promise<void> => {
 
-			// Read file
-			logLines[ filePath ] = [];
-			const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
-			const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
-			logLines[ filePath ].push( `Read file at "${ absoluteSourceFilePath }"` );
+			// Read source file
+			logMessages[ sourceFilePath ] = [];
+			const absoluteSourceFilePath: string = path.join( config.entry.folder, sourceFilePath );
+			const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, sourceFilePath );
+			logMessages[ sourceFilePath ].push( `Read source file from "${ absoluteSourceFilePath }"` );
 			const fileContent: string = await readFile( absoluteSourceFilePath );
 
 			// Find external resources
@@ -55,35 +55,49 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 				( numberOfResourceFiles: number, externalResource: AngularResource ): number => {
 				return numberOfResourceFiles + externalResource.urls.length;
 			}, 0 );
-			logLines[ filePath ].push( `Found ${ externalResources.length } external resources, total of ${ numberOfResourceFiles } files` );
+			const numberOfExternalTemplates: number = externalResources.reduce(
+				( numberOfExternalTemplates: number, externalResource: AngularResource ): number => {
+				return numberOfExternalTemplates + ( externalResource.oldKey === 'templateUrl' ? 1 : 0 );
+			}, 0 );
+			const numberOfExternalStyles: number = externalResources.reduce(
+				( numberOfExternalStyles: number, externalResource: AngularResource ): number => {
+				return numberOfExternalStyles + ( externalResource.oldKey === 'styleUrls' ? 1 : 0 );
+			}, 0 );
+			logMessages[ sourceFilePath ].push( [
+				`Found ${ externalResources.length } external resources`,
+				`(${ numberOfExternalTemplates } templates, ${ numberOfExternalStyles } stylesheets)`,
+				`, total of ${ numberOfResourceFiles } files`
+			].join() );
 
 			// Load external resources
 			const externalResourcesLoaded: Array<AngularResource> =
-				await loadExternalResources( externalResources, absoluteSourceFilePath, logLines[ filePath ] );
+				await loadExternalResources( externalResources, absoluteSourceFilePath, logMessages[ sourceFilePath ] );
 
 			// Inline external resources
-			logLines[ filePath ].push( `Inline loaded resources` );
+			logMessages[ sourceFilePath ].push( `Inline external resources` );
 			const fileContentWithInlinedResources: string = angularResourceAnalyzer.inlineExternalResources( externalResourcesLoaded );
 
 			// Write file
-			logLines[ filePath ].push( `Write file to "${ absoluteDestinationFilePath }"` );
+			logMessages[ sourceFilePath ].push( `Write file to "${ absoluteDestinationFilePath }"` );
 			await writeFile( absoluteDestinationFilePath, fileContentWithInlinedResources );
 
 		} )
 	);
-	Object.keys( logLines ).forEach( ( filePath: string ): void => {
-		Logger.debug( `  "${ filePath }"` );
-		logLines[ filePath ].forEach( ( logLine: string ): void => {
+	Object.keys( logMessages ).forEach( ( filePath: string ): void => {
+		Logger.debug( `  Source file "${ filePath }"` );
+		logMessages[ filePath ].forEach( ( logLine: string ): void => {
 			Logger.debug( `    -> ${ logLine }` );
 		} );
 	} );
+	Logger.debug( '' );
 
 }
 
 /**
  * Load all external resources
  */
-async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string, logLine: any ): Promise<Array<AngularResource>> {
+async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string, logMessages: Array<string> ):
+	Promise<Array<AngularResource>> {
 
 	return Promise.all(
 
@@ -93,7 +107,7 @@ async function loadExternalResources( externalResources: Array<AngularResource>,
 
 				// Load all resource URLs
 				externalResource.urls.map( async( url: AngularResourceUrl ): Promise<AngularResourceUrl> => {
-					url.content = await loadAndPrepareExternalResource( url.url, filePath, logLine );
+					url.content = await loadAndPrepareExternalResource( url.url, filePath, logMessages );
 					return url;
 				} )
 
@@ -108,14 +122,14 @@ async function loadExternalResources( externalResources: Array<AngularResource>,
 /**
  * Load and prepare a external resource
  */
-async function loadAndPrepareExternalResource( resourceUrl: string, filePath: string, logLine: any ): Promise<string> {
+async function loadAndPrepareExternalResource( resourceUrl: string, filePath: string, logMessages: Array<string> ): Promise<string> {
 
 	// Read the resource file
 	const resourcePath: string = path.join( path.dirname( filePath ), resourceUrl );
 	let resource: string;
 	try {
 		resource = await readFile( resourcePath );
-		logLine.push( `Read external resource from "${ resourcePath }"` );
+		logMessages.push( `Read external resource file from "${ resourcePath }"` );
 	} catch( error ) {
 		throw new Error( [
 			`The external resource at "${ resourcePath }" does not exist, or cannot be read.`,
@@ -130,21 +144,22 @@ async function loadAndPrepareExternalResource( resourceUrl: string, filePath: st
 
 		// External HTML templates
 		case 'html':
-			logLine.push( 'Minify HTML resource' );
+			logMessages.push( 'Minify HTML resource' );
 			resource = minifyHtml( resource );
 			break;
 
 		// External CSS files
 		case 'css':
-			logLine.push( 'Minify CSS resource' );
+			logMessages.push( 'Minify CSS resource' );
 			resource = minifyCss( resource );
 			break;
 
 		// External SASS files
 		case 'scss':
 		case 'sass':
-			logLine.push( 'Compile SASS resource' );
+			logMessages.push( 'Compile SASS resource' );
 			resource = await compileSass( resource );
+			logMessages.push( 'Minify SASS resource' );
 			resource = minifyCss( resource );
 			break;
 

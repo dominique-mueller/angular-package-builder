@@ -4,9 +4,9 @@ import { Bundle, Options, GenerateOptions } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
 import * as unixify from 'unixify';
 
-import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
-import { importWithFs } from './../utilities/import-with-fs';
+import { importWithFs } from '../utilities/import-with-fs';
 import Logger from '../logger/logger';
 
 let rollup: any;
@@ -18,7 +18,7 @@ let writeFile: any;
 export async function bundleJavascript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 
 	rollup = ( await importWithFs( 'rollup' ) ).rollup;
-	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
+	writeFile = ( await importWithFs( '../utilities/write-file' ) ).writeFile;
 
 	// Get information upfront
 	let sourcePath: string;
@@ -46,19 +46,21 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 			break;
 	}
 
-	// Get rollup configuration
+	// Get rollup input configuration
 	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, target, config );
-	Logger.debug( 'Rollup Input Configuration:' );
-	Logger.debug( rollupInputOptions );
 	Logger.debug( '' );
+	Logger.debug( 'Rollup Input Configuration:', rollupInputOptions );
+	Logger.debug( '' );
+
+	// Get rollup output configuration
 	const rollupOutputOptions: GenerateOptions = getRollupOutputConfig( rollupFormat, config );
-	Logger.debug( 'Rollup Output Configuration:' );
-	Logger.debug( rollupOutputOptions );
+	Logger.debug( 'Rollup Output Configuration:', rollupOutputOptions );
 	Logger.debug( '' );
 
 	// Generate the bundle
-	Logger.debug( 'Generate bundle with sourcemaps ...' );
+	Logger.debug( 'Create bundle ...' );
 	const bundle: Bundle = await rollup( rollupInputOptions );
+	Logger.debug( 'Generate code and sourcemap ...' );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 	Logger.debug( '' );
 
@@ -76,12 +78,12 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	const fileName: string = `${ parsePackageJsonName( config.packageName ).fullName }.${ bundleSuffix }`;
 	const bundlePath: string = path.join( destinationPath, `${ fileName }.js` );
 	const sourcemapPath: string = path.join( destinationPath, `${ fileName }.js.map` );
-	Logger.debug( `Write bundle and sourcemap ...` );
-	Logger.debug( `  Write bundle to "${ bundlePath }"` );
-	Logger.debug( `  Write bundle source-map to "${ sourcemapPath }"` );
+	Logger.debug( `Write bundle to "${ bundlePath }"` );
+	Logger.debug( `Write sourcemap to "${ sourcemapPath }"` );
 	await Promise.all( [
 		writeFile( bundlePath, code ),
 		writeFile( sourcemapPath, map )
 	] );
+	Logger.debug( '' );
 
 }

@@ -6,8 +6,8 @@ import * as unixify from 'unixify';
 
 import { getFiles } from '../utilities/get-files';
 import { normalizeLineEndings } from '../utilities/normalize-line-endings';
-import { readFile } from './../utilities/read-file';
-import { writeFile } from './../utilities/write-file';
+import { readFile } from '../utilities/read-file';
+import { writeFile } from '../utilities/write-file';
 
 /**
  * Memory File System
