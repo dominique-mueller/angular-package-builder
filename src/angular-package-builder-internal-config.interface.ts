@@ -1,4 +1,4 @@
-import { MemoryFileSystem } from '../memory-file-system/memory-file-system';
+import { MemoryFileSystem } from './memory-file-system/memory-file-system';
 
 /**
  * Angular Package Builder Internal Configuration Interface (derived from Angular Package Builder Config)

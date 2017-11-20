@@ -1,13 +1,12 @@
 import { posix as path } from 'path';
 
-import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from './../angular-resource-analyzer/angular-resource-analyzer';
-import { compileSass } from './../resources/compile-sass';
-import { getFiles } from './../utilities/get-files';
-import { htmlMinifierConfig } from './../config/html-minifier.config';
-import { importWithFs } from './../utilities/import-with-fs';
-import { minifyCss } from './../resources/minify-css';
-import { minifyHtml } from './../resources/minify-html';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from '../angular-resource-analyzer/angular-resource-analyzer';
+import { compileSass } from '../resources/compile-sass';
+import { getFiles } from '../utilities/get-files';
+import { importWithFs } from '../utilities/import-with-fs';
+import { minifyCss } from '../resources/minify-css';
+import { minifyHtml } from '../resources/minify-html';
 
 let readFile: any;
 let writeFile: any;
@@ -17,34 +16,30 @@ let writeFile: any;
  */
 export async function inlineResources( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
-	readFile = ( await importWithFs( './../utilities/read-file' ) ).readFile;
-	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
+	readFile = ( await importWithFs( '../utilities/read-file' ) ).readFile;
+	writeFile = ( await importWithFs( '../utilities/write-file' ) ).writeFile;
 
-	// Get all files
-	const sourceFilesPatterns: Array<string> = [
+	// Get list of source file paths
+	const sourceFilePatterns: Array<string> = [
 		path.join( '**', '*.ts' ), // Includes source and typing files
 		`!${ path.join( '**', '*.spec.ts' ) }`, // Exclude tests
-		...config.ignored
+		...config.ignored // Exclude ignored files & folders
 	];
-	const filePaths: Array<string> = await getFiles( sourceFilesPatterns, config.entry.folder );
+	const sourceFilePaths: Array<string> = await getFiles( sourceFilePatterns, config.entry.folder );
 
 	// Inline resources into source files
 	await Promise.all(
-		filePaths.map( async( filePath: string ): Promise<void> => {
+		sourceFilePaths.map( async( sourceFilePath: string ): Promise<void> => {
 
-			// Read file
-			const absoluteSourceFilePath: string = path.join( config.entry.folder, filePath );
-			const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, filePath );
+			// Read source file
+			const absoluteSourceFilePath: string = path.join( config.entry.folder, sourceFilePath );
+			const absoluteDestinationFilePath: string = path.join( config.temporary.prepared, sourceFilePath );
 			const fileContent: string = await readFile( absoluteSourceFilePath );
 
-			// Find external resources
+			// Find, load and inline external resources
 			const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( absoluteSourceFilePath, fileContent );
 			const externalResources: Array<AngularResource> = angularResourceAnalyzer.getExternalResources();
-
-			// Load external resources
 			const externalResourcesLoaded: Array<AngularResource> = await loadExternalResources( externalResources, absoluteSourceFilePath );
-
-			// Inline external resources
 			const fileContentWithInlinedResources: string = angularResourceAnalyzer.inlineExternalResources( externalResourcesLoaded );
 
 			// Write file
@@ -58,7 +53,8 @@ export async function inlineResources( config: AngularPackageBuilderInternalConf
 /**
  * Load all external resources
  */
-async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ): Promise<Array<AngularResource>> {
+async function loadExternalResources( externalResources: Array<AngularResource>, filePath: string ):
+	Promise<Array<AngularResource>> {
 
 	return Promise.all(
 

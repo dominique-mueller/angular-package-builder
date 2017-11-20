@@ -4,9 +4,9 @@ import { Bundle, Options, GenerateOptions } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
 import * as unixify from 'unixify';
 
-import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { importWithFs } from './../utilities/import-with-fs';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
+import { importWithFs } from '../utilities/import-with-fs';
 
 let rollup: any;
 let writeFile: any;
@@ -17,9 +17,9 @@ let writeFile: any;
 export async function bundleJavascript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 
 	rollup = ( await importWithFs( 'rollup' ) ).rollup;
-	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
+	writeFile = ( await importWithFs( '../utilities/write-file' ) ).writeFile;
 
-	// Get information upfront
+	// Get general configuration
 	let sourcePath: string;
 	let destinationPath: string;
 	let rollupFormat: 'es' | 'umd';
@@ -45,21 +45,21 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 			break;
 	}
 
-	// Get rollup configuration
+	// Get rollup configurations
 	const rollupInputOptions: Options = await getRollupInputConfig( sourcePath, target, config );
 	const rollupOutputOptions: GenerateOptions = getRollupOutputConfig( rollupFormat, config );
 
-	// Generate the bundle
+	// Generate the bundle (code & sourcemap)
 	const bundle: Bundle = await rollup( rollupInputOptions );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
-	// Re-write sourcemap URLs
+	// Re-write sourcemap URLs (absolute -> relative)
 	const normalizedSourcePath: string = unixify( sourcePath );
-	map.sources = map.sources.map( ( source: string ): string => {
-		return path.relative( normalizedSourcePath, unixify( source ) );
+	map.sources = map.sources.map( ( sourcePath: string ): string => {
+		return path.relative( normalizedSourcePath, unixify( sourcePath ) );
 	} );
 
-	// Write bundle w/ sourcemaps to destination
+	// Write bundle and sourcemap to disk
 	const fileName: string = `${ parsePackageJsonName( config.packageName ).fullName }.${ bundleSuffix }`;
 	await Promise.all( [
 		writeFile( path.join( destinationPath, `${ fileName }.js` ), code ),

@@ -2,10 +2,9 @@ import { posix as path } from 'path';
 
 import { ParsedConfiguration } from '@angular/compiler-cli';
 
-import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { importWithFs } from './../utilities/import-with-fs';
-import { getTypescriptConfig } from './../config/typescript.config';
-import { TypescriptConfig } from './../config/typescript.config.interface';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { getTypescriptConfig, TypescriptConfig } from '../config/typescript.config';
+import { importWithFs } from '../utilities/import-with-fs';
 
 let angularCompilerCli: any;
 let getFiles: any;
@@ -16,21 +15,24 @@ let writeFile: any;
  */
 export async function compileTypescript( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' ): Promise<void> {
 
-	// Import
 	angularCompilerCli = ( await importWithFs( '@angular/compiler-cli/src/main' ) ).main;
-	getFiles = ( await importWithFs( './../utilities/get-files' ) ).getFiles;
-	writeFile = ( await importWithFs( './../utilities/write-file' ) ).writeFile;
+	getFiles = ( await importWithFs( '../utilities/get-files' ) ).getFiles;
+	writeFile = ( await importWithFs( '../utilities/write-file' ) ).writeFile;
 
-	// Get TypeScript-related information
-	const typeDefinitionFilesPatterns: Array<string> = [
-		path.join( '**', '*.d.ts' ),
-		...config.ignored
-	]
-	const typescriptDefinitionsFiles: Array<string> = await getFiles( typeDefinitionFilesPatterns, config.temporary.prepared, true );
-	const destinationPath: string = target === 'ES2015' ? config.temporary.buildES2015 : config.temporary.buildES5;
+	// Get list of TypeScript definition files
+	const typeDefinitionFilePatterns: Array<string> = [
+		path.join( '**', '*.d.ts' ), // Include all typings
+		...config.ignored // Exclude ignored files and folders
+	];
+	const typescriptDefinitionsFilePaths: Array<string> = await getFiles( typeDefinitionFilePatterns, config.temporary.prepared, true );
+
+	// Get TypeScript input and output configuration
+	const destinationPath: string = target === 'ES2015'
+		? config.temporary.buildES2015
+		: config.temporary.buildES5;
 	const entryFiles: Array<string> = [
 		path.join( config.temporary.prepared, config.entry.file ), // Only one entry file is allowed!
-		...typescriptDefinitionsFiles // Additional TypeScript definition files (those do not count as entry files)
+		...typescriptDefinitionsFilePaths // Additional TypeScript definition files (those do not count as entry files)
 	];
 
 	// Create and write TypeScript configuration

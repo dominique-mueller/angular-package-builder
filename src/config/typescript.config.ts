@@ -1,7 +1,7 @@
 import * as parsePackageJsonName from 'parse-packagejson-name';
 
-import { AngularPackageBuilderInternalConfig } from '../interfaces/angular-package-builder-internal-config.interface';
-import { TypescriptConfig } from './typescript.config.interface';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import Logger from '../logger/logger';
 
 /**
  * Get Typescript Config
@@ -12,10 +12,6 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 	return {
 		compilerOptions: {
 			...{
-				// diagnostics: true, // TODO: Test for debug mode
-				// listFiles: true, // TODO: Test for debug mode
-				// traceResolution: true, // TODO: Test for debug mode
-				// listEmittedFiles: true, // TODO: Test for debug mode
 				declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
 				emitDecoratorMetadata: true, // Keep metadata about decorators
 				experimentalDecorators: true, // Enable decorators
@@ -39,7 +35,7 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 				rootDir: config.temporary.prepared,
 				sourceMap: true, // Emit sourcemap files
 				sourceRoot: config.temporary.prepared,
-				target,
+				target
 			},
 			...validateTypescriptCompilerOptions( config.typescriptCompilerOptions )
 		},
@@ -65,10 +61,6 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 function validateTypescriptCompilerOptions( typescriptCompilerOptions: { [ option: string ]: any } ): { [ option: string ]: any } {
 
 	const typescriptCompilerOptionsBlacklist: Array<string> = [
-		'diagnostics',
-		'listFiles',
-		'traceResolution',
-		'listEmittedFiles',
 		'declaration',
 		'emitDecoratorMetadata',
 		'experimentalDecorators',
@@ -83,7 +75,7 @@ function validateTypescriptCompilerOptions( typescriptCompilerOptions: { [ optio
 	const { newCompilerOptions, removedCompilerOptions } = validateOptions( typescriptCompilerOptions, typescriptCompilerOptionsBlacklist );
 
 	if ( removedCompilerOptions.length > 0 ) {
-		console.warn( `INVALID COMPILER OPTIONS: ${ removedCompilerOptions.join( ', ' ) }` );
+		Logger.warn( `Invalid TypeScript compiler options: ${ removedCompilerOptions.join( ', ' ) }` );
 	}
 
 	return newCompilerOptions;
@@ -103,7 +95,7 @@ function validateAngularCompilerOptions( angularCompilerOptions: { [ option: str
 	const { newCompilerOptions, removedCompilerOptions } = validateOptions( angularCompilerOptions, angularCompilerOptionsBlacklist );
 
 	if ( removedCompilerOptions.length > 0 ) {
-		console.warn( `INVALID COMPILER OPTIONS: ${ removedCompilerOptions.join( ', ' ) }` );
+		Logger.warn( `Invalid Angular compiler options: ${ removedCompilerOptions.join( ', ' ) }` );
 	}
 
 	return newCompilerOptions;
@@ -143,3 +135,37 @@ function validateOptions( compilerOptions: { [ option: string ]: any }, compiler
 	};
 
 }
+
+/**
+ * TypeScript Config Interface
+ */
+export interface TypescriptConfig {
+	compilerOptions?: {
+		declaration?: boolean;
+		emitDecoratorMetadata?: boolean;
+		experimentalDecorators?: boolean;
+		lib?: Array<string>;
+		module?: string;
+		moduleResolution?: string;
+		newLine?: string;
+		outDir?: string;
+		pretty?: boolean;
+		rootDir?: string;
+		sourceMap?: boolean;
+		sourceRoot?: string;
+		target?: string;
+		traceResolution?: boolean;
+		[ key: string ]: any;
+	};
+	files?: Array<string>;
+	angularCompilerOptions?: {
+		annotateForClosureCompiler?: boolean;
+		flatModuleId?: string;
+		flatModuleOutFile?: string;
+		preserveWhitespaces?: boolean;
+		skipTemplateCodegen?: boolean;
+		strictMetadataEmit?: boolean;
+		[ key: string ]: any;
+	};
+}
+

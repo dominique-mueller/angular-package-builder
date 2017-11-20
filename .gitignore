@@ -1,16 +1,12 @@
 # Dependencies
-/node_modules
+node_modules/
 
 # Build
-/dist
-/dist-angular-package-builder
-
-# Tests
-/test/my-library/dist
-/test/my-library/dist-angular-package-builder
+dist/
+dist-angular-package-builder/
 
 # Development
-/.vscode
+.vscode
 
 # Logs
 *.log

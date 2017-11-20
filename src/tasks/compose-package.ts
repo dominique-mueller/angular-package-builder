@@ -1,7 +1,7 @@
 import { posix as path } from 'path';
 
-import { AngularPackageBuilderInternalConfig } from './../interfaces/angular-package-builder-internal-config.interface';
-import { importWithFs } from './../utilities/import-with-fs';
+import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { importWithFs } from '../utilities/import-with-fs';
 
 let copyFiles: any;
 
@@ -10,7 +10,7 @@ let copyFiles: any;
  */
 export async function composePackage( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 
-	copyFiles = ( await importWithFs( './../utilities/copy-files' ) ).copyFiles;
+	copyFiles = ( await importWithFs( '../utilities/copy-files' ) ).copyFiles;
 
 	// Copy all files which should end up in the package
 	await Promise.all( [
@@ -20,12 +20,11 @@ export async function composePackage( config: AngularPackageBuilderInternalConfi
 		copyFiles( path.join( config.temporary.bundleFESM5, '**' ), config.output.folder ),
 		copyFiles( path.join( config.temporary.bundleUMD, '**' ), config.output.folder ),
 
-		// Type definitions
+		// TypeScript definition files
 		copyFiles( path.join( config.temporary.buildES2015, '**', '*.d.ts' ), config.output.folder ),
 
-		// Angular AoT metadata file
+		// Angular AoT metadata files
 		copyFiles( path.join( config.temporary.buildES2015, '**', '*.metadata.json' ), config.output.folder )
-
 	] );
 
 }

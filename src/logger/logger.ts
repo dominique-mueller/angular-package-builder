@@ -8,18 +8,6 @@ const arrowSymbol = process.platform === 'win32' ? '→' : '➜';
  */
 export class Logger {
 
-
-	/**
-	 * Log debug message
-	 *
-	 * @param message - Message
-	 */
-	public debug( message: string ): void {
-		if ( !!process.env.DEBUG ) {
-			console.log( message );
-		}
-	}
-
 	/**
 	 * Task message
 	 *
@@ -64,7 +52,11 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public title( message: string ): void {
-		console.log( chalk.white.bold.underline( message ) );
+		if ( process.env.DEBUG === 'ENABLED' ) {
+			console.log( chalk.white.bold.underline( message ), '[DEBUG MODE ENABLED]' );
+		} else {
+			console.log( chalk.white.bold.underline( message ) );
+		}
 	}
 
 	/**
