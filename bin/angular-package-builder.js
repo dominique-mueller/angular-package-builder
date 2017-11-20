@@ -2,10 +2,10 @@
 
 'use strict';
 
-const automaticRelease = require( '../index.js' ).automaticRelease;
+const runAngularPackageBuilder = require( '../index.js' ).runAngularPackageBuilder;
 
 // Run
-automaticRelease()
+runAngularPackageBuilder()
 	.then( () => {
 		process.exit( 0 );
 	} )
