@@ -1,6 +1,6 @@
 // Import and run Angular Pacakge Builder
-const angularPackageBuilder = require( './../dist/index' );
-angularPackageBuilder.main()
+const runAngularPackageBuilder = require( '../dist/index' ).runAngularPackageBuilder;
+runAngularPackageBuilder()
     .then( () => {
         // Do nothing
     } )

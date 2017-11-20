@@ -10,7 +10,7 @@ import { inlineResources } from './src/tasks/inline-resources';
 import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 
-export async function main() {
+export async function runAngularPackageBuilder() {
 
 	// TODO: Get as CLI command
 	const debug: boolean = false;
