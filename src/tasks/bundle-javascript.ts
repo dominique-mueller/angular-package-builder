@@ -60,6 +60,9 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	// Generate the bundle
 	Logger.debug( 'Create bundle ...' );
 	const bundle: Bundle = await rollup( rollupInputOptions );
+	Logger.debug( 'Bundle imports:', ( <any> bundle ).imports );
+	Logger.debug( 'Bundle exports:', ( <any> bundle ).exports );
+	Logger.debug( '' );
 	Logger.debug( 'Generate code and sourcemap ...' );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 	Logger.debug( '' );
