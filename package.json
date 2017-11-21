@@ -48,9 +48,11 @@
 		"parse-gitignore": "0.4.x",
 		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "1.8.x",
+		"resolve": "1.5.x",
 		"rollup-plugin-commonjs": "8.2.x",
 		"rollup-plugin-node-resolve": "3.0.x",
 		"rollup": "0.51.x",
+		"semver": "5.4.x",
 		"unixify": "1.0.x",
 		"yargs": "10.0.x"
 	},

@@ -32,7 +32,9 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public warn( message: string ): void {
-		console.log( chalk.yellow.bold( `    WARNING: ${ message }` ) );
+		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
+		console.log( chalk.yellow.bold( `    WARNING: ${ messageTitle }` ) );
+		console.log( chalk.gray( `             ${ messageBody.join( '\n             ' ) }` ) );
 	}
 
 	/**
