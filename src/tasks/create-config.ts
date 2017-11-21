@@ -75,10 +75,7 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 			? await readFile( path.join( cwd, configOrConfigUrl ) )
 			: configOrConfigUrl;
 	} catch ( error ) {
-		throw new Error( [
-			`The ".angular-package.json" file at "${ path.join( cwd, configOrConfigUrl ) }" does not exist.`,
-			error.join( '\n' )
-		].join( '\n' ) );
+		throw new Error(  `The Angular Package config file at "${ path.join( cwd, configOrConfigUrl ) }" does not exist.` );
 	}
 
 	// Validate project configuration
