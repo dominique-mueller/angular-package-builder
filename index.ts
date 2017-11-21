@@ -13,8 +13,8 @@ import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 
 export async function runAngularPackageBuilder(
 	configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json',
-	debug: boolean = false
-) {
+	debug: boolean = false,
+): Promise<void> {
 
 	Logger.empty();
 	Logger.title( 'Angular Package Builder' );
@@ -27,7 +27,7 @@ export async function runAngularPackageBuilder(
 
 		// Preparation
 		Logger.task( 'Configuration' );
-		const config: AngularPackageBuilderInternalConfig = await createConfig();
+		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
 		if ( debug ) {
 			await deleteFolder( config.temporary.folder );
 		} else {

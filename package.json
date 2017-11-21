@@ -51,7 +51,8 @@
 		"rollup-plugin-commonjs": "8.2.x",
 		"rollup-plugin-node-resolve": "3.0.x",
 		"rollup": "0.51.x",
-		"unixify": "1.0.x"
+		"unixify": "1.0.x",
+		"yargs": "10.0.x"
 	},
 	"devDependencies": {
 		"@angular/common": "5.0.x",

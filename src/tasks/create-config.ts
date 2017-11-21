@@ -24,11 +24,11 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 	const config: AngularPackageBuilderInternalConfig = {
 		cwd,
 		entry: {
-			file: 'index.ts',
-			folder: cwd
+			// file
+			// folder
 		},
 		output: {
-			folder: path.join( cwd, 'dist' ),
+			// folder
 		},
 		temporary: {
 			folder: path.join( cwd, 'dist-angular-package-builder' ),
@@ -108,9 +108,7 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 	if ( path.extname( config.entry.file ).substring( 1 ).toLowerCase() !== 'ts' ) {
 		throw new Error( `The entry file at "${ entryFilePath }" is not a TypeScript file.` );
 	}
-	if ( projectConfig.outDir ) {
-		config.output.folder = path.join( cwd, projectConfig.outDir );
-	}
+	config.output.folder = path.join( cwd, projectConfig.outDir );
 
 	// Set additional information
 	config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
