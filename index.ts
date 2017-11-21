@@ -30,7 +30,9 @@ export async function runAngularPackageBuilder(
 	try {
 
 		// Preparation
+		// TODO: Check for same compiler version? Check for TypeScript?
 		Logger.task( 'Preparation' );
+		console.log( await import( '@angular/forms/package.json' ) ); // TODO: Use this instead of the other, cleanup deps
 		const angularCompilerCliVersion: string = await getInstalledDependencyVersion( '@angular/compiler-cli', cwd );
 		if ( !semver.satisfies( angularCompilerCliVersion, '>= 5.0.0 < 6.0.0' ) ) {
 			Logger.warn( [
