@@ -14,7 +14,8 @@ import * as angularPackageSchema from '../angular-package.schema.json';
 /**
  * Create Angular Package Builder Configuration
  */
-export async function createConfig(): Promise<AngularPackageBuilderInternalConfig> {
+export async function createConfig( configOrConfigUrl: AngularPackageBuilderConfig | string ):
+	Promise<AngularPackageBuilderInternalConfig> {
 
 	// Get current working directory path (must be normalized manually)
 	const cwd: string = process.cwd().replace( /\\/g, '/' );
@@ -27,7 +28,7 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 			// folder
 		},
 		output: {
-			folder: path.join( cwd, 'dist' ),
+			// folder
 		},
 		temporary: {
 			folder: path.join( cwd, 'dist-angular-package-builder' ),
@@ -68,55 +69,56 @@ export async function createConfig(): Promise<AngularPackageBuilderInternalConfi
 	config.dependencies = getDependencyMap( packageDependencies );
 
 	// Get custom project configuration
-	const angularPackageJsonFilePath: string = path.join( cwd, '.angular-package.json' );
-	if ( fs.existsSync( angularPackageJsonFilePath ) ) {
-
-		// Read and validate config file
-		const projectConfig: AngularPackageBuilderConfig = await readFile( angularPackageJsonFilePath );
-		const validatorResult: ValidatorResult = validate( projectConfig, <Schema> angularPackageSchema );
-		if ( !validatorResult.valid ) {
-			const errorMessages: Array<string> = validatorResult.errors.map( ( error: ValidationError ): string => {
-				return `${ error.property.replace( 'instance.', '' ).replace( 'instance', '' ) } ${ error.message }`;
-			} );
-			throw new Error( [
-				'The ".angular-package.json" file is invalid. Make sure it follows the JSON schema.',
-				errorMessages.join( '\n' )
-			].join( '\n' ) );
-		}
-
-		// Set input & output details
-		const entryFilePath: string = path.join( cwd, projectConfig.entryFile );
-		try {
-			await readFile( entryFilePath );
-		} catch ( error ) {
-			throw new Error( [
-				`The entry file at "${ entryFilePath }" does not exist, or cannot be read.`,
-				`Details: ${ error.message }`
-			].join( '\n' ) );
-		}
-		config.entry.folder = path.dirname( entryFilePath );
-		config.entry.file = path.basename( entryFilePath );
-		if ( path.extname( config.entry.file ).substring( 1 ).toLowerCase() !== 'ts' ) {
-			throw new Error( `The entry file at "${ entryFilePath }" is not a TypeScript file.` );
-		}
-		if ( projectConfig.outDir ) {
-			config.output.folder = path.join( cwd, projectConfig.outDir );
-		}
-
-		// Set additional information
-		config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
-		config.typescriptCompilerOptions = projectConfig.typescriptCompilerOptions || {};
-		config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
-
-		// Get ignored files
-		config.ignored.push(
-			`!${ path.relative( cwd, config.output.folder ) }`,
-			`!${ path.join( path.relative( cwd, config.output.folder ), '**' ) }`,
-			`!${ path.relative( cwd, config.temporary.folder ) }`,
-			`!${ path.join( path.relative( cwd, config.temporary.folder ), '**' ) }`
-		);
-
+	let projectConfig: AngularPackageBuilderConfig;
+	try {
+		projectConfig = typeof configOrConfigUrl === 'string'
+			? await readFile( path.join( cwd, configOrConfigUrl ) )
+			: configOrConfigUrl;
+	} catch ( error ) {
+		throw new Error(  `The Angular Package config file at "${ path.join( cwd, configOrConfigUrl ) }" does not exist.` );
 	}
+
+	// Validate project configuration
+	const validatorResult: ValidatorResult = validate( projectConfig, <Schema> angularPackageSchema );
+	if ( !validatorResult.valid ) {
+		const errorMessages: Array<string> = validatorResult.errors.map( ( error: ValidationError ): string => {
+			return `${ error.property.replace( 'instance.', '' ).replace( 'instance', '' ) } ${ error.message }`;
+		} );
+		throw new Error( [
+			'The given Angular Package Builder configuration is invalid. Make sure it follows the JSON schema.',
+			errorMessages.join( '\n' )
+		].join( '\n' ) );
+	}
+
+	// Set input & output details
+	const entryFilePath: string = path.join( cwd, projectConfig.entryFile );
+	try {
+		await readFile( entryFilePath );
+	} catch ( error ) {
+		throw new Error( [
+			`The entry file at "${ entryFilePath }" does not exist, or cannot be read.`,
+			`Details: ${ error.message }`
+		].join( '\n' ) );
+	}
+	config.entry.folder = path.dirname( entryFilePath );
+	config.entry.file = path.basename( entryFilePath );
+	if ( path.extname( config.entry.file ).substring( 1 ).toLowerCase() !== 'ts' ) {
+		throw new Error( `The entry file at "${ entryFilePath }" is not a TypeScript file.` );
+	}
+	config.output.folder = path.join( cwd, projectConfig.outDir );
+
+	// Set additional information
+	config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
+	config.typescriptCompilerOptions = projectConfig.typescriptCompilerOptions || {};
+	config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
+
+	// Get ignored files
+	config.ignored.push(
+		`!${ path.relative( cwd, config.output.folder ) }`,
+		`!${ path.join( path.relative( cwd, config.output.folder ), '**' ) }`,
+		`!${ path.relative( cwd, config.temporary.folder ) }`,
+		`!${ path.join( path.relative( cwd, config.temporary.folder ), '**' ) }`
+	);
 
 	// Get information from '.gitignore' file
 	config.ignored.push(

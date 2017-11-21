@@ -1,5 +1,6 @@
 import { posix as path } from 'path';
 
+import { AngularPackageBuilderConfig } from './src/angular-package-builder-config.interface';
 import { AngularPackageBuilderInternalConfig } from './src/angular-package-builder-internal-config.interface';
 import { bundleJavascript } from './src/tasks/bundle-javascript';
 import { compileTypescript } from './src/tasks/compile-typescript';
@@ -10,22 +11,23 @@ import { inlineResources } from './src/tasks/inline-resources';
 import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 
-export async function main() {
-
-	// TODO: Get as CLI command
-	const debug: boolean = false;
-	process.env.DEBUG = debug ? 'ENABLED' : 'DISABLED';
-	const startTime = new Date().getTime();
+export async function runAngularPackageBuilder(
+	configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json',
+	debug: boolean = false,
+): Promise<void> {
 
 	Logger.empty();
 	Logger.title( 'Angular Package Builder' );
 	Logger.empty();
 
+	process.env.DEBUG = debug ? 'ENABLED' : 'DISABLED';
+	const startTime = new Date().getTime();
+
 	try {
 
 		// Preparation
 		Logger.task( 'Configuration' );
-		const config: AngularPackageBuilderInternalConfig = await createConfig();
+		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
 		if ( debug ) {
 			await deleteFolder( config.temporary.folder );
 		} else {

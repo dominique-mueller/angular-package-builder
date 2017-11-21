@@ -25,9 +25,9 @@
 		"build": "tsc -p tsconfig.json && copyfiles \"src/**/*.json\" \"bin/**\" dist",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
-		"pretest": "npm run build && cd test/my-library && node ../../test/test.prepare.js",
+		"pretest": "npm run build && cd test/my-library && node ../../dist/bin/angular-package-builder.js",
 		"test": "jest --config jest.config.json --runInBand --no-cache",
-		"quick": "cd test/my-library && ts-node ../../test/test.prepare.ts"
+		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
 	},
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",
@@ -51,7 +51,8 @@
 		"rollup-plugin-commonjs": "8.2.x",
 		"rollup-plugin-node-resolve": "3.0.x",
 		"rollup": "0.51.x",
-		"unixify": "1.0.x"
+		"unixify": "1.0.x",
+		"yargs": "10.0.x"
 	},
 	"devDependencies": {
 		"@angular/common": "5.0.x",
