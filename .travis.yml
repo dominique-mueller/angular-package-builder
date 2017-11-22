@@ -3,7 +3,9 @@ dist: trusty
 sudo: false
 language: node_js
 node_js:
-  - "9.1.0"
+  - "7.6.0" # Minimum version
+  - "8.9.1" # Current LTS
+  - "9.2.0" # Latest and greatest
 cache:
   directories:
     - node_modules
@@ -33,32 +35,56 @@ jobs:
         - npm run build
 
     - stage: test
+      node_js:
+        - "7.6.0"
       env:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@2.4.x
+        - npm install typescript@$TYPESCRIPT
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
     -
+      node_js:
+        - "8.9.1"
       env:
-        - TYPESCRIPT=2.5.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@2.5.x
+        - npm install typescript@$TYPESCRIPT
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
     -
+      node_js:
+        - "9.2.0"
       env:
-        - TYPESCRIPT=2.6.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@2.6.x
+        - npm install typescript@$TYPESCRIPT
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
+    # -
+    #   env:
+    #     - TYPESCRIPT=2.5.x
+    #   install:
+    #     - npm install
+    #     - npm install typescript@2.5.x
+    #     - ./node_modules/.bin/tsc --version
+    #   script:
+    #     - npm run test
+    # -
+    #   env:
+    #     - TYPESCRIPT=2.6.x
+    #   install:
+    #     - npm install
+    #     - npm install typescript@2.6.x
+    #     - ./node_modules/.bin/tsc --version
+    #   script:
+    #     - npm run test
 
     - stage: release
       before_install:
