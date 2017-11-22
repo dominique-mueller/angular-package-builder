@@ -46,6 +46,13 @@ jobs:
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
+    -
+      install:
+        - npm install
+        - npm install typescript@2.6.x
+        - ./node_modules/.bin/tsc --version
+      script:
+        - npm run test
 
     - stage: release
       before_install:

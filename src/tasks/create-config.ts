@@ -14,8 +14,11 @@ import * as angularPackageSchema from '../angular-package.schema.json';
 /**
  * Create Angular Package Builder Configuration
  */
-export async function createConfig( configOrConfigUrl: AngularPackageBuilderConfig | string, cwd: string ):
+export async function createConfig( configOrConfigUrl: AngularPackageBuilderConfig | string ):
 	Promise<AngularPackageBuilderInternalConfig> {
+
+	// Get current working directory path (must be normalized manually)
+	const cwd: string = process.cwd().replace( /\\/g, '/' );
 
 	// Initial configuration
 	const config: AngularPackageBuilderInternalConfig = {

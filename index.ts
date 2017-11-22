@@ -1,7 +1,5 @@
 import { posix as path } from 'path';
 
-import * as semver from 'semver';
-
 import { AngularPackageBuilderConfig } from './src/angular-package-builder-config.interface';
 import { AngularPackageBuilderInternalConfig } from './src/angular-package-builder-internal-config.interface';
 import { bundleJavascript } from './src/tasks/bundle-javascript';
@@ -9,7 +7,7 @@ import { compileTypescript } from './src/tasks/compile-typescript';
 import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
-import { getInstalledDependencyVersion } from './src/utilities/get-installed-dependency-version';
+import { ensureDependencyVersion } from './src/utilities/ensure-dependency-version';
 import { inlineResources } from './src/tasks/inline-resources';
 import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
@@ -25,22 +23,15 @@ export async function runAngularPackageBuilder(
 
 	process.env.DEBUG = debug ? 'ENABLED' : 'DISABLED';
 	const startTime = new Date().getTime();
-	const cwd: string = process.cwd().replace( /\\/g, '/' ); // Get current working directory path (must be normalized manually)
 
 	try {
 
 		// Preparation
-		// TODO: Check for same compiler version? Check for TypeScript?
 		Logger.task( 'Preparation' );
-		console.log( await import( '@angular/forms/package.json' ) ); // TODO: Use this instead of the other, cleanup deps
-		const angularCompilerCliVersion: string = await getInstalledDependencyVersion( '@angular/compiler-cli', cwd );
-		if ( !semver.satisfies( angularCompilerCliVersion, '>= 5.0.0 < 6.0.0' ) ) {
-			Logger.warn( [
-				`It seems that version "@angular/compiler-cli" is installed in version "${ angularCompilerCliVersion }".`,
-				'This version if officially not supported (">= 5.0.0 < 6.0.0"). Will try to continue anyway ...'
-			].join( '\n' ) );
-		}
-		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl, cwd );
+		await ensureDependencyVersion( '@angular/compiler-cli', '>= 5.0.0 < 6.0.0' );
+		await ensureDependencyVersion( '@angular/compiler', '>= 5.0.0 < 6.0.0' );
+		await ensureDependencyVersion( 'typescript', '>= 2.4.2 < 3.0.0' );
+		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
 		if ( debug ) {
 			await deleteFolder( config.temporary.folder );
 		} else {
