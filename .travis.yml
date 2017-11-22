@@ -33,6 +33,8 @@ jobs:
         - npm run build
 
     - stage: test
+      env:
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
         - npm install typescript@2.4.x
@@ -40,6 +42,8 @@ jobs:
       script:
         - npm run test
     -
+      env:
+        - TYPESCRIPT=2.5.x
       install:
         - npm install
         - npm install typescript@2.5.x
@@ -47,6 +51,8 @@ jobs:
       script:
         - npm run test
     -
+      env:
+        - TYPESCRIPT=2.6.x
       install:
         - npm install
         - npm install typescript@2.6.x
