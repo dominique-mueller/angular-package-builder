@@ -37,33 +37,27 @@ jobs:
     - stage: test
       node_js:
         - "7.6.0"
-      env:
-        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@$TYPESCRIPT
+        - npm install typescript
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
     -
       node_js:
         - "8.9.1"
-      env:
-        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@$TYPESCRIPT
+        - npm install typescript
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
     -
       node_js:
         - "9.2.0"
-      env:
-        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@$TYPESCRIPT
+        - npm install typescript
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
