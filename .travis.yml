@@ -36,7 +36,7 @@ jobs:
       node_js:
         - "7.6.0"
       env:
-        - TYPESCRIPT=2.4.x
+        - TYPESCRIPT=2.5.x
       install:
         - npm install
         - npm install typescript@$TYPESCRIPT
@@ -59,7 +59,7 @@ jobs:
       node_js:
         - "9.2.0"
       env:
-        - TYPESCRIPT=2.5.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
         - npm install typescript@$( echo $TYPESCRIPT )
