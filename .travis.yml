@@ -39,7 +39,6 @@ jobs:
         - "7.6.0"
       install:
         - npm install
-        - npm install typescript
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
@@ -48,7 +47,6 @@ jobs:
         - "8.9.1"
       install:
         - npm install
-        - npm install typescript
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
@@ -57,7 +55,6 @@ jobs:
         - "9.2.0"
       install:
         - npm install
-        - npm install typescript
         - ./node_modules/.bin/tsc --version
       script:
         - npm run test
