@@ -39,8 +39,10 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
+        - npm install typescript@$TYPESCRIPT
+        - npm install "typescript@$TYPESCRIPT"
+        - npm install "typescript@${TYPESCRIPT}"
         - npm install typescript@$( echo $TYPESCRIPT )
-        - ./node_modules/.bin/tsc --version
       script:
         - npm run test
     -
@@ -51,18 +53,16 @@ jobs:
       install:
         - npm install
         - npm install typescript@$( echo $TYPESCRIPT )
-        - ./node_modules/.bin/tsc --version
       script:
         - npm run test
     -
       node_js:
         - "9.2.0"
       env:
-        - TYPESCRIPT=2.4.x
+        - TYPESCRIPT=2.5.x
       install:
         - npm install
         - npm install typescript@$( echo $TYPESCRIPT )
-        - ./node_modules/.bin/tsc --version
       script:
         - npm run test
     # -
