@@ -7,9 +7,12 @@ import { compileTypescript } from './src/tasks/compile-typescript';
 import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
+import { ensureDependencyVersion } from './src/utilities/ensure-dependency-version';
 import { inlineResources } from './src/tasks/inline-resources';
 import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
+
+import * as packageJson from './package.json';
 
 export async function runAngularPackageBuilder(
 	configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json',
@@ -26,7 +29,14 @@ export async function runAngularPackageBuilder(
 	try {
 
 		// Preparation
-		Logger.task( 'Configuration' );
+		Logger.task( 'Preparation' );
+		Promise.all(
+			Object
+				.keys( ( <any> packageJson ).peerDependencies )
+				.map( ( peerDependency: string ): Promise<void> => {
+					return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
+				} )
+		);
 		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
 		if ( debug ) {
 			await deleteFolder( config.temporary.folder );

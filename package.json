@@ -22,7 +22,7 @@
 		"angular-package-builder": "bin/angular-package-builder.js"
 	},
 	"scripts": {
-		"build": "tsc -p tsconfig.json && copyfiles \"src/**/*.json\" \"bin/**\" dist",
+		"build": "tsc -p tsconfig.json && copyfiles \"bin/**\" angular-package.schema.json package.json dist",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
 		"pretest": "npm run build && cd test/my-library && node ../../dist/bin/angular-package-builder.js",
@@ -32,7 +32,7 @@
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",
 		"@angular/compiler": ">= 5.0.0 < 6.0.0",
-		"typescript": ">= 2.4.0 < 2.5.0"
+		"typescript": ">= 2.4.2 < 2.5.0"
 	},
 	"dependencies": {
 		"chalk": "2.3.x",
@@ -40,7 +40,7 @@
 		"cpx": "1.5.x",
 		"del": "3.0.x",
 		"fs-extra": "4.0.x",
-		"globby": "7.0.x",
+		"globby": "7.1.x",
 		"html-minifier": "3.5.x",
 		"jsonschema": "1.2.x",
 		"memfs": "2.5.x",
@@ -51,18 +51,19 @@
 		"rollup-plugin-commonjs": "8.2.x",
 		"rollup-plugin-node-resolve": "3.0.x",
 		"rollup": "0.51.x",
+		"semver": "5.4.x",
 		"unixify": "1.0.x",
 		"yargs": "10.0.x"
 	},
 	"devDependencies": {
 		"@angular/common": "5.0.x",
-		"@angular/compiler-cli": "5.0.x",
 		"@angular/compiler": "5.0.x",
+		"@angular/compiler-cli": "5.0.x",
 		"@angular/core": "5.0.x",
 		"@types/clean-css": "3.4.x",
 		"@types/jest": "21.1.x",
-		"@types/node-sass": "3.10.x",
 		"@types/node": "8.0.x",
+		"@types/node-sass": "3.10.x",
 		"@types/rollup": "0.51.x",
 		"automatic-release": "1.1.x",
 		"babel-jest": "21.2.x",

@@ -2,8 +2,6 @@
 dist: trusty
 sudo: false
 language: node_js
-node_js:
-  - "9.1.0"
 cache:
   directories:
     - node_modules
@@ -27,18 +25,65 @@ jobs:
   include:
 
     - stage: build
+      node_js:
+        - "8.9.1"
       install:
         - npm install
       script:
         - npm run build
 
     - stage: test
+      node_js:
+        - "7.6.0"
+      env:
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
+        - npm install typescript@$TYPESCRIPT
       script:
         - npm run test
+    -
+      node_js:
+        - "8.9.1"
+      env:
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm install
+        - npm install typescript@$TYPESCRIPT
+      script:
+        - npm run test
+    -
+      node_js:
+        - "9.2.0"
+      env:
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm install
+        - npm install typescript@$TYPESCRIPT
+      script:
+        - npm run test
+    # -
+    #   env:
+    #     - TYPESCRIPT=2.5.x
+    #   install:
+    #     - npm install
+    #     - npm install typescript@2.5.x
+    #     - ./node_modules/.bin/tsc --version
+    #   script:
+    #     - npm run test
+    # -
+    #   env:
+    #     - TYPESCRIPT=2.6.x
+    #   install:
+    #     - npm install
+    #     - npm install typescript@2.6.x
+    #     - ./node_modules/.bin/tsc --version
+    #   script:
+    #     - npm run test
 
     - stage: release
+      node_js:
+        - "8.9.1"
       before_install:
         # Clone the whole repository because we also need the develop branch for releasing (Travis only gives us the master by default)
         - git clone "https://github.com/$TRAVIS_REPO_SLUG.git" "$TRAVIS_REPO_SLUG";

@@ -1,8 +1,5 @@
 import * as path from 'path';
-import { promisify, log } from 'util';
 import * as fs from 'fs';
-
-const readFileAsync = promisify( fs.readFile );
 
 const distFolder: string = path.join( `${ path.relative( process.cwd(), __dirname ) }`, 'dist' );
 const libraryName: string = 'my-library';
@@ -53,9 +50,9 @@ describe( 'Angular Package: TypeScript definition files', () => {
 		let fileContents: Array<string>;
 		let currentError: Error | null = null;
 		try {
-			fileContents = await Promise.all( filePaths.map( ( path: string ): Promise<string> => {
-				return readFileAsync( path, 'utf-8' );
-			} ) );
+			fileContents = await filePaths.map( ( path: string ): string => {
+				return fs.readFileSync( path, 'utf-8' );
+			} );
 		} catch ( error ) {
 			currentError = error;
 		}
@@ -79,7 +76,7 @@ describe( 'Angular Package: Metadata', () => {
 
 		let currentError: Error | null = null;
 		try {
-			metadataJsonFile = await readFileAsync( path.join( distFolder, `${ libraryName }.metadata.json` ), 'utf-8' );
+			metadataJsonFile = await fs.readFileSync( path.join( distFolder, `${ libraryName }.metadata.json` ), 'utf-8' );
 		} catch ( error ) {
 			currentError = error;
 		}
@@ -209,7 +206,7 @@ async function testSourcemap( type: 'es2015' | 'es5' | 'umd' ): Promise<void> {
 
 		let currentError: Error | null = null;
 		try {
-			sourceMapFile = await readFileAsync( path.join( distFolder, `${ moduleFileName }.js.map` ), 'utf-8' );
+			sourceMapFile = await fs.readFileSync( path.join( distFolder, `${ moduleFileName }.js.map` ), 'utf-8' );
 		} catch ( error ) {
 			currentError = error;
 		}
