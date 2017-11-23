@@ -12,6 +12,8 @@ import { inlineResources } from './src/tasks/inline-resources';
 import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 
+import * as packageJson from './package.json';
+
 export async function runAngularPackageBuilder(
 	configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json',
 	debug: boolean = false,
@@ -28,9 +30,13 @@ export async function runAngularPackageBuilder(
 
 		// Preparation
 		Logger.task( 'Preparation' );
-		await ensureDependencyVersion( '@angular/compiler-cli', '>= 5.0.0 < 6.0.0' );
-		await ensureDependencyVersion( '@angular/compiler', '>= 5.0.0 < 6.0.0' );
-		await ensureDependencyVersion( 'typescript', '>= 2.4.2 < 3.0.0' );
+		Promise.all(
+			Object
+				.keys( ( <any> packageJson ).peerDependencies )
+				.map( ( peerDependency: string ): Promise<void> => {
+					return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
+				} )
+		);
 		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
 		if ( debug ) {
 			await deleteFolder( config.temporary.folder );
