@@ -14,7 +14,7 @@ export class Logger {
 	 * @param message - Message
 	 */
 	public task( message: string ): void {
-		console.log( chalk.white.bold( `  ${ arrowSymbol } ${ message }` ) );
+		console.log( chalk.bold( `  ${ arrowSymbol } ${ message }` ) );
 	}
 
 	/**
