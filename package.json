@@ -27,6 +27,7 @@
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
 		"pretest": "npm run build && cd test/my-library && node ../../dist/bin/angular-package-builder.js",
 		"test": "jest --config jest.config.json --runInBand --no-cache",
+		"test:integration": "ng build --prod --extract-licenses false --progress false",
 		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
 	},
 	"peerDependencies": {
@@ -56,14 +57,18 @@
 		"yargs": "10.0.x"
 	},
 	"devDependencies": {
+		"@angular/cli": "1.5.x",
 		"@angular/common": "5.0.x",
-		"@angular/compiler": "5.0.x",
 		"@angular/compiler-cli": "5.0.x",
+		"@angular/compiler": "5.0.x",
 		"@angular/core": "5.0.x",
+		"@angular/language-service": "5.0.x",
+		"@angular/platform-browser-dynamic": "5.0.x",
+		"@angular/platform-browser": "5.0.x",
 		"@types/clean-css": "3.4.x",
 		"@types/jest": "21.1.x",
-		"@types/node": "8.0.x",
 		"@types/node-sass": "3.10.x",
+		"@types/node": "8.0.x",
 		"@types/rollup": "0.51.x",
 		"automatic-release": "1.1.x",
 		"babel-jest": "21.2.x",
@@ -72,6 +77,7 @@
 		"rimraf": "2.6.x",
 		"rxjs": "5.5.x",
 		"ts-jest": "21.2.x",
-		"typescript": "2.4.x"
+		"typescript": "2.4.x",
+		"zone.js": "0.8.x"
 	}
 }

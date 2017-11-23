@@ -1,0 +1,26 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"baseUrl": "./",
+		"declaration": false,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"lib": [
+			"es2017",
+			"dom"
+		],
+		"module": "es2015",
+		"moduleResolution": "node",
+		"outDir": "../out-tsc/app",
+		"sourceMap": true,
+		"target": "es5",
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"types": []
+	},
+	"exclude": [
+		"test.ts",
+		"**/*.spec.ts"
+	]
+}
