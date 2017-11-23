@@ -75,7 +75,7 @@ function validateTypescriptCompilerOptions( typescriptCompilerOptions: { [ optio
 	const { newCompilerOptions, removedCompilerOptions } = validateOptions( typescriptCompilerOptions, typescriptCompilerOptionsBlacklist );
 
 	if ( removedCompilerOptions.length > 0 ) {
-		Logger.warn( `Invalid TypeScript compiler options: ${ removedCompilerOptions.join( ', ' ) }` );
+		Logger.warn( `The TypeScript compiler option ${ removedCompilerOptions.join( ', ' ) } cannot be changed.` );
 	}
 
 	return newCompilerOptions;
@@ -95,7 +95,7 @@ function validateAngularCompilerOptions( angularCompilerOptions: { [ option: str
 	const { newCompilerOptions, removedCompilerOptions } = validateOptions( angularCompilerOptions, angularCompilerOptionsBlacklist );
 
 	if ( removedCompilerOptions.length > 0 ) {
-		Logger.warn( `Invalid Angular compiler options: ${ removedCompilerOptions.join( ', ' ) }` );
+		Logger.warn( `The TypeScript compiler option ${ removedCompilerOptions.join( ', ' ) } cannot be changed.` );
 	}
 
 	return newCompilerOptions;
@@ -116,7 +116,7 @@ function validateOptions( compilerOptions: { [ option: string ]: any }, compiler
 
 		// Remove blacklisted compiler option keys
 		.filter( ( compilerOption: string ): boolean => {
-			const isValid: boolean = compilerOptionsBlacklist.indexOf( compilerOption ) !== -1;
+			const isValid: boolean = compilerOptionsBlacklist.indexOf( compilerOption ) === -1;
 			if ( !isValid ) {
 				removedCompilerOptions.push( compilerOption );
 			}

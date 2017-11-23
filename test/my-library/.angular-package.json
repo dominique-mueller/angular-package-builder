@@ -1,4 +1,7 @@
 {
 	"entryFile": "src/index.ts",
-	"outDir": "dist"
+	"outDir": "dist",
+	"angularCompilerOptions": {
+		"annotateForClosureCompiler": false
+	}
 }
