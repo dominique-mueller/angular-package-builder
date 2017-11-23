@@ -1,7 +1,5 @@
 {
+	"$schema": "../../angular-package.schema.json",
 	"entryFile": "src/index.ts",
-	"outDir": "dist",
-	"angularCompilerOptions": {
-		"annotateForClosureCompiler": false
-	}
+	"outDir": "dist"
 }

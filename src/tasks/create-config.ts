@@ -9,7 +9,7 @@ import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-
 import { getDependencyMap } from '../utilities/get-dependency-map';
 import { readFile } from '../utilities/read-file';
 
-import * as angularPackageSchema from '../angular-package.schema.json';
+import * as angularPackageSchema from '../../angular-package.schema.json';
 
 /**
  * Create Angular Package Builder Configuration
