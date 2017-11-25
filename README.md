@@ -50,7 +50,35 @@ executing **angular-package-builder** using the `--harmony-async-await` flag.*
 
 ## How to use
 
-TODO
+In most cases, integrating **angular-package-builder** into a project is very straightforward.
+
+**Step 1:** Call **angular-package-builder** within one of the scripts of your `package.json` file. For instance:
+
+``` json
+{
+  "scripts" {
+    "builder": "angular-package-builder"
+  }
+}
+```
+
+**Step 2:** In the root folder of your project, create a `.angular-package.json` file with the following content (replacing the placeholders):
+
+``` json
+{
+  "entryFile": "<PATH_TO_ENTRY_FILE>",
+  "outDir": "<PATH_TO_OUTPUT_FOLDER>"
+}
+```
+
+For instance, a simple configuration might look like the following:
+
+``` json
+{
+  "entryFile": "lib/src/index.ts",
+  "outDir": "dist"
+}
+```
 
 <br><br>
 
