@@ -74,13 +74,56 @@ Then, create a `.angular-package.json` file in your project's root folder, and f
 
 ### Advanced configuration
 
-TODO
+Usually, the configuration described above should be working for most library projects. For special use cases, or more advanced configuration, you can extend your `.angular-package.json` file further.
+
+#### Custom TypeScript compiler options
+
+One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`, `skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
+
+``` json
+{
+  "typescriptCompilerOptions": {
+    "strictNullChecks": true
+  }
+}
+```
+
+> Please note that the following options cannot be changed: `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`, `sourceRoot` and `target`.
+
+#### Custom Angular compiler options
+
+Furthermore, you might also decide to configure the Angular compiler. Common options are `annotateForClosureCompiler`, `preserveWhitespaces` and `strictMetadataEmit`.
+
+``` json
+{
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": false
+  }
+}
+```
+
+> Please note that the following options cannot be changed: `flatModuleId`, `flatModuleOutFile and `skipTemplateCodegen`.
+
+#### Custom dependency declaration
+
+By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is missing or you want to overwrite a dependency definition, you can declare them as `dependency package name` -> `global constant`.
+
+``` json
+{
+  "dependencies": {
+    "@ngx-translate/core": "ngxTranslate.core"
+  }
+}
+```
 
 <br>
 
 ### CLI commands
 
-TODO
+Usually, simply calling `angular-package-builder` in your npm scripts should work like a charm. There are, however, two parameters which can be defined:
+
+- `--config <PATH>` allows you to define a custom path to your `.angular-package.json` file
+- `--debug` emits the output of intermediate build steps to the disk (`dist-angular-package-builder`)
 
 <br><br>
 

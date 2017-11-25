@@ -17,8 +17,13 @@ export function getSafeDependencyName( originalDependencyName: string ): string 
 			return value[ 1 ].toUpperCase();
 		} )
 		.replace( /[^A-Za-z]/g, '' ); // Remove unsafe characters
+	const safeScope: string = ( scope || '' )
+		.replace( /-([a-z])/g, ( value: string ): string => { // Convert hyphenated case into camel case
+			return value[ 1 ].toUpperCase();
+		} )
+		.replace( /[^A-Za-z]/g, '' ); // Remove unsafe characters
 
 	// Return safe dependency name
-	return scope ? `${ scope }.${ safeFullName }` : safeFullName;
+	return scope ? `${ safeScope }.${ safeFullName }` : safeFullName;
 
 }
