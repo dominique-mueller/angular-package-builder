@@ -121,7 +121,7 @@ Furthermore, you might also decide to configure the Angular compiler. Common opt
 
 > The following options cannot be changed: `flatModuleId`, `flatModuleOutFile and `skipTemplateCodegen`.
 
-#### dependency declaration
+#### Dependency declaration
 
 By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is missing or you want to overwrite a dependency definition, you can declare them as `dependency package name` -> `global constant`.
 
