@@ -27,7 +27,7 @@ jobs:
 
     - stage: build
       node_js:
-        - "8.9.1"
+        - "lts/*"
       install:
         - npm install
       script:
@@ -35,21 +35,21 @@ jobs:
 
     - stage: test (package)
       node_js:
-        - "7.6.0"
+        - "7.6.0" # Lowest compatible version
       install:
         - npm install
       script:
         - npm run test:package
     -
       node_js:
-        - "8.9.1"
+        - "lts/*"
       install:
         - npm install
       script:
         - npm run test:package
     -
       node_js:
-        - "9.2.0"
+        - "node"
       install:
         - npm install
       script:
@@ -57,7 +57,7 @@ jobs:
 
     - stage: test (integration)
       node_js:
-        - "8.9.1"
+        - "lts/*"
       install:
         - npm install
       script:
@@ -65,7 +65,7 @@ jobs:
 
     - stage: release
       node_js:
-        - "8.9.1"
+        - "lts/*"
       before_install:
         # Clone the whole repository because we also need the develop branch for releasing (Travis only gives us the master by default)
         - git clone "https://github.com/$TRAVIS_REPO_SLUG.git" "$TRAVIS_REPO_SLUG";
