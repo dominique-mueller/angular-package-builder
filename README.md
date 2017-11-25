@@ -2,7 +2,7 @@
 
 # angular-package-builder
 
-**Packages your Angular libraries based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview)**.
+**Packages your Angular libraries based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).** *Works with Angular 5+.*
 
 [![npm version](https://img.shields.io/npm/v/angular-package-builder.svg?maxAge=3600&style=flat)](https://www.npmjs.com/package/angular-package-builder)
 [![dependency status](https://img.shields.io/david/dominique-mueller/angular-package-builder.svg?maxAge=3600&style=flat)](https://david-dm.org/dominique-mueller/angular-package-builder)
@@ -101,7 +101,9 @@ One of the things you might want to configure specifically for your project is T
 }
 ```
 
-> Please note that the following options cannot be changed: `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`, `sourceRoot` and `target`.
+See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html)** for the full list of available options.
+
+> The following options cannot be changed: `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`, `sourceRoot` and `target`.
 
 #### Angular compiler options
 
@@ -115,7 +117,7 @@ Furthermore, you might also decide to configure the Angular compiler. Common opt
 }
 ```
 
-> Please note that the following options cannot be changed: `flatModuleId`, `flatModuleOutFile and `skipTemplateCodegen`.
+> The following options cannot be changed: `flatModuleId`, `flatModuleOutFile and `skipTemplateCodegen`.
 
 #### dependency declaration
 
@@ -140,19 +142,31 @@ Usually, simply calling `angular-package-builder` in your npm scripts should wor
 
 <br><br>
 
-## Known pitfalls
+## Known pitfalls w/ solutions
 
-### No barrels
+TODO: Description, open issue with own ones
 
-TODO: ...
+### Barrels referencing barrels
+
+Normally, libraries allow their implementation to be imported from a single import source. Internally, this can be achieved by re-exporting (import and exporting) implementation using so-called **[Barrels](https://angular.io/guide/glossary#barrel)**, seen in the form of `index.ts` files.
+
+While this works like a charm for the top-level barrel / `index.ts` file, Issues will occur when barrels import barrels. When doing so, the Angular Package Builder will succeed, and the compilation output will look like it is correct - but actually is not. When trying to import the corrupt library build, Angular applications will throw errors (telling you that some dependencies cannot be resolved).
+
+**Solution: Only use a single barrel / `index.ts` file at the top of you library, re-exporting all public functionality in a single place**.
+
+<br>
 
 ### Disable strictmetadataemit
 
 TODO: ...
 
+<br>
+
 ### JSdoc comments
 
 TODO: Solution, closure compiler annotations
+
+<br>
 
 ### Weird deps
 
