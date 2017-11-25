@@ -5,34 +5,34 @@ const distFolder: string = path.join( `${ path.relative( process.cwd(), __dirnam
 const libraryName: string = 'my-library';
 const indexPath: string = 'index';
 const moduleName: string = 'LIBModule';
-const modulePath: string = 'library.module';
+const modulePath: string = 'src/library.module';
 const serviceName: string = 'LIBDataService';
-const servicePath: string = 'data/data.service';
+const servicePath: string = 'src/data/data.service';
 const componentName: string = 'LIBInputComponent';
-const componentPath: string = 'input/input.component';
+const componentPath: string = 'src/input/input.component';
 
 describe( `Angular Package: Flat ES2015 module`, async() => {
-	await testModule( 'es2015' );
+	await testModule( `esm2015/${ libraryName }.js` );
 } );
 
 describe( `Angular Package: Flat ES2015 module source-map`, async() => {
-	await testSourcemap( 'es2015' );
+	await testSourcemap( `esm2015/${ libraryName }.js.map` );
 } );
 
 describe( `Angular Package: Flat ES5 module`, async() => {
-	await testModule( 'es5' );
+	await testModule( `esm5/${ libraryName }.js` );
 } );
 
 describe( `Angular Package: Flat ES5 module source-map`, async() => {
-	await testSourcemap( 'es5' );
+	await testSourcemap( `esm5/${ libraryName }.js.map` );
 } );
 
 describe( `Angular Package: UMD module`, async() => {
-	await testModule( 'umd' );
+	await testModule( `bundles/${ libraryName }.umd.js` );
 } );
 
 describe( `Angular Package: UMD module source-map`, async() => {
-	await testSourcemap( 'umd' );
+	await testSourcemap( `bundles/${ libraryName }.umd.js.map` );
 } );
 
 describe( 'Angular Package: TypeScript definition files', () => {
@@ -139,14 +139,13 @@ describe( 'Angular Package: Metadata', () => {
 
 } );
 
-async function testModule( type: 'es2015' | 'es5' | 'umd' ): Promise<void> {
+async function testModule( modulePath: string ): Promise<void> {
 
-	const moduleFileName: string = `${ libraryName }.${ type }`;
 	let moduleFileContent: any = null;
 
 	it ( 'should exist', async() => {
 
-		moduleFileContent = await import( `./dist/${ moduleFileName }` );
+		moduleFileContent = await import( `./dist/${ modulePath }` );
 
 		expect( moduleFileContent ).not.toBeNull();
 
@@ -196,9 +195,8 @@ async function testModule( type: 'es2015' | 'es5' | 'umd' ): Promise<void> {
 
 }
 
-async function testSourcemap( type: 'es2015' | 'es5' | 'umd' ): Promise<void> {
+async function testSourcemap( sourcemapPath: string ): Promise<void> {
 
-	const moduleFileName: string = `${ libraryName }.${ type }`;
 	let sourceMapFile: string = '';
 	let sourceMapFileContent: any | null = null;
 
@@ -206,7 +204,7 @@ async function testSourcemap( type: 'es2015' | 'es5' | 'umd' ): Promise<void> {
 
 		let currentError: Error | null = null;
 		try {
-			sourceMapFile = await fs.readFileSync( path.join( distFolder, `${ moduleFileName }.js.map` ), 'utf-8' );
+			sourceMapFile = await fs.readFileSync( path.join( distFolder, sourcemapPath ), 'utf-8' );
 		} catch ( error ) {
 			currentError = error;
 		}
@@ -250,7 +248,7 @@ async function testSourcemap( type: 'es2015' | 'es5' | 'umd' ): Promise<void> {
 
 	} );
 
-	if ( type === 'umd' ) {
+	if ( sourcemapPath.indexOf( 'umd' ) !== -1 ) {
 		it ( 'should contain all names', () => {
 
 			expect( sourceMapFileContent.names ).toEqual( expect.any( Array ) );
