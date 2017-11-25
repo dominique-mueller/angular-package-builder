@@ -29,19 +29,19 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 			sourcePath = config.temporary.buildES2015;
 			destinationPath = config.temporary.bundleFESM2015;
 			rollupFormat = 'es';
-			bundleSuffix = 'es2015';
+			bundleSuffix = '';
 			break;
 		case 'ES5':
 			sourcePath = config.temporary.buildES5;
 			destinationPath = config.temporary.bundleFESM5;
 			rollupFormat = 'es';
-			bundleSuffix = 'es5';
+			bundleSuffix = '';
 			break;
 		case 'UMD':
 			sourcePath = config.temporary.buildES5;
 			destinationPath = config.temporary.bundleUMD;
 			rollupFormat = 'umd';
-			bundleSuffix = 'umd';
+			bundleSuffix = '.umd';
 			break;
 	}
 
@@ -60,7 +60,7 @@ export async function bundleJavascript( config: AngularPackageBuilderInternalCon
 	} );
 
 	// Write bundle and sourcemap to disk
-	const fileName: string = `${ parsePackageJsonName( config.packageName ).fullName }.${ bundleSuffix }`;
+	const fileName: string = `${ parsePackageJsonName( config.packageName ).fullName }${ bundleSuffix }`;
 	await Promise.all( [
 		writeFile( path.join( destinationPath, `${ fileName }.js` ), code ),
 		writeFile( path.join( destinationPath, `${ fileName }.js.map` ), map )

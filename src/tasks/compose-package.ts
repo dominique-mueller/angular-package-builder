@@ -16,15 +16,16 @@ export async function composePackage( config: AngularPackageBuilderInternalConfi
 	await Promise.all( [
 
 		// Bundles
-		copyFiles( path.join( config.temporary.bundleFESM2015, '**' ), config.output.folder ),
-		copyFiles( path.join( config.temporary.bundleFESM5, '**' ), config.output.folder ),
-		copyFiles( path.join( config.temporary.bundleUMD, '**' ), config.output.folder ),
+		copyFiles( path.join( config.temporary.bundleFESM2015, '**' ), path.join( config.output.folder, 'esm2015' ) ),
+		copyFiles( path.join( config.temporary.bundleFESM5, '**' ), path.join( config.output.folder, 'esm5' ) ),
+		copyFiles( path.join( config.temporary.bundleUMD, '**' ), path.join( config.output.folder, 'bundles' ) ),
 
 		// TypeScript definition files
 		copyFiles( path.join( config.temporary.buildES2015, '**', '*.d.ts' ), config.output.folder ),
 
 		// Angular AoT metadata files
 		copyFiles( path.join( config.temporary.buildES2015, '**', '*.metadata.json' ), config.output.folder )
+
 	] );
 
 }
