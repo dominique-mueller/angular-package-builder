@@ -27,7 +27,7 @@
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
 		"pretest:package": "npm run build && cd test/my-library && node ../../dist/bin/angular-package-builder.js",
 		"test:package": "jest --config jest.config.json --runInBand --no-cache",
-		"pretest:integration": "npm run test:package:prepare && cd test/my-library && copyfiles package.json dist && cd ../my-app && npm install",
+		"pretest:integration": "npm run pretest:package && cd test/my-library && copyfiles package.json dist && cd ../my-app && npm install",
 		"test:integration": "cd test/my-app && npm run build",
 		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
 	},
