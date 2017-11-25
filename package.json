@@ -1,5 +1,6 @@
 {
 	"name": "angular-package-builder",
+	"description": "Packages your Angular libraries based on the Angular Package Format.",
 	"version": "1.0.0",
 	"author": {
 		"name": "Dominique Müller",
@@ -15,7 +16,15 @@
 	"bugs": {
 		"url": "https://github.com/dominique-mueller/angular-package-builder/issues"
 	},
-	"keywords": [],
+	"keywords": [
+		"angular",
+		"package",
+		"library",
+		"builder",
+		"build",
+		"tool",
+		"cli"
+	],
 	"main": "index.js",
 	"types": "index.d.ts",
 	"bin": {
