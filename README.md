@@ -146,25 +146,29 @@ Usually, simply calling `angular-package-builder` in your npm scripts should wor
 
 TODO: Description, open issue with own ones
 
-### Barrels referencing barrels
+### Barrels re-exporting barrels
 
-Normally, libraries allow their implementation to be imported from a single import source. Internally, this can be achieved by re-exporting (import and exporting) implementation using so-called **[Barrels](https://angular.io/guide/glossary#barrel)**, seen in the form of `index.ts` files.
+Normally, libraries make their implementation available from a single import source. Internally, this is achieved by re-exporting (importing and then exporting) implementation using so-called **[Barrels](https://angular.io/guide/glossary#barrel)**, seen in the form of `index.ts` files.
 
-While this works like a charm for the top-level barrel / `index.ts` file, Issues will occur when barrels import barrels. When doing so, the Angular Package Builder will succeed, and the compilation output will look like it is correct - but actually is not. When trying to import the corrupt library build, Angular applications will throw errors (telling you that some dependencies cannot be resolved).
+While this works like a charm for the top-level barrel / `index.ts` file, issues will occur when barrels re-export barrels. Funnily enough, when doing so the Angular Package Builder will succeed, and even the compilation output will look like it is correct - but actually is not. When trying to import the corrupt library, Angular applications will throw errors (e.g. dependencies cannot be resolved).
 
-**Solution: Only use a single barrel / `index.ts` file at the top of you library, re-exporting all public functionality in a single place**.
+**Tip: Only use a single barrel / `index.ts` file at the top of you library, re-exporting all public functionality.**
+
+<br>
+
+### Forbidden JSDoc annotations
+
+When building a library with `annotateForClosureCompiler` being enabled (which it is by default), not all JSDoc annotations are allowed. In particular, annotations which are unnecessary because of the information TypeScript can provide must not be used - otherwhise, the Angular Compiler (tsickle to be specific) will complain.
+
+This includes types in params (e.g. `@param {string} myOption - My option`), types in general (e.g. `@type {string}`) and annotations such as `@constructor` or `@class`. The full list of alled JSDoc tags can be found **[in the tsickle source files](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
+
+**Tip: Remove all unnecessary JSDoc information until the Angular Compiler is happy**. Alternatively, you could also disabled the `annotateForClosureCompiler` option in the `angularCompilerOptions` - but I don't recommend it :)
 
 <br>
 
 ### Disable strictmetadataemit
 
 TODO: ...
-
-<br>
-
-### JSdoc comments
-
-TODO: Solution, closure compiler annotations
 
 <br>
 
