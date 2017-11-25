@@ -20,13 +20,13 @@ These days, setting up build chains for frontend projects requires lots of knowl
 
 The **Angular Package Builder** is here to help. Once configured, this NodeJS-based command line tool will build your Angular library with a single command, allowing developers to focus on the important things - developing!
 
-Under the hood, **angular-package-builder** will:
+Under the hood, the **Angular Package Builder** will:
 
 - inline (and compile) external resources (HTML, CSS, SASS)
 - compile TypeScript sources into JavaScript (ES2015, ES5)
 - create JavaScript bundles (ESM2015, ESM5, UMD)
 
-> Please note that the **Angular Package Builder** only builds libraries for **Angular 5.x**. Previous Angular versions are not supported.
+> Please note that the **Angular Package Builder** only builds libraries for **Angular 5+**. Previous Angular versions are not supported.
 
 ![Angular Package Builder Preview](/docs/preview.png?raw=true)
 
@@ -82,6 +82,8 @@ Finally, reference your build output by adding the following to your `package.js
   "es2015": "./esm2015/my-library.js","
 }
 ```
+
+> The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
 
 <br>
 
@@ -140,11 +142,15 @@ Usually, simply calling `angular-package-builder` in your npm scripts should wor
 - `--config <PATH>` allows you to define a custom path to your `.angular-package.json` file
 - `--debug` emits the output of intermediate build steps to the disk (`dist-angular-package-builder`)
 
+> You can always run `angular-package-builder --help` to get a full list of available command line parameters.
+
 <br><br>
 
 ## Known pitfalls w/ solutions
 
-TODO: Description, open issue with own ones
+There are quite a few pitfalls one might run into when packaging an Angular library. Many of them are everything but obvious, and the fix is not always clear. The following is a collection of known pitfally and tips on how to solve them.
+
+> Feel free to extend this list by creating an issue / opening a Pull Request!
 
 <br>
 
@@ -174,13 +180,13 @@ When building a library with `annotateForClosureCompiler` being enabled (which i
 
 ### Disable strictmetadataemit
 
-TODO: ...
+TODO: static classes, ...
 
 <br>
 
 ### Weird deps
 
-TODO: momentjs, allow synthetic
+TODO: momentjs, allow synthetic, ...
 
 <br><br>
 
