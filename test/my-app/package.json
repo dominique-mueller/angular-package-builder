@@ -1,0 +1,22 @@
+{
+	"name": "angular-package-builder-app",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"build": "ng build --prod --extract-licenses false --progress false"
+	},
+	"dependencies": {
+		"@angular/cli": "1.5.x",
+		"@angular/common": "5.0.x",
+		"@angular/compiler-cli": "5.0.x",
+		"@angular/compiler": "5.0.x",
+		"@angular/core": "5.0.x",
+		"@angular/language-service": "5.0.x",
+		"@angular/platform-browser-dynamic": "5.0.x",
+		"@angular/platform-browser": "5.0.x",
+		"my-library": "file:../my-library/dist",
+		"rxjs": "5.5.x",
+		"typescript": "2.4.x",
+		"zone.js": "0.8.x"
+	}
+}

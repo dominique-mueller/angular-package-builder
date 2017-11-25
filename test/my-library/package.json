@@ -6,14 +6,8 @@
 	"main": "./bundles/my-library.umd.js",
 	"module": "./esm5/my-library.js",
 	"es2015": "./esm2015/my-library.js",
-	"dependencies": {
+	"peerDependencies": {
 		"@angular/core": "5.0.x",
-		"@angular/common": "5.0.x",
-		"@angular/compiler": "5.0.x",
-		"rxjs": "5.5.x"
-	},
-	"devDependencies": {
-		"@angular/compiler-cli": "5.0.x",
-		"typescript": "2.4.x"
+		"@angular/common": "5.0.x"
 	}
 }
