@@ -16,7 +16,8 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: test
+  - name: test (package)
+  - name: test (integration)
   - name: release
     if: branch = master
 
@@ -32,54 +33,35 @@ jobs:
       script:
         - npm run build
 
-    - stage: test
+    - stage: test (package)
       node_js:
         - "7.6.0"
-      env:
-        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@$TYPESCRIPT
       script:
-        - npm run test
+        - npm run test:package
     -
       node_js:
         - "8.9.1"
-      env:
-        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@$TYPESCRIPT
       script:
-        - npm run test
+        - npm run test:package
     -
       node_js:
         - "9.2.0"
-      env:
-        - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install typescript@$TYPESCRIPT
       script:
-        - npm run test
-    # -
-    #   env:
-    #     - TYPESCRIPT=2.5.x
-    #   install:
-    #     - npm install
-    #     - npm install typescript@2.5.x
-    #     - ./node_modules/.bin/tsc --version
-    #   script:
-    #     - npm run test
-    # -
-    #   env:
-    #     - TYPESCRIPT=2.6.x
-    #   install:
-    #     - npm install
-    #     - npm install typescript@2.6.x
-    #     - ./node_modules/.bin/tsc --version
-    #   script:
-    #     - npm run test
+        - npm run test:package
+
+    - stage: test (integration)
+      node_js:
+        - "8.9.1"
+      install:
+        - npm install
+      script:
+        - npm run test:integration
 
     - stage: release
       node_js:
