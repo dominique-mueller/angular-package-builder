@@ -1,6 +1,6 @@
 import { posix as path } from 'path';
 
-import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from '../angular-resource-analyzer/angular-resource-analyzer';
 import { compileSass } from '../resources/compile-sass';
 import { getFiles } from '../utilities/get-files';

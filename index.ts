@@ -1,9 +1,8 @@
 import { posix as path } from 'path';
 
-import { AngularPackageBuilderConfig } from './src/angular-package-builder-config.interface';
-import { AngularPackageBuilderInternalConfig } from './src/angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderConfig } from './src/config.interface';
+import { AngularPackageBuilderInternalConfig } from './src/internal-config.interface';
 import { bundleJavascript } from './src/tasks/bundle-javascript';
-import { compileTypescript } from './src/tasks/compile-typescript';
 import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
@@ -11,6 +10,7 @@ import { ensureDependencyVersion } from './src/utilities/ensure-dependency-versi
 import { inlineResources } from './src/tasks/inline-resources';
 import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
+import { AngularPackageBuilder } from './src/angular-package-builder';
 
 import * as packageJson from './package.json';
 
@@ -46,6 +46,9 @@ export async function runAngularPackageBuilder(
 		}
 		await deleteFolder( config.output.folder );
 
+		// TODO: Refactor ...
+		const angularPackageBuilder: AngularPackageBuilder = new AngularPackageBuilder( config, false );
+
 		// Step 1: Inline resources
 		Logger.task( 'Inline resources' );
 		await inlineResources( config );
@@ -53,8 +56,8 @@ export async function runAngularPackageBuilder(
 		// Step 2: Compile TypeScript into JavaScript (in parallel if not DEBUG)
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
 		await Promise.all( [
-			compileTypescript( config, 'ES2015' ),
-			compileTypescript( config, 'ES5' )
+			angularPackageBuilder.compile( 'ES2015' ),
+			angularPackageBuilder.compile( 'ES5' ),
 		] );
 
 		// Step 3: Create JavaScript bundles (in parallel if not DEBUG)

@@ -4,7 +4,7 @@ import { Bundle, Options, GenerateOptions } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
 import * as unixify from 'unixify';
 
-import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
 import { importWithFs } from '../utilities/import-with-fs';
 

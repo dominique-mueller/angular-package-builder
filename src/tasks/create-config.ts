@@ -4,8 +4,8 @@ import { posix as path } from 'path';
 import { Schema, validate, ValidatorResult, ValidationError } from 'jsonschema';
 import * as gitignore from 'parse-gitignore';
 
-import { AngularPackageBuilderConfig } from '../angular-package-builder-config.interface';
-import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderConfig } from '../config.interface';
+import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
 import { readFile } from '../utilities/read-file';
 

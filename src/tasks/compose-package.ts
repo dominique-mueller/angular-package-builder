@@ -1,6 +1,6 @@
 import { posix as path } from 'path';
 
-import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { importWithFs } from '../utilities/import-with-fs';
 
 let copyFiles: any;
