@@ -1,6 +1,6 @@
 {
 	"name": "angular-package-builder",
-	"description": "Packages your Angular libraries based on the Angular Package Format.",
+	"description": "Packages your Angular library based on the Angular Package Format.",
 	"version": "1.0.0",
 	"author": {
 		"name": "Dominique Müller",
