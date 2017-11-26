@@ -2,7 +2,7 @@
 
 # angular-package-builder
 
-**Packages your Angular library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview). Works with Angular 5+.**
+**Packages your Angular 5+ library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).**
 
 [![npm version](https://img.shields.io/npm/v/angular-package-builder.svg?maxAge=3600&style=flat)](https://www.npmjs.com/package/angular-package-builder)
 [![dependency status](https://img.shields.io/david/dominique-mueller/angular-package-builder.svg?maxAge=3600&style=flat)](https://david-dm.org/dominique-mueller/angular-package-builder)
@@ -178,15 +178,15 @@ When building a library with `annotateForClosureCompiler` being enabled (which i
 
 <br>
 
-### Disable strictmetadataemit
+### Metadata validation errors
 
-TODO: static classes, ...
+TODO: Static classes, disable "strictMetadataEmit" ...
 
 <br>
 
-### Weird deps
+### Issues with 3rd-party libraries
 
-TODO: momentjs, allow synthetic, ...
+TODO: For instance momentjs, allow synthetic default imports, ...
 
 <br><br>
 
