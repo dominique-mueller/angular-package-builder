@@ -7,9 +7,12 @@ import { AngularPackageBuilder } from './src/angular-package-builder';
 
 import * as packageJson from './package.json';
 
+/**
+ * Run Angular Package Builder
+ */
 export async function runAngularPackageBuilder(
 	configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json',
-	debug: boolean = false,
+	debug: boolean = false
 ): Promise<void> {
 
 	try {

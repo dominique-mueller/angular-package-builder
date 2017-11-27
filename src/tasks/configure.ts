@@ -12,7 +12,7 @@ import { readFile } from '../utilities/read-file';
 import * as angularPackageSchema from '../../angular-package.schema.json';
 
 /**
- * Create interna configuration
+ * Create internal configuration
  *
  * @param configOrConfigUrl - Public configuration, or path to configuration file
  */
@@ -64,8 +64,9 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 	config.packageName = packageJson.name;
 	const packageDependencies: Array<string> = [
 		...Object.keys( packageJson.dependencies || {} ),
-		...Object.keys( packageJson.peerDependencies || {} ),
-		...Object.keys( packageJson.optionalDependencies || {} )
+		...Object.keys( packageJson.devDependencies || {} ),
+		...Object.keys( packageJson.optionalDependencies || {} ),
+		...Object.keys( packageJson.peerDependencies || {} )
 	];
 	config.dependencies = getDependencyMap( packageDependencies );
 
@@ -76,7 +77,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 			? await readFile( path.join( cwd, configOrConfigUrl ) )
 			: configOrConfigUrl;
 	} catch ( error ) {
-		throw new Error(  `The Angular Package config file at "${ path.join( cwd, configOrConfigUrl ) }" does not exist.` );
+		throw new Error( `The Angular Package config file at "${ path.join( cwd, configOrConfigUrl ) }" does not exist.` );
 	}
 
 	// Validate project configuration
@@ -114,20 +115,15 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 	config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
 
 	// Get ignored files
-	config.ignored.push(
-		`!${ path.relative( cwd, config.output.folder ) }`,
-		`!${ path.join( path.relative( cwd, config.output.folder ), '**' ) }`,
-		`!${ path.relative( cwd, config.temporary.folder ) }`,
-		`!${ path.join( path.relative( cwd, config.temporary.folder ), '**' ) }`
-	);
-
-	// Get information from '.gitignore' file
-	config.ignored.push(
+	config.ignored = [
+		path.relative( cwd, config.output.folder ),
+		path.join( path.relative( cwd, config.output.folder ), '**' ),
+		path.relative( cwd, config.temporary.folder ),
+		path.join( path.relative( cwd, config.temporary.folder ), '**' ),
 		...gitignore( path.join( cwd, '.gitignore' ) )
-			.map( ( ignored: string ): string => {
-				return `!${ ignored }`;
-			} )
-	);
+	].map( ( ignored: string ): string => {
+		return `!${ ignored }`;
+	} );
 
 	return config;
 
