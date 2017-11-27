@@ -6,7 +6,6 @@ import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { ensureDependencyVersion } from './src/utilities/ensure-dependency-version';
-import { inlineResources } from './src/tasks/inline-resources';
 import Logger from './src/logger/logger';
 import MemoryFileSystem from './src/memory-file-system/memory-file-system';
 import { AngularPackageBuilder } from './src/angular-package-builder';
@@ -28,14 +27,14 @@ export async function runAngularPackageBuilder(
 	try {
 
 		// Preparation
-		Logger.task( 'Preparation' );
 		Promise.all(
 			Object
-				.keys( ( <any> packageJson ).peerDependencies )
-				.map( ( peerDependency: string ): Promise<void> => {
-					return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
-				} )
+			.keys( ( <any> packageJson ).peerDependencies )
+			.map( ( peerDependency: string ): Promise<void> => {
+				return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
+			} )
 		);
+		Logger.task( 'Configuration' );
 		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
 		if ( debug ) {
 			await deleteFolder( config.temporary.folder );
@@ -48,9 +47,9 @@ export async function runAngularPackageBuilder(
 		// TODO: Refactor ...
 		const angularPackageBuilder: AngularPackageBuilder = new AngularPackageBuilder( config, false );
 
-		// Step 1: Inline resources
-		Logger.task( 'Inline resources' );
-		await inlineResources( config );
+		// Step 1: Prepare
+		Logger.task( 'Prepare (line endings, external resources)' );
+		await angularPackageBuilder.prepare();
 
 		// Step 2: Compile TypeScript into JavaScript (in parallel if not DEBUG)
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );

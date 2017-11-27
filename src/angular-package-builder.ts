@@ -16,6 +16,13 @@ export class AngularPackageBuilder {
     }
 
     /**
+     * Do prepare
+     */
+    public async prepare(): Promise<void> {
+        return ( await this.dynamicImport( './tasks/prepare' ) ).prepare( this.config );
+    }
+
+    /**
      * Do compile
      *
      * @param target - Compilation target
