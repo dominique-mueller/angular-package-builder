@@ -17,8 +17,8 @@ export interface AngularPackageBuilderInternalConfig {
 		prepared?: string;
 		buildES5?: string;
 		buildES2015?: string;
-		bundleFESM2015?: string;
-		bundleFESM5?: string;
+		bundleES2015?: string;
+		bundleES5?: string;
 		bundleUMD?: string;
 	};
 	packageName?: string;

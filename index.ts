@@ -2,7 +2,6 @@ import { posix as path } from 'path';
 
 import { AngularPackageBuilderConfig } from './src/config.interface';
 import { AngularPackageBuilderInternalConfig } from './src/internal-config.interface';
-import { bundleJavascript } from './src/tasks/bundle-javascript';
 import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
@@ -63,9 +62,9 @@ export async function runAngularPackageBuilder(
 		// Step 3: Create JavaScript bundles (in parallel if not DEBUG)
 		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
 		await Promise.all( [
-			bundleJavascript( config, 'ES2015' ),
-			bundleJavascript( config, 'ES5' ),
-			bundleJavascript( config, 'UMD' )
+			angularPackageBuilder.bundle( 'ES2015' ),
+			angularPackageBuilder.bundle( 'ES5' ),
+			angularPackageBuilder.bundle( 'UMD' )
 		] );
 
 		// Finishing up

@@ -16,8 +16,8 @@ export async function composePackage( config: AngularPackageBuilderInternalConfi
 	await Promise.all( [
 
 		// Bundles
-		copyFiles( path.join( config.temporary.bundleFESM2015, '**' ), path.join( config.output.folder, 'esm2015' ) ),
-		copyFiles( path.join( config.temporary.bundleFESM5, '**' ), path.join( config.output.folder, 'esm5' ) ),
+		copyFiles( path.join( config.temporary.bundleES2015, '**' ), path.join( config.output.folder, 'esm2015' ) ),
+		copyFiles( path.join( config.temporary.bundleES5, '**' ), path.join( config.output.folder, 'esm5' ) ),
 		copyFiles( path.join( config.temporary.bundleUMD, '**' ), path.join( config.output.folder, 'bundles' ) ),
 
 		// TypeScript definition files

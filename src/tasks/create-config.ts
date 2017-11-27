@@ -35,8 +35,8 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 			prepared: path.join( cwd, 'dist-angular-package-builder', 'library-prepared' ),
 			buildES5: path.join( cwd, 'dist-angular-package-builder', 'library-build-es5' ),
 			buildES2015: path.join( cwd, 'dist-angular-package-builder', 'library-build-es2015' ),
-			bundleFESM2015: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-fesm2015' ),
-			bundleFESM5: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-fesm5' ),
+			bundleES2015: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-es2015' ),
+			bundleES5: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-es5' ),
 			bundleUMD: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-umd' )
 		},
 		packageName: '',
