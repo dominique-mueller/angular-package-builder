@@ -10,7 +10,7 @@ import { writeFile } from '../utilities/write-file';
 /**
  * Compile TypeScript into JavaScript
  *
- * @param config - Configuration
+ * @param config - Internal configuration
  * @param target - Compilation target
  */
 export async function compile( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' ): Promise<void> {

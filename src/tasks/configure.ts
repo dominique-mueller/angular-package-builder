@@ -12,10 +12,11 @@ import { readFile } from '../utilities/read-file';
 import * as angularPackageSchema from '../../angular-package.schema.json';
 
 /**
- * Create Angular Package Builder Configuration
+ * Create interna configuration
+ *
+ * @param configOrConfigUrl - Public configuration, or path to configuration file
  */
-export async function createConfig( configOrConfigUrl: AngularPackageBuilderConfig | string ):
-	Promise<AngularPackageBuilderInternalConfig> {
+export async function configure( configOrConfigUrl: AngularPackageBuilderConfig | string ): Promise<AngularPackageBuilderInternalConfig> {
 
 	// Get current working directory path (must be normalized manually)
 	const cwd: string = process.cwd().replace( /\\/g, '/' );

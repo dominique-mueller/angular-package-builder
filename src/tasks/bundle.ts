@@ -10,6 +10,9 @@ import { writeFile } from '../utilities/write-file';
 
 /**
  * Generate JavaScript bundle
+ *
+ * @param config - Internal configuration
+ * @param target - Bundle target
  */
 export async function bundle( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
 

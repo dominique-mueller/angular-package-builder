@@ -11,6 +11,8 @@ import { writeFile } from '../utilities/write-file';
 
 /**
  * Prepare
+ *
+ * @param config - Internal configuration
  */
 export async function prepare( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 

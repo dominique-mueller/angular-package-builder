@@ -1,12 +1,8 @@
 import { posix as path } from 'path';
 
 import { AngularPackageBuilderConfig } from './src/config.interface';
-import { AngularPackageBuilderInternalConfig } from './src/internal-config.interface';
-import { createConfig } from './src/tasks/create-config';
-import { deleteFolder } from './src/utilities/delete-folder';
 import { ensureDependencyVersion } from './src/utilities/ensure-dependency-version';
-import Logger from './src/logger/logger';
-import MemoryFileSystem from './src/memory-file-system/memory-file-system';
+import { Logger } from './src/logger/logger';
 import { AngularPackageBuilder } from './src/angular-package-builder';
 
 import * as packageJson from './package.json';
@@ -16,16 +12,14 @@ export async function runAngularPackageBuilder(
 	debug: boolean = false,
 ): Promise<void> {
 
-	Logger.empty();
-	Logger.title( 'Angular Package Builder' );
-	Logger.empty();
-
-	process.env.DEBUG = debug ? 'ENABLED' : 'DISABLED';
-	const startTime = new Date().getTime();
-
 	try {
 
-		// Preparation
+		Logger.empty();
+		Logger.title( 'Angular Package Builder' );
+		Logger.empty();
+
+		const startTime = new Date().getTime();
+
 		Promise.all(
 			Object
 				.keys( ( <any> packageJson ).peerDependencies )
@@ -33,18 +27,11 @@ export async function runAngularPackageBuilder(
 					return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
 				} )
 		);
-		Logger.task( 'Configuration' );
-		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
-		if ( debug ) {
-			await deleteFolder( config.temporary.folder );
-		} else {
-			MemoryFileSystem.isActive = true;
-			await MemoryFileSystem.fill( config.entry.folder );
-		}
-		await deleteFolder( config.output.folder );
+		const angularPackageBuilder: AngularPackageBuilder = new AngularPackageBuilder();
 
-		// TODO: Refactor ...
-		const angularPackageBuilder: AngularPackageBuilder = new AngularPackageBuilder( config, false );
+		// Step 0: Configuration
+		Logger.task( 'Configuration' );
+		await angularPackageBuilder.configure( configOrConfigUrl, debug );
 
 		// Step 1: Prepare
 		Logger.task( 'Prepare (line endings, external resources)' );
@@ -68,10 +55,6 @@ export async function runAngularPackageBuilder(
 		// Step 4: Compose package
 		Logger.task( 'Compose package' );
 		await angularPackageBuilder.compose();
-
-		if ( !debug ) {
-			await MemoryFileSystem.persist( config.output.folder );
-		}
 
 		const finishTime = new Date().getTime();
 		const processTime = ( ( finishTime - startTime ) / 1000 ).toFixed( 2 );

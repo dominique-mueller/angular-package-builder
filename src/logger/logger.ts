@@ -1,20 +1,22 @@
 import chalk from 'chalk';
 
-// Different arrow symbol based on OS
-const arrowSymbol = process.platform === 'win32' ? '→' : '➜';
-
 /**
  * Logger
  */
 export class Logger {
 
 	/**
+	 * Arrow symbol
+	 */
+	private static readonly arrowSymbol: string = process.platform === 'win32' ? '→' : '➜';
+
+	/**
 	 * Task message
 	 *
 	 * @param message - Message
 	 */
-	public task( message: string ): void {
-		console.log( chalk.bold( `  ${ arrowSymbol } ${ message }` ) );
+	public static task( message: string ): void {
+		console.log( chalk.bold( `  ${ this.arrowSymbol } ${ message }` ) );
 	}
 
 	/**
@@ -22,7 +24,7 @@ export class Logger {
 	 *
 	 * @param message - Message
 	 */
-	public success( message: string ): void {
+	public static success( message: string ): void {
 		console.log( chalk.green.bold( message ) );
 	}
 
@@ -31,7 +33,7 @@ export class Logger {
 	 *
 	 * @param message - Message
 	 */
-	public warn( message: string ): void {
+	public static warn( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
 		console.log( chalk.yellow.bold( `    WARNING: ${ messageTitle }` ) );
 		console.log( chalk.gray( `             ${ messageBody.join( '\n             ' ) }` ) );
@@ -42,7 +44,7 @@ export class Logger {
 	 *
 	 * @param message - Message
 	 */
-	public error( message: string ): void {
+	public static error( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
 		console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
 		console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );
@@ -53,28 +55,15 @@ export class Logger {
 	 *
 	 * @param message - Message
 	 */
-	public title( message: string ): void {
-		if ( process.env.DEBUG === 'ENABLED' ) {
-			console.log( chalk.white.bold.underline( message ), '[DEBUG MODE ENABLED]' );
-		} else {
-			console.log( chalk.white.bold.underline( message ) );
-		}
+	public static title( message: string ): void {
+		console.log( chalk.white.bold.underline( message ) );
 	}
 
 	/**
 	 * Empty log line
 	 */
-	public empty(): void {
+	public static empty(): void {
 		console.log( '' );
 	}
 
 }
-
-// Export as singleton
-let loggerInstance: Logger;
-export default ( () => {
-	if ( !loggerInstance ) {
-		loggerInstance = new Logger();
-	}
-	return loggerInstance;
-} )();
