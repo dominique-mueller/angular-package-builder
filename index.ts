@@ -2,7 +2,6 @@ import { posix as path } from 'path';
 
 import { AngularPackageBuilderConfig } from './src/config.interface';
 import { AngularPackageBuilderInternalConfig } from './src/internal-config.interface';
-import { composePackage } from './src/tasks/compose-package';
 import { createConfig } from './src/tasks/create-config';
 import { deleteFolder } from './src/utilities/delete-folder';
 import { ensureDependencyVersion } from './src/utilities/ensure-dependency-version';
@@ -29,10 +28,10 @@ export async function runAngularPackageBuilder(
 		// Preparation
 		Promise.all(
 			Object
-			.keys( ( <any> packageJson ).peerDependencies )
-			.map( ( peerDependency: string ): Promise<void> => {
-				return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
-			} )
+				.keys( ( <any> packageJson ).peerDependencies )
+				.map( ( peerDependency: string ): Promise<void> => {
+					return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
+				} )
 		);
 		Logger.task( 'Configuration' );
 		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
@@ -51,14 +50,14 @@ export async function runAngularPackageBuilder(
 		Logger.task( 'Prepare (line endings, external resources)' );
 		await angularPackageBuilder.prepare();
 
-		// Step 2: Compile TypeScript into JavaScript (in parallel if not DEBUG)
+		// Step 2: Compile TypeScript into JavaScript
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
 		await Promise.all( [
 			angularPackageBuilder.compile( 'ES2015' ),
 			angularPackageBuilder.compile( 'ES5' ),
 		] );
 
-		// Step 3: Create JavaScript bundles (in parallel if not DEBUG)
+		// Step 3: Create JavaScript bundles
 		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
 		await Promise.all( [
 			angularPackageBuilder.bundle( 'ES2015' ),
@@ -66,9 +65,10 @@ export async function runAngularPackageBuilder(
 			angularPackageBuilder.bundle( 'UMD' )
 		] );
 
-		// Finishing up
+		// Step 4: Compose package
 		Logger.task( 'Compose package' );
-		await composePackage( config );
+		await angularPackageBuilder.compose();
+
 		if ( !debug ) {
 			await MemoryFileSystem.persist( config.output.folder );
 		}

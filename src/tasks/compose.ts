@@ -3,16 +3,14 @@ import { posix as path } from 'path';
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { importWithFs } from '../utilities/import-with-fs';
 
-let copyFiles: any;
+import { copyFiles } from '../utilities/copy-files';
 
 /**
- * Compile TypeScript into JavaScript
+ * Compose package
+ *
+ * @param config - Internal configuration
  */
-export async function composePackage( config: AngularPackageBuilderInternalConfig ): Promise<void> {
-
-	copyFiles = ( await importWithFs( '../utilities/copy-files' ) ).copyFiles;
-
-	// Copy all files which should end up in the package
+export async function compose( config: AngularPackageBuilderInternalConfig ): Promise<void> {
 	await Promise.all( [
 
 		// Bundles
@@ -27,5 +25,4 @@ export async function composePackage( config: AngularPackageBuilderInternalConfi
 		copyFiles( path.join( config.temporary.buildES2015, '**', '*.metadata.json' ), config.output.folder )
 
 	] );
-
 }

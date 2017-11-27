@@ -40,6 +40,13 @@ export class AngularPackageBuilder {
         return ( await this.dynamicImport( './tasks/bundle' ) ).bundle( this.config, target );
     }
 
+    /**
+     * Do compose
+     */
+    public async compose(): Promise<void> {
+        return ( await this.dynamicImport( './tasks/compose' ) ).compose( this.config );
+    }
+
     private dynamicImport( moduleDefinition: string ): Promise<any> {
         // return this.debug
         //     ? import( moduleDefinition )
