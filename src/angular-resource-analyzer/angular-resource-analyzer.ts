@@ -73,39 +73,31 @@ export class AngularResourceAnalyzer {
 
 	/**
 	 * Inline external resources into the source file
+	 * Inspired by <https://github.com/Microsoft/TypeScript/issues/7580#issuecomment-198552002>
 	 *
 	 * @param   externalResources - List of external resources, with the content loaded
 	 * @returns                   - File with resources inlined
 	 */
 	public inlineExternalResources( externalResources: Array<AngularResource> ): string {
 
-		let currentPositionCorrection: number = 0;
-		return externalResources.reduce( ( fileContent: string, externalResource: AngularResource ): string => {
+		// Replace all external resources with inlined ones (changing both key and value of resource declarations)
+		return externalResources
+			.reverse() // Keep node start & end correct
+			.reduce( ( fileContent: string, externalResource: AngularResource ): string => {
 
-			// Replace key
-			fileContent = this.replaceAtNode(
-				fileContent,
-				externalResource.newKey,
-				externalResource.node.getStart() + currentPositionCorrection,
-				externalResource.node.getEnd() + currentPositionCorrection
-			);
-			currentPositionCorrection += externalResource.newKey.length - externalResource.oldKey.length;
+				// Replace value(s) -- before key
+				fileContent = externalResource.urls
+					.reverse() // Keep node start & end correct
+					.reduce( ( fileContent: string, url: AngularResourceUrl ): string => {
+						return this.replaceNodeContent( fileContent, `\`${url.content}\``, url.node );
+					}, fileContent );
 
-			// Replace value(s)
-			fileContent = externalResource.urls.reduce( ( fileContent: string, url: AngularResourceUrl ): string => {
-				fileContent = this.replaceAtNode(
-					fileContent,
-					`\`${url.content}\``,
-					url.node.getStart() + currentPositionCorrection,
-					url.node.getEnd() + currentPositionCorrection
-				);
-				currentPositionCorrection += url.content.length - url.url.length;
+				// Replace key -- after values
+				fileContent = this.replaceNodeContent( fileContent, externalResource.newKey, externalResource.node );
+
 				return fileContent;
-			}, fileContent );
 
-			return fileContent;
-
-		}, this.fileContent );
+			}, this.fileContent );
 
 	}
 
@@ -246,18 +238,13 @@ export class AngularResourceAnalyzer {
 	/**
 	 * Replace the text of a node within the file content
 	 *
-	 * @param   fileContent            - File content
-	 * @param   replacement            - Text to place in
-	 * @param   from                   - Start point
-	 * @param   to                     - End point
-	 * @returns                        - New file content
+	 * @param   fileContent - File content
+	 * @param   replacement - Text to place in
+	 * @param   node        - Node
+	 * @returns             - New file content
 	 */
-	private replaceAtNode( fileContent: string, replacement: string, from: number, to: number ): string {
-		return [
-			fileContent.substring( 0, from ),
-			replacement,
-			fileContent.substring( to, fileContent.length )
-		].join( '' );
+	private replaceNodeContent( fileContent: string, replacement: string, node: typescript.Node ): string {
+		return `${ fileContent.substring( 0, node.getStart() ) }${ replacement }${ fileContent.substring( node.getEnd() ) }`;
 	}
 
 	/**
