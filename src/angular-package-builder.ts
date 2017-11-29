@@ -88,16 +88,17 @@ export class AngularPackageBuilder {
 
     }
 
+    /**
+     * Do import the given module dynamically, with the fs mocked away if debug is disabled
+     *
+     * @param moduleDefinition - Module definition
+     */
     private dynamicImport( moduleDefinition: string ): Promise<any> {
-        // return this.debug
-        //     ? import( moduleDefinition )
-        //     : proxyquire( moduleDefinition, {
-        //         fs: MemoryFileSystem.fs // Mock the file system
-        //     } );
-
-        return proxyquire( moduleDefinition, {
-            fs: this.memoryFileSystem.fs // Mock the file system
-        } );
+        return this.debug
+            ? import( moduleDefinition )
+            : proxyquire( moduleDefinition, {
+                fs: this.memoryFileSystem.fs // Mock the file system
+            } );
     }
 
 }

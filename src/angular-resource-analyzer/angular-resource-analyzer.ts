@@ -6,9 +6,6 @@ import * as typescript from 'typescript';
 import { AngularResource } from './angular-resource.interface';
 import { AngularResourceUrl } from './angular-resource-url.interface';
 
-export { AngularResource } from './angular-resource.interface';
-export { AngularResourceUrl } from './angular-resource-url.interface';
-
 /**
  * Angular Resource Analyzer
  */
@@ -57,7 +54,7 @@ export class AngularResourceAnalyzer {
 			this.sourceFile = typescript.createSourceFile( this.fileName, this.fileContent, typescript.ScriptTarget.Latest, true );
 		} catch ( error ) {
 			throw new Error( [
-				`An error occured while trying to parse the file "${ this.fileName }" as a TypeScript source file.`,
+				`An error occured while trying to parse the file "${this.fileName}" as a TypeScript source file.`,
 				error.message
 			].join( '\n' ) );
 		}
@@ -69,8 +66,8 @@ export class AngularResourceAnalyzer {
 	 *
 	 * @returns - List of external resources (content not loaded)
 	 */
-	public getExternalResources(): Array<AngularResource> {
-		this.analyzeNodeForComponentDecorators( this.sourceFile );
+	public findExternalResources(): Array<AngularResource> {
+		this.findComponentDecorators( this.sourceFile );
 		return this.externalResources;
 	}
 
@@ -98,7 +95,7 @@ export class AngularResourceAnalyzer {
 			fileContent = externalResource.urls.reduce( ( fileContent: string, url: AngularResourceUrl ): string => {
 				fileContent = this.replaceAtNode(
 					fileContent,
-					`\`${ url.content }\``,
+					`\`${url.content}\``,
 					url.node.getStart() + currentPositionCorrection,
 					url.node.getEnd() + currentPositionCorrection
 				);
@@ -112,113 +109,138 @@ export class AngularResourceAnalyzer {
 
 	}
 
-	 /**
-	  * Analyzer recursively for external resources
-	  *
-	  * @param currentNode - Current node to analyze
-	  */
-	private analyzeNodeForComponentDecorators( currentNode: typescript.Node ): void {
-		if (
-			currentNode.kind === typescript.SyntaxKind.Decorator &&
-			( <any> currentNode ).expression.expression &&
-			( <any> currentNode ).expression.expression.text === 'Component'
-		) {
-			this.analyzeComponentDecoratorNodeForExternalResources( currentNode );
+	/**
+	 * Find component decorators, recursively
+	 *
+	 * @param node - Node
+	 */
+	private findComponentDecorators( node: typescript.Node ): void {
+		if ( this.isComponentDecorator( node ) ) {
+			this.findExternalTemplatesAndStyles( node );
 		}
-		typescript.forEachChild( currentNode, this.analyzeNodeForComponentDecorators.bind( this ) ); // Bind to keep the 'this' reference
+		typescript.forEachChild( node, this.findComponentDecorators.bind( this ) ); // Bind to keep the 'this' reference
 	}
 
 	/**
-	 * Analyzer a component decorator for external resources
+	 * Find external templates and styles (within a component decorator)
 	 *
-	 * @param currentNode - Current node to analyze
+	 * @param node - Node
 	 */
-	private analyzeComponentDecoratorNodeForExternalResources( currentNode: typescript.Node ): void {
+	private findExternalTemplatesAndStyles( node: typescript.Node ): void {
 
-		// Check the decorator parameters
-		if ( currentNode.kind === typescript.SyntaxKind.PropertyAssignment ) {
+		// Templates
+		if ( this.isTemplateUrlDeclaration( node ) ) {
 
-			// Templates
-			if ( ( <any> currentNode ).name.text === 'templateUrl' ) {
+			// Collect information
+			const templateUrlKeyNode: any = ( <any> node ).name;
+			const templateUrlValueNode: any = ( <any> node ).initializer;
+			const templateUrlValue: string | undefined = templateUrlValueNode.text;
 
-				// Handle errors
-				if (
-					( <any> currentNode ).initializer.text === '' || // empty string
-					( <any> currentNode ).initializer.text === 'undefined' || // undefined
-					( <any> currentNode ).initializer.text === undefined // null
-				) {
-					this.throwError( currentNode, `The component in "${ this.fileName }" has an empty template URL.` );
+			// Handle errors
+			if ( templateUrlValue === '' || templateUrlValue === 'undefined' || templateUrlValue === undefined ) {
+				this.throwError( node, `The component in "${this.fileName}" has an empty template URL.` );
+			}
+			if ( !templateUrlValue.endsWith( '.html' ) ) {
+				this.throwError( node, [
+					`The component in "${this.fileName}" has a template URL with a missing / unsupported file format.`,
+					'Make sure the template URL points to a ".html" file.'
+				].join( '\n' ) );
+			}
+
+			// Collect as external resource
+			this.externalResources.push( {
+				oldKey: 'templateUrl',
+				newKey: 'template',
+				node: templateUrlKeyNode,
+				urls: [ {
+					url: templateUrlValue,
+					node: templateUrlValueNode
+				}]
+			} );
+
+		}
+
+		// Styles
+		if ( this.isStyleUrlsDeclaration( node ) ) {
+
+			// Collect information
+			const styleUrlsKeyNode: any = ( <any> node ).name;
+			const styleUrlsValueNode: any = ( <any> node ).initializer;
+			const styleUrlsElementNodes: Array<any> | undefined = styleUrlsValueNode.elements;
+
+			// Handle errors
+			if ( !styleUrlsElementNodes || styleUrlsElementNodes.length === 0 ) {
+				this.throwError( node, `The component in "${this.fileName}" has an empty list of style URLs.` );
+			}
+
+			// Get the actual text
+			const styleUrls: Array<AngularResourceUrl> = styleUrlsElementNodes
+				.map( ( element: any ): AngularResourceUrl => {
+					return {
+						url: element.text,
+						node: element
+					};
+				} );
+
+			// Handle errors
+			styleUrls.forEach( ( styleUrl: AngularResourceUrl ) => {
+				if ( styleUrl.url === '' || styleUrl.url === 'undefined' || styleUrl.url === undefined ) {
+					this.throwError( styleUrl.node, `The component in "${this.fileName}" has an empty style URL.` );
 				}
-				if ( !( <string> ( <any> currentNode ).initializer.text ).endsWith( '.html' ) ) {
-					this.throwError( currentNode, [
-						`The component in "${ this.fileName }" has a template URL with a missing / unsupported file format.`,
-						'Make sure the template URL points to a ".html" file.'
+				if ( !( styleUrl.url.endsWith( '.css' ) || styleUrl.url.endsWith( '.sass' ) || styleUrl.url.endsWith( '.scss' ) ) ) {
+					this.throwError( styleUrl.node, [
+						`The component in "${this.fileName}" has a style URL with a missing / unsupported file format.`,
+						'Make sure the style URL points to a ".css", ".scss" or ".sass" file.'
 					].join( '\n' ) );
 				}
+			} );
 
-				// Collect as external resource
-				this.externalResources.push( {
-					oldKey: 'templateUrl',
-					newKey: 'template',
-					node: ( <any> currentNode ).name,
-					urls: [ {
-						url: ( <any> currentNode ).initializer.text,
-						node: ( <any> currentNode ).initializer
-					} ]
-				} );
-
-			// Styles
-			} else if ( ( <any> currentNode ).name.text === 'styleUrls' ) {
-
-				// Handle errors
-				if (
-					!( <any> currentNode ).initializer.hasOwnProperty( 'elements' ) ||
-					( <any> currentNode ).initializer.elements.length === 0
-				) {
-					this.throwError( currentNode, `The component in "${ this.fileName }" has an empty list of style URLs.` );
-				}
-
-				// Get the actual text
-				const styleUrls: Array<AngularResourceUrl> = ( <any> currentNode ).initializer.elements
-					.map( ( element: any ): AngularResourceUrl => {
-						return {
-							url: element.text,
-							node: element
-						};
-					} );
-
-				// Handle errors
-				styleUrls.forEach( ( styleUrl: AngularResourceUrl ) => {
-					if (
-						styleUrl.url === '' || // empty string
-						styleUrl.url === 'undefined' || // undefined
-						styleUrl.url === undefined // null
-					) {
-						this.throwError( styleUrl.node, `The component in "${ this.fileName }" has an empty style URL.` );
-					}
-					if ( !( styleUrl.url.endsWith( '.css' ) || styleUrl.url.endsWith( '.sass' ) || styleUrl.url.endsWith( '.scss' ) ) ) {
- 						this.throwError( styleUrl.node, [
-							`The component in "${ this.fileName }" has a style URL with a missing / unsupported file format.`,
-							'Make sure the style URL points to a ".css", ".scss" or ".sass" file.'
-						].join( '\n' ) );
-					}
-				} );
-
-				// Collect as external resource
-				this.externalResources.push( {
-					oldKey: 'styleUrls',
-					newKey: 'styles',
-					node: ( <any> currentNode ).name,
-					urls: styleUrls,
-				} );
-
-			}
+			// Collect as external resource
+			this.externalResources.push( {
+				oldKey: 'styleUrls',
+				newKey: 'styles',
+				node: styleUrlsKeyNode,
+				urls: styleUrls,
+			} );
 
 		}
 
 		// Continue analysis recursively for all children
-		typescript.forEachChild( currentNode, this.analyzeComponentDecoratorNodeForExternalResources.bind( this ) );
+		typescript.forEachChild( node, this.findExternalTemplatesAndStyles.bind( this ) );
 
+	}
+
+	/**
+	 * Check if the given node is a component decotator
+	 *
+	 * @param   node - Node
+	 * @returns      - Flag, describing whether the given node is a component decorator
+	 */
+	private isComponentDecorator( node: typescript.Node ): boolean {
+		return typescript.isDecorator( node ) &&
+			node.getChildren().find( typescript.isCallExpression ).getChildren().find( typescript.isIdentifier ).getText() === 'Component';
+	}
+
+	/**
+	 * Check if the given node is a template URL declaration
+	 *
+	 * @param   node - Node
+	 * @returns      - Flag, describing whether the given node is a template URL declaration
+	 */
+	private isTemplateUrlDeclaration( node: typescript.Node ): boolean {
+		return typescript.isPropertyAssignment( node ) &&
+			node.name.getText() === 'templateUrl';
+	}
+
+	/**
+	 * Check if the given node is a style URLs declaration
+	 *
+	 * @param   node - Node
+	 * @returns      - Flag, describing whether the given node is a style URLs declaration
+	 */
+	private isStyleUrlsDeclaration( node: typescript.Node ): boolean {
+		return typescript.isPropertyAssignment( node ) &&
+			node.name.getText() === 'styleUrls';
 	}
 
 	/**
@@ -248,7 +270,7 @@ export class AngularResourceAnalyzer {
 		const { character, line }: typescript.LineAndCharacter = this.sourceFile.getLineAndCharacterOfPosition( node.getStart() );
 		throw new Error( [
 			message,
-			`Details: ${ this.filePath } at ${ line + 1 }:${ character + 1 }: "${ node.getText() }"`
+			`Details: ${this.filePath} at ${line + 1}:${character + 1}: "${node.getText()}"`
 		].join( '\n' ) );
 	}
 

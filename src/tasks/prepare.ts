@@ -1,7 +1,9 @@
 import { posix as path } from 'path';
 
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
-import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from '../angular-resource-analyzer/angular-resource-analyzer';
+import { AngularResource } from '../angular-resource-analyzer/angular-resource.interface';
+import { AngularResourceAnalyzer } from '../angular-resource-analyzer/angular-resource-analyzer';
+import { AngularResourceUrl } from '../angular-resource-analyzer/angular-resource-url.interface';
 import { compileSass } from '../resources/compile-sass';
 import { getFiles } from '../utilities/get-files';
 import { minifyCss } from '../resources/minify-css';
@@ -64,7 +66,7 @@ async function transformResources( fileContent: string, filePath: string ): Prom
 
 	// Find external resources
 	const angularResourceAnalyzer: AngularResourceAnalyzer = new AngularResourceAnalyzer( filePath, fileContent );
-	let externalResources: Array<AngularResource> = angularResourceAnalyzer.getExternalResources();
+	let externalResources: Array<AngularResource> = angularResourceAnalyzer.findExternalResources();
 
 	// Get external resources
 	externalResources = await Promise.all(
