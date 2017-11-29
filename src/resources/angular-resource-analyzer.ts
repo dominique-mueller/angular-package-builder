@@ -3,9 +3,6 @@ import { posix as path } from 'path';
 
 import * as typescript from 'typescript';
 
-import { AngularResource } from './angular-resource.interface';
-import { AngularResourceUrl } from './angular-resource-url.interface';
-
 /**
  * Angular Resource Analyzer
  */
@@ -261,4 +258,23 @@ export class AngularResourceAnalyzer {
 		].join( '\n' ) );
 	}
 
+}
+
+/**
+ * Angular resource URL interface
+ */
+export interface AngularResourceUrl {
+	url: string;
+	node: typescript.Node;
+	content?: string; // Not part of the initial analysis result, added later on
+}
+
+/**
+ * Angular Resource Interface
+ */
+export interface AngularResource {
+	oldKey: string;
+	newKey: string;
+	node: typescript.Node;
+	urls: Array<AngularResourceUrl>;
 }

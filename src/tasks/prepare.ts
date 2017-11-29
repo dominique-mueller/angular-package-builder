@@ -1,9 +1,7 @@
 import { posix as path } from 'path';
 
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
-import { AngularResource } from '../angular-resource-analyzer/angular-resource.interface';
-import { AngularResourceAnalyzer } from '../angular-resource-analyzer/angular-resource-analyzer';
-import { AngularResourceUrl } from '../angular-resource-analyzer/angular-resource-url.interface';
+import { AngularResourceAnalyzer, AngularResource, AngularResourceUrl } from '../resources/angular-resource-analyzer';
 import { compileSass } from '../resources/compile-sass';
 import { getFiles } from '../utilities/get-files';
 import { minifyCss } from '../resources/minify-css';
