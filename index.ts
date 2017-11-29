@@ -10,10 +10,7 @@ import * as packageJson from './package.json';
 /**
  * Run Angular Package Builder
  */
-export async function runAngularPackageBuilder(
-	configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json',
-	debug: boolean = false
-): Promise<void> {
+export async function runAngularPackageBuilder(	configOrConfigUrl?: AngularPackageBuilderConfig | string, debug?: boolean ): Promise<void> {
 
 	try {
 

@@ -2,7 +2,7 @@ import { posix as path } from 'path';
 
 import * as semver from 'semver';
 
-import Logger from '../logger/logger';
+import { Logger } from '../logger/logger';
 
 /**
  * Ensure a specific version of a dependency

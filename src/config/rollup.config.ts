@@ -2,22 +2,17 @@ import { posix as path } from 'path';
 
 import * as parsePackageJsonName from 'parse-packagejson-name';
 import { Options, Bundle, Warning, Plugin, WriteOptions, GenerateOptions } from 'rollup';
+import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
+import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
-import { importWithFs } from '../utilities/import-with-fs';
-import Logger from '../logger/logger';
-
-let commonjs: any;
-let nodeResolve: any;
+import { Logger } from '../logger/logger';
 
 /**
  * Get Rollup Input Config
  */
 export async function getRollupInputConfig( sourcePath: string, target: 'ES2015' | 'ES5' | 'UMD',
 	config: AngularPackageBuilderInternalConfig ): Promise<Options> {
-
-	commonjs = await importWithFs( 'rollup-plugin-commonjs' );
-	nodeResolve = await importWithFs( 'rollup-plugin-node-resolve' );
 
 	return {
 		external: Object.keys( config.dependencies ),
@@ -32,8 +27,8 @@ export async function getRollupInputConfig( sourcePath: string, target: 'ES2015'
 
 		},
 		plugins: [
-			nodeResolve(),
-			commonjs()
+			rollupNodeResolvePlugin(),
+			rollupCommonjsPlugin()
 		]
 	};
 

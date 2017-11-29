@@ -1,20 +1,37 @@
-import { AngularPackageBuilderInternalConfig } from './internal-config.interface';
-
 import * as proxyquire from 'proxyquire';
 
+import { AngularPackageBuilderInternalConfig } from './internal-config.interface';
 import { MemoryFileSystem } from './memory-file-system/memory-file-system';
 import { configure } from './tasks/configure';
 import { AngularPackageBuilderConfig } from './config.interface';
 import { deleteFolder } from './utilities/delete-folder';
 
+/**
+ * Angular Package Builder
+ */
 export class AngularPackageBuilder {
 
+    /**
+     * Internal configuration
+     */
     private config: AngularPackageBuilderInternalConfig;
 
+    /**
+     * Debug flag
+     */
     private debug: boolean;
 
+    /**
+     * Memory file system
+     */
     private memoryFileSystem: MemoryFileSystem;
 
+    /**
+     * Do configure
+     *
+     * @param [configOrConfigUrl='.angular-package.json'] - Configuration, or path to configuration file
+     * @param [debug=false]                               - Debug flag
+     */
     public async configure( configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json', debug: boolean = false ):
         Promise<void> {
 
@@ -79,7 +96,7 @@ export class AngularPackageBuilder {
         //     } );
 
         return proxyquire( moduleDefinition, {
-            fs: MemoryFileSystem.fs // Mock the file system
+            fs: this.memoryFileSystem.fs // Mock the file system
         } );
     }
 
