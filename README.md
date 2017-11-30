@@ -146,7 +146,7 @@ Usually, simply calling `angular-package-builder` in your npm scripts should wor
 
 <br><br>
 
-## Known pitfalls with solutions
+## Known pitfalls and solutions
 
 There are quite a few pitfalls one might run into when packaging an Angular library. Many of them are everything but obvious, and the fix is not always clear. The following is a collection of known pitfally and tips on how to solve them.
 
@@ -154,7 +154,7 @@ There are quite a few pitfalls one might run into when packaging an Angular libr
 
 <br>
 
-### On the use of barrels
+### Caution with barrels
 
 Usually, libraries expose their functionality in the form of a single import source (e.g. the module name). Internally, this is achieved by re-exporting this functionality within a so-called **[Barrel](https://angular.io/guide/glossary#barrel)**, a `index.ts` file.
 
