@@ -54,7 +54,7 @@ export class AngularPackageBuilder {
      * Do prepare
      */
     public async prepare(): Promise<void> {
-        await ( await this.dynamicImport( './tasks/prepare' ) ).prepare( this.config );
+        await this.dynamicImport( './tasks/prepare' ).prepare( this.config );
     }
 
     /**
@@ -63,7 +63,7 @@ export class AngularPackageBuilder {
      * @param target - Compilation target
      */
     public async compile( target: 'ES2015' | 'ES5' ): Promise<void> {
-        await ( await this.dynamicImport( './tasks/compile' ) ).compile( this.config, target );
+        await this.dynamicImport( './tasks/compile' ).compile( this.config, target );
     }
 
     /**
@@ -72,14 +72,14 @@ export class AngularPackageBuilder {
      * @param target - Bundle target
      */
     public async bundle( target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
-        await ( await this.dynamicImport( './tasks/bundle' ) ).bundle( this.config, target );
+        await this.dynamicImport( './tasks/bundle' ).bundle( this.config, target );
     }
 
     /**
      * Do compose
      */
     public async compose(): Promise<void> {
-        await ( await this.dynamicImport( './tasks/compose' ) ).compose( this.config );
+        await this.dynamicImport( './tasks/compose' ).compose( this.config );
 
         // Run final file setup
         if ( !this.debug ) {
@@ -93,9 +93,9 @@ export class AngularPackageBuilder {
      *
      * @param moduleDefinition - Module definition
      */
-    private dynamicImport( moduleDefinition: string ): Promise<any> {
+    private dynamicImport( moduleDefinition: string ): any {
         return this.debug
-            ? import( moduleDefinition )
+            ? require( moduleDefinition )
             : proxyquire( moduleDefinition, {
                 fs: this.memoryFileSystem.fs // Mock the file system
             } );
