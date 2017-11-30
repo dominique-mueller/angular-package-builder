@@ -15,8 +15,12 @@ export class Logger {
 	 *
 	 * @param message - Message
 	 */
-	public static task( message: string ): void {
-		console.log( chalk.bold( `  ${ this.arrowSymbol } ${ message }` ) );
+	public static task( message: string, details: string = '' ): void {
+		if ( details ) {
+			console.log( chalk.white.bold( `  ${ this.arrowSymbol } ${ message }` ), chalk.gray.bold( `(${ details })` ) );
+		} else {
+			console.log( chalk.white.bold( `  ${ this.arrowSymbol } ${ message }` ) );
+		}
 	}
 
 	/**

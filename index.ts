@@ -34,18 +34,18 @@ export async function runAngularPackageBuilder(	configOrConfigUrl?: AngularPacka
 		await angularPackageBuilder.configure( configOrConfigUrl, debug );
 
 		// Step 1: Prepare
-		Logger.task( 'Prepare (line endings, external resources)' );
+		Logger.task( 'Prepare', 'line endings, resources' );
 		await angularPackageBuilder.prepare();
 
 		// Step 2: Compile TypeScript into JavaScript
-		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
+		Logger.task( 'Compile TypeScript into JavaScript', 'ES2015, ES5' );
 		await Promise.all( [
 			angularPackageBuilder.compile( 'ES2015' ),
 			angularPackageBuilder.compile( 'ES5' ),
 		] );
 
 		// Step 3: Create JavaScript bundles
-		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
+		Logger.task( 'Create JavaScript bundles', 'ES2015, ES5, UMD' );
 		await Promise.all( [
 			angularPackageBuilder.bundle( 'ES2015' ),
 			angularPackageBuilder.bundle( 'ES5' ),
