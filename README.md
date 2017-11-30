@@ -146,7 +146,7 @@ Usually, simply calling `angular-package-builder` in your npm scripts should wor
 
 <br><br>
 
-## Known pitfalls w/ solutions
+## Known pitfalls with solutions
 
 There are quite a few pitfalls one might run into when packaging an Angular library. Many of them are everything but obvious, and the fix is not always clear. The following is a collection of known pitfally and tips on how to solve them.
 
@@ -154,19 +154,19 @@ There are quite a few pitfalls one might run into when packaging an Angular libr
 
 <br>
 
-### Barrels re-exporting barrels
+### On the use of barrels
 
-Normally, libraries make their implementation available from a single import source. Internally, this is achieved by re-exporting (importing and then exporting) implementation using so-called **[Barrels](https://angular.io/guide/glossary#barrel)**, seen in the form of `index.ts` files.
+Usually, libraries expose their functionality in the form of a single import source (e.g. the module name). Internally, this is achieved by re-exporting this functionality within a so-called **[Barrel](https://angular.io/guide/glossary#barrel)**, a `index.ts` file.
 
-While this works like a charm for the top-level barrel / `index.ts` file, issues will occur when barrels re-export barrels. Funnily enough, when doing so the Angular Package Builder will succeed, and even the compilation output will look like it is correct - but actually is not. When trying to import the corrupt library, Angular applications will throw errors (e.g. dependencies cannot be resolved).
+This very common technique works like a charm for the top barrel / `index.ts` file. However, issues *might* occur when - somewhere in the dependency tree - two barrels meet each other. Funnily enough, in those cases the Angular Package Builder will probably succeed, and even the compilation output will look like it is correct - but actually is not. The issue becomes appearant when trying to import the library into an Angular application (an error will be thrown, e.g. "dependencies cannot be resolved").
 
-**Tip: Only use a single barrel / `index.ts` file at the top of you library, re-exporting all public functionality.**
+**Therefore: We recommend to only use a single barrel / `index.ts` file at the top of you library, re-exporting all public functionality from that place.**
 
 <br>
 
 ### Forbidden JSDoc tags
 
-When building a library with `annotateForClosureCompiler` being enabled (which it is by default), not all JSDoc annotations are allowed. In particular, annotations which are unnecessary because of the information TypeScript can provide must not be used - otherwhise, the Angular Compiler (tsickle to be specific) will complain. Forbidden tags include:
+When building a library with the `annotateForClosureCompiler` option being enabled (which it is by default), not all JSDoc tags are allowed. In particular, any tag which describes the type of classes, methods or variables is unnecessary because redundant (the TypeScript code already provides this kind of information). If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain. The list of forbidden tags include:
 
 - types in parameter tags (e.g. `@param {string} myOption - My option`)
 - type tags on variables (e.g. `@type {string}`)
@@ -174,7 +174,7 @@ When building a library with `annotateForClosureCompiler` being enabled (which i
 
 > The full list of alled JSDoc tags can be found **[in the tsickle source files](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
 
-**Tip: Remove all unnecessary JSDoc information until the Angular Compiler is happy**. Alternatively, you could also disabled the `annotateForClosureCompiler` option in the `angularCompilerOptions` - but I don't recommend it :)
+**Therefore: Remove all redundant JSDoc tags until the Angular Compiler is happy.** Alternatively, you could also disabled the `annotateForClosureCompiler` option in the `angularCompilerOptions` - but we don't recommend it :)
 
 <br>
 
