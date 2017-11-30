@@ -4,18 +4,19 @@ import { posix as path } from 'path';
 import { Schema, validate, ValidatorResult, ValidationError } from 'jsonschema';
 import * as gitignore from 'parse-gitignore';
 
-import { AngularPackageBuilderConfig } from '../angular-package-builder-config.interface';
-import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
+import { AngularPackageBuilderConfig } from '../config.interface';
+import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
 import { readFile } from '../utilities/read-file';
 
 import * as angularPackageSchema from '../../angular-package.schema.json';
 
 /**
- * Create Angular Package Builder Configuration
+ * Create internal configuration
+ *
+ * @param configOrConfigUrl - Public configuration, or path to configuration file
  */
-export async function createConfig( configOrConfigUrl: AngularPackageBuilderConfig | string ):
-	Promise<AngularPackageBuilderInternalConfig> {
+export async function configure( configOrConfigUrl: AngularPackageBuilderConfig | string ): Promise<AngularPackageBuilderInternalConfig> {
 
 	// Get current working directory path (must be normalized manually)
 	const cwd: string = process.cwd().replace( /\\/g, '/' );
@@ -35,8 +36,8 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 			prepared: path.join( cwd, 'dist-angular-package-builder', 'library-prepared' ),
 			buildES5: path.join( cwd, 'dist-angular-package-builder', 'library-build-es5' ),
 			buildES2015: path.join( cwd, 'dist-angular-package-builder', 'library-build-es2015' ),
-			bundleFESM2015: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-fesm2015' ),
-			bundleFESM5: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-fesm5' ),
+			bundleES2015: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-es2015' ),
+			bundleES5: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-es5' ),
 			bundleUMD: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-umd' )
 		},
 		packageName: '',
@@ -63,8 +64,9 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 	config.packageName = packageJson.name;
 	const packageDependencies: Array<string> = [
 		...Object.keys( packageJson.dependencies || {} ),
-		...Object.keys( packageJson.peerDependencies || {} ),
-		...Object.keys( packageJson.optionalDependencies || {} )
+		...Object.keys( packageJson.devDependencies || {} ),
+		...Object.keys( packageJson.optionalDependencies || {} ),
+		...Object.keys( packageJson.peerDependencies || {} )
 	];
 	config.dependencies = getDependencyMap( packageDependencies );
 
@@ -75,7 +77,7 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 			? await readFile( path.join( cwd, configOrConfigUrl ) )
 			: configOrConfigUrl;
 	} catch ( error ) {
-		throw new Error(  `The Angular Package config file at "${ path.join( cwd, configOrConfigUrl ) }" does not exist.` );
+		throw new Error( `The Angular Package config file at "${ path.join( cwd, configOrConfigUrl ) }" does not exist.` );
 	}
 
 	// Validate project configuration
@@ -113,20 +115,15 @@ export async function createConfig( configOrConfigUrl: AngularPackageBuilderConf
 	config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
 
 	// Get ignored files
-	config.ignored.push(
-		`!${ path.relative( cwd, config.output.folder ) }`,
-		`!${ path.join( path.relative( cwd, config.output.folder ), '**' ) }`,
-		`!${ path.relative( cwd, config.temporary.folder ) }`,
-		`!${ path.join( path.relative( cwd, config.temporary.folder ), '**' ) }`
-	);
-
-	// Get information from '.gitignore' file
-	config.ignored.push(
+	config.ignored = [
+		path.relative( cwd, config.output.folder ),
+		path.join( path.relative( cwd, config.output.folder ), '**' ),
+		path.relative( cwd, config.temporary.folder ),
+		path.join( path.relative( cwd, config.temporary.folder ), '**' ),
 		...gitignore( path.join( cwd, '.gitignore' ) )
-			.map( ( ignored: string ): string => {
-				return `!${ ignored }`;
-			} )
-	);
+	].map( ( ignored: string ): string => {
+		return `!${ ignored }`;
+	} );
 
 	return config;
 

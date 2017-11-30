@@ -3,7 +3,8 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"build": "ng build --prod --extract-licenses false --progress false"
+		"build": "ng build --prod --extract-licenses false --progress false",
+		"start": "ng serve --aot --preserve-symlinks"
 	},
 	"dependencies": {
 		"@angular/cli": "1.5.x",

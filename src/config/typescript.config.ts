@@ -1,7 +1,7 @@
 import * as parsePackageJsonName from 'parse-packagejson-name';
 
-import { AngularPackageBuilderInternalConfig } from '../angular-package-builder-internal-config.interface';
-import Logger from '../logger/logger';
+import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
+import { Logger } from '../logger/logger';
 
 /**
  * Get Typescript Config

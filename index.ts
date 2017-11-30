@@ -1,35 +1,25 @@
 import { posix as path } from 'path';
 
-import { AngularPackageBuilderConfig } from './src/angular-package-builder-config.interface';
-import { AngularPackageBuilderInternalConfig } from './src/angular-package-builder-internal-config.interface';
-import { bundleJavascript } from './src/tasks/bundle-javascript';
-import { compileTypescript } from './src/tasks/compile-typescript';
-import { composePackage } from './src/tasks/compose-package';
-import { createConfig } from './src/tasks/create-config';
-import { deleteFolder } from './src/utilities/delete-folder';
+import { AngularPackageBuilderConfig } from './src/config.interface';
 import { ensureDependencyVersion } from './src/utilities/ensure-dependency-version';
-import { inlineResources } from './src/tasks/inline-resources';
-import Logger from './src/logger/logger';
-import MemoryFileSystem from './src/memory-file-system/memory-file-system';
+import { Logger } from './src/logger/logger';
+import { AngularPackageBuilder } from './src/angular-package-builder';
 
 import * as packageJson from './package.json';
 
-export async function runAngularPackageBuilder(
-	configOrConfigUrl: AngularPackageBuilderConfig | string = '.angular-package.json',
-	debug: boolean = false,
-): Promise<void> {
-
-	Logger.empty();
-	Logger.title( 'Angular Package Builder' );
-	Logger.empty();
-
-	process.env.DEBUG = debug ? 'ENABLED' : 'DISABLED';
-	const startTime = new Date().getTime();
+/**
+ * Run Angular Package Builder
+ */
+export async function runAngularPackageBuilder(	configOrConfigUrl?: AngularPackageBuilderConfig | string, debug?: boolean ): Promise<void> {
 
 	try {
 
-		// Preparation
-		Logger.task( 'Preparation' );
+		Logger.empty();
+		Logger.title( 'Angular Package Builder' );
+		Logger.empty();
+
+		const startTime = new Date().getTime();
+
 		Promise.all(
 			Object
 				.keys( ( <any> packageJson ).peerDependencies )
@@ -37,40 +27,34 @@ export async function runAngularPackageBuilder(
 					return ensureDependencyVersion( peerDependency, ( <any> packageJson ).peerDependencies[ peerDependency ] );
 				} )
 		);
-		const config: AngularPackageBuilderInternalConfig = await createConfig( configOrConfigUrl );
-		if ( debug ) {
-			await deleteFolder( config.temporary.folder );
-		} else {
-			MemoryFileSystem.isActive = true;
-			await MemoryFileSystem.fill( config.entry.folder );
-		}
-		await deleteFolder( config.output.folder );
+		const angularPackageBuilder: AngularPackageBuilder = new AngularPackageBuilder();
 
-		// Step 1: Inline resources
-		Logger.task( 'Inline resources' );
-		await inlineResources( config );
+		// Step 0: Configuration
+		Logger.task( 'Configuration' );
+		await angularPackageBuilder.configure( configOrConfigUrl, debug );
 
-		// Step 2: Compile TypeScript into JavaScript (in parallel if not DEBUG)
+		// Step 1: Prepare
+		Logger.task( 'Prepare (line endings, external resources)' );
+		await angularPackageBuilder.prepare();
+
+		// Step 2: Compile TypeScript into JavaScript
 		Logger.task( 'Compile TypeScript into JavaScript (ES2015, ES5)' );
 		await Promise.all( [
-			compileTypescript( config, 'ES2015' ),
-			compileTypescript( config, 'ES5' )
+			angularPackageBuilder.compile( 'ES2015' ),
+			angularPackageBuilder.compile( 'ES5' ),
 		] );
 
-		// Step 3: Create JavaScript bundles (in parallel if not DEBUG)
+		// Step 3: Create JavaScript bundles
 		Logger.task( 'Create JavaScript bundles (ES2015, ES5, UMD)' );
 		await Promise.all( [
-			bundleJavascript( config, 'ES2015' ),
-			bundleJavascript( config, 'ES5' ),
-			bundleJavascript( config, 'UMD' )
+			angularPackageBuilder.bundle( 'ES2015' ),
+			angularPackageBuilder.bundle( 'ES5' ),
+			angularPackageBuilder.bundle( 'UMD' )
 		] );
 
-		// Finishing up
+		// Step 4: Compose package
 		Logger.task( 'Compose package' );
-		await composePackage( config );
-		if ( !debug ) {
-			await MemoryFileSystem.persist( config.output.folder );
-		}
+		await angularPackageBuilder.compose();
 
 		const finishTime = new Date().getTime();
 		const processTime = ( ( finishTime - startTime ) / 1000 ).toFixed( 2 );

@@ -5,7 +5,6 @@ import { Volume, createFsFromVolume } from 'memfs';
 import * as unixify from 'unixify';
 
 import { getFiles } from '../utilities/get-files';
-import { normalizeLineEndings } from '../utilities/normalize-line-endings';
 import { readFile } from '../utilities/read-file';
 import { writeFile } from '../utilities/write-file';
 
@@ -21,11 +20,6 @@ import { writeFile } from '../utilities/write-file';
 export class MemoryFileSystem {
 
 	/**
-	 * Active flag
-	 */
-	public isActive: boolean;
-
-	/**
 	 * Virtual volume, containing our files
 	 */
 	public readonly volume: Volume;
@@ -39,7 +33,6 @@ export class MemoryFileSystem {
 	 * Constructor
 	 */
 	constructor() {
-		this.isActive = false;
 		this.volume = this.createVolume();
 		this.fs = this.createFs( this.volume );
 	}
@@ -74,7 +67,7 @@ export class MemoryFileSystem {
 		// Write files -- to memory file system (synchronously, cause nothing is async in the virtual disk)
 		filePaths.forEach( ( file: string, index: number ): void => {
 			this.volume.mkdirpSync( path.dirname( file ) );
-			this.volume.writeFileSync( file, normalizeLineEndings( fileContents[ index ] ), 'utf-8' );
+			this.volume.writeFileSync( file, fileContents[ index ], 'utf-8' );
 		} );
 
 	}
@@ -140,21 +133,26 @@ export class MemoryFileSystem {
 		// Then, override parts of the mapping for special cases; for now this only includes the ability to access the real filesystem when
 		// going into the 'node_modules' folder
 		const fsFunctionMappingWithExceptions = { ...fsFunctionMapping, ...{
+			existsSync: ( path: string ): boolean => {
+				return ( path.indexOf( 'node_modules' ) === -1 )
+					? volumeFs.existsSync( path )
+					: fs.existsSync( path );
+			},
 			statSync: ( path: string ): fs.Stats => {
-				return ( path.indexOf( 'node_modules' ) === -1 ) // Allow real access to 'node_modules' folder
+				return ( path.indexOf( 'node_modules' ) === -1 )
 					? volumeFs.statSync( path )
 					: fs.statSync( path );
 			},
 			readFileSync: ( path: any, options: any ): any => {
-				return ( path.indexOf( 'node_modules' ) === -1 ) // Allow real access to 'node_modules' folder
+				return ( path.indexOf( 'node_modules' ) === -1 )
 					? volumeFs.readFileSync( path, options )
 					: fs.readFileSync( path, options );
 			},
 			readdirSync: ( path: any, options: any ): any => {
-				return ( path.indexOf( 'node_modules' ) === -1 ) // Allow real access to 'node_modules' folder
+				return ( path.indexOf( 'node_modules' ) === -1 )
 					? volumeFs.readdirSync( path, options )
 					: fs.readdirSync( path, options );
-			}
+			},
 		} };
 
 		return fsFunctionMappingWithExceptions;
@@ -162,12 +160,3 @@ export class MemoryFileSystem {
 	}
 
 }
-
-// Export as singleton
-let memoryFileSystemInstance: MemoryFileSystem;
-export default ( () => {
-	if ( !memoryFileSystemInstance ) {
-		memoryFileSystemInstance = new MemoryFileSystem();
-	}
-	return memoryFileSystemInstance;
-} )();
