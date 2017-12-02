@@ -146,47 +146,71 @@ Usually, simply calling `angular-package-builder` in your npm scripts should wor
 
 <br><br>
 
-## Known pitfalls w/ solutions
+## Known pitfalls with solutions
 
-There are quite a few pitfalls one might run into when packaging an Angular library. Many of them are everything but obvious, and the fix is not always clear. The following is a collection of known pitfally and tips on how to solve them.
+There are quite a few pitfalls one can run into when packaging an Angular library. Most of them are all but obvious, and the fix is not always clear. The following is a collection of known pitfally, plus tips on how to solve them.
 
-> Feel free to extend this list by creating an issue / opening a Pull Request!
+> Feel free to extend this list by **[creating an issue](https://github.com/dominique-mueller/angular-package-builder/issues/new)**!
 
 <br>
 
-### Barrels re-exporting barrels
+### Caution with barrels
 
-Normally, libraries make their implementation available from a single import source. Internally, this is achieved by re-exporting (importing and then exporting) implementation using so-called **[Barrels](https://angular.io/guide/glossary#barrel)**, seen in the form of `index.ts` files.
+Usually, libraries are built in a way which allows them to be imported by a single import source (normalle the name of the module / package). This can be achieved by re-exporting the implementation (spread accross multiple files) with a so-called **[Barrel](https://angular.io/guide/glossary#barrel)**, in other word an `index.ts` file.
 
-While this works like a charm for the top-level barrel / `index.ts` file, issues will occur when barrels re-export barrels. Funnily enough, when doing so the Angular Package Builder will succeed, and even the compilation output will look like it is correct - but actually is not. When trying to import the corrupt library, Angular applications will throw errors (e.g. dependencies cannot be resolved).
+While this very common technique works like a charm for the top barrel, *issues might occur when - somewhere within the library - two barrels meet each other*. Funnily enough, should such a constellation lead to any issues, it won't be appeatant right away; chances are good that the Angular Package Builder will succeed, and the compilation output will probably look correct. However, when trying to import the library into an Angular application later on,an error will be thrown (e.g. "injected dependencies cannot be resolved").
 
-**Tip: Only use a single barrel / `index.ts` file at the top of you library, re-exporting all public functionality.**
+#### Solution
+
+We recommend to only use a single barrel / `index.ts` file at the root of you library, re-exporting all public functionality from that place.
 
 <br>
 
 ### Forbidden JSDoc tags
 
-When building a library with `annotateForClosureCompiler` being enabled (which it is by default), not all JSDoc annotations are allowed. In particular, annotations which are unnecessary because of the information TypeScript can provide must not be used - otherwhise, the Angular Compiler (tsickle to be specific) will complain. Forbidden tags include:
+When building a library with the `annotateForClosureCompiler` option enabled - which it is by default - not all JSDoc tags are allowed. In particular, any tag which describes the type of classes, methods or variables is not allowed because redundant (the TypeScript code already contains this kind of information). If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain. The list of forbidden tags include:
 
-- types in parameter tags (e.g. `@param {string} myOption - My option`)
+- types in parameters (e.g. `@param {string} myOption`)
 - type tags on variables (e.g. `@type {string}`)
-- annotations such as `@constructor` or `@class`.
+- class or function tags such as `@constructor` or `@class`.
 
-> The full list of alled JSDoc tags can be found **[in the tsickle source files](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
+> The full list of allowed JSDoc tags can be found **[in the tsickle source](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
 
-**Tip: Remove all unnecessary JSDoc information until the Angular Compiler is happy**. Alternatively, you could also disabled the `annotateForClosureCompiler` option in the `angularCompilerOptions` - but I don't recommend it :)
+``` text
+ERROR: An error occured while trying to compile the TypeScript sources using the Angular Compiler.
+       [tsickle] XXX: warning TS0: the type annotation on @param is redundant with its TypeScript type,
+                 remove the {...} part
+```
+
+#### Solution
+
+Preferably, remove all redundant JSDoc tags until the Angular Compiler is happy. As an alternative, you could also set the `annotateForClosureCompiler` option in the `angularCompilerOptions` to `false` - but we don't recommend it.
+
+> For bigger libraries, removing those JSDoc tags manually is quite a paint and might actually take a very long time. We recommend an IDE or code editor with a search-and-replace functionality that can work with regular expressions to speed up this process (e.g. **[Visual Studio Code](https://code.visualstudio.com/)**).
 
 <br>
 
 ### Metadata validation errors
 
-TODO: Static classes, disable "strictMetadataEmit" ...
+If your library contains custom validators or utilities, you might run into an issue where - at compilation time - the `Angular Compiler CLI` throws an error while validating the generated `metadata.json` file. In particular, the error occurs when using closures (e.g. arrow functions) within static class methods.
 
-<br>
+``` text
+ERROR: An error occured while trying to compile the TypeScript sources using the Angular Compiler.
+       [TypeScript]: Error: XXX Error encountered in metadata generated for exported symbol XXX
+       [TypeScript] XXX Metadata collected contains an error that will be reported at runtime: Function
+                    calls are not supported. Consider replacing the function or lambda with a reference
+                    to an exported function.
+       [TypeScript] {"__symbolic":"error","message":"Function call not supported","line":XX,"character":XX}
+```
 
-### Issues with 3rd-party libraries
+#### Solution
 
-TODO: For instance momentjs, allow synthetic default imports, ...
+There are two ways to solve this issue:
+
+- The preferred solution is to add the `@dynamic` tag to the comment describing the static method (or, if this should not work, the class containing the static method). Then, the Angular Compiler will make an exception for this code.
+- The alternative way is to set the `strictMetadataEmit` option in the `angularCompilerOptions` object to `false`. Then, however, other metadata validation issues will no longer be visible.
+
+> For more information on this issue and its solutions, see **[this Angular GitHub issue](https://github.com/angular/angular/issues/19698)**.
 
 <br><br>
 
