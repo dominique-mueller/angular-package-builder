@@ -56,7 +56,6 @@
 		"jsonschema": "1.2.x",
 		"memfs": "2.5.x",
 		"node-sass": "4.6.x",
-		"parse-gitignore": "0.4.x",
 		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "1.8.x",
 		"rollup-plugin-commonjs": "8.2.x",

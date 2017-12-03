@@ -25,5 +25,4 @@ export interface AngularPackageBuilderInternalConfig {
 	dependencies?: { [ dependency: string ]: string };
 	typescriptCompilerOptions?: { [ option: string ]: any };
 	angularCompilerOptions?: { [ option: string ]: any };
-	ignored?: Array<string>;
 }

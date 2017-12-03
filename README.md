@@ -16,25 +16,23 @@
 
 ## What it does
 
-These days, setting up build chains for frontend projects requires lots of knowledge and quite some time. Especially when developing libraries for the **Angular ecosystem**, there is a fair amount of things to do in order to get an Angular library published just right.
+These days, setting up build chains for frontend projects requires lots of knowledge and time. Especially when developing libraries for the **Angular ecosystem**, there is a fair amount of things to do to get an Angular library published just right.
 
-The **Angular Package Builder** is here to help. Once configured, this NodeJS-based command line tool will build your Angular library with a single command, allowing developers to focus on the important things - developing!
+The **Angular Package Builder** is here to help. Once setup, this NodeJS-based command line tool will build your Angular library by using a single command, allowing developers to focus on the important things - developing! Under the hood, the **Angular Package Builder** will do tasks such as:
 
-Under the hood, the **Angular Package Builder** will:
+- inlining (and compiling) external resources (HTML, CSS, SASS)
+- compiling TypeScript sources into JavaScript (ES2015, ES5)
+- generating JavaScript bundles (ESM2015, ESM5, UMD)
 
-- inline (and compile) external resources (HTML, CSS, SASS)
-- compile TypeScript sources into JavaScript (ES2015, ES5)
-- create JavaScript bundles (ESM2015, ESM5, UMD)
-
-> Please note that the **Angular Package Builder** only builds libraries for **Angular 5+**. Previous Angular versions are not supported.
+> Please note that the **Angular Package Builder** only builds libraries for **Angular version 5 and up**.
 
 ![Angular Package Builder Preview](/docs/preview.png?raw=true)
 
-<br><br>
+<br><br><br>
 
 ## How to install
 
-You can get **angular-package-builder** via **npm** by either adding it as a new devDependency to your `package.json` file and running
+You can get the **angular-package-builder** via **npm** by either adding it as a new *devDependency* to your `package.json` file and running
 `npm install`, or running the following command:
 
 ``` bash
@@ -46,23 +44,42 @@ npm install angular-package-builder --save-dev
 - **angular-package-builder** requires at least **NodeJS 7.6** (or higher). *Earlier 7.x versions of NodeJS (7.0 to 7.5) might also work when
 executing **angular-package-builder** using the `--harmony-async-await` flag.*
 
-- **angular-package-builder** requires all its peer dependencies (*@angular/compiler-cli*, *@angular-compiler*, *typescript*) to be installed in the compatible versions (see the *package.json* file for more details).
+- **angular-package-builder** requires all its peer dependencies (*@angular/compiler-cli*, *@angular-compiler*, *typescript*) to be installed in the compatible versions (see the **[peer dependencies](https://github.com/dominique-mueller/angular-package-builder/blob/develop/package.json#L43)** file for more details).
 
-<br><br>
+<br><br><br>
 
 ## How to use
 
-In most cases, integrating **angular-package-builder** into a project is very straightforward. First, make sure to call **angular-package-builder** within one of the scripts of your `package.json` file. For instance:
+In most cases, integrating **angular-package-builder** into a project is very straightforward.
+
+> The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
+
+<br>
+
+### Step 1: Add `package.json` script
+
+First, make sure to run **angular-package-builder** within one of your `package.json` scripts. For instance:
 
 ``` json
 {
   "scripts": {
-    "builder": "angular-package-builder"
+    "build": "angular-package-builder"
   }
 }
 ```
 
-Then, create a `.angular-package.json` file in your project's root folder, and fill it with the following content (using your custom configuration values, of course):
+In addition, there are two (optional, and usually not needed) parameters available:
+
+- `--config <PATH>` allows you to define a custom path to your `.angular-package.json` file
+- `--debug` emits the output of intermediate build steps to the disk (into the `dist-angular-package-builder` folder)
+
+> You can always run `angular-package-builder --help` to get a full list of available command line parameters.
+
+<br>
+
+### Step 2: Create `.angular-package.json` file
+
+Then, create a `.angular-package.json` file in your project's root folder, and place in your configuration. For instance:
 
 ``` json
 {
@@ -72,26 +89,38 @@ Then, create a `.angular-package.json` file in your project's root folder, and f
 }
 ```
 
-Finally, reference your build output by adding the following to your `package.json` (changing file names and paths based on your project and its configuration):
+The two options seen above are always required. In particular:
 
-``` json
-{
-  "typings": "./my-library.d.ts",
-  "main": "./bundles/my-library.umd.js",
-  "module": "./esm5/my-library.js",
-  "es2015": "./esm2015/my-library.js","
-}
-```
-
-> The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
+- `entryFile` is the relative path to the entry file (usually an `index.ts`) file
+  - Note: In order to follow the Angular Package Format strictly, the entry file must be in a folder named `src`
+  - Note: Other files which are part of your library must be at the same directory level, or deeper
+- `outDir` is the relative path to the build output directory
+  - Note: Don't forget to add the outDir path to your `.gitignore` file
 
 <br>
 
-### Advanced configuration
+### Step 3: Define `package.json` entry points
 
-Usually, the configuration described above should be working for most library projects. For special use cases, or more advanced configuration, you can extend your `.angular-package.json` file further.
+Finally, reference your build output by adding the following fields to your `package.json` (change file names and paths based on your package name and publish folder):
 
-#### TypeScript compiler options
+``` json
+{
+  "typings": "./[package-name].d.ts",
+  "main": "./bundles/[package-name].umd.js",
+  "module": "./esm5/[package-name].js",
+  "es2015": "./esm2015/[package-name].js","
+}
+```
+
+<br><br><br>
+
+## Advanced configuration
+
+Usually, configuring the `entryFile` and `outDir` should be sufficient for most libraries. For more advanced use cases or requirements, you can extend your `.angular-package.json` file further.
+
+<br>
+
+### TypeScript compiler options
 
 One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`, `skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
 
@@ -107,9 +136,11 @@ See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang
 
 > The following options cannot be changed: `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`, `sourceRoot` and `target`.
 
-#### Angular compiler options
+<br>
 
-Furthermore, you might also decide to configure the Angular compiler. Common options are `annotateForClosureCompiler`, `preserveWhitespaces` and `strictMetadataEmit`.
+### Angular compiler options
+
+Furthermore, you might also decide to configure the Angular compiler differently. Common options are `annotateForClosureCompiler`, `preserveWhitespaces` and `strictMetadataEmit`. For instance:
 
 ``` json
 {
@@ -119,11 +150,13 @@ Furthermore, you might also decide to configure the Angular compiler. Common opt
 }
 ```
 
-> The following options cannot be changed: `flatModuleId`, `flatModuleOutFile and `skipTemplateCodegen`.
+> The following options cannot be changed: `flatModuleId`, `flatModuleOutFile` and `skipTemplateCodegen`.
 
-#### Dependency declaration
+<br>
 
-By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is missing or you want to overwrite a dependency definition, you can declare them as `dependency package name` -> `global constant`.
+### Dependencies
+
+By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is missing or you want to overwrite a dependency definition, you can declare them in the form of `package -> global constant`. For instance:
 
 ``` json
 {
@@ -133,22 +166,11 @@ By default, the **Angular Package Builder** will identify your libraries' depend
 }
 ```
 
-<br>
-
-### CLI commands
-
-Usually, simply calling `angular-package-builder` in your npm scripts should work like a charm. There are, however, two parameters which can be defined:
-
-- `--config <PATH>` allows you to define a custom path to your `.angular-package.json` file
-- `--debug` emits the output of intermediate build steps to the disk (`dist-angular-package-builder`)
-
-> You can always run `angular-package-builder --help` to get a full list of available command line parameters.
-
-<br><br>
+<br><br><br>
 
 ## Known pitfalls with solutions
 
-There are quite a few pitfalls one can run into when packaging an Angular library. Most of them are all but obvious, and the fix is not always clear. The following is a collection of known pitfally, plus tips on how to solve them.
+There are quite a few pitfalls when packaging an Angular library. Most of them are all but obvious, and the fix is not always clear. The following is a collection of known pitfally, plus tips on how to solve them.
 
 > Feel free to extend this list by **[creating an issue](https://github.com/dominique-mueller/angular-package-builder/issues/new)**!
 
@@ -196,7 +218,7 @@ If your library contains custom validators or utilities, you might run into an i
 
 ``` text
 ERROR: An error occured while trying to compile the TypeScript sources using the Angular Compiler.
-       [TypeScript]: Error: XXX Error encountered in metadata generated for exported symbol XXX
+       [TypeScript] Error: XXX Error encountered in metadata generated for exported symbol XXX
        [TypeScript] XXX Metadata collected contains an error that will be reported at runtime: Function
                     calls are not supported. Consider replacing the function or lambda with a reference
                     to an exported function.
@@ -212,7 +234,7 @@ There are two ways to solve this issue:
 
 > For more information on this issue and its solutions, see **[this Angular GitHub issue](https://github.com/angular/angular/issues/19698)**.
 
-<br><br>
+<br><br><br>
 
 ## Creator
 
