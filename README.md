@@ -120,6 +120,8 @@ Finally, reference your build output by adding the following fields to your `pac
 
 Usually, the configuration described above should be working for most library projects. For special use cases, or more advanced configuration, you can extend your `.angular-package.json` file further.
 
+<br>
+
 ### TypeScript compiler options
 
 One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`, `skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
@@ -136,6 +138,8 @@ See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang
 
 > The following options cannot be changed: `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`, `sourceRoot` and `target`.
 
+<br>
+
 ### Angular compiler options
 
 Furthermore, you might also decide to configure the Angular compiler. Common options are `annotateForClosureCompiler`, `preserveWhitespaces` and `strictMetadataEmit`.
@@ -149,6 +153,8 @@ Furthermore, you might also decide to configure the Angular compiler. Common opt
 ```
 
 > The following options cannot be changed: `flatModuleId`, `flatModuleOutFile and `skipTemplateCodegen`.
+
+<br>
 
 ### Dependency declaration
 
