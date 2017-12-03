@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import { posix as path } from 'path';
 
 import { Schema, validate, ValidatorResult, ValidationError } from 'jsonschema';
-import * as gitignore from 'parse-gitignore';
 
 import { AngularPackageBuilderConfig } from '../config.interface';
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
@@ -43,8 +42,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 		packageName: '',
 		dependencies: {},
 		typescriptCompilerOptions: {},
-		angularCompilerOptions: {},
-		ignored: []
+		angularCompilerOptions: {}
 	};
 
 	// Get package name and dependencies from 'package.json' file
@@ -113,17 +111,6 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 	config.dependencies = { ...config.dependencies, ...( projectConfig.dependencies || {} ) };
 	config.typescriptCompilerOptions = projectConfig.typescriptCompilerOptions || {};
 	config.angularCompilerOptions = projectConfig.angularCompilerOptions || {};
-
-	// Get ignored files
-	config.ignored = [
-		path.relative( cwd, config.output.folder ),
-		path.join( path.relative( cwd, config.output.folder ), '**' ),
-		path.relative( cwd, config.temporary.folder ),
-		path.join( path.relative( cwd, config.temporary.folder ), '**' ),
-		...gitignore( path.join( cwd, '.gitignore' ) )
-	].map( ( ignored: string ): string => {
-		return `!${ ignored }`;
-	} );
 
 	return config;
 

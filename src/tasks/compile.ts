@@ -40,14 +40,8 @@ export async function compile( config: AngularPackageBuilderInternalConfig, targ
  */
 async function getCompilationEntries( config: AngularPackageBuilderInternalConfig ): Promise<Array<string>> {
 
-	// Get patterns
-	const dtsPatterns: Array<string> = [
-		path.join( '**', '*.d.ts' ), // Include all the typings we can find
-		...config.ignored // Exclude ignored files and folders
-	];
-
 	// Get paths to matching files
-	const dtsFilePaths: Array<string> = await getFiles( dtsPatterns, config.temporary.prepared, true );
+	const dtsFilePaths: Array<string> = await getFiles( [ path.join( config.temporary.prepared, '**', '*.d.ts' ) ] );
 
 	// Return compilation entries
 	return [

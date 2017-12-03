@@ -40,7 +40,7 @@ export class Logger {
 	public static warn( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
 		console.log( chalk.yellow.bold( `    WARNING: ${ messageTitle }` ) );
-		console.log( chalk.gray( `             ${ messageBody.join( '\n             ' ) }` ) );
+		console.log( chalk.yellow( `             ${ messageBody.join( '\n             ' ) }` ) );
 	}
 
 	/**
@@ -51,7 +51,7 @@ export class Logger {
 	public static error( message: string ): void {
 		const [ messageTitle, ...messageBody ]: Array<string> = message.split( '\n' );
 		console.log( chalk.red.bold( `ERROR: ${ messageTitle }` ) );
-		console.log( chalk.gray( `       ${ messageBody.join( '\n       ' ) }` ) );
+		console.log( chalk.red( `       ${ messageBody.join( '\n       ' ) }` ) );
 	}
 
 	/**

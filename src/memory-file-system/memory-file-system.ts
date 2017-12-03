@@ -55,7 +55,7 @@ export class MemoryFileSystem {
 			path.join( folderPath, '**', '*.scss' ),
 			path.join( folderPath, '**', '*.css' )
 		];
-		const filePaths: Array<string> = await getFiles( fileGlobs, '' );
+		const filePaths: Array<string> = await getFiles( fileGlobs );
 
 		// Read files -- from the actual disk
 		const fileContents: Array<string> = await Promise.all(

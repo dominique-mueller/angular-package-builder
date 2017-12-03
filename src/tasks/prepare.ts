@@ -19,8 +19,7 @@ export async function prepare( config: AngularPackageBuilderInternalConfig ): Pr
 	// Get source files
 	const sourceFilePatterns: Array<string> = [
 		path.join( '**', '*.ts' ), // Includes source and typing files
-		`!${path.join( '**', '*.spec.ts' )}`, // Exclude tests
-		...config.ignored // Exclude ignored files & folders
+		`!${path.join( '**', '*.spec.ts' )}` // Exclude tests
 	];
 	const sourceFilePaths: Array<string> = await getFiles( sourceFilePatterns, config.entry.folder );
 
