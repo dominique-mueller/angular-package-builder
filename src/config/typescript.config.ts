@@ -125,7 +125,7 @@ function validateOptions( compilerOptions: { [ option: string ]: any }, compiler
 
 		// Re-create compiler options object
 		.reduce( ( newCompilerOptions: { [ option: string ]: any }, compilerOption: string ): { [ option: string ]: any } => {
-			newCompilerOptions[ compilerOption ] = compilerOption[ compilerOption ];
+			newCompilerOptions[ compilerOption ] = compilerOptions[ compilerOption ];
 			return newCompilerOptions;
 		}, {} );
 
