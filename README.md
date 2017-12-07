@@ -54,6 +54,8 @@ In most cases, integrating **angular-package-builder** into a project is very st
 
 > The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
 
+> A list of public (exemplary) GitHub repositories using this tool is available **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
+
 <br>
 
 ### Step 1: Add `package.json` script
@@ -83,19 +85,18 @@ Then, create a `.angular-package.json` file in your project's root folder, and p
 
 ``` json
 {
-  "$schema": "node_modules/angular-package-builder/angular-package.schema.json",
-  "entryFile": "lib/src/index.ts",
-  "outDir": "dist"
+  "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
+  "entryFile": "./src/lib/index.ts",
+  "outDir": "./dist"
 }
 ```
 
 The two options seen above are always required. In particular:
 
 - `entryFile` is the relative path to the entry file (usually an `index.ts`) file
-  - Note: In order to follow the Angular Package Format strictly, the entry file must be in a folder named `src`
-  - Note: Other files which are part of your library must be at the same directory level, or deeper
+  - All further files that are part of the library must be placed into the same folder, or some place deeper in the folder tree (the Angular Package Format recommends a folder named `src` containing all other files)
 - `outDir` is the relative path to the build output directory
-  - Note: Don't forget to add the outDir path to your `.gitignore` file
+  - Don't forget to add the outDir path to your `.gitignore` file
 
 <br>
 
