@@ -92,9 +92,10 @@ Then, create a `.angular-package.json` file in your project's root folder, and p
 The two options seen above are always required. In particular:
 
 - `entryFile` is the relative path to the entry file (usually an `index.ts`) file
-  - Note: Other files which are part of the library must be at the same directory level, or deeper (a `src` folder is recommded)
+  - All further files which are part of the library must be in the same folder, or at deeper levels
+  - The Angular Package Format recommends to place them in a folder named `src` (next to the `index.ts` file)
 - `outDir` is the relative path to the build output directory
-  - Note: Don't forget to add the outDir path to your `.gitignore` file
+  - Don't forget to add the outDir path to your `.gitignore` file
 
 <br>
 
