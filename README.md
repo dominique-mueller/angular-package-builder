@@ -111,6 +111,10 @@ Finally, reference your build output by adding the following fields to your `pac
 }
 ```
 
+<br>
+
+> You can find a list of public repositories using this tool **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
+
 <br><br><br>
 
 ## Advanced configuration
