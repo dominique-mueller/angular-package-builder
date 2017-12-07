@@ -83,17 +83,16 @@ Then, create a `.angular-package.json` file in your project's root folder, and p
 
 ``` json
 {
-  "$schema": "node_modules/angular-package-builder/angular-package.schema.json",
-  "entryFile": "lib/src/index.ts",
-  "outDir": "dist"
+  "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
+  "entryFile": "./src/lib/index.ts",
+  "outDir": "./dist"
 }
 ```
 
 The two options seen above are always required. In particular:
 
 - `entryFile` is the relative path to the entry file (usually an `index.ts`) file
-  - Note: In order to follow the Angular Package Format strictly, the entry file must be in a folder named `src`
-  - Note: Other files which are part of your library must be at the same directory level, or deeper
+  - Note: Other files which are part of the library must be at the same directory level, or deeper (a `src` folder is recommded)
 - `outDir` is the relative path to the build output directory
   - Note: Don't forget to add the outDir path to your `.gitignore` file
 
