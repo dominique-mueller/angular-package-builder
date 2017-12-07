@@ -54,6 +54,8 @@ In most cases, integrating **angular-package-builder** into a project is very st
 
 > The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
 
+> You can find a list of public repositories using this tool **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
+
 <br>
 
 ### Step 1: Add `package.json` script
@@ -74,8 +76,6 @@ In addition, there are two (optional, and usually not needed) parameters availab
 - `--debug` emits the output of intermediate build steps to the disk (into the `dist-angular-package-builder` folder)
 
 > You can always run `angular-package-builder --help` to get a full list of available command line parameters.
-
-> You can find a list of public repositories using this tool **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
 
 <br>
 
