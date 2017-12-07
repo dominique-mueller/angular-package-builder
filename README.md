@@ -75,6 +75,8 @@ In addition, there are two (optional, and usually not needed) parameters availab
 
 > You can always run `angular-package-builder --help` to get a full list of available command line parameters.
 
+> You can find a list of public repositories using this tool **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
+
 <br>
 
 ### Step 2: Create `.angular-package.json` file
@@ -110,10 +112,6 @@ Finally, reference your build output by adding the following fields to your `pac
   "es2015": "./esm2015/[package-name].js","
 }
 ```
-
-<br>
-
-> You can find a list of public repositories using this tool **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
 
 <br><br><br>
 
