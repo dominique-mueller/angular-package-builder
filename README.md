@@ -54,7 +54,7 @@ In most cases, integrating **angular-package-builder** into a project is very st
 
 > The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
 
-> You can find a list of public repositories using this tool **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
+> A list of public (exemplary) GitHub repositories using this tool is available **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
 
 <br>
 
