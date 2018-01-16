@@ -2,6 +2,8 @@
 dist: trusty
 sudo: false
 language: node_js
+node_js:
+  "lts/*"
 cache:
   directories:
     - node_modules
@@ -26,20 +28,33 @@ jobs:
   include:
 
     - stage: build
-      node_js:
-        - "lts/*"
       install:
         - npm install
       script:
         - npm run build
 
     - stage: test (package)
-      node_js:
-        - "node"
-        - "lts/*"
-        - "7.6.0"
+      env:
+        - ANGULAR=5.0.x
       install:
         - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR --no-save
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.1.x
+      install:
+        - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR --no-save
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+      install:
+        - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR --no-save
       script:
         - npm run test:package
 
