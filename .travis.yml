@@ -2,6 +2,10 @@
 dist: trusty
 sudo: false
 language: node_js
+node_js:
+  - "node"
+  - "lts/*""
+  - "7.6.0"
 cache:
   directories:
     - node_modules
@@ -34,22 +38,6 @@ jobs:
         - npm run build
 
     - stage: test (package)
-      node_js:
-        - "7.6.0" # Lowest compatible version
-      install:
-        - npm install
-      script:
-        - npm run test:package
-    -
-      node_js:
-        - "lts/*"
-      install:
-        - npm install
-      script:
-        - npm run test:package
-    -
-      node_js:
-        - "node"
       install:
         - npm install
       script:
