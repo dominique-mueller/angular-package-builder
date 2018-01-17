@@ -58,7 +58,6 @@
 		"html-minifier": "3.5.x",
 		"jsonschema": "1.2.x",
 		"memfs": "2.6.x",
-		"npm-check-updates": "^2.14.0",
 		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "1.8.x",
 		"rollup": "0.54.x",

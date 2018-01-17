@@ -39,14 +39,13 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR --no-save
-        - npm install @angular/compiler-cli@$ANGULAR --no-save
-        - npm install typescript@$TYPESCRIPT --no-save
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
     -
       env:
-        - ANGULAR=5.1.x TYPESCRIPT=2.4.x
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
@@ -54,7 +53,8 @@ jobs:
         - npm run test:package
     -
       env:
-        - ANGULAR=5.1.x TYPESCRIPT=2.5.x
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.5.x
       install:
         - npm install
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
@@ -62,7 +62,8 @@ jobs:
         - npm run test:package
     -
       env:
-        - ANGULAR=5.2.x TYPESCRIPT=2.4.x
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
@@ -70,7 +71,8 @@ jobs:
         - npm run test:package
     -
       env:
-        - ANGULAR=5.2.x TYPESCRIPT=2.5.x
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.5.x
       install:
         - npm install
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
@@ -78,7 +80,8 @@ jobs:
         - npm run test:package
     -
       env:
-        - ANGULAR=5.2.x TYPESCRIPT=2.6.x
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.6.x
       install:
         - npm install
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
