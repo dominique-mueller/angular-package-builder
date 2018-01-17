@@ -43,45 +43,46 @@
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",
 		"@angular/compiler": ">= 5.0.0 < 6.0.0",
-		"typescript": ">= 2.4.2 < 2.5.0"
+		"typescript": ">= 2.4.2"
+	},
+	"optionalDependencies": {
+		"node-sass": ">= 4.3.0"
 	},
 	"dependencies": {
 		"chalk": "2.3.x",
 		"clean-css": "4.1.x",
 		"cpx": "1.5.x",
 		"del": "3.0.x",
-		"fs-extra": "4.0.x",
+		"fs-extra": "5.0.x",
 		"globby": "7.1.x",
 		"html-minifier": "3.5.x",
 		"jsonschema": "1.2.x",
-		"memfs": "2.5.x",
-		"node-sass": "4.6.x",
+		"memfs": "2.6.x",
 		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "1.8.x",
+		"rollup": "0.54.x",
 		"rollup-plugin-commonjs": "8.2.x",
 		"rollup-plugin-node-resolve": "3.0.x",
-		"rollup": "0.51.x",
-		"semver": "5.4.x",
+		"semver": "5.5.x",
 		"unixify": "1.0.x",
-		"yargs": "10.0.x"
+		"yargs": "10.1.x"
 	},
 	"devDependencies": {
-		"@angular/common": "5.0.x",
-		"@angular/compiler-cli": "5.0.x",
-		"@angular/compiler": "5.0.x",
-		"@angular/core": "5.0.x",
+		"@angular/common": "5.2.x",
+		"@angular/compiler-cli": "5.2.x",
+		"@angular/compiler": "5.2.x",
+		"@angular/core": "5.2.x",
 		"@types/clean-css": "3.4.x",
-		"@types/jest": "21.1.x",
+		"@types/jest": "22.0.x",
 		"@types/node-sass": "3.10.x",
-		"@types/node": "8.0.x",
-		"@types/rollup": "0.51.x",
+		"@types/node": "9.3.x",
 		"automatic-release": "1.1.x",
-		"babel-jest": "21.2.x",
+		"babel-jest": "22.1.x",
 		"copyfiles": "1.2.x",
-		"jest": "21.2.x",
+		"jest": "22.1.x",
 		"rimraf": "2.6.x",
 		"rxjs": "5.5.x",
-		"ts-jest": "21.2.x",
-		"typescript": "2.4.x"
+		"ts-jest": "22.0.x",
+		"typescript": "2.6.x"
 	}
 }

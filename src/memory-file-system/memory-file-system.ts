@@ -153,6 +153,11 @@ export class MemoryFileSystem {
 					? volumeFs.readdirSync( path, options )
 					: fs.readdirSync( path, options );
 			},
+			realpathSync: ( path: any, options: any ): any => {
+				return ( path.indexOf( 'node_modules' ) === -1 )
+					? volumeFs.realpathSync( path, options )
+					: fs.realpathSync( path, options );
+			}
 		} };
 
 		return fsFunctionMappingWithExceptions;

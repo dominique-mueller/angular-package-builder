@@ -2,6 +2,8 @@
 dist: trusty
 sudo: false
 language: node_js
+node_js:
+  "lts/*"
 cache:
   directories:
     - node_modules
@@ -26,38 +28,67 @@ jobs:
   include:
 
     - stage: build
-      node_js:
-        - "lts/*"
       install:
         - npm install
       script:
         - npm run build
 
     - stage: test (package)
-      node_js:
-        - "7.6.0" # Lowest compatible version
+      env:
+        - ANGULAR=5.0.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
     -
-      node_js:
-        - "lts/*"
+      env:
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
     -
-      node_js:
-        - "node"
+      env:
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.5.x
       install:
         - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.5.x
+      install:
+        - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.6.x
+      install:
+        - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
 
     - stage: test (integration)
-      node_js:
-        - "lts/*"
       install:
         - npm install
       script:
