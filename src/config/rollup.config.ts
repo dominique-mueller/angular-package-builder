@@ -1,7 +1,7 @@
 import { posix as path } from 'path';
 
 import * as parsePackageJsonName from 'parse-packagejson-name';
-import { Options, Bundle, Warning, Plugin, WriteOptions, GenerateOptions } from 'rollup';
+import { OutputOptions, InputOptions } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
 import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
@@ -12,7 +12,7 @@ import { Logger } from '../logger/logger';
  * Get Rollup Input Config
  */
 export async function getRollupInputConfig( sourcePath: string, target: 'ES2015' | 'ES5' | 'UMD',
-	config: AngularPackageBuilderInternalConfig ): Promise<Options> {
+	config: AngularPackageBuilderInternalConfig ): Promise<InputOptions> {
 
 	return {
 		external: Object.keys( config.dependencies ),
@@ -37,7 +37,7 @@ export async function getRollupInputConfig( sourcePath: string, target: 'ES2015'
 /**
  * Get Rollup Output Config
  */
-export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPackageBuilderInternalConfig ): GenerateOptions {
+export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPackageBuilderInternalConfig ): OutputOptions {
 
 	return {
 		format,
