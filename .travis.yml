@@ -39,7 +39,7 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT
       script:
         - npm run test:package
     -
@@ -48,7 +48,7 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT
       script:
         - npm run test:package
     -
@@ -57,7 +57,7 @@ jobs:
         - TYPESCRIPT=2.5.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT
       script:
         - npm run test:package
     -
@@ -66,7 +66,7 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT
       script:
         - npm run test:package
     -
@@ -75,7 +75,7 @@ jobs:
         - TYPESCRIPT=2.5.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT
       script:
         - npm run test:package
     -
@@ -84,7 +84,7 @@ jobs:
         - TYPESCRIPT=2.6.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT
       script:
         - npm run test:package
 
