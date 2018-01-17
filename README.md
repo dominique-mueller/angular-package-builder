@@ -41,10 +41,13 @@ npm install angular-package-builder --save-dev
 
 ### Requirements
 
-- **angular-package-builder** requires at least **NodeJS 7.6** (or higher). *Earlier 7.x versions of NodeJS (7.0 to 7.5) might also work when
-executing **angular-package-builder** using the `--harmony-async-await` flag.*
+The following version ranges of Angular, TypeScript and NodeJS are supported / required:
 
-- **angular-package-builder** requires all its peer dependencies (*@angular/compiler-cli*, *@angular-compiler*, *typescript*) to be installed in the compatible versions (see the **[peer dependencies](https://github.com/dominique-mueller/angular-package-builder/blob/develop/package.json#L43)** file for more details).
+| Angular            | TypeScript         | NodeJS     |
+| ------------------ | ------------------ | ---------- |
+| `>= 5.0.0 < 5.1.0` | `>= 2.4.2 < 2.5.0` | `>= 7.6.0` |
+| `>= 5.1.0 < 5.2.0` | `>= 2.4.2 < 2.6.0` | `>= 7.6.0` |
+| `>= 5.2.0 < 6.0.0` | `>= 2.4.2 < 2.7.0` | `>= 7.6.0` |
 
 <br><br><br>
 
