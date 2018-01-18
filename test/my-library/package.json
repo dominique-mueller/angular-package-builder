@@ -7,7 +7,7 @@
 	"module": "./esm5/my-library.js",
 	"es2015": "./esm2015/my-library.js",
 	"peerDependencies": {
-		"@angular/core": "5.0.x",
-		"@angular/common": "5.0.x"
+		"@angular/core": "5.x",
+		"@angular/common": "5.x"
 	}
 }
