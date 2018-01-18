@@ -4,6 +4,19 @@ Also see the **[release page](https://github.com/dominique-mueller/angular-packa
 
 <br>
 
+## [1.0.1](https://github.com/dominique-mueller/angular-package-builder/releases/tag/1.0.1) (2018-01-18)
+
+### Bug Fixes
+
+* **angular:** Fix Angular 5.2 compatibility, enhance CI build matrix ([#41](https://github.com/dominique-mueller/angular-package-builder/issues/41)) ([efa9464](https://github.com/dominique-mueller/angular-package-builder/commit/efa9464)), closes [#40](https://github.com/dominique-mueller/angular-package-builder/issues/40)
+
+### Documentation
+
+* **README:** Add compatibility table ([#42](https://github.com/dominique-mueller/angular-package-builder/issues/42)) ([1f9f6f3](https://github.com/dominique-mueller/angular-package-builder/commit/1f9f6f3))
+* **README:** Update how to use guide ([#39](https://github.com/dominique-mueller/angular-package-builder/issues/39)) ([de23f9a](https://github.com/dominique-mueller/angular-package-builder/commit/de23f9a))
+
+<br>
+
 ## [1.0.0](https://github.com/dominique-mueller/angular-package-builder/releases/tag/1.0.0) (2017-12-03)
 
 ### Bug Fixes
