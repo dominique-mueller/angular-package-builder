@@ -7,7 +7,7 @@
 		"start": "ng serve --aot --preserve-symlinks"
 	},
 	"dependencies": {
-		"@angular/cli": "1.6.x",
+		"@angular/cli": "1.6.1",
 		"@angular/common": "5.2.x",
 		"@angular/compiler-cli": "5.2.x",
 		"@angular/compiler": "5.2.x",
