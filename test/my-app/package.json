@@ -17,7 +17,7 @@
 		"zone.js": "0.8.x"
 	},
 	"devDependencies": {
-		"@angular/cli": "1.6.1",
+		"@angular/cli": "1.6.4",
 		"@angular/compiler-cli": "5.2.x",
 		"@angular/language-service": "5.2.x",
 		"typescript": "2.6.x"
