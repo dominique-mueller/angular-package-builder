@@ -7,17 +7,19 @@
 		"start": "ng serve --aot --preserve-symlinks"
 	},
 	"dependencies": {
-		"@angular/cli": "1.6.1",
 		"@angular/common": "5.2.x",
-		"@angular/compiler-cli": "5.2.x",
 		"@angular/compiler": "5.2.x",
 		"@angular/core": "5.2.x",
-		"@angular/language-service": "5.2.x",
 		"@angular/platform-browser-dynamic": "5.2.x",
 		"@angular/platform-browser": "5.2.x",
 		"my-library": "file:../my-library/dist",
 		"rxjs": "5.5.x",
-		"typescript": "2.6.x",
 		"zone.js": "0.8.x"
+	},
+	"devDependencies": {
+		"@angular/cli": "1.6.1",
+		"@angular/compiler-cli": "5.2.x",
+		"@angular/language-service": "5.2.x",
+		"typescript": "2.6.x"
 	}
 }
