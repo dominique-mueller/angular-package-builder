@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"build": "ng build --prod --extract-licenses false --progress false",
+		"build": "ng build --prod --extract-licenses false --preserve-symlinks",
 		"start": "ng serve --aot --preserve-symlinks"
 	},
 	"dependencies": {
@@ -17,9 +17,8 @@
 		"zone.js": "0.8.x"
 	},
 	"devDependencies": {
-		"@angular/cli": "1.6.1",
+		"@angular/cli": "1.6.x",
 		"@angular/compiler-cli": "5.2.x",
-		"@angular-devkit/core": "0.0.26",
 		"@angular/language-service": "5.2.x",
 		"typescript": "2.6.x"
 	}
