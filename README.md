@@ -2,6 +2,8 @@
 
 # angular-package-builder
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/dominique-mueller/angular-package-builder.svg)](https://greenkeeper.io/)
+
 **Packages your Angular 5+ library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).**
 
 [![npm version](https://img.shields.io/npm/v/angular-package-builder.svg?maxAge=3600&style=flat)](https://www.npmjs.com/package/angular-package-builder)
