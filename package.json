@@ -65,7 +65,7 @@
 		"rollup-plugin-node-resolve": "3.0.x",
 		"semver": "5.5.x",
 		"unixify": "1.0.x",
-		"yargs": "10.1.x"
+		"yargs": "~11.0.0"
 	},
 	"devDependencies": {
 		"@angular/common": "5.2.x",
