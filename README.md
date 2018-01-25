@@ -112,7 +112,7 @@ Finally, reference your build output by adding the following fields to your `pac
   "typings": "./[package-name].d.ts",
   "main": "./bundles/[package-name].umd.js",
   "module": "./esm5/[package-name].js",
-  "es2015": "./esm2015/[package-name].js","
+  "es2015": "./esm2015/[package-name].js",
 }
 ```
 
