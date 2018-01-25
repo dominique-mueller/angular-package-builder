@@ -1,5 +1,15 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "assignees": [
+    "dominique-mueller"
+  ],
+  "dependencies": {},
+  "labels": [
+    "renovate"
+  ],
+  "pinVersions": false,
+  "semanticCommitScope": "dependencies",
+  "semanticCommitType": "chore"
 }
