@@ -61,7 +61,7 @@
 		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "1.8.x",
 		"rollup": "0.54.x",
-		"rollup-plugin-commonjs": "8.2.x",
+		"rollup-plugin-commonjs": "8.3.x",
 		"rollup-plugin-node-resolve": "3.0.x",
 		"semver": "5.5.x",
 		"unixify": "1.0.x",
