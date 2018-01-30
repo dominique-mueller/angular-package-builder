@@ -1,6 +1,6 @@
 import { posix as path } from 'path';
 
-import { InputOptions, OutputOptions, OutputBundle, rollup } from 'rollup';
+import { InputOptions, OutputOptions, OutputChunk, rollup } from 'rollup';
 import * as parsePackageJsonName from 'parse-packagejson-name';
 import * as unixify from 'unixify';
 
@@ -22,7 +22,7 @@ export async function bundle( config: AngularPackageBuilderInternalConfig, targe
 	const rollupOutputOptions: OutputOptions = getRollupOutputConfig( target === 'UMD' ? 'umd' : 'es', config );
 
 	// Generate the bundle (code & sourcemap)
-	const bundle: OutputBundle = await rollup( rollupInputOptions );
+	const bundle: OutputChunk = await rollup( rollupInputOptions );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
 	// Re-write sourcemap URLs (absolute -> relative)

@@ -1,7 +1,7 @@
 import { posix as path } from 'path';
 
 import * as parsePackageJsonName from 'parse-packagejson-name';
-import { OutputOptions, InputOptions } from 'rollup';
+import { OutputOptions, InputOptions, RollupWarning } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
 import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
@@ -17,7 +17,7 @@ export async function getRollupInputConfig( sourcePath: string, target: 'ES2015'
 	return {
 		external: Object.keys( config.dependencies ),
 		input: path.join( sourcePath, `${ parsePackageJsonName( config.packageName ).fullName }.js` ), // Previously 'entry' which is now deprecated
-		onwarn: ( warning ): void => {
+		onwarn: ( warning: RollupWarning ): void => {
 
 			// Print prettier warning log
 			const betterWarningMessage: string = warning.message
