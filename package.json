@@ -83,6 +83,6 @@
 		"rimraf": "2.6.x",
 		"rxjs": "5.5.x",
 		"ts-jest": "22.0.x",
-		"typescript": "2.6.x"
+		"typescript": "2.7.x"
 	}
 }
