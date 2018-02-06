@@ -87,15 +87,15 @@ jobs:
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
-      -
-        env:
-          - ANGULAR=5.2.x
-          - TYPESCRIPT=2.7.x
-        install:
-          - npm install
-          - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
-        script:
-          - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.7.x
+      install:
+        - npm install
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+      script:
+        - npm run test:package
 
     - stage: test (integration)
       install:
