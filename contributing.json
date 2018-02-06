@@ -4,8 +4,6 @@
     "subject_must_be_longer_than": 4,
     "subject_must_be_shorter_than": 101,
     "subject_must_be_in_tense": "imperative",
-    "subject_must_start_with_case": "upper",
-    "subject_must_not_end_with_dot": true,
     "subject_must_include_prefix": {
       "prefixes": [
         "feat",
@@ -15,7 +13,23 @@
         "perf",
         "styles",
         "test",
-        "chore"
+        "chore",
+        "[WIP] feat",
+        "[WIP] fix",
+        "[WIP] docs",
+        "[WIP] refactor",
+        "[WIP] perf",
+        "[WIP] styles",
+        "[WIP] test",
+        "[WIP] chore",
+        "[BLOCKED] feat",
+        "[BLOCKED] fix",
+        "[BLOCKED] docs",
+        "[BLOCKED] refactor",
+        "[BLOCKED] perf",
+        "[BLOCKED] styles",
+        "[BLOCKED] test",
+        "[BLOCKED] chore"
       ],
       "require_after_prefix": "(*): "
     },
