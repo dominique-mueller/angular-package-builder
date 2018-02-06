@@ -26,6 +26,7 @@ export async function getRollupInputConfig( sourcePath: string, target: 'ES2015'
 			Logger.warn( `${ warning.code } – ${ betterWarningMessage } (${ target } target)` );
 
 		},
+		preserveSymlinks: true, // No idea why this is required, though ...
 		plugins: [
 			rollupNodeResolvePlugin(),
 			rollupCommonjsPlugin()
