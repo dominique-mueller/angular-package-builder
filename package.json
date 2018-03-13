@@ -62,7 +62,7 @@
 		"proxyquire": "1.8.x",
 		"rollup": "0.56.x",
 		"rollup-plugin-commonjs": "8.3.x",
-		"rollup-plugin-node-resolve": "3.0.x",
+		"rollup-plugin-node-resolve": "3.2.x",
 		"semver": "5.5.x",
 		"unixify": "1.0.x",
 		"yargs": "11.0.x"
