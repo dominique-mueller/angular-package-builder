@@ -59,7 +59,7 @@
 		"jsonschema": "1.2.x",
 		"memfs": "2.8.x",
 		"parse-packagejson-name": "1.0.x",
-		"proxyquire": "1.8.x",
+		"proxyquire": "2.0.x",
 		"rollup": "0.56.x",
 		"rollup-plugin-commonjs": "9.1.x",
 		"rollup-plugin-node-resolve": "3.2.x",
