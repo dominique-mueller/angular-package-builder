@@ -21,7 +21,7 @@ export async function bundle( config: AngularPackageBuilderInternalConfig, targe
 	const rollupOutputOptions: OutputOptions = getRollupOutputConfig( target === 'UMD' ? 'umd' : 'es', config );
 
 	// Generate the bundle (code & sourcemap)
-	const bundle: OutputChunk = await rollup( rollupInputOptions );
+	const bundle: OutputChunk = <OutputChunk> await rollup( rollupInputOptions );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
 	// Write bundle and sourcemap to disk
