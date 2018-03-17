@@ -60,7 +60,7 @@
 		"memfs": "2.8.x",
 		"parse-packagejson-name": "1.0.x",
 		"proxyquire": "2.0.x",
-		"rollup": "0.56.x",
+		"rollup": "0.57.x",
 		"rollup-plugin-commonjs": "9.1.x",
 		"rollup-plugin-node-resolve": "3.2.x",
 		"semver": "5.5.x",
