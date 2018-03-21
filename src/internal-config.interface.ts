@@ -4,25 +4,26 @@ import { MemoryFileSystem } from './memory-file-system/memory-file-system';
  * Angular Package Builder Internal Configuration Interface (derived from Angular Package Builder Config)
  */
 export interface AngularPackageBuilderInternalConfig {
-	cwd?: string;
-	entry?: {
-		folder?: string;
-		file?: string;
+	cwd: string;
+	entry: {
+		folder: string;
+		file: string;
 	};
-	output?: {
-		folder?: string;
+	output: {
+		folder: string;
 	};
-	temporary?: {
-		folder?: string;
-		prepared?: string;
-		buildES5?: string;
-		buildES2015?: string;
-		bundleES2015?: string;
-		bundleES5?: string;
-		bundleUMD?: string;
+	temporary: {
+		folder: string;
+		prepared: string;
+		buildES5: string;
+		buildES2015: string;
+		bundleES2015: string;
+		bundleES5: string;
+		bundleUMD: string;
 	};
-	packageName?: string;
-	dependencies?: { [ dependency: string ]: string };
-	typescriptCompilerOptions?: { [ option: string ]: any };
-	angularCompilerOptions?: { [ option: string ]: any };
+	packageName: string;
+	fileName: string;
+	dependencies: { [ dependency: string ]: string };
+	typescriptCompilerOptions: { [ option: string ]: any };
+	angularCompilerOptions: { [ option: string ]: any };
 }
