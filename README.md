@@ -260,7 +260,7 @@ ERROR: Error: Cannot call a namespace ('moment')
 The solution to this problem is called **[synthetic default imports](https://www.typescriptlang.org/docs/handbook/compiler-options.html)**,
 a technique which does allow TypeScript to make default import from modules that come without a default export.
 
-First, enable *synthetic default import* support in the TypeScript configuration by adding the following line to the
+First, enable synthetic default import support in the TypeScript configuration by adding the following line to the
 `typescriptCompilerOptions` within your `.angular-package.json` file:
 
 ``` json
