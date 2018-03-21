@@ -7,7 +7,6 @@
 [![npm version](https://img.shields.io/npm/v/angular-package-builder.svg?maxAge=3600&style=flat)](https://www.npmjs.com/package/angular-package-builder)
 [![dependency status](https://img.shields.io/david/dominique-mueller/angular-package-builder.svg?maxAge=3600&style=flat)](https://david-dm.org/dominique-mueller/angular-package-builder)
 [![travis ci build status](https://img.shields.io/travis/dominique-mueller/angular-package-builder/master.svg?maxAge=3600&style=flat)](https://travis-ci.org/dominique-mueller/angular-package-builder)
-[![Known Vulnerabilities](https://snyk.io/test/github/dominique-mueller/angular-package-builder/badge.svg)](https://snyk.io/test/github/dominique-mueller/angular-package-builder)
 [![license](https://img.shields.io/npm/l/angular-package-builder.svg?maxAge=3600&style=flat)](https://github.com/dominique-mueller/automatic-release/LICENSE)
 
 </div>
@@ -237,6 +236,44 @@ There are two ways to solve this issue:
 - The alternative way is to set the `strictMetadataEmit` option in the `angularCompilerOptions` object to `false`. Then, however, other metadata validation issues will no longer be visible.
 
 > For more information on this issue and its solutions, see **[this Angular GitHub issue](https://github.com/angular/angular/issues/19698)**.
+
+<br>
+
+### Synthetic imports
+
+Often, we integrate long-existing libraries into our Angular projects. **[Moment.js](https://momentjs.com/)**, for example, is one of the
+libraries often used when working with dates. Due to its age, it's published as a single-entry ES5 module - which means people usually write
+the following TypeScript code to import Moment.js into a file:
+
+``` typescript
+import * as moment from 'moment';
+```
+
+When trying to package an Angular library using the import statement above, an error will be thrown. In particular:
+
+``` text
+ERROR: Error: Cannot call a namespace ('moment')
+```
+
+#### Solution
+
+The solution to this problem is called **[synthetic default imports](https://www.typescriptlang.org/docs/handbook/compiler-options.html)**,
+a technique which does allow TypeScript to make default import from modules that come without a default export.
+
+First, enable synthetic default import support in the TypeScript configuration by adding the following line to the
+`typescriptCompilerOptions` within your `.angular-package.json` file:
+
+``` json
+"typescriptCompilerOptions": {
+  "allowSyntheticDefaultImports": true
+}
+```
+
+Then, change the affected import statements to default import statements. For instance:
+
+``` typescript
+import moment from 'moment';
+```
 
 <br><br><br>
 
