@@ -1,7 +1,6 @@
 import { posix as path } from 'path';
 
 import { InputOptions, OutputOptions, OutputChunk, rollup } from 'rollup';
-import * as parsePackageJsonName from 'parse-packagejson-name';
 
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { getRollupInputConfig, getRollupOutputConfig } from '../config/rollup.config';
@@ -25,7 +24,7 @@ export async function bundle( config: AngularPackageBuilderInternalConfig, targe
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
 	// Write bundle and sourcemap to disk
-	const fileName: string = `${ parsePackageJsonName( config.packageName ).fullName }${ target === 'UMD' ? '.umd' : '' }`;
+	const fileName: string = `${ config.fileName }${ target === 'UMD' ? '.umd' : '' }`;
 	await Promise.all( [
 		writeFile( path.join( config.temporary[ `bundle${ target }` ], `${ fileName }.js` ), code ),
 		writeFile( path.join( config.temporary[ `bundle${ target }` ], `${ fileName }.js.map` ), map )

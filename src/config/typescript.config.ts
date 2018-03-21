@@ -1,5 +1,3 @@
-import * as parsePackageJsonName from 'parse-packagejson-name';
-
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { Logger } from '../logger/logger';
 
@@ -44,7 +42,7 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 			...{
 				annotateForClosureCompiler: true, // Generate specific annoation (only works with 'LF' line endings)
 				flatModuleId: config.packageName, // Name of the package, used when importing from the library
-				flatModuleOutFile: `${ parsePackageJsonName( config.packageName ).fullName }.js`, // Name of the output file
+				flatModuleOutFile: `${ config.fileName }.js`, // Name of the output file
 				preserveWhitespaces: false, // Remove whitespaces for smaller bundles (#perfmatters)
 				skipTemplateCodegen: true, // Do not pre-compile templates
 				strictMetadataEmit: true // Validate emitted metadata
