@@ -1,6 +1,5 @@
 import { posix as path } from 'path';
 
-import * as parsePackageJsonName from 'parse-packagejson-name';
 import { OutputOptions, InputOptions, RollupWarning } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
 import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
@@ -16,8 +15,20 @@ export async function getRollupInputConfig( sourcePath: string, target: 'ES2015'
 
 	return {
 		external: Object.keys( config.dependencies ),
-		input: path.join( sourcePath, `${ parsePackageJsonName( config.packageName ).fullName }.js` ), // Previously 'entry' which is now deprecated
+		input: path.join( sourcePath, `${ config.fileName }.js` ), // Previously 'entry' which is now deprecated
 		onwarn: ( warning: RollupWarning ): void => {
+
+			// Supress THIS_IS_UNDEFINED warnings, as they're not having an effect on the bundle
+			// - Documentation: https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
+			// - Recommendation: https://github.com/rollup/rollup/issues/794#issuecomment-260694288
+			if ( warning.message.indexOf( 'THIS_IS_UNDEFINED' ) !== -1 ) {
+				return;
+			}
+
+			// Supress UNUSED_EXTERNAL_IMPORT warnings, as they're optimzation warnings
+			if ( warning.message.indexOf( 'UNUSED_EXTERNAL_IMPORT' ) !== -1 ) {
+				return;
+			}
 
 			// Print prettier warning log
 			const betterWarningMessage: string = warning.message
@@ -43,7 +54,7 @@ export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPack
 	return {
 		format,
 		globals: config.dependencies,
-		name: parsePackageJsonName( config.packageName ).fullName, // Required for UMD bundles
+		name: config.fileName, // Required for UMD bundles
 		sourcemap: true
 	};
 

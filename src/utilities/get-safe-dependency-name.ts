@@ -1,5 +1,3 @@
-import * as parsePackageJsonName from 'parse-packagejson-name';
-
 /**
  * Get safe dependenc name
  *
@@ -7,23 +5,11 @@ import * as parsePackageJsonName from 'parse-packagejson-name';
  * @returns                        - Safe pakage name
  */
 export function getSafeDependencyName( originalDependencyName: string ): string {
-
-	// Parse package name
-	const { scope, fullName, projectName, moduleName }: any = parsePackageJsonName( originalDependencyName );
-
-	// Get safe name
-	const safeFullName: string = fullName
+	return originalDependencyName
+		.replace( '@', '' ) // Remove scope identifier (can only appear once at the start)
+		.replace( /\//g, '.' ) // Replaces slashes with dots (between scope and name, or further on in the name)+
 		.replace( /-([a-z])/g, ( value: string ): string => { // Convert hyphenated case into camel case
 			return value[ 1 ].toUpperCase();
 		} )
-		.replace( /[^A-Za-z]/g, '' ); // Remove unsafe characters
-	const safeScope: string = ( scope || '' )
-		.replace( /-([a-z])/g, ( value: string ): string => { // Convert hyphenated case into camel case
-			return value[ 1 ].toUpperCase();
-		} )
-		.replace( /[^A-Za-z]/g, '' ); // Remove unsafe characters
-
-	// Return safe dependency name
-	return scope ? `${ safeScope }.${ safeFullName }` : safeFullName;
-
+		.replace( /[^A-Za-z\.]/g, '' ); // Remove any unsafe characters (other than dots)
 }
