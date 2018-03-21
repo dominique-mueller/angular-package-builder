@@ -61,7 +61,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 		throw new Error( 'The "package.json" file has no "name" property.' );
 	}
 	config.packageName = packageJson.name;
-	config.fileName = packageJson.split( '/' ).pop(); // Last package name segment
+	config.fileName = packageJson.name.split( '/' ).pop(); // Last package name segment
 	const packageDependencies: Array<string> = [
 		...Object.keys( packageJson.dependencies || {} ),
 		...Object.keys( packageJson.devDependencies || {} ),
