@@ -4,6 +4,46 @@ Also see the **[release page](https://github.com/dominique-mueller/angular-packa
 
 <br>
 
+## [1.0.2](https://github.com/dominique-mueller/angular-package-builder/releases/tag/1.0.2) (2018-03-21)
+
+### Bug Fixes
+
+* **config:** Fix output file names for sub-modules ([#78](https://github.com/dominique-mueller/angular-package-builder/issues/78)) ([ee12970](https://github.com/dominique-mueller/angular-package-builder/commit/ee12970)), closes [#77](https://github.com/dominique-mueller/angular-package-builder/issues/77)
+* **logging:** Supress rollup optimization warnings ([#79](https://github.com/dominique-mueller/angular-package-builder/issues/79)) ([7765313](https://github.com/dominique-mueller/angular-package-builder/commit/7765313)), closes [#76](https://github.com/dominique-mueller/angular-package-builder/issues/76)
+
+### Chores
+
+* **dependencies:** Add renovate ([#48](https://github.com/dominique-mueller/angular-package-builder/issues/48)) ([239335e](https://github.com/dominique-mueller/angular-package-builder/commit/239335e))
+* **dependencies:** Update dependency [@types](https://github.com/types)/jest to 22.1.x ([#50](https://github.com/dominique-mueller/angular-package-builder/issues/50)) ([f6705fb](https://github.com/dominique-mueller/angular-package-builder/commit/f6705fb))
+* **dependencies:** Update dependency [@types](https://github.com/types)/jest to 22.2.x ([#70](https://github.com/dominique-mueller/angular-package-builder/issues/70)) ([d439a22](https://github.com/dominique-mueller/angular-package-builder/commit/d439a22))
+* **dependencies:** Update dependency [@types](https://github.com/types)/node to 9.4.x ([#52](https://github.com/dominique-mueller/angular-package-builder/issues/52)) ([c166302](https://github.com/dominique-mueller/angular-package-builder/commit/c166302))
+* **dependencies:** Update dependency copyfiles to 2.0.x ([#71](https://github.com/dominique-mueller/angular-package-builder/issues/71)) ([ae444a3](https://github.com/dominique-mueller/angular-package-builder/commit/ae444a3))
+* **dependencies:** Update dependency globby to 8.0.x ([#59](https://github.com/dominique-mueller/angular-package-builder/issues/59)) ([320ba9d](https://github.com/dominique-mueller/angular-package-builder/commit/320ba9d))
+* **dependencies:** Update dependency jest to 22.3.x ([#60](https://github.com/dominique-mueller/angular-package-builder/issues/60)) ([c9df9e0](https://github.com/dominique-mueller/angular-package-builder/commit/c9df9e0))
+* **dependencies:** Update dependency memfs to 2.7.x ([#58](https://github.com/dominique-mueller/angular-package-builder/issues/58)) ([3d9db1c](https://github.com/dominique-mueller/angular-package-builder/commit/3d9db1c))
+* **dependencies:** Update dependency memfs to 2.8.x ([#65](https://github.com/dominique-mueller/angular-package-builder/issues/65)) ([3117a76](https://github.com/dominique-mueller/angular-package-builder/commit/3117a76))
+* **dependencies:** Update dependency proxyquire to 2.0.x ([#67](https://github.com/dominique-mueller/angular-package-builder/issues/67)) ([ad9b9e4](https://github.com/dominique-mueller/angular-package-builder/commit/ad9b9e4))
+* **dependencies:** Update dependency rollup to 0.55.x ([#49](https://github.com/dominique-mueller/angular-package-builder/issues/49)) ([c82392f](https://github.com/dominique-mueller/angular-package-builder/commit/c82392f))
+* **dependencies:** Update dependency rollup to 0.56.x ([#63](https://github.com/dominique-mueller/angular-package-builder/issues/63)) ([97dd40e](https://github.com/dominique-mueller/angular-package-builder/commit/97dd40e))
+* **dependencies:** Update dependency rollup to 0.57.x ([#73](https://github.com/dominique-mueller/angular-package-builder/issues/73)) ([9ecf812](https://github.com/dominique-mueller/angular-package-builder/commit/9ecf812))
+* **dependencies:** Update dependency rollup-plugin-commonjs to 8.3.x ([#53](https://github.com/dominique-mueller/angular-package-builder/issues/53)) ([0713307](https://github.com/dominique-mueller/angular-package-builder/commit/0713307))
+* **dependencies:** Update dependency rollup-plugin-commonjs to 9.1.x ([#69](https://github.com/dominique-mueller/angular-package-builder/issues/69)) ([c590171](https://github.com/dominique-mueller/angular-package-builder/commit/c590171))
+* **dependencies:** Update dependency rollup-plugin-node-resolve to 3.2.x ([#72](https://github.com/dominique-mueller/angular-package-builder/issues/72)) ([ba8f888](https://github.com/dominique-mueller/angular-package-builder/commit/ba8f888))
+* **dependencies:** Update dependency rollup-plugin-node-resolve to 3.3.x ([#74](https://github.com/dominique-mueller/angular-package-builder/issues/74)) ([d494827](https://github.com/dominique-mueller/angular-package-builder/commit/d494827))
+* **dependencies:** Update dependency ts-jest to 22.4.x ([#66](https://github.com/dominique-mueller/angular-package-builder/issues/66)) ([c87b758](https://github.com/dominique-mueller/angular-package-builder/commit/c87b758))
+* **dependencies:** Update dependency typescript to 2.7.x ([#56](https://github.com/dominique-mueller/angular-package-builder/issues/56)) ([9bb5f53](https://github.com/dominique-mueller/angular-package-builder/commit/9bb5f53))
+* **dependencies:** Update dependency yargs to 11.0.x ([#51](https://github.com/dominique-mueller/angular-package-builder/issues/51)) ([9f875da](https://github.com/dominique-mueller/angular-package-builder/commit/9f875da))
+* **dependencies:** Update jest monorepo packages ([#57](https://github.com/dominique-mueller/angular-package-builder/issues/57)) ([5a1d3ed](https://github.com/dominique-mueller/angular-package-builder/commit/5a1d3ed))
+* **dependencies:** Update jest monorepo packages ([#64](https://github.com/dominique-mueller/angular-package-builder/issues/64)) ([c1f6005](https://github.com/dominique-mueller/angular-package-builder/commit/c1f6005))
+* **gitmagic:** Add gitmagic configuration ([#55](https://github.com/dominique-mueller/angular-package-builder/issues/55)) ([efb866b](https://github.com/dominique-mueller/angular-package-builder/commit/efb866b))
+
+### Documentation
+
+* **pitfalls:** Add section on synthetic imports ([#80](https://github.com/dominique-mueller/angular-package-builder/issues/80)) ([7497095](https://github.com/dominique-mueller/angular-package-builder/commit/7497095)), closes [#75](https://github.com/dominique-mueller/angular-package-builder/issues/75)
+* **README:** Remove typo in code example ([#47](https://github.com/dominique-mueller/angular-package-builder/issues/47)) ([432723a](https://github.com/dominique-mueller/angular-package-builder/commit/432723a))
+
+<br>
+
 ## [1.0.1](https://github.com/dominique-mueller/angular-package-builder/releases/tag/1.0.1) (2018-01-18)
 
 ### Bug Fixes
