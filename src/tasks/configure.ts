@@ -21,7 +21,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 	const cwd: string = process.cwd().replace( /\\/g, '/' );
 
 	// Initial configuration
-	const config: Partial<AngularPackageBuilderInternalConfig> = {
+	const config: AngularPackageBuilderInternalConfig = {
 		cwd,
 		entry: {
 			file: '',
