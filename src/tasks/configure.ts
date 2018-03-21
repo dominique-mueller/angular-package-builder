@@ -21,14 +21,14 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 	const cwd: string = process.cwd().replace( /\\/g, '/' );
 
 	// Initial configuration
-	const config: AngularPackageBuilderInternalConfig = {
+	const config: Partial<AngularPackageBuilderInternalConfig> = {
 		cwd,
 		entry: {
-			// file
-			// folder
+			file: '',
+			folder: ''
 		},
 		output: {
-			// folder
+			folder: ''
 		},
 		temporary: {
 			folder: path.join( cwd, 'dist-angular-package-builder' ),
@@ -40,6 +40,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 			bundleUMD: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-umd' )
 		},
 		packageName: '',
+		fileName: '',
 		dependencies: {},
 		typescriptCompilerOptions: {},
 		angularCompilerOptions: {}
@@ -60,6 +61,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 		throw new Error( 'The "package.json" file has no "name" property.' );
 	}
 	config.packageName = packageJson.name;
+	config.fileName = packageJson.split( '/' ).pop(); // Last package name segment
 	const packageDependencies: Array<string> = [
 		...Object.keys( packageJson.dependencies || {} ),
 		...Object.keys( packageJson.devDependencies || {} ),
