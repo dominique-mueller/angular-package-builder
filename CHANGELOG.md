@@ -4,6 +4,14 @@ Also see the **[release page](https://github.com/dominique-mueller/angular-packa
 
 <br>
 
+## [1.0.3](https://github.com/dominique-mueller/angular-package-builder/releases/tag/1.0.3) (2018-03-22)
+
+### Bug Fixes
+
+* **logging:** Supress rollup warnings based on their codes ([#81](https://github.com/dominique-mueller/angular-package-builder/issues/81)) ([0f27bfb](https://github.com/dominique-mueller/angular-package-builder/commit/0f27bfb)), closes [#76](https://github.com/dominique-mueller/angular-package-builder/issues/76)
+
+<br>
+
 ## [1.0.2](https://github.com/dominique-mueller/angular-package-builder/releases/tag/1.0.2) (2018-03-21)
 
 ### Bug Fixes
