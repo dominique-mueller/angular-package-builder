@@ -75,7 +75,7 @@
 		"@types/clean-css": "3.4.x",
 		"@types/jest": "22.2.x",
 		"@types/node-sass": "3.10.x",
-		"@types/node": "9.4.x",
+		"@types/node": "9.6.x",
 		"automatic-release": "1.1.x",
 		"babel-jest": "22.4.x",
 		"copyfiles": "2.0.x",
