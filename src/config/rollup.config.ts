@@ -21,12 +21,12 @@ export async function getRollupInputConfig( sourcePath: string, target: 'ES2015'
 			// Supress THIS_IS_UNDEFINED warnings, as they're not having an effect on the bundle
 			// - Documentation: https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
 			// - Recommendation: https://github.com/rollup/rollup/issues/794#issuecomment-260694288
-			if ( warning.message.indexOf( 'THIS_IS_UNDEFINED' ) !== -1 ) {
+			if ( warning.code === 'THIS_IS_UNDEFINED' ) {
 				return;
 			}
 
 			// Supress UNUSED_EXTERNAL_IMPORT warnings, as they're optimzation warnings
-			if ( warning.message.indexOf( 'UNUSED_EXTERNAL_IMPORT' ) !== -1 ) {
+			if ( warning.code === 'UNUSED_EXTERNAL_IMPORT' ) {
 				return;
 			}
 
