@@ -34,22 +34,22 @@ export async function runAngularPackageBuilder(	configOrConfigUrl?: AngularPacka
 		await angularPackageBuilder.configure( configOrConfigUrl, debug );
 		await angularPackageBuilder.prepare();
 
-		// Step 2: Compile TypeScript into JavaScript
-		Logger.task( 'Compile TypeScript into JavaScript', 'ESM2015, ESM5' );
+		// Step 1: Compile TypeScript into JavaScript
+		Logger.task( 'Compile TypeScript into JavaScript', 'esm2015, esm5' );
 		await Promise.all( [
 			angularPackageBuilder.compile( 'esm2015' ),
 			angularPackageBuilder.compile( 'esm5' ),
 		] );
 
-		// Step 3: Generate JavaScript bundles
-		Logger.task( 'Generate JavaScript bundles', 'FESM2015, FESM5, UMD' );
+		// Step 2: Generate JavaScript bundles
+		Logger.task( 'Generate JavaScript bundles', 'fesm2015, fesm5, umd' );
 		await Promise.all( [
 			angularPackageBuilder.bundle( 'fesm2015' ),
 			angularPackageBuilder.bundle( 'fesm5' ),
 			angularPackageBuilder.bundle( 'umd' )
 		] );
 
-		// Step 4: Compose package
+		// Step 3: Compose package
 		Logger.task( 'Compose package' );
 		await angularPackageBuilder.compose();
 
