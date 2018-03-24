@@ -19,6 +19,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 
 	// Get current working directory path (must be normalized manually)
 	const cwd: string = process.cwd().replace( /\\/g, '/' );
+	const temporaryFolder: string = path.join( cwd, 'dist-angular-package-builder' );
 
 	// Initial configuration
 	const config: AngularPackageBuilderInternalConfig = {
@@ -31,13 +32,13 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 			folder: ''
 		},
 		temporary: {
-			folder: path.join( cwd, 'dist-angular-package-builder' ),
-			prepared: path.join( cwd, 'dist-angular-package-builder', 'library-prepared' ),
-			buildES5: path.join( cwd, 'dist-angular-package-builder', 'library-build-es5' ),
-			buildES2015: path.join( cwd, 'dist-angular-package-builder', 'library-build-es2015' ),
-			bundleES2015: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-es2015' ),
-			bundleES5: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-es5' ),
-			bundleUMD: path.join( cwd, 'dist-angular-package-builder', 'library-bundle-umd' )
+			esm2015: path.join( temporaryFolder, 'esm2015' ),
+			esm5: path.join( temporaryFolder, 'esm5' ),
+			fesm2015: path.join( temporaryFolder, 'fesm2015' ),
+			fesm5: path.join( temporaryFolder, 'fesm5' ),
+			folder: temporaryFolder,
+			prepared: path.join( temporaryFolder, 'prepared' ),
+			umd: path.join( temporaryFolder, 'umd' )
 		},
 		packageName: '',
 		fileName: '',

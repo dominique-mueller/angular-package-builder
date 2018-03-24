@@ -12,22 +12,22 @@ import { writeFile } from '../utilities/write-file';
  * @param config - Internal configuration
  * @param target - Bundle target
  */
-export async function bundle( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
+export async function bundle( config: AngularPackageBuilderInternalConfig, target: 'fesm2015' | 'fesm5' | 'umd' ): Promise<void> {
 
 	// Get rollup configurations
-	const sourcePath: string = target === 'ES2015' ? config.temporary.buildES2015 : config.temporary.buildES5;
+	const sourcePath: string = target === 'fesm2015' ? config.temporary.esm2015 : config.temporary.esm5;
 	const rollupInputOptions: InputOptions = await getRollupInputConfig( sourcePath, target, config );
-	const rollupOutputOptions: OutputOptions = getRollupOutputConfig( target === 'UMD' ? 'umd' : 'es', config );
+	const rollupOutputOptions: OutputOptions = getRollupOutputConfig( target, config );
 
 	// Generate the bundle (code & sourcemap)
 	const bundle: OutputChunk = <OutputChunk> await rollup( rollupInputOptions );
 	const { code, map } = await bundle.generate( rollupOutputOptions );
 
 	// Write bundle and sourcemap to disk
-	const fileName: string = `${ config.fileName }${ target === 'UMD' ? '.umd' : '' }`;
+	const fileName: string = `${ config.fileName }${ target === 'umd' ? '.umd' : '' }`;
 	await Promise.all( [
-		writeFile( path.join( config.temporary[ `bundle${ target }` ], `${ fileName }.js` ), code ),
-		writeFile( path.join( config.temporary[ `bundle${ target }` ], `${ fileName }.js.map` ), map )
+		writeFile( path.join( config.temporary[ target ], `${ fileName }.js` ), code ),
+		writeFile( path.join( config.temporary[ target ], `${ fileName }.js.map` ), map )
 	] );
 
 }

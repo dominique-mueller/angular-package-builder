@@ -10,7 +10,7 @@ import { Logger } from '../logger/logger';
 /**
  * Get Rollup Input Config
  */
-export async function getRollupInputConfig( sourcePath: string, target: 'ES2015' | 'ES5' | 'UMD',
+export async function getRollupInputConfig( sourcePath: string, target: 'fesm2015' | 'fesm5' | 'umd',
 	config: AngularPackageBuilderInternalConfig ): Promise<InputOptions> {
 
 	return {
@@ -49,10 +49,10 @@ export async function getRollupInputConfig( sourcePath: string, target: 'ES2015'
 /**
  * Get Rollup Output Config
  */
-export function getRollupOutputConfig( format: 'es' | 'umd', config: AngularPackageBuilderInternalConfig ): OutputOptions {
+export function getRollupOutputConfig( format: 'fesm2015' | 'fesm5' | 'umd', config: AngularPackageBuilderInternalConfig ): OutputOptions {
 
 	return {
-		format,
+		format: format === 'umd' ? format : 'es',
 		globals: config.dependencies,
 		name: config.fileName, // Required for UMD bundles
 		sourcemap: true

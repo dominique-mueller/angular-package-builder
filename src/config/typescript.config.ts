@@ -2,9 +2,17 @@ import { AngularPackageBuilderInternalConfig } from '../internal-config.interfac
 import { Logger } from '../logger/logger';
 
 /**
+ * TypeScript targets
+ */
+const typescriptTargets: { [ target: string ]: string } = {
+	esm2015: 'ES2015',
+	esm5: 'ES5'
+};
+
+/**
  * Get Typescript Config
  */
-export function getTypescriptConfig( target: string, destinationPath: string, files: Array<string>,
+export function getTypescriptConfig( target: 'esm2015' | 'esm5', destinationPath: string, files: Array<string>,
 	config: AngularPackageBuilderInternalConfig ): TypescriptConfig {
 
 	return {
@@ -33,7 +41,7 @@ export function getTypescriptConfig( target: string, destinationPath: string, fi
 				rootDir: config.temporary.prepared,
 				sourceMap: true, // Emit sourcemap files
 				sourceRoot: config.temporary.prepared,
-				target
+				target: typescriptTargets[ target ]
 			},
 			...validateTypescriptCompilerOptions( config.typescriptCompilerOptions )
 		},
