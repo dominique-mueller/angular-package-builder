@@ -11,20 +11,20 @@ const servicePath: string = 'src/data/data.service';
 const componentName: string = 'LIBInputComponent';
 const componentPath: string = 'src/input/input.component';
 
-describe( `Angular Package: Flat ES2015 module`, async() => {
-	await testModule( `esm2015/${ libraryName }.js` );
+describe( `Angular Package: Flat ESM2015 module`, async() => {
+	await testModule( `fesm2015/${ libraryName }.js` );
 } );
 
-describe( `Angular Package: Flat ES2015 module source-map`, async() => {
-	await testSourcemap( `esm2015/${ libraryName }.js.map` );
+describe( `Angular Package: Flat ESM2015 module source-map`, async() => {
+	await testSourcemap( `fesm2015/${ libraryName }.js.map` );
 } );
 
-describe( `Angular Package: Flat ES5 module`, async() => {
-	await testModule( `esm5/${ libraryName }.js` );
+describe( `Angular Package: Flat ESM5 module`, async() => {
+	await testModule( `fesm5/${ libraryName }.js` );
 } );
 
-describe( `Angular Package: Flat ES5 module source-map`, async() => {
-	await testSourcemap( `esm5/${ libraryName }.js.map` );
+describe( `Angular Package: Flat ESM5 module source-map`, async() => {
+	await testSourcemap( `fesm5/${ libraryName }.js.map` );
 } );
 
 describe( `Angular Package: UMD module`, async() => {
