@@ -67,7 +67,6 @@
 		"yargs": "11.0.x"
 	},
 	"devDependencies": {
-		"@angular/common": "5.2.x",
 		"@angular/compiler-cli": "5.2.x",
 		"@angular/compiler": "5.2.x",
 		"@angular/core": "5.2.x",

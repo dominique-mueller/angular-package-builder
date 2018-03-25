@@ -6,8 +6,14 @@
 	"main": "./bundles/my-library.umd.js",
 	"module": "./esm5/my-library.js",
 	"es2015": "./esm2015/my-library.js",
+	"scripts": {
+		"build": "angular-package-builder"
+	},
 	"peerDependencies": {
-		"@angular/core": "5.x",
-		"@angular/common": "5.x"
+		"@angular/core": "x",
+		"@angular/common": "x"
+	},
+	"devDependencies": {
+		"angular-package-builder": "file:../../dist"
 	}
 }
