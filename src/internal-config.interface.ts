@@ -13,13 +13,13 @@ export interface AngularPackageBuilderInternalConfig {
 		folder: string;
 	};
 	temporary: {
+		esm2015: string;
+		esm5: string;
+		fesm2015: string;
+		fesm5: string;
 		folder: string;
 		prepared: string;
-		buildES5: string;
-		buildES2015: string;
-		bundleES2015: string;
-		bundleES5: string;
-		bundleUMD: string;
+		umd: string;
 	};
 	packageName: string;
 	fileName: string;

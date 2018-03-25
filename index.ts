@@ -30,29 +30,26 @@ export async function runAngularPackageBuilder(	configOrConfigUrl?: AngularPacka
 		const angularPackageBuilder: AngularPackageBuilder = new AngularPackageBuilder();
 
 		// Step 0: Configuration
-		Logger.task( 'Configuration' );
+		Logger.task( 'Configuration & Preparation' );
 		await angularPackageBuilder.configure( configOrConfigUrl, debug );
-
-		// Step 1: Prepare
-		Logger.task( 'Prepare', 'line breaks, resources' );
 		await angularPackageBuilder.prepare();
 
-		// Step 2: Compile TypeScript into JavaScript
-		Logger.task( 'Compile TypeScript into JavaScript', 'ES2015, ES5' );
+		// Step 1: Compile TypeScript into JavaScript
+		Logger.task( 'Compile TypeScript into JavaScript', 'esm2015, esm5' );
 		await Promise.all( [
-			angularPackageBuilder.compile( 'ES2015' ),
-			angularPackageBuilder.compile( 'ES5' ),
+			angularPackageBuilder.compile( 'esm2015' ),
+			angularPackageBuilder.compile( 'esm5' ),
 		] );
 
-		// Step 3: Generate JavaScript bundles
-		Logger.task( 'Generate JavaScript bundles', 'ES2015, ES5, UMD' );
+		// Step 2: Generate JavaScript bundles
+		Logger.task( 'Generate JavaScript bundles', 'fesm2015, fesm5, umd' );
 		await Promise.all( [
-			angularPackageBuilder.bundle( 'ES2015' ),
-			angularPackageBuilder.bundle( 'ES5' ),
-			angularPackageBuilder.bundle( 'UMD' )
+			angularPackageBuilder.bundle( 'fesm2015' ),
+			angularPackageBuilder.bundle( 'fesm5' ),
+			angularPackageBuilder.bundle( 'umd' )
 		] );
 
-		// Step 4: Compose package
+		// Step 3: Compose package
 		Logger.task( 'Compose package' );
 		await angularPackageBuilder.compose();
 

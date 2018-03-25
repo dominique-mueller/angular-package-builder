@@ -1,4 +1,3 @@
-// import * as copy from 'copy';
 import { copy } from 'cpx';
 
 /**

@@ -13,11 +13,11 @@ import { writeFile } from '../utilities/write-file';
  * @param config - Internal configuration
  * @param target - Compilation target
  */
-export async function compile( config: AngularPackageBuilderInternalConfig, target: 'ES2015' | 'ES5' ): Promise<void> {
+export async function compile( config: AngularPackageBuilderInternalConfig, target: 'esm2015' | 'esm5' ): Promise<void> {
 
 	// Create the TypeScript configuration
 	const compilationEntries: Array<string> = await getCompilationEntries( config );
-	const tsconfig: TypescriptConfig = getTypescriptConfig( target, config.temporary[ `build${ target }` ], compilationEntries, config );
+	const tsconfig: TypescriptConfig = getTypescriptConfig( target, config.temporary[ target ], compilationEntries, config );
 
 	// Write the TypeScript configuration file
 	const tsconfigPath: string = path.join( config.temporary.folder, `tsconfig.${ target.toLowerCase() }.json` );

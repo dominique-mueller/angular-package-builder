@@ -62,7 +62,7 @@ export class AngularPackageBuilder {
      *
      * @param target - Compilation target
      */
-    public async compile( target: 'ES2015' | 'ES5' ): Promise<void> {
+    public async compile( target: 'esm2015' | 'esm5' ): Promise<void> {
         await this.dynamicImport( './tasks/compile' ).compile( this.config, target );
     }
 
@@ -71,7 +71,7 @@ export class AngularPackageBuilder {
      *
      * @param target - Bundle target
      */
-    public async bundle( target: 'ES2015' | 'ES5' | 'UMD' ): Promise<void> {
+    public async bundle( target: 'fesm2015' | 'fesm5' | 'umd' ): Promise<void> {
         await this.dynamicImport( './tasks/bundle' ).bundle( this.config, target );
     }
 
