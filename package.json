@@ -34,7 +34,7 @@
 		"build": "tsc -p tsconfig.json && copyfiles \"bin/**\" angular-package.schema.json package.json dist",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
-		"pretest:package": "npm run build && cd test/my-library && node ../../dist/bin/angular-package-builder.js",
+		"pretest:package": "cd test/my-library && node ../../dist/bin/angular-package-builder.js",
 		"test:package": "jest --config jest.config.json --runInBand --no-cache",
 		"pretest:integration": "npm run pretest:package && cd test/my-library && copyfiles package.json dist && cd ../my-app && npm install",
 		"test:integration": "cd test/my-app && npm run build",

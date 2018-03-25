@@ -35,12 +35,33 @@ jobs:
 
     - stage: test (package)
       env:
+        - ANGULAR=2.4.x
+        - TYPESCRIPT=2.3.x
+      install:
+        - npm install
+      script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.4.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm install
+      script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
+        - npm run test:package
+    -
+      env:
         - ANGULAR=5.0.x
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package
     -
       env:
@@ -48,8 +69,9 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package
     -
       env:
@@ -57,8 +79,9 @@ jobs:
         - TYPESCRIPT=2.5.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package
     -
       env:
@@ -66,8 +89,9 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package
     -
       env:
@@ -75,8 +99,9 @@ jobs:
         - TYPESCRIPT=2.5.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package
     -
       env:
@@ -84,8 +109,9 @@ jobs:
         - TYPESCRIPT=2.6.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package
     -
       env:
@@ -93,8 +119,9 @@ jobs:
         - TYPESCRIPT=2.7.x
       install:
         - npm install
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
+        - npm run build
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package
 
     - stage: test (integration)
