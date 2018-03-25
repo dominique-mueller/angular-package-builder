@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { importPath, distFolderPath } from './config';
 
@@ -8,13 +8,15 @@ import { importPath, distFolderPath } from './config';
  */
 describe( 'UMD Module (with Source Maps)', () => {
 
-	let moduleFileContent: any = null;
-	let sourceMapFile: string = '';
+	const distSubfolder: string = 'bundles';
+
+	let moduleFileContent: any | null = null;
+	let sourceMapFile: string | null = null;
 	let sourceMapFileContent: any | null = null;
 
 	beforeAll( async () => {
-		moduleFileContent = await import( path.join( importPath, 'bundles', 'my-library.umd.js' ) );
-		sourceMapFile = await fs.readFileSync( path.join( distFolderPath, 'bundles', 'my-library.umd.js.map' ), 'utf-8' );
+		moduleFileContent = await import( path.join( importPath, distSubfolder, 'my-library.umd.js' ) );
+		sourceMapFile = await fs.readFileSync( path.join( distFolderPath, distSubfolder, 'my-library.umd.js.map' ), 'utf-8' );
 		sourceMapFileContent = JSON.parse( sourceMapFile );
 	} );
 
@@ -82,11 +84,11 @@ describe( 'UMD Module (with Source Maps)', () => {
 	it( 'should have sourcemaps containing all sources', () => {
 
 		expect( sourceMapFileContent.sources ).toEqual( [
-			`src/data/data.service.js`,
-			`src/input/input.component.js`,
-			`src/library.module.js`,
-			`index.js`,
-			`my-library.js`,
+			path.join( 'src', 'data', 'data.service.js' ),
+			path.join( 'src', 'input', 'input.component.js' ),
+			path.join( 'src', 'library.module.js' ),
+			'index.js',
+			'my-library.js',
 		] );
 
 		expect( sourceMapFileContent.sourcesContent.length ).toBe( 5 );
