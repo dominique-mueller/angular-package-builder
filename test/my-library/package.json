@@ -5,15 +5,5 @@
 	"typings": "./my-library.d.ts",
 	"main": "./bundles/my-library.umd.js",
 	"module": "./esm5/my-library.js",
-	"es2015": "./esm2015/my-library.js",
-	"scripts": {
-		"build": "angular-package-builder"
-	},
-	"peerDependencies": {
-		"@angular/core": "x",
-		"@angular/common": "x"
-	},
-	"devDependencies": {
-		"angular-package-builder": "file:../../dist"
-	}
+	"es2015": "./esm2015/my-library.js"
 }
