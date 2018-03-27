@@ -6,6 +6,7 @@ import { Schema, validate, ValidatorResult, ValidationError } from 'jsonschema';
 import { AngularPackageBuilderConfig } from '../config.interface';
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
 import { getDependencyMap } from '../utilities/get-dependency-map';
+import { getInstalledDependencyVersion } from '../utilities/get-installed-dependency-version';
 import { readFile } from '../utilities/read-file';
 
 import * as angularPackageSchema from '../../angular-package.schema.json';
@@ -40,12 +41,20 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 			prepared: path.join( temporaryFolder, 'prepared' ),
 			umd: path.join( temporaryFolder, 'umd' )
 		},
+		versions: {
+			angular: '',
+			typescript: ''
+		},
 		packageName: '',
 		fileName: '',
 		dependencies: {},
 		typescriptCompilerOptions: {},
 		angularCompilerOptions: {}
 	};
+
+	// Get versions
+	config.versions.angular = await getInstalledDependencyVersion( '@angular/compiler-cli' );
+	config.versions.typescript = await getInstalledDependencyVersion( 'typescript' );
 
 	// Get package name and dependencies from 'package.json' file
 	const packageJsonPath: string = path.join( cwd, 'package.json' );
