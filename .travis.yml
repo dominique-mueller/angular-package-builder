@@ -19,6 +19,7 @@ stages:
   - name: build
   - name: test (Angular 4)
   - name: test (Angular 5)
+
   # - name: test (integration)
   - name: release
     if: branch = master
