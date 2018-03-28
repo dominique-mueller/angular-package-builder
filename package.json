@@ -70,6 +70,7 @@
 		"@angular/compiler-cli": "5.2.x",
 		"@angular/compiler": "5.2.x",
 		"@angular/core": "5.2.x",
+		"@angular/common": "5.2.x",
 		"@types/acorn": "4.0.x",
 		"@types/clean-css": "3.4.x",
 		"@types/jest": "22.2.x",
