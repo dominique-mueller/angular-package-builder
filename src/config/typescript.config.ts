@@ -21,6 +21,12 @@ export function getTypescriptConfig( target: 'esm2015' | 'esm5', destinationPath
 				declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
 				emitDecoratorMetadata: true, // Keep metadata about decorators
 				experimentalDecorators: true, // Enable decorators
+				lib: [ // Defaults (see https://www.typescriptlang.org/docs/handbook/compiler-options.html)
+					'es6',
+					'dom',
+					'dom.iterable',
+					'scripthost'
+				],
 				module: 'ES2015', // Always generate ES6 modules, meaning use 'import' and 'export'
 				moduleResolution: 'node', // Module resolution strategy
 				newLine: 'LF', // Always use 'LF' as line endings in order to make closure compiler annotations work correctly
