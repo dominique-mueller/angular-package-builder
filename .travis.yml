@@ -39,12 +39,12 @@ jobs:
         - TYPESCRIPT=2.1.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -52,12 +52,12 @@ jobs:
         - TYPESCRIPT=2.2.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -65,12 +65,12 @@ jobs:
         - TYPESCRIPT=2.3.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -78,12 +78,12 @@ jobs:
         - TYPESCRIPT=2.1.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -91,12 +91,12 @@ jobs:
         - TYPESCRIPT=2.2.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -104,12 +104,12 @@ jobs:
         - TYPESCRIPT=2.3.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -117,12 +117,12 @@ jobs:
         - TYPESCRIPT=2.1.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -130,12 +130,12 @@ jobs:
         - TYPESCRIPT=2.2.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -143,12 +143,12 @@ jobs:
         - TYPESCRIPT=2.3.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -156,12 +156,12 @@ jobs:
         - TYPESCRIPT=2.1.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -169,12 +169,12 @@ jobs:
         - TYPESCRIPT=2.2.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -182,12 +182,12 @@ jobs:
         - TYPESCRIPT=2.3.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -195,12 +195,12 @@ jobs:
         - TYPESCRIPT=2.1.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -208,12 +208,12 @@ jobs:
         - TYPESCRIPT=2.2.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -221,12 +221,12 @@ jobs:
         - TYPESCRIPT=2.3.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
 
     - stage: test (Angular 5)
@@ -235,12 +235,12 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -248,12 +248,12 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -261,12 +261,12 @@ jobs:
         - TYPESCRIPT=2.5.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -274,12 +274,12 @@ jobs:
         - TYPESCRIPT=2.4.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -287,12 +287,12 @@ jobs:
         - TYPESCRIPT=2.5.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
     -
       env:
@@ -300,12 +300,12 @@ jobs:
         - TYPESCRIPT=2.6.x
       install:
         - npm install
+      before_script:
         - npm run build
-      script:
-        - rimraf node_modules/**
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
         - npm run test:package:prepare
         - npm install typescript@2.7.x --no-save
+      script:
         - npm run test:package
 
     # - stage: test (integration)
