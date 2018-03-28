@@ -41,11 +41,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -56,11 +55,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -71,11 +69,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -86,11 +83,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -101,11 +97,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -116,11 +111,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -131,11 +125,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -146,11 +139,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -161,11 +153,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -176,11 +167,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -191,11 +181,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -206,11 +195,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -221,11 +209,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -236,11 +223,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -251,11 +237,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
 
@@ -267,11 +252,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -282,11 +266,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -297,11 +280,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -312,11 +294,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -327,11 +308,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
     -
@@ -342,11 +322,10 @@ jobs:
         - npm install
       before_script:
         - npm run build
-        - npm uninstall @angular/compiler @angular/compiler-cli @angular/core @angular/common typescript --no-save
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-        - npm run test:package:prepare
-        - npm uninstall typescript --no-save
-        - npm install typescript@2.7.x --no-save
+        - cd test/my-library
+        - npm install ../../dist @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT
+        - npm run build
+        - cd ../..
       script:
         - npm run test:package
 

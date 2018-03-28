@@ -5,5 +5,8 @@
 	"typings": "./my-library.d.ts",
 	"main": "./bundles/my-library.umd.js",
 	"module": "./esm5/my-library.js",
-	"es2015": "./esm2015/my-library.js"
+	"es2015": "./esm2015/my-library.js",
+	"scripts": {
+		"build": "angular-package-builder"
+	}
 }
