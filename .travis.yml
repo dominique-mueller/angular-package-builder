@@ -18,8 +18,15 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: test (package)
-  - name: test (integration)
+  - name: test (Angular 4.0.x)
+  - name: test (Angular 4.1.x)
+  - name: test (Angular 4.2.x)
+  - name: test (Angular 4.3.x)
+  - name: test (Angular 4.4.x)
+  - name: test (Angular 5.0.x)
+  - name: test (Angular 5.1.x)
+  - name: test (Angular 5.2.x)
+  # - name: test (integration)
   - name: release
     if: branch = master
 
@@ -33,10 +40,10 @@ jobs:
       script:
         - npm run build
 
-    - stage: test (package)
+    - stage: test (Angular 4.0.x)
       env:
-        - ANGULAR=2.4.x
-        - TYPESCRIPT=2.3.x
+        - ANGULAR=4.0.x
+        - TYPESCRIPT=2.4.x
       install:
         - npm install
         - npm run build
@@ -44,7 +51,44 @@ jobs:
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
-    -
+
+    - stage: test (Angular 4.1.x)
+      env:
+        - ANGULAR=4.1.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm install
+        - npm run build
+        - rimraf node_modules/**
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
+      script:
+        - npm run test:package
+
+    - stage: test (Angular 4.2.x)
+      env:
+        - ANGULAR=4.2.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm install
+        - npm run build
+        - rimraf node_modules/**
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
+      script:
+        - npm run test:package
+
+    - stage: test (Angular 4.3.x)
+      env:
+        - ANGULAR=4.3.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm install
+        - npm run build
+        - rimraf node_modules/**
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
+      script:
+        - npm run test:package
+
+    - stage: test (Angular 4.4.x)
       env:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.4.x
@@ -55,7 +99,8 @@ jobs:
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
-    -
+
+    - stage: test (Angular 5.0.x)
       env:
         - ANGULAR=5.0.x
         - TYPESCRIPT=2.4.x
@@ -66,7 +111,8 @@ jobs:
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
-    -
+
+    - stage: test (Angular 5.1.x)
       env:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.4.x
@@ -88,7 +134,8 @@ jobs:
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
-    -
+
+    - stage: test (Angular 5.2.x)
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.4.x
@@ -121,23 +168,12 @@ jobs:
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
       script:
         - npm run test:package
-    -
-      env:
-        - ANGULAR=5.2.x
-        - TYPESCRIPT=2.7.x
-      install:
-        - npm install
-        - npm run build
-        - rimraf node_modules/**
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save
-      script:
-        - npm run test:package
 
-    - stage: test (integration)
-      install:
-        - npm install
-      script:
-        - npm run test:integration
+    # - stage: test (integration)
+    #   install:
+    #     - npm install
+    #   script:
+    #     - npm run test:integration
 
     - stage: release
       node_js:
