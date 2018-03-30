@@ -2,12 +2,15 @@
 	"name": "my-library",
 	"version": "1.0.0",
 	"private": true,
-	"typings": "./my-library.d.ts",
-	"main": "./bundles/my-library.umd.js",
 	"module": "./esm5/my-library.js",
 	"es2015": "./esm2015/my-library.js",
-	"peerDependencies": {
-		"@angular/core": "5.x",
-		"@angular/common": "5.x"
+	"esm5": "./esm5/my-library.js",
+	"esm2015": "./esm2015/my-library.js",
+	"fesm5": "./fesm5/my-library.js",
+	"fesm2015": "./fesm2015/my-library.js",
+	"main": "./bundles/my-library.umd.js",
+	"typings": "./my-library.d.ts",
+	"scripts": {
+		"build:lib": "angular-package-builder && copyfiles package.json dist"
 	}
 }

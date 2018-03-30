@@ -1,5 +1,6 @@
 import { posix as path } from 'path';
 
+import * as semver from 'semver';
 import { main as angularCompilerCli } from '@angular/compiler-cli/src/main';
 
 import { AngularPackageBuilderInternalConfig } from '../internal-config.interface';
@@ -24,7 +25,10 @@ export async function compile( config: AngularPackageBuilderInternalConfig, targ
 	await writeFile( tsconfigPath, tsconfig );
 
 	// Run Angular compiler (synchronous process!), using the tsconfig file from above
-	angularCompilerCli( [ '-p', tsconfigPath ], ( errorLog: string ): void => {
+	const angularCompilerCliArguments: any = semver.gte( config.versions.angular, '5.0.0' )
+		? [ '-p', tsconfigPath ]
+		: { p: tsconfigPath };
+	angularCompilerCli( angularCompilerCliArguments, ( errorLog: string ): void => {
 		throw new Error( [
 			`An error occured while trying to compile the TypeScript sources using the Angular Compiler.`,
 			...improveAngularCompilerCliErrors( config, errorLog )

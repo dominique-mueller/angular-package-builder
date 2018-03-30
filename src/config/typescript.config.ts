@@ -21,14 +21,8 @@ export function getTypescriptConfig( target: 'esm2015' | 'esm5', destinationPath
 				declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
 				emitDecoratorMetadata: true, // Keep metadata about decorators
 				experimentalDecorators: true, // Enable decorators
-				lib: [ // Use all of them (for maximum compatibility)
-					'es5',
+				lib: [ // Defaults (see https://www.typescriptlang.org/docs/handbook/compiler-options.html)
 					'es6',
-					'es2015',
-					'es7',
-					'es2016',
-					'es2017',
-					'esnext',
 					'dom',
 					'dom.iterable',
 					'scripthost'
