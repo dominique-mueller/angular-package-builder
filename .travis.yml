@@ -42,10 +42,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -56,10 +58,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -70,10 +74,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -84,10 +90,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -98,10 +106,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -112,10 +122,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -126,10 +138,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -140,10 +154,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -154,10 +170,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -168,10 +186,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -182,10 +202,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -196,10 +218,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -210,10 +234,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -224,10 +250,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -238,10 +266,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
 
@@ -253,10 +283,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -267,10 +299,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -281,10 +315,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -295,10 +331,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -309,10 +347,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
     -
@@ -323,10 +363,12 @@ jobs:
         - npm install
       before_script:
         - npm run build
+        - rimraf -r node_modules/**
         - cd test/my-library
         - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT --no-save --no-package-lock
         - npm run build
         - cd ../..
+        - npm install
       script:
         - npm run test:package
 
