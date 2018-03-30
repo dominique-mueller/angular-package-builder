@@ -38,14 +38,13 @@ jobs:
       env:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.1.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -55,14 +54,13 @@ jobs:
       env:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.2.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -72,14 +70,13 @@ jobs:
       env:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.3.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -89,14 +86,13 @@ jobs:
       env:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.1.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -106,14 +102,13 @@ jobs:
       env:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.2.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -123,14 +118,13 @@ jobs:
       env:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.3.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -140,14 +134,13 @@ jobs:
       env:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.1.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -157,14 +150,13 @@ jobs:
       env:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.2.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -174,14 +166,13 @@ jobs:
       env:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.3.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -191,14 +182,13 @@ jobs:
       env:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.1.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -208,14 +198,13 @@ jobs:
       env:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.2.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -225,14 +214,13 @@ jobs:
       env:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.3.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -242,14 +230,13 @@ jobs:
       env:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.1.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -259,14 +246,13 @@ jobs:
       env:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.2.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -276,14 +262,13 @@ jobs:
       env:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.3.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -294,14 +279,13 @@ jobs:
       env:
         - ANGULAR=5.0.x
         - TYPESCRIPT=2.4.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -311,14 +295,13 @@ jobs:
       env:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.4.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -328,14 +311,13 @@ jobs:
       env:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.5.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -345,14 +327,13 @@ jobs:
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.4.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -362,14 +343,13 @@ jobs:
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.5.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
@@ -379,14 +359,13 @@ jobs:
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.6.x
-        - RXJS=5.5.x
       install:
         - npm install
       before_script:
         - npm run build
         - rimraf -r node_modules/**
         - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x --no-save --no-package-lock
         - npm run build:lib
         - cd ../..
         - npm install
