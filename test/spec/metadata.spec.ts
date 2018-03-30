@@ -1,17 +1,26 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { distFolderPath } from './config';
+import * as semver from 'semver';
+
+import { angularMetadataVersions, distFolderPath, importPath } from './config';
 
 /**
  * AoT Metadata JSON File - AoT Metadata
  */
 describe( 'AoT Metadata', () => {
 
+    let angularMetadataVersion: number = 0;
     let metadataJsonFile: string = '';
     let metadataJsonFileContent: any | null = null;
 
     beforeAll( async () => {
+
+        // Get Angular metadata version
+        const angularPackagePath: string = path.join( importPath, '..', 'node_modules', '@angular', 'compiler-cli', 'package.json' );
+        const angularMajorVersion = semver.major( ( await import( angularPackagePath ) ).version );
+        angularMetadataVersion = angularMetadataVersions[ angularMajorVersion ];
+
         metadataJsonFile = await fs.readFileSync( path.join( distFolderPath, 'my-library.metadata.json' ), 'utf-8' );
         metadataJsonFileContent = JSON.parse( metadataJsonFile );
     } );
@@ -30,7 +39,7 @@ describe( 'AoT Metadata', () => {
 
     it( 'should contain the correct version', () => {
 
-        expect( metadataJsonFileContent.version ).toBe( 4 );
+        expect( metadataJsonFileContent.version ).toBe( angularMetadataVersion );
 
     } );
 
