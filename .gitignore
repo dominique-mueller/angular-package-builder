@@ -4,7 +4,6 @@ node_modules/
 # Build
 dist/
 dist-angular-package-builder/
-*.tgz
 
 # Development
 .vscode
