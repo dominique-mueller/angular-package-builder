@@ -34,6 +34,7 @@ jobs:
 
     - stage: build
       install:
+        - npm install -g npm
         - npm install
       script:
         - npm run build
@@ -43,6 +44,7 @@ jobs:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.1.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -63,6 +65,7 @@ jobs:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.2.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -83,6 +86,7 @@ jobs:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.3.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -104,6 +108,7 @@ jobs:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.1.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -124,6 +129,7 @@ jobs:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.2.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -144,6 +150,7 @@ jobs:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.3.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -165,6 +172,7 @@ jobs:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.1.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -185,6 +193,7 @@ jobs:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.2.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -205,6 +214,7 @@ jobs:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.3.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -226,6 +236,7 @@ jobs:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.1.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -246,6 +257,7 @@ jobs:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.2.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -266,6 +278,7 @@ jobs:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.3.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -287,6 +300,7 @@ jobs:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.1.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -307,6 +321,7 @@ jobs:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.2.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -327,6 +342,7 @@ jobs:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.3.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -348,6 +364,7 @@ jobs:
         - ANGULAR=5.0.x
         - TYPESCRIPT=2.4.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -369,6 +386,7 @@ jobs:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.4.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -389,6 +407,7 @@ jobs:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.5.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -410,6 +429,7 @@ jobs:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.4.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -430,6 +450,7 @@ jobs:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.5.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -450,6 +471,7 @@ jobs:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.6.x
       install:
+        - npm install -g npm
         - npm install
       before_script:
         - npm run build
@@ -477,6 +499,7 @@ jobs:
         #  Fix Travis CI issue of detached heads in git
         - git checkout master
       install:
+        - npm install -g npm
         - npm install
       script:
         - npm run build
