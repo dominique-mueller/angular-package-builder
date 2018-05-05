@@ -1,50 +1,51 @@
+import * as path from 'path';
+
 import * as typescript from 'typescript';
 
-const fileContent: string = `
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import Project, { ObjectLiteralExpression, SyntaxKind, ObjectLiteralElementLike, StringLiteral, Node, ImportDeclaration } from 'ts-simple-ast';
 
-import { LIBInputComponent } from './input/input.component';
-import { LIBDataService } from './data/data.service';
+// Add source files - ONLY WORKING FOR THE ONES PASSED IN!
 
-/**
- * Notifier module
- */
-@NgModule( {
-	declarations: [
-		LIBInputComponent
-	],
-	exports: [
-		LIBInputComponent
-	],
-	imports: [
-		CommonModule
-	],
-	providers: [
-		LIBDataService
-	]
-} )
-export class LIBModule {}
-`;
+const project: Project = new Project();
+project.addExistingSourceFile( path.resolve( './test/my-library/lib/src/input/input.component.ts' ) );
 
-const sourceFile: typescript.SourceFile = typescript.createSourceFile( 'aaa', fileContent, typescript.ScriptTarget.Latest, true );
+// Get imports - WORKING!
 
-const fileImportSources = [];
-findImport( sourceFile );
+const importSources: Array<ImportDeclaration> = project.getSourceFiles()[ 0 ].getImportDeclarations();
+console.log( importSources[ 0 ].getModuleSpecifier().getText() );
 
-console.log( fileImportSources );
+// Get decorator information - WORKING!
 
-function findImport( node: typescript.Node ): void {
+const templateUrlProperty: ObjectLiteralElementLike = ( <ObjectLiteralExpression> project.getSourceFiles()[ 0 ].getClasses()[ 0 ].getDecorator( 'Component' ).getArguments()[ 0 ] )
+    .getProperty( 'templateUrl' );
+const templateUrlValue: Node = templateUrlProperty.getChildrenOfKind( SyntaxKind.StringLiteral )[ 0 ];
+const url: string = templateUrlValue
+    .getText()
+    .replace( /['"`]/g, '' );
 
-    if ( typescript.isImportDeclaration( node ) ) {
-        const importSource: string = node
-            .getChildren()
-            .find( typescript.isStringLiteral ) // Gets import source
-            .getText()
-            .replace( /['"`]/g, '' ); // Removes any quotemarks otherwhise included in the token
-        fileImportSources.push( importSource );
-    }
+templateUrlProperty.replaceWithText( `template: ''` );
 
-    typescript.forEachChild( node, findImport.bind( this ) );
+// console.log( project.getSourceFiles()[ 0 ].getText() );
 
-}
+
+
+// const program: typescript.Program = typescript.createProgram( [ path.resolve( './test/my-library/lib/index.ts' ) ], {} );
+
+// const sourceFiles: ReadonlyArray<typescript.SourceFile> = program.getSourceFiles();
+// sourceFiles
+//     .filter( ( sourceFile: typescript.SourceFile ): boolean => {
+//         return sourceFile.fileName.indexOf( 'node_modules' ) === -1;
+//     } )
+//     .forEach( ( sourceFile: typescript.SourceFile ): void => {
+//         // fileName for path, text for content
+//         console.log( '' );
+//         console.log( 'FILE:', sourceFile.fileName );
+//         console.log( 'IMPORTS:', ( <any> sourceFile ).imports.map( ( sourceFileImport ) =>  sourceFileImport.text ) );
+
+//         // if ( sourceFile.fileName.indexOf( 'input.component.ts' ) !== -1 ) {
+
+//         //     typescriptSimple.get
+
+//         // }
+
+//     } );

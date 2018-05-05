@@ -61,6 +61,7 @@
 		"rollup-plugin-commonjs": "9.1.x",
 		"rollup-plugin-node-resolve": "3.3.x",
 		"semver": "5.5.x",
+		"ts-simple-ast": "11.1.x",
 		"unixify": "1.0.x",
 		"yargs": "11.0.x"
 	},
