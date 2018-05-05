@@ -26,23 +26,11 @@ describe( 'Flat ESM2015 Module (with Source Maps)', () => {
 
 	} );
 
-	it( 'should contain classes with attached metadata', () => {
+	it( 'should all contain classes', () => {
 
-		// Module
 		expect( moduleFileContent[ 'LIBModule' ] ).toEqual( expect.any( Function ) );
-		expect( moduleFileContent[ 'LIBModule' ].decorators ).toEqual( expect.any( Array ) );
-		expect( moduleFileContent[ 'LIBModule' ].ctorParameters ).toEqual( expect.any( Function ) );
-
-		// Service
 		expect( moduleFileContent[ 'LIBDataService' ] ).toEqual( expect.any( Function ) );
-		expect( moduleFileContent[ 'LIBDataService' ].decorators ).toEqual( expect.any( Array ) );
-		expect( moduleFileContent[ 'LIBDataService' ].ctorParameters ).toEqual( expect.any( Function ) );
-
-		// Component
 		expect( moduleFileContent[ 'LIBInputComponent' ] ).toEqual( expect.any( Function ) );
-		expect( moduleFileContent[ 'LIBInputComponent' ].decorators ).toEqual( expect.any( Array ) );
-		expect( moduleFileContent[ 'LIBInputComponent' ].propDecorators ).toEqual( expect.any( Object ) );
-		expect( moduleFileContent[ 'LIBInputComponent' ].ctorParameters ).toEqual( expect.any( Function ) );
 
 	} );
 

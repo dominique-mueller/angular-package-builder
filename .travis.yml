@@ -17,14 +17,9 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: test (Angular 4.0)
-  - name: test (Angular 4.1)
-  - name: test (Angular 4.2)
-  - name: test (Angular 4.3)
-  - name: test (Angular 4.4)
-  - name: test (Angular 5.0)
-  - name: test (Angular 5.1)
-  - name: test (Angular 5.2)
+  - name: test (Angular 4)
+  - name: test (Angular 5)
+  - name: test (Angular 6)
   - name: release
     if: branch = master
 
@@ -33,19 +28,21 @@ jobs:
   include:
 
     - stage: build
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       script:
         - npm run build
 
-    - stage: test (Angular 4.0)
+    - stage: test (Angular 4)
       env:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.1.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -55,28 +52,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
-      script:
-        - npm run test:package
-        - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
-        - npm run test:integration
-    -
-      env:
-        - ANGULAR=4.0.x
-        - TYPESCRIPT=2.2.x
-      install:
-        - npm install -g npm
-        - npm install
-      before_script:
-        - npm run build
-        - rimraf -r node_modules/**
-        - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x copyfiles --no-save --no-package-lock
-        - npm run build:lib
-        - cd ../my-app
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
-        - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -84,10 +60,11 @@ jobs:
     -
       env:
         - ANGULAR=4.0.x
-        - TYPESCRIPT=2.3.x
-      install:
+        - TYPESCRIPT=2.2.x
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -97,40 +74,19 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
-      script:
-        - npm run test:package
-        - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
-        - npm run test:integration
-
-    - stage: test (Angular 4.1)
-      env:
-        - ANGULAR=4.1.x
-        - TYPESCRIPT=2.1.x
-      install:
-        - npm install -g npm
-        - npm install
-      before_script:
-        - npm run build
-        - rimraf -r node_modules/**
-        - cd test/my-library
-        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x copyfiles --no-save --no-package-lock
-        - npm run build:lib
-        - cd ../my-app
-        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
-        - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
     -
       env:
-        - ANGULAR=4.1.x
-        - TYPESCRIPT=2.2.x
-      install:
+        - ANGULAR=4.0.x
+        - TYPESCRIPT=2.3.x
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -140,7 +96,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -148,10 +104,11 @@ jobs:
     -
       env:
         - ANGULAR=4.1.x
-        - TYPESCRIPT=2.3.x
-      install:
+        - TYPESCRIPT=2.1.x
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -161,19 +118,19 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
-    - stage: test (Angular 4.2)
+    -
       env:
-        - ANGULAR=4.2.x
-        - TYPESCRIPT=2.1.x
-      install:
+        - ANGULAR=4.1.x
+        - TYPESCRIPT=2.2.x
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -183,7 +140,51 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
+      script:
+        - npm run test:package
+        - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
+        - npm run test:integration
+    -
+      env:
+        - ANGULAR=4.1.x
+        - TYPESCRIPT=2.3.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rimraf -r node_modules/**
+        - cd test/my-library
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x copyfiles --no-save --no-package-lock
+        - npm run build:lib
+        - cd ../my-app
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
+        - cd ../..
+        - npm ci
+      script:
+        - npm run test:package
+        - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
+        - npm run test:integration
+    -
+      env:
+        - ANGULAR=4.2.x
+        - TYPESCRIPT=2.1.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rimraf -r node_modules/**
+        - cd test/my-library
+        - npm install $( npm pack ../../dist | tail -1 ) @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@5.5.x copyfiles --no-save --no-package-lock
+        - npm run build:lib
+        - cd ../my-app
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
+        - cd ../..
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -192,9 +193,10 @@ jobs:
       env:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.2.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -204,7 +206,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -213,9 +215,10 @@ jobs:
       env:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.3.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -225,19 +228,19 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
-    - stage: test (Angular 4.3)
+    -
       env:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.1.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -247,7 +250,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -256,9 +259,10 @@ jobs:
       env:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.2.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -268,7 +272,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -277,9 +281,10 @@ jobs:
       env:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.3.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -289,19 +294,19 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
-    - stage: test (Angular 4.4)
+    -
       env:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.1.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -311,7 +316,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -320,9 +325,10 @@ jobs:
       env:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.2.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -332,7 +338,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -341,9 +347,10 @@ jobs:
       env:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.3.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -353,19 +360,20 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.4.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
 
-    - stage: test (Angular 5.0)
+    - stage: test (Angular 5)
       env:
         - ANGULAR=5.0.x
         - TYPESCRIPT=2.4.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -375,19 +383,19 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.7.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
-    - stage: test (Angular 5.1)
+    -
       env:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.4.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -397,7 +405,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.7.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -406,9 +414,10 @@ jobs:
       env:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.5.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -418,19 +427,19 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.7.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
-    - stage: test (Angular 5.2)
+    -
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.4.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -440,7 +449,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.7.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -449,9 +458,10 @@ jobs:
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.5.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -461,7 +471,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.7.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -470,9 +480,10 @@ jobs:
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.6.x
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       before_script:
         - npm run build
         - rimraf -r node_modules/**
@@ -482,7 +493,7 @@ jobs:
         - cd ../my-app
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR @angular/platform-browser-dynamic@$ANGULAR typescript@$TYPESCRIPT @angular/cli@1.7.x rxjs@5.5.x zone.js@0.8.x --no-save --no-package-lock
         - cd ../..
-        - npm install
+        - npm ci
       script:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
@@ -498,9 +509,10 @@ jobs:
         - git checkout -qf "$TRAVIS_COMMIT";
         #  Fix Travis CI issue of detached heads in git
         - git checkout master
-      install:
+      before_install:
         - npm install -g npm
-        - npm install
+      install:
+        - npm ci
       script:
         - npm run build
       before_deploy:
