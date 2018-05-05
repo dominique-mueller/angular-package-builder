@@ -233,7 +233,6 @@ jobs:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
     -
       env:
         - ANGULAR=4.3.x
@@ -300,7 +299,6 @@ jobs:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
     -
       env:
         - ANGULAR=4.4.x
@@ -390,7 +388,6 @@ jobs:
         - npm run test:package
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
-
     -
       env:
         - ANGULAR=5.1.x
@@ -502,7 +499,7 @@ jobs:
         - cd test/my-app && npm install ../my-library/dist --no-save --no-package-lock && cd ../.. && rimraf -r node_modules/**
         - npm run test:integration
 
-  - stage: test (Angular 6)
+    - stage: test (Angular 6)
       env:
         - ANGULAR=6.0.x
         - TYPESCRIPT=2.7.x
