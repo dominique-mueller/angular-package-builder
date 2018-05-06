@@ -1,6 +1,6 @@
 import { Identifier } from 'ts-simple-ast';
 
-import { AngularExternalResource } from './angular-file-external-resources.interfaces';
+import { AngularExternalResource } from './angular-external-resource.interface';
 
 /**
  * Angular External Template Interface

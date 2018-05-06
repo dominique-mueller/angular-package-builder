@@ -1,59 +1,85 @@
 import { posix as path } from 'path';
-import * as fs from 'fs';
 
 import { AngularPackageConfig, AngularSubPackageConfig } from './src/config.interface';
-import { ensureDependencyVersion } from './src/utilities/ensure-dependency-version';
-import { Logger } from './src/logger/logger';
-import { AngularPackageBuilder } from './src/angular-package-builder';
 import { readFile } from './src/utilities/read-file';
 
+// TODO: Find a better name?
+export interface AngularPackageConfigInternal {
+	entryFile: string;
+	outDir: string;
+	packageName: string;
+	fileName: string;
+}
+
+/**
+ * Angular Package
+ */
 export class AngularPackage {
 
+	/**
+	 * Angular Package project directory
+	 */
 	private cwd: string;
 
-	private entryFile: string;
+	/**
+	 * Primary entry point
+	 */
+	private primaryEntry: AngularPackageConfigInternal;
 
-	private outDir: string;
+	/**
+	 * List of secondary entry points
+	 */
+	private secondaryEntries: Array<AngularPackageConfigInternal>;
 
-	private packageName: string;
+	/**
+	 * Custom TypeScript compiler options
+	 */
+	private typescriptCompilerOptions: { [ option: string ]: any };
 
-	private fileName: string;
+	/**
+	 * Custom Angular compiler options
+	 */
+	private angularCompilerOptions: { [ option: string ]: any };
 
-	private secondaryEntries: Array<AngularPackageSecondaryEntry>;
+	public async withConfig( absoluteAngularPackageJsonPath: string ): Promise<void> {
 
-	private typescriptCompilerOptions: any;
+		this.cwd = path.dirname( absoluteAngularPackageJsonPath );
 
-	private angularCompilerOptions: any;
+		// Read files
+		const angularPackageJson: AngularPackageConfig = await readFile( absoluteAngularPackageJsonPath );
+		const absolutePackageJsonPath: string = path.join( path.dirname( absoluteAngularPackageJsonPath ), 'package.json' );
+		const packageJson: any = await readFile( absolutePackageJsonPath );
 
-	public async withConfig( angularPackageJsonPath: string ): Promise<void> {
+		// Get primary entry information
+		this.primaryEntry = {
+			entryFile: path.join( path.dirname( absoluteAngularPackageJsonPath ), angularPackageJson.entryFile ),
+			fileName: this.primaryEntry.packageName.split( '/' ).pop(),
+			outDir: path.join( path.dirname( absoluteAngularPackageJsonPath ), angularPackageJson.outDir ),
+			packageName: packageJson.name
+		};
 
-		// Read angular package file
-		this.cwd = path.dirname( angularPackageJsonPath );
-		const angularPackageJson: AngularPackageConfig = await readFile( angularPackageJsonPath );
-
-		// Get information for main package
-		this.entryFile = path.join( path.dirname( angularPackageJsonPath ), angularPackageJson.entryFile );
-		this.outDir = path.join( path.dirname( angularPackageJsonPath ), angularPackageJson.outDir );
+		// Get compiler options
 		this.typescriptCompilerOptions = angularPackageJson.typescriptCompilerOptions || {};
 		this.angularCompilerOptions = angularPackageJson.angularCompilerOptions || {};
 
-		// Read package.json file
-		const packageJson: any = await readFile( path.join( path.dirname( angularPackageJsonPath ), 'package.json' ) );
-		this.packageName = packageJson.name;
-		this.fileName = this.packageName.split( '/' ).pop();
-
-		// Get information for secondary entry points
+		// Get secondary entry information
 		this.secondaryEntries = ( angularPackageJson.secondaryEntries || [] )
 			.map( ( secondaryEntry: AngularSubPackageConfig ) => {
-				const absoluteSecondaryEntryFilePath: string = path.join( path.dirname( angularPackageJsonPath ), secondaryEntry.entryFile );
-				const secondaryEntryFolder: string = path.relative( path.dirname( this.entryFile ), path.dirname( absoluteSecondaryEntryFilePath ) );
-				const secondaryPackageName: string = path.join( this.packageName, secondaryEntryFolder );
+
+				const absoluteSecondaryEntryFilePath: string =
+					path.join( path.dirname( absoluteAngularPackageJsonPath ), secondaryEntry.entryFile );
+				const secondaryEntryFolder: string =
+					path.relative( path.dirname( this.primaryEntry.entryFile ), path.dirname( absoluteSecondaryEntryFilePath ) );
+				const secondaryPackageName: string =
+					path.join( this.primaryEntry.packageName, secondaryEntryFolder );
+
 				return {
 					entryFile: absoluteSecondaryEntryFilePath,
-					outDir: path.join( this.outDir, secondaryPackageName ),
-					packageName: secondaryPackageName,
-					fileName: secondaryPackageName.split( '/' ).pop()
+					fileName: secondaryPackageName.split( '/' ).pop(),
+					outDir: path.join( this.primaryEntry.outDir, secondaryPackageName ),
+					packageName: secondaryPackageName
 				};
+
 			} );
 
 		// TODO: Dependencies
@@ -63,13 +89,6 @@ export class AngularPackage {
 
 	}
 
-}
-
-export interface AngularPackageSecondaryEntry {
-	entryFile: string;
-	outDir: string;
-	packageName: string;
-	fileName: string;
 }
 
 /**

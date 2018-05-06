@@ -1,13 +1,14 @@
 import { posix as path } from 'path';
 
 import * as typescript from 'typescript';
-import Project, { SourceFile, Identifier, StringLiteral, } from 'ts-simple-ast';
+import Project, { SourceFile } from 'ts-simple-ast';
 
 import { AngularFileImportAnalyzer } from './angular-file-import.analyzer';
 import { AngularExternalTemplate } from './angular-external-template.interface';
 import { AngularExternalResource } from './angular-external-resource.interface';
 import { AngularFileExternalResourcesAnayzer } from './angular-file-external-resources.analyzer';
 import { AngularExternalStyles } from './angular-external-styles.interface';
+import { deduplicateArray } from '../utilities/deduplicate-array';
 
 /**
  * Angular Package Transformer
@@ -17,7 +18,7 @@ export class AngularPackageTransformer {
     /**
      * TypeScript project
      */
-    public readonly typescriptProject: Project;
+    private readonly typescriptProject: Project;
 
     /**
      * Constructor
@@ -36,7 +37,7 @@ export class AngularPackageTransformer {
                 return !typescriptProgram.isSourceFileFromExternalLibrary( sourceFile ) && !sourceFile.isDeclarationFile;
             } )
             .map( ( sourceFile: typescript.SourceFile ): string => {
-                return sourceFile.fileName; // This is actually the path!
+                return sourceFile.fileName; // This is actually the path ... weird, right?
             } );
 
         // Create TypeScript project, and load in the source files discovered above
@@ -46,115 +47,83 @@ export class AngularPackageTransformer {
     }
 
     /**
+     * Get all project source files
+     *
+     * @returns Source files with content (path -> content)
+     */
+    public getSourceFiles(): { [ path: string ]: string } {
+        return this.typescriptProject.getSourceFiles()
+            .reduce( ( files: { [ path: string ]: string }, sourceFile: SourceFile ): { [ path: string ]: string } => {
+                files[ sourceFile.getFilePath() ] = sourceFile.getText();
+                return files;
+            }, {} );
+    }
+
+    /**
      * Get list of all external imports
      */
     public getExternalImports(): Array<string> {
 
+        // Get external imports from all project files, as a flattened list
+        const externalImports: Array<string> = this.typescriptProject.getSourceFiles()
+            .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
+                externalImports.push( ...AngularFileImportAnalyzer.getExternalImports( sourceFile ) );
+                return externalImports;
+            }, [] );
+
         // Deduplicate external imports
-        return this.deduplicateArray(
+        return deduplicateArray( externalImports );
 
-            // Get external imports of all files
-            this.typescriptProject
-                .getSourceFiles()
-                .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
-                    externalImports.push( ...AngularFileImportAnalyzer.getExternalImports( sourceFile ) );
-                    return externalImports;
-                }, [] )
-
-        );
-
-    }
-
-    public rewriteExternalTemplateNode( node: Identifier ): void {
-        node.replaceWithText( 'template' );
-    }
-
-    public rewriteExternalStylesNode( node: Identifier ): void {
-        node.replaceWithText( 'styles' );
-    }
-
-    public rewriteExternalResourceNode( node: StringLiteral, resrouce: string ): void {
-        node.replaceWithText( `'${ resrouce }'` );
     }
 
     /**
      * Get all external templates
      *
-     * @returns External templates, including the node and the resources
+     * @returns External templates
      */
-    public getAllExternalTemplates(): {
-        nodes: Array<Identifier>,
-        resources: Array<AngularExternalResource>,
-    } {
-
-        // Get external templates of all files
-        const externalTemplates: Array<AngularExternalTemplate> = this.typescriptProject
-            .getSourceFiles()
+    public getAllExternalTemplates(): Array<AngularExternalTemplate> {
+        return this.typescriptProject.getSourceFiles()
             .reduce( ( externalTemplates: Array<AngularExternalTemplate>, sourceFile: SourceFile ): Array<AngularExternalTemplate> => {
                 externalTemplates.push( ...AngularFileExternalResourcesAnayzer.getExternalTemplates( sourceFile ) );
                 return externalTemplates;
             }, [] );
-
-        // Get external template nodes
-        const nodes: Array<Identifier> = externalTemplates
-            .map( ( externalTemplate: AngularExternalTemplate ) => {
-                return externalTemplate.node;
-            } );
-
-        // Get external template resources
-        const resources: Array<AngularExternalResource> = externalTemplates
-            .map( ( externalTemplate: AngularExternalTemplate ) => {
-                return externalTemplate.template;
-            } );
-
-        return { nodes, resources };
-
     }
 
     /**
      * Get all external styles
      *
-     * @returns External styles, including the node and the resources
+     * @returns External styles
      */
-    public getAllExternalStyles(): {
-        nodes: Array<Identifier>,
-        resources: Array<AngularExternalResource>,
-    } {
-
-        // Get external styles of all files
-        const externalStyles: Array<AngularExternalStyles> = this.typescriptProject
-            .getSourceFiles()
+    public getAllExternalStyles(): Array<AngularExternalStyles> {
+        return this.typescriptProject.getSourceFiles()
             .reduce( ( externalStyles: Array<AngularExternalStyles>, sourceFile: SourceFile ): Array<AngularExternalStyles> => {
                 externalStyles.push( ...AngularFileExternalResourcesAnayzer.getExternalStyles( sourceFile ) );
                 return externalStyles;
             }, [] );
-
-        // Get external template nodes
-        const nodes: Array<Identifier> = externalStyles
-            .map( ( externalStyle: AngularExternalStyles ) => {
-                return externalStyle.node;
-            } );
-
-        // Get external template resources
-        const resources: Array<AngularExternalResource> = externalStyles
-            .reduce( ( resources: Array<AngularExternalResource>, externalStyle: AngularExternalStyles ): Array<AngularExternalResource> => {
-                resources.push( ...externalStyle.styles );
-                return resources;
-            }, [] );
-
-        return { nodes, resources };
-
     }
 
     /**
-     * Remove duplicates from array
-     * Implementation inspired by: https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+     * Rewrite external template to internal one (manipulates source code!)
      *
-     * @param   array - Array containing possible duplicated
-     * @returns       - Array without any duplicates
+     * @param externalTemplate External template
+     * @param template         Template
      */
-    private deduplicateArray( array: Array<string> ): Array<string> {
-        return [ ...new Set( array ) ];
+    public rewriteExternalTemplateToInternalTemplate( externalTemplate: AngularExternalTemplate, template: string ): void {
+        externalTemplate.node.replaceWithText( 'template' );
+        externalTemplate.template.node.replaceWithText( `'${ template }'` );
+    }
+
+    /**
+     * Rewrite external styles to internal ones (manipulates source code!)
+     *
+     * @param externalStyles External styles
+     * @param styles         Styles
+     */
+    public rewriteExternalStylesToInternalStyles( externalStyles: AngularExternalStyles, styles: Array<string> ): void {
+        externalStyles.node.replaceWithText( 'styles' );
+        externalStyles.styles.forEach( ( style: AngularExternalResource, index: number ): void => {
+            style.node.replaceWithText( `'${ styles[ index ] }'` );
+        } );
     }
 
 }
