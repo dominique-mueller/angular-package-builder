@@ -12,5 +12,11 @@
 	"typings": "./my-library.d.ts",
 	"scripts": {
 		"build:lib": "angular-package-builder && copyfiles package.json dist"
+	},
+	"peerDependencies": {
+		"@angular/core": "5.x"
+	},
+	"dependencies": {
+		"my-second-library": "1.0.0"
 	}
 }

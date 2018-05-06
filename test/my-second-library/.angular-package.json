@@ -1,0 +1,4 @@
+{
+	"entryFile": "./lib/index.ts",
+	"outDir": "dist"
+}

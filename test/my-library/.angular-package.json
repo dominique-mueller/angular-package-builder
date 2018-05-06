@@ -1,4 +1,9 @@
 {
 	"entryFile": "./lib/index.ts",
-	"outDir": "dist"
+	"outDir": "dist",
+	"secondaryEntries": [
+		{
+			"entryFile": "./lib/testing/index.ts"
+		}
+	]
 }

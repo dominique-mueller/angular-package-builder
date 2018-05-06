@@ -19,5 +19,3 @@ resources.forEach( ( resource: AngularExternalResource ) => {
 } );
 
 console.log( angularPackageTransformer.typescriptProject.getSourceFiles()[ 3 ].getText() );
-
-// console.log( nodes );

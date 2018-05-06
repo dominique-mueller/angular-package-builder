@@ -29,7 +29,7 @@ export async function prepare( config: AngularPackageBuilderInternalConfig ): Pr
 
 			// Read source file
 			const absoluteSourceFilePath: string = path.join( config.entry.folder, sourceFilePath );
-			const absoluteOutputFilePath: string = path.join( config.temporary.prepared, sourceFilePath );
+			const absoluteOutputFilePath: string = path.join( config.temporary.transformed, sourceFilePath );
 			let sourceFileContent: string = await readFile( absoluteSourceFilePath );
 
 			// Run transformers

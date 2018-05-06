@@ -45,11 +45,11 @@ export async function compile( config: AngularPackageBuilderInternalConfig, targ
 async function getCompilationEntries( config: AngularPackageBuilderInternalConfig ): Promise<Array<string>> {
 
 	// Get paths to matching files
-	const dtsFilePaths: Array<string> = await getFiles( [ path.join( config.temporary.prepared, '**', '*.d.ts' ) ] );
+	const dtsFilePaths: Array<string> = await getFiles( [ path.join( config.temporary.transformed, '**', '*.d.ts' ) ] );
 
 	// Return compilation entries
 	return [
-		path.join( config.temporary.prepared, config.entry.file ), // Only one entry file is allowed!
+		path.join( config.temporary.transformed, config.entry.file ), // Only one entry file is allowed!
 		...dtsFilePaths // Additional TypeScript definition files (those do not count as entry files)
 	];
 
@@ -73,7 +73,7 @@ function improveAngularCompilerCliErrors( config: AngularPackageBuilderInternalC
 
 		// Fix path
 		.map( ( error: string ): string => {
-			return error.replace( config.temporary.prepared.split( path.sep ).pop(), config.entry.folder.split( path.sep ).pop() );
+			return error.replace( config.temporary.transformed.split( path.sep ).pop(), config.entry.folder.split( path.sep ).pop() );
 		} )
 
 		// Prefix with error source

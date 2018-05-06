@@ -32,9 +32,9 @@ export function getTypescriptConfig( target: 'esm2015' | 'esm5', destinationPath
 				newLine: 'LF', // Always use 'LF' as line endings in order to make closure compiler annotations work correctly
 				outDir: destinationPath,
 				pretty: true, // Pretty error messages
-				rootDir: config.temporary.prepared,
+				rootDir: config.temporary.transformed,
 				sourceMap: true, // Emit sourcemap files
-				sourceRoot: config.temporary.prepared,
+				sourceRoot: config.temporary.transformed,
 				target: typescriptTargets[ target ]
 			},
 			...validateTypescriptCompilerOptions( config.typescriptCompilerOptions )

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "rootDir": ".",
+        "paths": {
+            "my-library": [
+                "./lib"
+            ]
+        }
+    }
+}

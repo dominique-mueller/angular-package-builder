@@ -1,0 +1,16 @@
+{
+	"name": "my-second-library",
+	"version": "1.0.0",
+	"private": true,
+	"module": "./esm5/my-second-library.js",
+	"es2015": "./esm2015/my-second-library.js",
+	"esm5": "./esm5/my-second-library.js",
+	"esm2015": "./esm2015/my-second-library.js",
+	"fesm5": "./fesm5/my-second-library.js",
+	"fesm2015": "./fesm2015/my-second-library.js",
+	"main": "./bundles/my-second-library.umd.js",
+	"typings": "./my-second-library.d.ts",
+	"scripts": {
+		"build:lib": "angular-package-builder && copyfiles package.json dist"
+	}
+}

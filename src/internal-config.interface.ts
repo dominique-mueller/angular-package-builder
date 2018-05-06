@@ -16,7 +16,7 @@ export interface AngularPackageBuilderInternalConfig {
 		fesm2015: string;
 		fesm5: string;
 		folder: string;
-		prepared: string;
+		transformed: string;
 		umd: string;
 	};
 	versions: {

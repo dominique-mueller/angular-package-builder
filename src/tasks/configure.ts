@@ -38,7 +38,7 @@ export async function configure( configOrConfigUrl: AngularPackageBuilderConfig 
 			fesm2015: path.join( temporaryFolder, 'fesm2015' ),
 			fesm5: path.join( temporaryFolder, 'fesm5' ),
 			folder: temporaryFolder,
-			prepared: path.join( temporaryFolder, 'prepared' ),
+			transformed: path.join( temporaryFolder, 'transformed' ),
 			umd: path.join( temporaryFolder, 'umd' )
 		},
 		versions: {
