@@ -53,7 +53,7 @@ export class AngularPackage {
 		// Get primary entry information
 		this.primaryEntry = {
 			entryFile: path.join( path.dirname( absoluteAngularPackageJsonPath ), angularPackageJson.entryFile ),
-			fileName: this.primaryEntry.packageName.split( '/' ).pop(),
+			fileName: packageJson.name.split( '/' ).pop(),
 			outDir: path.join( path.dirname( absoluteAngularPackageJsonPath ), angularPackageJson.outDir ),
 			packageName: packageJson.name
 		};

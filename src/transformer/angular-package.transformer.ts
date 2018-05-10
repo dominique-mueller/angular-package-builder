@@ -4,11 +4,9 @@ import * as typescript from 'typescript';
 import Project, { SourceFile } from 'ts-simple-ast';
 
 import { AngularFileImportAnalyzer } from './angular-file-import.analyzer';
-import { AngularExternalTemplate } from './angular-external-template.interface';
-import { AngularExternalResource } from './angular-external-resource.interface';
 import { AngularFileExternalResourcesAnayzer } from './angular-file-external-resources.analyzer';
-import { AngularExternalStyles } from './angular-external-styles.interface';
 import { deduplicateArray } from '../utilities/deduplicate-array';
+import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './angular-file-external-resources.interfaces';
 
 /**
  * Angular Package Transformer
