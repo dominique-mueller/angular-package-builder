@@ -6,27 +6,38 @@ import { ImportDeclaration, SourceFile } from 'ts-simple-ast';
 export class AngularFileImportAnalyzer {
 
     /**
-     * Get a list of external imports
+     * Get a list of external import sources
      *
      * @param   sourceFile Source File
      * @returns            List of external imports
      */
-    public static getExternalImports( sourceFile: SourceFile ): Array<string> {
+    public static getExternalImportSources( sourceFile: SourceFile ): Array<string> {
         return sourceFile.getImportDeclarations()
+            .filter( this.isExternalImport )
+            .map( this.getImportSource );
+    }
 
-            // Filter out internal imports
-            .filter( ( importDeclaration: ImportDeclaration ): boolean => {
-                return !importDeclaration.isModuleSpecifierRelative();
-            } )
+    /**
+     * Check if the given import declaration points to an external module
+     *
+     * @param   importDeclaration Import declaration
+     * @returns                   Flag, describing whether the import is external
+     */
+    private static isExternalImport( importDeclaration: ImportDeclaration ): boolean {
+        return !importDeclaration.isModuleSpecifierRelative();
+    }
 
-            // Get import source
-            .map( ( importDeclaration: ImportDeclaration ): string => {
-                return importDeclaration
-                    .getModuleSpecifier()
-                    .getText()
-                    .replace( /['"`]/g, '' );
-            } );
-
+    /**
+     * Get the import source of an import declaration
+     *
+     * @param   importDeclaration Import declaration
+     * @returns                   Import source
+     */
+    private static getImportSource( importDeclaration: ImportDeclaration ): string {
+        return importDeclaration
+            .getModuleSpecifier()
+            .getText()
+            .replace( /['"`]/g, '' );
     }
 
 }

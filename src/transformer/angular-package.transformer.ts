@@ -67,7 +67,7 @@ export class AngularPackageTransformer {
         // Get external imports from all project files, as a flattened list
         const externalImports: Array<string> = this.typescriptProject.getSourceFiles()
             .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
-                externalImports.push( ...AngularFileImportAnalyzer.getExternalImports( sourceFile ) );
+                externalImports.push( ...AngularFileImportAnalyzer.getExternalImportSources( sourceFile ) );
                 return externalImports;
             }, [] );
 

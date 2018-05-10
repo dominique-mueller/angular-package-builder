@@ -96,7 +96,8 @@ export class AngularPackage {
  */
 export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<string> ): Promise<void> {
 
-	const cwd: string = process.cwd().replace( /\\/g, '/' );
+	const cwd: string = process.cwd()
+		.replace( /\\/g, '/' );
 
 	const angularPackages: Array<AngularPackage> = await Promise.all(
 		angularPackageJsonUrls
