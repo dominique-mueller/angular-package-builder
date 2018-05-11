@@ -1,9 +1,9 @@
 import { ImportDeclaration, SourceFile } from 'ts-simple-ast';
 
 /**
- * Angular Import Analyzer
+ * Angular Import File Analyzer
  */
-export class AngularImportAnalyzer {
+export class AngularImportFileAnalyzer {
 
     /**
      * Get a list of external import sources

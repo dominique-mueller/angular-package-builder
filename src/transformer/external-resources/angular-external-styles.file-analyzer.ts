@@ -1,12 +1,12 @@
 import { SyntaxKind, ClassDeclaration, SourceFile, PropertyAssignment, StringLiteral, Identifier, ArrayLiteralExpression } from 'ts-simple-ast';
 
-import { AngularExternalResource, AngularExternalStyles } from './angular-external-resources-analyzer.interfaces';
-import { AngularExternalResourcesAnayzer } from './angular-external-resources-analyzer.abstract';
+import { AngularExternalResource, AngularExternalStyles } from './angular-external-resources.interfaces';
+import { AngularExternalResourcesFileAnalyzer } from './angular-external-resources.file-analyzer';
 
 /**
- * Angular External Styles Analyzer
+ * Angular External Styles File Analyzer
  */
-export class AngularExternalStylesAnayzer extends AngularExternalResourcesAnayzer {
+export class AngularExternalStylesFileAnalyzer extends AngularExternalResourcesFileAnalyzer {
 
     /**
      * Get external styles

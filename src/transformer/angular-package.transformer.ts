@@ -4,13 +4,31 @@ import * as typescript from 'typescript';
 import Project, { SourceFile } from 'ts-simple-ast';
 
 import { deduplicateArray } from '../utilities/deduplicate-array';
-import { AngularImportAnalyzer } from './angular-import-analyzer';
+import { AngularImportFileAnalyzer } from './angular-import.file-analyzer';
 import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './angular-external-resources-analyzer.interfaces';
 
 /**
  * Angular Package Transformer
  */
 export class AngularPackageTransformer {
+
+    /**
+     * Source files
+     */
+    public get sourceFiles(): Array<SourceFile> {
+        return this.typescriptProject.getSourceFiles();
+    };
+
+    /**
+     * Source files with paths
+     */
+    public get sourceFilesWithPaths(): { [ path: string ]: string } {
+        return this.sourceFiles
+            .reduce( ( files: { [ path: string ]: string }, sourceFile: SourceFile ): { [ path: string ]: string } => {
+                files[ sourceFile.getFilePath() ] = sourceFile.getText();
+                return files;
+            }, {} );
+    }
 
     /**
      * TypeScript project
@@ -44,19 +62,6 @@ export class AngularPackageTransformer {
     }
 
     /**
-     * Get all project source files
-     *
-     * @returns Source files with content (path -> content)
-     */
-    public getSourceFiles(): { [ path: string ]: string } {
-        return this.typescriptProject.getSourceFiles()
-            .reduce( ( files: { [ path: string ]: string }, sourceFile: SourceFile ): { [ path: string ]: string } => {
-                files[ sourceFile.getFilePath() ] = sourceFile.getText();
-                return files;
-            }, {} );
-    }
-
-    /**
      * Get list of all external imports
      */
     public getAllExternalImportSources(): Array<string> {
@@ -64,7 +69,7 @@ export class AngularPackageTransformer {
             .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
                 return [
                     ...externalImports,
-                    ...AngularImportAnalyzer.getExternalImportSources( sourceFile ),
+                    ...AngularImportFileAnalyzer.getExternalImportSources( sourceFile ),
                 ];
             }, [] );
         const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
@@ -96,29 +101,5 @@ export class AngularPackageTransformer {
     //             return externalStyles;
     //         }, [] );
     // }
-
-    /**
-     * Rewrite external template to internal one (manipulates source code!)
-     *
-     * @param externalTemplate External template
-     * @param template         Template
-     */
-    public rewriteExternalTemplateToInternalTemplate( externalTemplate: AngularExternalTemplate, template: string ): void {
-        externalTemplate.node.replaceWithText( 'template' );
-        externalTemplate.template.node.replaceWithText( `'${ template }'` );
-    }
-
-    /**
-     * Rewrite external styles to internal ones (manipulates source code!)
-     *
-     * @param externalStyles External styles
-     * @param styles         Styles
-     */
-    public rewriteExternalStylesToInternalStyles( externalStyles: AngularExternalStyles, styles: Array<string> ): void {
-        externalStyles.node.replaceWithText( 'styles' );
-        externalStyles.styles.forEach( ( style: AngularExternalResource, index: number ): void => {
-            style.node.replaceWithText( `'${ styles[ index ] }'` );
-        } );
-    }
 
 }

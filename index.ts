@@ -110,6 +110,8 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 
 	console.dir( angularPackages, { depth: null } );
 
+
+
 	// try {
 
 	// 	Logger.empty();
@@ -172,5 +174,5 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 
 runAngularPackageBuilder( [
 	'./test/my-library/.angular-package.json',
-	'./test/my-second-library/.angular-package.json',
+	// './test/my-second-library/.angular-package.json',
 ] );
