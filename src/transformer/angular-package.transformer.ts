@@ -49,7 +49,7 @@ export class AngularPackageTransformer {
      * Get list of all external imports
      */
     public getAllExternalImportSources(): Array<string> {
-        const externalImportSources: Array<string> = this.typescriptProject.getSourceFiles()
+        const externalImportSources: Array<string> = this.sourceFiles
             .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
                 return [
                     ...externalImports,
