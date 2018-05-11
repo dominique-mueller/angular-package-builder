@@ -1,15 +1,7 @@
 import { posix as path } from 'path';
 
-import { SourceFile } from 'ts-simple-ast';
-
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageTransformer } from './src/transformer/angular-package.transformer';
-import { AngularExternalTemplatesFileAnalyzer } from './src/transformer/external-resources/angular-external-templates.file-analyzer';
-import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './src/transformer/external-resources/angular-external-resources.interfaces';
-import { readFile } from './src/utilities/read-file';
-import { AngularExternalTemplatesFileTransformer } from './src/transformer/external-resources/angular-external-templates.file-transformer';
-import { AngularExternalStylesFileAnalyzer } from './src/transformer/external-resources/angular-external-styles.file-analyzer';
-import { AngularExternalStylesFileTransformer } from './src/transformer/external-resources/angular-external-styles.file-transformer';
 
 /**
  * Run Angular Package Builder
@@ -31,7 +23,8 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 	console.dir( angularPackages[ 0 ], { depth: null } );
 
 	const angularPackage = angularPackages[ 0 ];
-	const angularPackageTransformer: AngularPackageTransformer = new AngularPackageTransformer( angularPackage.entry.entryFile );
+	const angularPackageTransformer: AngularPackageTransformer =
+		new AngularPackageTransformer( angularPackage.entry.entryFile, angularPackage.entry.outDir );
 
 	// console.log( angularPackageTransformer.getAllExternalImportSources() );
 	console.log( angularPackageTransformer.sourceFiles.length );
@@ -39,8 +32,12 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 	await angularPackageTransformer.inlineExternalTemplates();
 	await angularPackageTransformer.inlineExternalStyles();
 	angularPackageTransformer.convertLineBreaks();
+	await angularPackageTransformer.save();
 
-	console.dir( angularPackageTransformer.sourceFiles[ 3 ].getText() );
+	// TODO: Save!
+
+	// console.log( Object.keys( angularPackageTransformer.sourceFilesWithPaths ) );
+	// console.log( angularPackageTransformer.sourceFiles[ 3 ].getText() );
 
 	// try {
 

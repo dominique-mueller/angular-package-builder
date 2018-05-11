@@ -1,4 +1,4 @@
-import { posix as path } from 'path';
+import { posix as path, relative } from 'path';
 
 import Project, { SourceFile } from 'ts-simple-ast';
 
@@ -11,6 +11,7 @@ import { AngularExternalTemplatesFileTransformer } from './external-resources/an
 import { readFile } from '../utilities/read-file';
 import { AngularExternalStylesFileAnalyzer } from './external-resources/angular-external-styles.file-analyzer';
 import { AngularExternalStylesFileTransformer } from './external-resources/angular-external-styles.file-transformer';
+import { writeFile } from '../utilities/write-file';
 
 /**
  * Angular Package Transformer
@@ -45,10 +46,30 @@ export class AngularPackageTransformer {
      *
      * @param entryFilePath Path to the package entry file (e.g. 'index.ts' file)
      */
-    constructor( entryFilePath: string ) {
+    constructor( private entryFilePath: string, private outDir: string ) {
         const sourceFiles: Array<string> = getTypeScriptProjectFiles( entryFilePath );
         this.typescriptProject = new Project();
         this.typescriptProject.addExistingSourceFiles( sourceFiles );
+    }
+
+    // TODO: Other folder
+    public async save(): Promise<void> {
+
+        const sourceFiles: Array<SourceFile> = this.sourceFiles;
+        const sourceFilesOutPaths: Array<string> = this.sourceFiles
+            .map( ( sourceFile: SourceFile ): string => {
+                const filePath: string = sourceFile.getFilePath();
+                const relativeFilePath: string = path.relative( path.dirname( this.entryFilePath ), filePath );
+                const movedFilePath: string = path.join( this.outDir, relativeFilePath );
+                return movedFilePath;
+            } );
+
+        await Promise.all(
+            sourceFilesOutPaths.map( async( filePath: string, index: number ): Promise<void> => {
+                await writeFile( filePath, sourceFiles[ index ].getText() );
+            } )
+        );
+
     }
 
     public async inlineExternalTemplates(): Promise<void> {
