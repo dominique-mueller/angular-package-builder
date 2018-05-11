@@ -1,10 +1,10 @@
 import { posix as path } from 'path';
 
-import * as typescript from 'typescript';
 import Project, { SourceFile } from 'ts-simple-ast';
 
 import { deduplicateArray } from '../utilities/deduplicate-array';
 import { AngularImportFileAnalyzer } from './imports/angular-import.file-analyzer';
+import { getTypeScriptProjectFiles } from '../utilities/get-typescript-project-files';
 
 /**
  * Angular Package Transformer
@@ -40,24 +40,9 @@ export class AngularPackageTransformer {
      * @param entryFilePath Path to the package entry file (e.g. 'index.ts' file)
      */
     constructor( entryFilePath: string ) {
-
-        // Create TypeScript program, using the original TypeScript API to get the module resolution feature
-        const absoluteEntryFilePath: string = path.resolve( entryFilePath );
-        const typescriptProgram: typescript.Program = typescript.createProgram( [ absoluteEntryFilePath ], {} );
-
-        // Get all source file paths, excluding all external libraries & typing files
-        const absoluteSourceFilePaths: Array<string> = typescriptProgram.getSourceFiles()
-            .filter( ( sourceFile: typescript.SourceFile ): boolean => {
-                return !typescriptProgram.isSourceFileFromExternalLibrary( sourceFile ) && !sourceFile.isDeclarationFile;
-            } )
-            .map( ( sourceFile: typescript.SourceFile ): string => {
-                return sourceFile.fileName; // This is actually the path ... weird, right?
-            } );
-
-        // Create TypeScript project, and load in the source files discovered above
+        const sourceFiles: Array<string> = getTypeScriptProjectFiles( path.resolve( entryFilePath ) );
         this.typescriptProject = new Project();
-        this.typescriptProject.addExistingSourceFiles( absoluteSourceFilePaths );
-
+        this.typescriptProject.addExistingSourceFiles( sourceFiles );
     }
 
     /**
@@ -74,31 +59,5 @@ export class AngularPackageTransformer {
         const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
         return externalImportSourcesDeduplicated;
     }
-
-    /**
-     * Get all external templates
-     *
-     * @returns External templates
-     */
-    // public getAllExternalTemplates(): Array<AngularExternalTemplate> {
-    //     return this.typescriptProject.getSourceFiles()
-    //         .reduce( ( externalTemplates: Array<AngularExternalTemplate>, sourceFile: SourceFile ): Array<AngularExternalTemplate> => {
-    //             externalTemplates.push( ...AngularExternalResourcesAnayzer.getExternalTemplates( sourceFile ) );
-    //             return externalTemplates;
-    //         }, [] );
-    // }
-
-    /**
-     * Get all external styles
-     *
-     * @returns External styles
-     */
-    // public getAllExternalStyles(): Array<AngularExternalStyles> {
-    //     return this.typescriptProject.getSourceFiles()
-    //         .reduce( ( externalStyles: Array<AngularExternalStyles>, sourceFile: SourceFile ): Array<AngularExternalStyles> => {
-    //             externalStyles.push( ...AngularExternalResourcesAnayzer.getExternalStyles( sourceFile ) );
-    //             return externalStyles;
-    //         }, [] );
-    // }
 
 }
