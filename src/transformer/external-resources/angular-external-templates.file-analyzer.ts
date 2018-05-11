@@ -28,8 +28,6 @@ export class AngularExternalTemplatesFileAnalyzer extends AngularExternalResourc
                         this.getComponentDecoratorPropertyOrThrow( classDeclaration, 'templateUrl' )
                     ];
                 } catch {
-                    // Do nothing
-                } finally {
                     return externalTemplateAssignment;
                 }
             }, [] )
@@ -64,7 +62,7 @@ export class AngularExternalTemplatesFileAnalyzer extends AngularExternalResourc
      * @returns                            External template key
      */
     private static getExternalTemplateAssignmentKeyOrThrow( externalTemplateAssignment: PropertyAssignment ): Identifier {
-        return externalTemplateAssignment.getChildrenOfKind( SyntaxKind.Identifier )[ 0 ] ||
+        return <Identifier> externalTemplateAssignment.getChildrenOfKind( SyntaxKind.Identifier )[ 0 ] ||
             ( () => { throw new Error( 'External template does not have a key.' ) } )();
     }
 
@@ -75,7 +73,7 @@ export class AngularExternalTemplatesFileAnalyzer extends AngularExternalResourc
      * @returns                            External template value
      */
     private static getExternalTemplateAssignmentValueOrThrow( externalTemplateAssignment: PropertyAssignment ): StringLiteral {
-        return externalTemplateAssignment.getChildrenOfKind( SyntaxKind.StringLiteral )[ 0 ] ||
+        return <StringLiteral> externalTemplateAssignment.getChildrenOfKind( SyntaxKind.StringLiteral )[ 0 ] ||
             ( () => { throw new Error( 'External template doesn ot have a vlaue.' ) } )();
     }
 

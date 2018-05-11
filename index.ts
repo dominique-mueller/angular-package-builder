@@ -1,6 +1,15 @@
 import { posix as path } from 'path';
 
+import { SourceFile } from 'ts-simple-ast';
+
 import { AngularPackage } from './src/angular-package';
+import { AngularPackageTransformer } from './src/transformer/angular-package.transformer';
+import { AngularExternalTemplatesFileAnalyzer } from './src/transformer/external-resources/angular-external-templates.file-analyzer';
+import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './src/transformer/external-resources/angular-external-resources.interfaces';
+import { readFile } from './src/utilities/read-file';
+import { AngularExternalTemplatesFileTransformer } from './src/transformer/external-resources/angular-external-templates.file-transformer';
+import { AngularExternalStylesFileAnalyzer } from './src/transformer/external-resources/angular-external-styles.file-analyzer';
+import { AngularExternalStylesFileTransformer } from './src/transformer/external-resources/angular-external-styles.file-transformer';
 
 /**
  * Run Angular Package Builder
@@ -19,9 +28,45 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 			} )
 	);
 
-	console.dir( angularPackages, { depth: null } );
+	console.dir( angularPackages[ 0 ], { depth: null } );
 
+	const angularPackage = angularPackages[ 0 ];
+	const angularPackageTransformer: AngularPackageTransformer = new AngularPackageTransformer( angularPackage.entry.entryFile );
 
+	console.log( angularPackageTransformer.sourceFiles.length );
+	console.log( angularPackageTransformer.getAllExternalImportSources() );
+
+	await Promise.all(
+		angularPackageTransformer.sourceFiles.map( async( sourceFile: SourceFile ): Promise<void> => {
+
+			// External templates
+			const externalTemplates: Array<AngularExternalTemplate> = AngularExternalTemplatesFileAnalyzer.getExternalTemplates( sourceFile );
+			await Promise.all(
+				externalTemplates.map( async( externalTemplate: AngularExternalTemplate ): Promise<void> => {
+					const template: string = await readFile( externalTemplate.template.path );
+					AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
+				} )
+			);
+
+			// External styles
+			const externalStyles: Array<AngularExternalStyles> = AngularExternalStylesFileAnalyzer.getExternalStyles( sourceFile );
+			await Promise.all(
+				externalStyles.map( async( externalStyle: AngularExternalStyles ): Promise<void> => {
+					const styles: Array<string> = await Promise.all(
+						externalStyle.styles.map( ( style: AngularExternalResource ): Promise<string> => {
+							return readFile( style.path );
+						} )
+					);
+					await AngularExternalStylesFileTransformer.inlineExternalStyles( externalStyle, styles );
+				} )
+			);
+
+			// TODO: Line breaks
+
+		} )
+	);
+
+	console.log( angularPackageTransformer.sourceFiles[ 3 ].getFullText() );
 
 	// try {
 

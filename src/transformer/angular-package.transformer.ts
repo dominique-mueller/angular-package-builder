@@ -40,7 +40,7 @@ export class AngularPackageTransformer {
      * @param entryFilePath Path to the package entry file (e.g. 'index.ts' file)
      */
     constructor( entryFilePath: string ) {
-        const sourceFiles: Array<string> = getTypeScriptProjectFiles( path.resolve( entryFilePath ) );
+        const sourceFiles: Array<string> = getTypeScriptProjectFiles( entryFilePath );
         this.typescriptProject = new Project();
         this.typescriptProject.addExistingSourceFiles( sourceFiles );
     }

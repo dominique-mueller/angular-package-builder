@@ -4,9 +4,9 @@ import { CSSTransformer } from '../languages/css.transformer';
 import { SASSTransformer } from '../languages/sass.transformer';
 
 /**
- * Angular External Templates File Transformer
+ * Angular External Styles File Transformer
  */
-export class AngularExternalTemplatesFileTransformer {
+export class AngularExternalStylesFileTransformer {
 
     /**
      * Inline external styles (manipulates source code!)
@@ -19,7 +19,7 @@ export class AngularExternalTemplatesFileTransformer {
         // Prepare styles
         const preparedStyles: Array<string> = await Promise.all(
             styles.map( ( style: string, index: number ): Promise<string> => {
-                return this.prepareStyle( style, getFileType( externalStyles[ 0 ].path ) );
+                return this.prepareStyle( style, getFileType( externalStyles.styles[ index ].path ) );
             } )
         );
 

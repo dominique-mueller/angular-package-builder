@@ -23,22 +23,22 @@ export class AngularPackage {
 	/**
 	 * Primary entry point
 	 */
-    private entry: AngularPackageConfigInternal;
+    public entry: AngularPackageConfigInternal;
 
 	/**
 	 * Secondary entry points
 	 */
-    private secondaryEntries: Array<AngularPackageConfigInternal>;
+    public secondaryEntries: Array<AngularPackageConfigInternal>;
 
 	/**
 	 * Custom TypeScript compiler options
 	 */
-    private typescriptCompilerOptions: { [ option: string ]: any };
+    public typescriptCompilerOptions: { [ option: string ]: any };
 
 	/**
 	 * Custom Angular compiler options
 	 */
-    private angularCompilerOptions: { [ option: string ]: any };
+    public angularCompilerOptions: { [ option: string ]: any };
 
     public async withConfig( absoluteAngularPackageJsonPath: string ): Promise<void> {
 

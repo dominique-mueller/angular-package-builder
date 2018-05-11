@@ -28,8 +28,6 @@ export class AngularExternalStylesFileAnalyzer extends AngularExternalResourcesF
                         this.getComponentDecoratorPropertyOrThrow( classDeclaration, 'styleUrls' )
                     ];
                 } catch {
-                    // Do nothing
-                } finally {
                     return externalStylesAssignment;
                 }
             }, [] )
@@ -68,7 +66,7 @@ export class AngularExternalStylesFileAnalyzer extends AngularExternalResourcesF
      * @returns                          External styles key
      */
     private static getExternalStylesAssignmentKeyOrThrow( externalStylesAssignment: PropertyAssignment ): Identifier {
-        return externalStylesAssignment.getChildrenOfKind( SyntaxKind.Identifier )[ 0 ] ||
+        return <Identifier> externalStylesAssignment.getChildrenOfKind( SyntaxKind.Identifier )[ 0 ] ||
             ( () => { throw new Error( 'External template does not have a key.' ) } )();
     }
 
@@ -80,7 +78,7 @@ export class AngularExternalStylesFileAnalyzer extends AngularExternalResourcesF
      */
     private static getExternalStylesAssignmentValuesOrThrow( externalStylesAssignment: PropertyAssignment ): Array<StringLiteral> {
         const externalStylesAssignmentValue: ArrayLiteralExpression =
-            externalStylesAssignment.getChildrenOfKind( SyntaxKind.ArrayLiteralExpression )[ 0 ] ||
+            <ArrayLiteralExpression> externalStylesAssignment.getChildrenOfKind( SyntaxKind.ArrayLiteralExpression )[ 0 ] ||
             ( () => { throw new Error( 'External template doesn ot have a vlaue.' ) } )();
         const externalStylesAssignmentValues: Array<StringLiteral> = <Array<StringLiteral>> externalStylesAssignmentValue.getElements();
         return externalStylesAssignmentValues;
