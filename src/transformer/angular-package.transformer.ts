@@ -3,10 +3,9 @@ import { posix as path } from 'path';
 import * as typescript from 'typescript';
 import Project, { SourceFile } from 'ts-simple-ast';
 
-import { AngularFileImportAnalyzer } from './angular-file-import.analyzer';
-import { AngularFileExternalResourcesAnayzer } from './angular-file-external-resources.analyzer';
 import { deduplicateArray } from '../utilities/deduplicate-array';
-import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './angular-file-external-resources.interfaces';
+import { AngularImportAnalyzer } from './angular-import-analyzer';
+import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './angular-external-resources-analyzer.interfaces';
 
 /**
  * Angular Package Transformer
@@ -60,18 +59,16 @@ export class AngularPackageTransformer {
     /**
      * Get list of all external imports
      */
-    public getExternalImports(): Array<string> {
-
-        // Get external imports from all project files, as a flattened list
-        const externalImports: Array<string> = this.typescriptProject.getSourceFiles()
+    public getAllExternalImportSources(): Array<string> {
+        const externalImportSources: Array<string> = this.typescriptProject.getSourceFiles()
             .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
-                externalImports.push( ...AngularFileImportAnalyzer.getExternalImportSources( sourceFile ) );
-                return externalImports;
+                return [
+                    ...externalImports,
+                    ...AngularImportAnalyzer.getExternalImportSources( sourceFile ),
+                ];
             }, [] );
-
-        // Deduplicate external imports
-        return deduplicateArray( externalImports );
-
+        const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
+        return externalImportSourcesDeduplicated;
     }
 
     /**
@@ -79,26 +76,26 @@ export class AngularPackageTransformer {
      *
      * @returns External templates
      */
-    public getAllExternalTemplates(): Array<AngularExternalTemplate> {
-        return this.typescriptProject.getSourceFiles()
-            .reduce( ( externalTemplates: Array<AngularExternalTemplate>, sourceFile: SourceFile ): Array<AngularExternalTemplate> => {
-                externalTemplates.push( ...AngularFileExternalResourcesAnayzer.getExternalTemplates( sourceFile ) );
-                return externalTemplates;
-            }, [] );
-    }
+    // public getAllExternalTemplates(): Array<AngularExternalTemplate> {
+    //     return this.typescriptProject.getSourceFiles()
+    //         .reduce( ( externalTemplates: Array<AngularExternalTemplate>, sourceFile: SourceFile ): Array<AngularExternalTemplate> => {
+    //             externalTemplates.push( ...AngularExternalResourcesAnayzer.getExternalTemplates( sourceFile ) );
+    //             return externalTemplates;
+    //         }, [] );
+    // }
 
     /**
      * Get all external styles
      *
      * @returns External styles
      */
-    public getAllExternalStyles(): Array<AngularExternalStyles> {
-        return this.typescriptProject.getSourceFiles()
-            .reduce( ( externalStyles: Array<AngularExternalStyles>, sourceFile: SourceFile ): Array<AngularExternalStyles> => {
-                externalStyles.push( ...AngularFileExternalResourcesAnayzer.getExternalStyles( sourceFile ) );
-                return externalStyles;
-            }, [] );
-    }
+    // public getAllExternalStyles(): Array<AngularExternalStyles> {
+    //     return this.typescriptProject.getSourceFiles()
+    //         .reduce( ( externalStyles: Array<AngularExternalStyles>, sourceFile: SourceFile ): Array<AngularExternalStyles> => {
+    //             externalStyles.push( ...AngularExternalResourcesAnayzer.getExternalStyles( sourceFile ) );
+    //             return externalStyles;
+    //         }, [] );
+    // }
 
     /**
      * Rewrite external template to internal one (manipulates source code!)

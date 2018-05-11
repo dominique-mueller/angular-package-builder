@@ -64,7 +64,7 @@ export class AngularPackage {
 
 		// Get secondary entry information
 		this.secondaryEntries = ( angularPackageJson.secondaryEntries || [] )
-			.map( ( secondaryEntry: AngularSubPackageConfig ) => {
+			.map( ( secondaryEntry: AngularSubPackageConfig ): AngularPackageConfigInternal => {
 
 				const absoluteSecondaryEntryFilePath: string =
 					path.join( path.dirname( absoluteAngularPackageJsonPath ), secondaryEntry.entryFile );
