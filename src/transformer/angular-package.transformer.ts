@@ -1,4 +1,4 @@
-import { posix as path, relative } from 'path';
+import { posix as path } from 'path';
 
 import Project, { SourceFile } from 'ts-simple-ast';
 
@@ -12,6 +12,7 @@ import { readFile } from '../utilities/read-file';
 import { AngularExternalStylesFileAnalyzer } from './external-resources/angular-external-styles.file-analyzer';
 import { AngularExternalStylesFileTransformer } from './external-resources/angular-external-styles.file-transformer';
 import { writeFile } from '../utilities/write-file';
+import { AngularPackage } from '../angular-package';
 
 /**
  * Angular Package Transformer
@@ -42,12 +43,19 @@ export class AngularPackageTransformer {
     private readonly typescriptProject: Project;
 
     /**
+     * Angular Package
+     */
+    private readonly angularPackage: AngularPackage;
+
+    /**
      * Constructor
      *
      * @param entryFilePath Path to the package entry file (e.g. 'index.ts' file)
      */
-    constructor( private entryFilePath: string, private outDir: string ) {
-        const sourceFiles: Array<string> = getTypeScriptProjectFiles( entryFilePath );
+    constructor( angularPackage: AngularPackage ) {
+        this.angularPackage = angularPackage;
+        const absoluteEntryPath: string = path.join( this.angularPackage.cwd, this.angularPackage.entryFile );
+        const sourceFiles: Array<string> = getTypeScriptProjectFiles( absoluteEntryPath );
         this.typescriptProject = new Project();
         this.typescriptProject.addExistingSourceFiles( sourceFiles );
     }
@@ -59,8 +67,10 @@ export class AngularPackageTransformer {
         const sourceFilesOutPaths: Array<string> = this.sourceFiles
             .map( ( sourceFile: SourceFile ): string => {
                 const filePath: string = sourceFile.getFilePath();
-                const relativeFilePath: string = path.relative( path.dirname( this.entryFilePath ), filePath );
-                const movedFilePath: string = path.join( this.outDir, relativeFilePath );
+                const absoluteEntryPath: string = path.join( this.angularPackage.cwd, this.angularPackage.entryFile );
+                const absoluteOutputPath: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir );
+                const relativeFilePath: string = path.relative( path.dirname( absoluteEntryPath ), filePath );
+                const movedFilePath: string = path.join( absoluteOutputPath, 'temp', 'transformed', relativeFilePath );
                 return movedFilePath;
             } );
 

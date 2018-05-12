@@ -2,6 +2,7 @@ import { posix as path } from 'path';
 
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageTransformer } from './src/transformer/angular-package.transformer';
+import { AngularPackageCompiler } from './src/compiler/angular-package.compiler';
 
 /**
  * Run Angular Package Builder
@@ -23,8 +24,7 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 	console.dir( angularPackages[ 0 ], { depth: null } );
 
 	const angularPackage = angularPackages[ 0 ];
-	const angularPackageTransformer: AngularPackageTransformer =
-		new AngularPackageTransformer( angularPackage.entry.entryFile, angularPackage.entry.outDir );
+	const angularPackageTransformer: AngularPackageTransformer = new AngularPackageTransformer( angularPackage );
 
 	// console.log( angularPackageTransformer.getAllExternalImportSources() );
 	console.log( angularPackageTransformer.sourceFiles.length );
@@ -33,6 +33,10 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 	await angularPackageTransformer.inlineExternalStyles();
 	angularPackageTransformer.convertLineBreaks();
 	await angularPackageTransformer.save();
+
+	const angularPackageCompiler: AngularPackageCompiler = new AngularPackageCompiler( angularPackage );
+	await angularPackageCompiler.compile( 'esm2015' );
+	await angularPackageCompiler.compile( 'esm5' );
 
 	// TODO: Save!
 

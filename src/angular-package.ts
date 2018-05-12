@@ -1,14 +1,6 @@
 import { posix as path } from 'path';
-import { AngularPackageConfig, AngularSubPackageConfig } from './config.interface';
+import { AngularPackageConfig } from './config.interface';
 import { readFile } from './utilities/read-file';
-
-// TODO: Find a better name?
-export interface AngularPackageConfigInternal {
-    entryFile: string;
-    outDir: string;
-    packageName: string;
-    fileName: string;
-}
 
 /**
  * Angular Package
@@ -18,17 +10,22 @@ export class AngularPackage {
 	/**
 	 * Angular Package project directory
 	 */
-    private cwd: string;
+    public cwd: string;
 
-	/**
-	 * Primary entry point
-	 */
-    public entry: AngularPackageConfigInternal;
+    /**
+     * Entry file path (relative to cwd)
+     */
+    public entryFile: string;
 
-	/**
-	 * Secondary entry points
-	 */
-    public secondaryEntries: Array<AngularPackageConfigInternal>;
+    /**
+     * Output directory path (relative to cwd)
+     */
+    public outDir: string;
+
+    /**
+     * Package name
+     */
+    public packageName: string;
 
 	/**
 	 * Custom TypeScript compiler options
@@ -39,6 +36,8 @@ export class AngularPackage {
 	 * Custom Angular compiler options
 	 */
     public angularCompilerOptions: { [ option: string ]: any };
+
+    public dependencies: any;
 
     public async withConfig( absoluteAngularPackageJsonPath: string ): Promise<void> {
 
@@ -51,22 +50,20 @@ export class AngularPackage {
         const packageJson: any = await readFile( absolutePackageJsonPath );
 
         // Get primary entry information
-        const entryFile: string = path.join( this.cwd, angularPackageJson.entryFile );
-        const fileName: string = packageJson.name.split( '/' ).pop();
-        const outDir: string = path.join( this.cwd, angularPackageJson.outDir );
-        const packageName: string = packageJson.name;
-        this.entry = { entryFile, fileName, outDir, packageName };
+        this.entryFile = path.normalize( angularPackageJson.entryFile );
+        this.outDir = path.normalize( angularPackageJson.outDir );
+        this.packageName = packageJson.name;
 
         // Get secondary entry information
-        this.secondaryEntries = ( angularPackageJson.secondaryEntries || [] )
-            .map( ( secondaryEntry: AngularSubPackageConfig ): AngularPackageConfigInternal => {
-                const entryFile: string = path.join( this.cwd, secondaryEntry.entryFile );
-                const secondaryEntryDir: string = path.relative( path.dirname( this.entry.entryFile ), path.dirname( entryFile ) );
-                const packageName: string = path.join( this.entry.packageName, secondaryEntryDir );
-                const fileName: string = packageName.split( '/' ).pop();
-                const outDir: string = path.join( this.entry.outDir, secondaryEntryDir );
-                return { entryFile, fileName, outDir, packageName };
-            } );
+        // this.secondaryEntries = ( angularPackageJson.secondaryEntries || [] )
+        //     .map( ( secondaryEntry: AngularSubPackageConfig ): AngularPackageConfigInternal => {
+        //         const entryFile: string = path.normalize( secondaryEntry.entryFile );
+        //         const relativeEntryDir: string = path.relative( path.dirname( this.entry.entryFile ), path.dirname( entryFile ) );
+        //         const outDir: string = path.join( this.entry.outDir, relativeEntryDir );
+        //         const packageName: string = [ this.entry.packageName, relativeEntryDir ].join( '/' );
+        //         const fileName: string = packageName.split( '/' ).pop();
+        //         return { entryFile, fileName, outDir, packageName };
+        //     } );
 
         // Get compiler options
         this.typescriptCompilerOptions = angularPackageJson.typescriptCompilerOptions || {};
