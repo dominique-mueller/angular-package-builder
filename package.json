@@ -55,7 +55,7 @@
 		"globby": "8.0.x",
 		"html-minifier": "3.5.x",
 		"jsonschema": "1.2.x",
-		"memfs": "2.8.x",
+		"memfs": "2.9.x",
 		"proxyquire": "2.0.x",
 		"rollup": "0.57.x",
 		"rollup-plugin-commonjs": "9.1.x",
