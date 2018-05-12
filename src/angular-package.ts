@@ -1,6 +1,8 @@
 import { posix as path } from 'path';
 import { AngularPackageConfig } from './config.interface';
 import { readFile } from './utilities/read-file';
+import { getDependencyMap } from './utilities/get-dependency-map';
+import { deduplicateArray } from './utilities/deduplicate-array';
 
 /**
  * Angular Package
@@ -37,7 +39,10 @@ export class AngularPackage {
 	 */
     public angularCompilerOptions: { [ option: string ]: any };
 
-    public dependencies: any;
+    /**
+     * Dependencies (name -> id)
+     */
+    public dependencies: { [ dependency: string ]: string };
 
     public async withConfig( absoluteAngularPackageJsonPath: string ): Promise<void> {
 
@@ -69,9 +74,12 @@ export class AngularPackage {
         this.typescriptCompilerOptions = angularPackageJson.typescriptCompilerOptions || {};
         this.angularCompilerOptions = angularPackageJson.angularCompilerOptions || {};
 
-        // TODO: Dependencies
-        // TODO: Angular Package JSON Schema Validation
-        // TODO: Error Handling
+        // Get dependencies
+        const dependencies: Array<string> = [
+            ...Object.keys( packageJson.dependencies || {} ),
+            ...Object.keys( packageJson.peerDependencies || {} )
+        ];
+        this.dependencies = getDependencyMap( deduplicateArray( dependencies ) );
 
     }
 

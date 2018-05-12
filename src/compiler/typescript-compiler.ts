@@ -6,9 +6,9 @@ import { main as angularCompilerCli } from '@angular/compiler-cli/src/main';
 import { getInstalledDependencyVersion } from '../utilities/get-installed-dependency-version';
 
 /**
- * Angular Compiler
+ * TypeScript Compiler
  */
-export class AngularCompiler {
+export class TypeScriptCompiler {
 
     /**
      * Compile

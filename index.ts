@@ -3,6 +3,7 @@ import { posix as path } from 'path';
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageTransformer } from './src/transformer/angular-package.transformer';
 import { AngularPackageCompiler } from './src/compiler/angular-package.compiler';
+import { AngularPackageBundler } from './src/bundler/angular-package.bundler';
 
 /**
  * Run Angular Package Builder
@@ -38,7 +39,10 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 	await angularPackageCompiler.compile( 'esm2015' );
 	await angularPackageCompiler.compile( 'esm5' );
 
-	// TODO: Save!
+	const angularPackageBundler: AngularPackageBundler = new AngularPackageBundler( angularPackage );
+	await angularPackageBundler.bundle( 'fesm2015' );
+	await angularPackageBundler.bundle( 'fesm5' );
+	await angularPackageBundler.bundle( 'umd' );
 
 	// console.log( Object.keys( angularPackageTransformer.sourceFilesWithPaths ) );
 	// console.log( angularPackageTransformer.sourceFiles[ 3 ].getText() );

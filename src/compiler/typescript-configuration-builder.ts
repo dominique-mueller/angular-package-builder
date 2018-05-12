@@ -8,24 +8,24 @@ export class TypeScriptConfigurationBuilder {
 	/**
 	 * List of entry files
 	 */
-	private files: Array<string>;
+	private readonly files: Array<string>;
 
 	/**
 	 * TypeScript compiler options
 	 */
-	private compilerOptions: any;
+	private readonly compilerOptions: any;
 
 	/**
 	 * Angualr compiler options
 	 */
-	private angularCompilerOptions: any;
+	private readonly angularCompilerOptions: any;
 
 	/**
 	 * TypeScript compilation targets
 	 */
 	private static readonly compilationTargets: { [ target: string ]: string } = {
-		'esm2015': 'ES2015',
-		'esm5': 'ES5'
+		esm2015: 'ES2015',
+		esm5: 'ES5'
 	};
 
 	/**
@@ -43,8 +43,8 @@ export class TypeScriptConfigurationBuilder {
 	 * @param   files Entry files
 	 * @returns       This instance of the TypeScript configuration builder
 	 */
-	public addEntryFiles( files: Array<string> ): TypeScriptConfigurationBuilder {
-		this.files = [ ...this.files, ...files ];
+	public withEntryFiles( files: Array<string> ): TypeScriptConfigurationBuilder {
+		this.files.push( ...files );
 		return this;
 	}
 
@@ -78,9 +78,9 @@ export class TypeScriptConfigurationBuilder {
 	 * @returns             This instance of the TypeScript configuration builder
 	 */
 	public withName( packageName: string ): TypeScriptConfigurationBuilder {
-		const fileName: string = packageName.split( '/' ).pop();
+		const fileName: string = `${ packageName.split( '/' ).pop() }.js`;
 		this.angularCompilerOptions.flatModuleId = packageName; // Name of the package, used when importing from the library
-		this.angularCompilerOptions.flatModuleOutFile = `${ fileName }.js`; // Name of the output file
+		this.angularCompilerOptions.flatModuleOutFile = fileName; // Name of the output file
 		return this;
 	}
 
