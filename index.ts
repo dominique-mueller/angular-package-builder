@@ -33,8 +33,8 @@ export class AngularPackageBuilderOrchestrator {
 				angularPackages.forEach( ( angularPackage: Array<AngularPackage>, index: number ) => {
 					console.log( '    PACKAGE', index + 1 );
 					angularPackage.forEach( ( subPackage: AngularPackage, index: number ) => {
-						console.log( '      SUB-PACKAGE', index + 1 );
-						console.log( `        -> ${ subPackage.packageName }` );
+						// console.log( '      SUB-PACKAGE', index + 1 );
+						console.log( `      -> ${ subPackage.packageName }` );
 						// console.dir( subPackage, { depth: 2 } );
 					} );
 				} );
