@@ -2,25 +2,66 @@ import { posix as path } from 'path';
 
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageBuilder } from './src/angular-package-builder';
+import { AngularPackageConfig, AngularSubPackageConfig, AngularPackageOptions } from './src/config.interface';
+import { readFile } from './src/utilities/read-file';
 
 /**
  * Run Angular Package Builder
  */
-export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<string> ): Promise<void> {
+export async function runAngularPackageBuilder( angularPackageJsonUrls: Array<string> ): Promise<void> {
 
 	const cwd: string = process.cwd()
 		.replace( /\\/g, '/' );
 
-	const angularPackages: Array<AngularPackage> = await Promise.all(
+	const angularPackagesWithSubPackages: Array<Array<AngularPackage>> = await Promise.all(
 		angularPackageJsonUrls
-			.map( async( angularPackageJsonUrl: string ): Promise<any> => {
-				const angularPackage: AngularPackage = new AngularPackage();
-				await angularPackage.withConfig( path.join( cwd, angularPackageJsonUrl ) );
-				return angularPackage;
+			.map( async ( angularPackageJsonUrl: string ): Promise<Array<AngularPackage>> => {
+
+				// Read angular package config
+				const angularPackageJson: AngularPackageConfig = await readFile( angularPackageJsonUrl );
+				const angularPackageCwd: string = path.dirname( path.join( cwd, angularPackageJsonUrl ) );
+
+				// Get configuration
+				const angularPackageOptions: AngularPackageOptions = {
+					entryFile: angularPackageJson.entryFile,
+					outDir: angularPackageJson.outDir,
+					typescriptCompilerOptions: angularPackageJson.typescriptCompilerOptions,
+					angularCompilerOptions: angularPackageJson.angularCompilerOptions,
+					dependencies: angularPackageJson.dependencies
+				};
+
+				// Create angular package
+				const primaryAngularPackage: AngularPackage = new AngularPackage();
+				await primaryAngularPackage.withConfig( angularPackageCwd, angularPackageOptions );
+
+				// Create angular packages for secondary entry points
+				const secondaryAngularPackages: Array<AngularPackage> = await Promise.all(
+					( angularPackageJson.secondaryEntries || [] ).map( async ( secondaryEntry: AngularSubPackageConfig ): Promise<AngularPackage> => {
+
+						// Get configuration
+						const angularPackageOptions: AngularPackageOptions = {
+							entryFile: secondaryEntry.entryFile,
+							outDir: angularPackageJson.outDir,
+							typescriptCompilerOptions: angularPackageJson.typescriptCompilerOptions,
+							angularCompilerOptions: angularPackageJson.angularCompilerOptions,
+							dependencies: angularPackageJson.dependencies
+						};
+
+						// Create angular package
+						const angularPackage: AngularPackage = new AngularPackage();
+						await angularPackage.withConfig( angularPackageCwd, angularPackageOptions );
+						return angularPackage;
+
+					} )
+				);
+
+				return [ primaryAngularPackage, ...secondaryAngularPackages ];
+
 			} )
 	);
+	const angularPackages: Array<AngularPackage> = [].concat( ...angularPackagesWithSubPackages );
 
-	console.dir( angularPackages[ 0 ], { depth: 2 } );
+	console.dir( angularPackages, { depth: 1 } );
 
 	const angularPackage = angularPackages[ 0 ];
 	await AngularPackageBuilder.package( angularPackage );
@@ -87,5 +128,5 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 
 runAngularPackageBuilder( [
 	'./test/my-library/.angular-package.json',
-	// './test/my-second-library/.angular-package.json',
+	'./test/my-second-library/.angular-package.json',
 ] );

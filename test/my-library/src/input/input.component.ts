@@ -1,5 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 
+import { WindowRef } from 'my-second-library';
+
 import { LIBDataService } from '../data/data.service';
 
 /**
@@ -60,7 +62,7 @@ export class LIBInputComponent implements AfterViewInit {
 	 * @param elementRef  - Reference to the component's element
 	 * @param dataService - Data service
 	 */
-	constructor( elementRef: ElementRef, dataService: LIBDataService ) {
+	constructor( elementRef: ElementRef, dataService: LIBDataService, private windowRef: WindowRef ) {
 		this.label = '';
 		this.modelChange = new EventEmitter<string>();
 		this.isInitialized = false;

@@ -3,7 +3,7 @@ import { posix as path } from 'path';
 import * as typescript from 'typescript';
 import Project, { SourceFile } from 'ts-simple-ast';
 
-import { AngularPackageConfig } from './config.interface';
+import { AngularPackageOptions } from './config.interface';
 import { readFile } from './utilities/read-file';
 import { getDependencyMap } from './utilities/get-dependency-map';
 import { deduplicateArray } from './utilities/deduplicate-array';
@@ -59,35 +59,22 @@ export class AngularPackage {
      */
     public typescriptProject: Project;
 
-    public async withConfig( absoluteAngularPackageJsonPath: string ): Promise<void> {
+    public async withConfig( cwd: string, angularPackageOptions: AngularPackageOptions ): Promise<void> {
 
-        this.cwd = path.dirname( absoluteAngularPackageJsonPath );
+        this.cwd = cwd;
 
         // Read files
-        // TODO: Error handling
-        const angularPackageJson: AngularPackageConfig = await readFile( absoluteAngularPackageJsonPath );
         const absolutePackageJsonPath: string = path.join( this.cwd, 'package.json' );
         const packageJson: any = await readFile( absolutePackageJsonPath );
 
         // Get primary entry information
-        this.entryFile = path.normalize( angularPackageJson.entryFile );
-        this.outDir = path.normalize( angularPackageJson.outDir );
-        this.packageName = packageJson.name;
-
-        // Get secondary entry information
-        // this.secondaryEntries = ( angularPackageJson.secondaryEntries || [] )
-        //     .map( ( secondaryEntry: AngularSubPackageConfig ): AngularPackageConfigInternal => {
-        //         const entryFile: string = path.normalize( secondaryEntry.entryFile );
-        //         const relativeEntryDir: string = path.relative( path.dirname( this.entry.entryFile ), path.dirname( entryFile ) );
-        //         const outDir: string = path.join( this.entry.outDir, relativeEntryDir );
-        //         const packageName: string = [ this.entry.packageName, relativeEntryDir ].join( '/' );
-        //         const fileName: string = packageName.split( '/' ).pop();
-        //         return { entryFile, fileName, outDir, packageName };
-        //     } );
+        this.entryFile = path.normalize( angularPackageOptions.entryFile );
+        this.outDir = path.join( angularPackageOptions.outDir, path.dirname( angularPackageOptions.entryFile ) );
+        this.packageName = path.join( packageJson.name, path.dirname( angularPackageOptions.entryFile ) );
 
         // Get compiler options
-        this.typescriptCompilerOptions = angularPackageJson.typescriptCompilerOptions || {};
-        this.angularCompilerOptions = angularPackageJson.angularCompilerOptions || {};
+        this.typescriptCompilerOptions = angularPackageOptions.typescriptCompilerOptions || {};
+        this.angularCompilerOptions = angularPackageOptions.angularCompilerOptions || {};
 
         // Get dependencies
         const dependencies: Array<string> = [
@@ -116,7 +103,7 @@ export class AngularPackage {
         // Get all source file paths, but exclude external modules & typings
         const sourceFilePaths: Array<string> = typescriptProgram.getSourceFiles()
             .filter( ( sourceFile: typescript.SourceFile ): boolean => {
-                return !typescriptProgram.isSourceFileFromExternalLibrary( sourceFile ) && !sourceFile.isDeclarationFile;;
+                return !typescriptProgram.isSourceFileFromExternalLibrary( sourceFile ) && !sourceFile.isDeclarationFile;
             } )
             .map( ( sourceFile: typescript.SourceFile ): string => {
                 return sourceFile.fileName; // This is actually the path ... weird, right?

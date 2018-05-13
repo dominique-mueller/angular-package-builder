@@ -52,6 +52,43 @@ export interface AngularSubPackageConfig {
 
 }
 
+/**
+ * Angular Packages Configuration Interface
+ */
+export interface AngularPackageOptions {
+
+	/**
+	 * Path to the package entry file
+	 */
+	entryFile: string;
+
+	/**
+	 * Output directory
+	 */
+	outDir: string;
+
+	/**
+	 * TypeScript compiler options
+	 */
+	typescriptCompilerOptions?: { [ option: string ]: any };
+
+	/**
+	 * Angular compiler options
+	 */
+	angularCompilerOptions?: { [ option: string ]: any };
+
+	/**
+	 * Map of external dependencies (module name -> global name)
+	 */
+	dependencies?: { [ dependency: string ]: string };
+
+}
+
+
+
+
+
+
 
 
 /**
