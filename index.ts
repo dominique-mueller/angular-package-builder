@@ -14,9 +14,37 @@ export class AngularPackageBuilderOrchestrator {
 		// Process the given angular package json files
 		// This will return a list containing lists of angular packages (first entry is primary, others secondary)
 		const angularPackages: Array<Array<AngularPackage>> = await this.processAngularPackageJsonFiles( angularPackageJsonFilePaths );
+
 		const angularPackagesOrdered: Array<Array<Array<AngularPackage>>> = this.orderAngularPackages( angularPackages );
 
-		console.dir( angularPackagesOrdered, { depth: 4 } );
+		const angularPackagesOrderedOrdered: Array<Array<Array<Array<AngularPackage>>>> =
+			angularPackagesOrdered.map( ( angularPackagesOrdered: Array<Array<AngularPackage>> ) => {
+				return angularPackagesOrdered.map( ( angularPackageOrdered: Array<AngularPackage> ) => {
+					return this.orderAngularSubPackages( angularPackageOrdered );
+				} );
+			} );
+
+		console.log( '### BUILD PLAN ###' );
+		angularPackagesOrderedOrdered.forEach( ( angularPackagesOrdered: Array<Array<Array<AngularPackage>>>, index: number ) => {
+			console.log( '' );
+			console.log( 'RUN', index + 1 );
+			angularPackagesOrdered.forEach( ( angularPackages: Array<Array<AngularPackage>>, index: number ) => {
+				console.log( '  PACKAGES', index + 1 );
+				angularPackages.forEach( ( angularPackage: Array<AngularPackage>, index: number ) => {
+					console.log( '    PACKAGE', index + 1 );
+					angularPackage.forEach( ( subPackage: AngularPackage, index: number ) => {
+						console.log( '      SUB-PACKAGE', index + 1 );
+						console.log( `        -> ${ subPackage.packageName }` );
+						// console.dir( subPackage, { depth: 2 } );
+					} );
+				} );
+			} );
+		} );
+		console.log( '' );
+
+		// console.dir( angularPackagesOrdered, { depth: 4 } );
+		// console.dir( '---' );
+		console.dir( angularPackagesOrderedOrdered, { depth: 4 } );
 
 	}
 
@@ -68,6 +96,51 @@ export class AngularPackageBuilderOrchestrator {
 			} )
 		);
 
+	}
+
+	private static orderAngularSubPackages( angularPackages: Array<AngularPackage> ): Array<Array<AngularPackage>> {
+
+		// Get package names (primary only)
+		const packageNames: Array<string> = angularPackages.map( ( angularPackages ) => {
+			return angularPackages.packageName;
+		} );
+		const packageNamesAlreadyInBuildChain: Array<string> = [];
+
+		const angularPackagesOrdered: Array<Array<AngularPackage>> = [];
+		while ( angularPackages.length !== 0 ) {
+
+			// Filter out angular packages which are ready to be built
+			const angularPackagesReadyForBuild: Array<AngularPackage> = [];
+			angularPackages = angularPackages
+				.filter( ( angularPackage: AngularPackage ) => {
+
+					// Find local import sources
+					const localImportSources: Array<string> = Object
+						.keys( angularPackage.externalImportSources )
+						.filter( ( dependency: string ): boolean => {
+							return packageNames.indexOf( dependency ) !== -1 && packageNamesAlreadyInBuildChain.indexOf( dependency ) === -1;
+						} );
+
+					// If there are no local import sources (left), add it to the build chain
+					if ( localImportSources.length === 0 ) {
+						angularPackagesReadyForBuild.push( angularPackage );
+						return false;
+					} else {
+						return true;
+					}
+
+				} );
+
+			// Add those angular packages to the build chain
+			angularPackagesOrdered.push( angularPackagesReadyForBuild );
+			const packageNamesReadyForBuild: Array<string> = angularPackagesReadyForBuild.map( ( angularPackageReadyForBuild: AngularPackage ): string => {
+				return angularPackageReadyForBuild.packageName;
+			} );
+			packageNamesAlreadyInBuildChain.push( ...packageNamesReadyForBuild );
+
+		}
+
+		return angularPackagesOrdered;
 	}
 
 	private static orderAngularPackages( angularPackages: Array<Array<AngularPackage>> ): Array<Array<Array<AngularPackage>>> {
