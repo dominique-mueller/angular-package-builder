@@ -13,7 +13,7 @@ export async function runAngularPackageBuilder( angularPackageJsonUrls: Array<st
 	const cwd: string = process.cwd()
 		.replace( /\\/g, '/' );
 
-	const angularPackagesWithSubPackages: Array<Array<AngularPackage>> = await Promise.all(
+	let angularPackagesWithSubPackages: Array<Array<AngularPackage>> = await Promise.all(
 		angularPackageJsonUrls
 			.map( async ( angularPackageJsonUrl: string ): Promise<Array<AngularPackage>> => {
 
@@ -61,10 +61,50 @@ export async function runAngularPackageBuilder( angularPackageJsonUrls: Array<st
 	);
 	const angularPackages: Array<AngularPackage> = [].concat( ...angularPackagesWithSubPackages );
 
-	console.dir( angularPackages, { depth: 1 } );
+	console.dir( angularPackagesWithSubPackages, { depth: 2 } );
 
-	const angularPackage = angularPackages[ 0 ];
-	await AngularPackageBuilder.package( angularPackage );
+	const packageNames: Array<string> = angularPackagesWithSubPackages.map( angularPackages => angularPackages[ 0 ].packageName );
+
+	const buildOrder: Array<any> = [];
+	const packageNamesAlreadyInBuildOrder: Array<string> = [];
+
+	while ( angularPackagesWithSubPackages.length !== 0 ) {
+
+		const nextToBuild: Array<Array<AngularPackage>> = [];
+		angularPackagesWithSubPackages = angularPackagesWithSubPackages
+			.reduce( ( packages: Array<Array<AngularPackage>>, angularPackageWithSubPackages: Array<AngularPackage> ) => {
+
+				const intraDependencies: Array<string> = Object
+					.keys( angularPackageWithSubPackages[ 0 ].dependencies )
+					.filter( ( dependency: string ): boolean => {
+						return packageNames.indexOf( dependency ) !== -1;
+					} )
+					.filter( ( dependency: string ): boolean => {
+						return packageNamesAlreadyInBuildOrder.indexOf( dependency ) === -1;
+					} );
+
+				if ( intraDependencies.length === 0 ) {
+					nextToBuild.push( angularPackageWithSubPackages );
+				} else {
+					packages.push( angularPackageWithSubPackages );
+				}
+
+				return packages;
+
+			}, [] );
+
+		buildOrder.push( nextToBuild );
+		nextToBuild.forEach( ( angularPackageWithSubPackages: Array<AngularPackage> ) => {
+			packageNamesAlreadyInBuildOrder.push( angularPackageWithSubPackages[ 0 ].packageName );
+		} );
+
+	}
+
+	console.log( 'BUILDS NO', buildOrder.length );
+	console.dir( buildOrder, { depth: 3 } );
+
+	// const angularPackage = angularPackages[ 0 ];
+	// await AngularPackageBuilder.package( angularPackage );
 
 	// try {
 
