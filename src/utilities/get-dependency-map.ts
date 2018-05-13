@@ -1,6 +1,6 @@
-import { angularDependencies } from '../config/angular.dependencies';
 import { getSafeDependencyName } from '../utilities/get-safe-dependency-name';
-import { rxjsDependencies } from '../config/rxjs.dependencies';
+import { angularDependencies } from '../bundler/dependencies/angular.dependencies';
+import { rxjsDependencies } from '../bundler/dependencies/rxjs.dependencies';
 
 /**
  * Get full dependency map

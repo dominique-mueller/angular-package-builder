@@ -1,6 +1,6 @@
 import { posix as path } from 'path';
 
-import { InputOptions, OutputOptions, RollupWarning } from 'rollup';
+import { InputOptions, OutputOptions, RollupWarning, ModuleFormat } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
 import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
@@ -22,7 +22,7 @@ export class RollupConfigurationBuilder {
     /**
 	 * Rollup bundling targets
 	 */
-	private static readonly compilationTargets: { [ target: string ]: string } = {
+	private static readonly bundlingTargets: { [ target: string ]: ModuleFormat } = {
         fesm2015: 'es',
         fesm5: 'es',
         umd: 'umd'
@@ -37,13 +37,13 @@ export class RollupConfigurationBuilder {
     }
 
     /**
-     * Add entry file
+     * Add package name
      *
-     * @param   entryFile Entry file
-     * @returns          This instance of the Rollup configuration builder
+     * @param   packageName Package name
+     * @returns             This instance of the Rollup configuration builder
      */
-    public withEntryFile( entryFile: string ): RollupConfigurationBuilder {
-        this.inputOptions.input = entryFile;
+    public withName( packageName: string ): RollupConfigurationBuilder {
+        this.outputOptions.name = packageName.split( '/' ).pop();
         return this;
     }
 
@@ -53,20 +53,20 @@ export class RollupConfigurationBuilder {
      * @param   dependencies Dependencies
      * @returns              This instance of the Rollup configuration builder
      */
-    public withDependencies( dependencies: any ): RollupConfigurationBuilder {
+    public excludeDependencies( dependencies: any ): RollupConfigurationBuilder {
         this.inputOptions.external = Object.keys( dependencies );
         this.outputOptions.globals = dependencies;
         return this;
     }
 
     /**
-     * Add package name
+     * Add entry file
      *
-     * @param   packageName Package name
-     * @returns             This instance of the Rollup configuration builder
+     * @param   entryFile Entry file
+     * @returns          This instance of the Rollup configuration builder
      */
-    public withName( packageName: string ): RollupConfigurationBuilder {
-        this.outputOptions.name = packageName.split( '/' ).pop(); // Required for UMD bundles
+    public fromEntryFile( entryFile: string ): RollupConfigurationBuilder {
+        this.inputOptions.input = entryFile;
         return this;
     }
 
@@ -77,7 +77,20 @@ export class RollupConfigurationBuilder {
      * @returns             This instance of the Rollup configuration builder
      */
     public toTarget( target: 'fesm2015' | 'fesm5' | 'umd' ): RollupConfigurationBuilder {
-        this.outputOptions.format = <any> RollupConfigurationBuilder.compilationTargets[ target ];
+        this.outputOptions.format = RollupConfigurationBuilder.bundlingTargets[ target ];
+        return this;
+    }
+
+    /**
+     * Add bundling output directory
+     *
+     * @param   outDir Output directory
+     * @returns             This instance of the Rollup configuration builder
+     */
+    public toOutDir( outDir: string ): RollupConfigurationBuilder {
+        const bundleSuffix: string = this.outputOptions.format === 'umd' ? '.umd' : '';
+        const fileName: string = `${ this.outputOptions.name }${ bundleSuffix }.js`;
+        this.outputOptions.file = path.join( outDir, fileName );
         return this;
     }
 
@@ -116,12 +129,6 @@ export class RollupConfigurationBuilder {
                 if ( warning.code === 'UNUSED_EXTERNAL_IMPORT' ) {
                     return;
                 }
-
-                // Print prettier warning log
-                // const betterWarningMessage: string = warning.message
-                // 	.replace( /\\/g, '/' )
-                // 	.replace( sourcePath.split( path.sep ).slice( -2 ).join( path.sep ), config.entry.folder.split( path.sep ).pop() );
-                // Logger.warn( `${ warning.code } – ${ betterWarningMessage } (${ target } target)` );
 
             },
             preserveSymlinks: true, // No idea why this is required, though ...

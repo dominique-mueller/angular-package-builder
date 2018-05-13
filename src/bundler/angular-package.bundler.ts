@@ -2,7 +2,7 @@ import { posix as path } from 'path';
 
 import { AngularPackage } from '../angular-package';
 import { RollupConfigurationBuilder } from './rollup-configuration-builder';
-import { RollupBundler } from './rollup-bundler';
+import { OutputChunk, rollup, InputOptions, OutputOptions } from 'rollup';
 
 /**
  * Angular Package Bundler
@@ -23,7 +23,36 @@ export class AngularPackageBundler {
         this.angularPackage = angularPackage;
     }
 
+    /**
+     * Create bundle
+     *
+     * @param   target Bundle target
+     * @returns        Promise, resolves when done
+     */
     public async bundle( target: 'fesm2015' | 'fesm5' | 'umd' ): Promise<void> {
+
+        // Get configuration
+        const { inputOptions, outputOptions }: {
+            inputOptions: InputOptions,
+            outputOptions: OutputOptions
+        } = this.buildRollupConfiguration( target );
+
+        // Create and write bundle
+        const bundle: OutputChunk = <OutputChunk> await rollup( inputOptions );
+        await bundle.write( outputOptions );
+
+    }
+
+    /**
+     * Build rollup configuration
+     *
+     * @param   target Bundle target
+     * @returns        Rollup input & output configuration
+     */
+    private buildRollupConfiguration( target: 'fesm2015' | 'fesm5' | 'umd' ): {
+        inputOptions: InputOptions,
+        outputOptions: OutputOptions
+    } {
 
         // Collect information
         const entryFileName: string = `${ this.angularPackage.packageName.split( '/' ).pop() }.js`;
@@ -35,15 +64,13 @@ export class AngularPackageBundler {
             : path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', target );
 
         // Build Rollup configuration
-        const { inputOptions, outputOptions }: any = new RollupConfigurationBuilder()
-            .withEntryFile( entryFile )
-            .withDependencies( this.angularPackage.dependencies )
+        return new RollupConfigurationBuilder()
             .withName( this.angularPackage.packageName )
+            .excludeDependencies( this.angularPackage.dependencies )
+            .fromEntryFile( entryFile )
             .toTarget( target )
+            .toOutDir( outDir )
             .build();
-
-        // Bundle
-        await RollupBundler.bundle( inputOptions, outputOptions, outDir );
 
     }
 

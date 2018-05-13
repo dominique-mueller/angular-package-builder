@@ -1,9 +1,7 @@
 import { posix as path } from 'path';
 
 import { AngularPackage } from './src/angular-package';
-import { AngularPackageTransformer } from './src/transformer/angular-package.transformer';
-import { AngularPackageCompiler } from './src/compiler/angular-package.compiler';
-import { AngularPackageBundler } from './src/bundler/angular-package.bundler';
+import { AngularPackageBuilder } from './src/angular-package-builder';
 
 /**
  * Run Angular Package Builder
@@ -22,27 +20,25 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 			} )
 	);
 
-	console.dir( angularPackages[ 0 ], { depth: null } );
+	console.dir( angularPackages[ 0 ], { depth: 2 } );
 
 	const angularPackage = angularPackages[ 0 ];
-	const angularPackageTransformer: AngularPackageTransformer = new AngularPackageTransformer( angularPackage );
+	await AngularPackageBuilder.package( angularPackage );
 
-	// console.log( angularPackageTransformer.getAllExternalImportSources() );
-	console.log( angularPackageTransformer.sourceFiles.length );
-
-	await angularPackageTransformer.inlineExternalTemplates();
-	await angularPackageTransformer.inlineExternalStyles();
-	angularPackageTransformer.convertLineBreaks();
-	await angularPackageTransformer.save();
-
-	const angularPackageCompiler: AngularPackageCompiler = new AngularPackageCompiler( angularPackage );
-	await angularPackageCompiler.compile( 'esm2015' );
-	await angularPackageCompiler.compile( 'esm5' );
-
-	const angularPackageBundler: AngularPackageBundler = new AngularPackageBundler( angularPackage );
-	await angularPackageBundler.bundle( 'fesm2015' );
-	await angularPackageBundler.bundle( 'fesm5' );
-	await angularPackageBundler.bundle( 'umd' );
+	/**
+     * Get list of all external imports
+     */
+    // public getAllExternalImportSources(): Array<string> {
+    //     const externalImportSources: Array<string> = this.sourceFiles
+    //         .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
+    //             return [
+    //                 ...externalImports,
+    //                 ...AngularImportFileAnalyzer.getExternalImportSources( sourceFile ),
+    //             ];
+    //         }, [] );
+    //     const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
+    //     return externalImportSourcesDeduplicated;
+    // }
 
 	// console.log( Object.keys( angularPackageTransformer.sourceFilesWithPaths ) );
 	// console.log( angularPackageTransformer.sourceFiles[ 3 ].getText() );

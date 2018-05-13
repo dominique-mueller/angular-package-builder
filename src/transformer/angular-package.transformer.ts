@@ -2,9 +2,6 @@ import { posix as path } from 'path';
 
 import Project, { SourceFile } from 'ts-simple-ast';
 
-import { deduplicateArray } from '../utilities/deduplicate-array';
-import { AngularImportFileAnalyzer } from './imports/angular-import.file-analyzer';
-import { getTypeScriptProjectFiles } from '../utilities/get-typescript-project-files';
 import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './external-resources/angular-external-resources.interfaces';
 import { AngularExternalTemplatesFileAnalyzer } from './external-resources/angular-external-templates.file-analyzer';
 import { AngularExternalTemplatesFileTransformer } from './external-resources/angular-external-templates.file-transformer';
@@ -23,7 +20,7 @@ export class AngularPackageTransformer {
      * Source files
      */
     public get sourceFiles(): Array<SourceFile> {
-        return this.typescriptProject.getSourceFiles();
+        return this.angularPackage.typescriptProject.getSourceFiles();
     };
 
     /**
@@ -38,11 +35,6 @@ export class AngularPackageTransformer {
     }
 
     /**
-     * TypeScript project
-     */
-    private readonly typescriptProject: Project;
-
-    /**
      * Angular Package
      */
     private readonly angularPackage: AngularPackage;
@@ -54,35 +46,31 @@ export class AngularPackageTransformer {
      */
     constructor( angularPackage: AngularPackage ) {
         this.angularPackage = angularPackage;
-        const absoluteEntryPath: string = path.join( this.angularPackage.cwd, this.angularPackage.entryFile );
-        const sourceFiles: Array<string> = getTypeScriptProjectFiles( absoluteEntryPath );
-        this.typescriptProject = new Project();
-        this.typescriptProject.addExistingSourceFiles( sourceFiles );
     }
 
-    // TODO: Other folder
-    public async save(): Promise<void> {
+    /**
+     * Transform
+     *
+     * @returns Promise, resovled when done
+     */
+    public async transform(): Promise<void> {
 
-        const sourceFiles: Array<SourceFile> = this.sourceFiles;
-        const sourceFilesOutPaths: Array<string> = this.sourceFiles
-            .map( ( sourceFile: SourceFile ): string => {
-                const filePath: string = sourceFile.getFilePath();
-                const absoluteEntryPath: string = path.join( this.angularPackage.cwd, this.angularPackage.entryFile );
-                const absoluteOutputPath: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir );
-                const relativeFilePath: string = path.relative( path.dirname( absoluteEntryPath ), filePath );
-                const movedFilePath: string = path.join( absoluteOutputPath, 'temp', 'transformed', relativeFilePath );
-                return movedFilePath;
-            } );
+        // Do transformations
+        await this.inlineExternalTemplates(),
+        await this.inlineExternalStyles()
+        this.convertLineBreaks();
 
-        await Promise.all(
-            sourceFilesOutPaths.map( async( filePath: string, index: number ): Promise<void> => {
-                await writeFile( filePath, sourceFiles[ index ].getText() );
-            } )
-        );
+        // Save
+        await this.save();
 
     }
 
-    public async inlineExternalTemplates(): Promise<void> {
+    /**
+     * Inline external templates
+     *
+     * @returns Promise, resolved when done
+     */
+    private async inlineExternalTemplates(): Promise<void> {
 
         // Apply transformation for each source file
         await Promise.all(
@@ -104,7 +92,12 @@ export class AngularPackageTransformer {
 
     }
 
-    public async inlineExternalStyles(): Promise<void> {
+    /**
+     * Inline external styles
+     *
+     * @returns Promise, resolves when done
+     */
+    private async inlineExternalStyles(): Promise<void> {
 
         // Apply transformation for each source file
         await Promise.all(
@@ -130,7 +123,10 @@ export class AngularPackageTransformer {
 
     }
 
-    public convertLineBreaks(): void {
+    /**
+     * Convert line breaks
+     */
+    private convertLineBreaks(): void {
 
         // Apply transformation for each source file
         this.sourceFiles.forEach( ( sourceFile: SourceFile ) => {
@@ -142,18 +138,31 @@ export class AngularPackageTransformer {
     }
 
     /**
-     * Get list of all external imports
+     * Save transformation results
+     *
+     * @returns Promise, resolves when done
      */
-    // public getAllExternalImportSources(): Array<string> {
-    //     const externalImportSources: Array<string> = this.sourceFiles
-    //         .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
-    //             return [
-    //                 ...externalImports,
-    //                 ...AngularImportFileAnalyzer.getExternalImportSources( sourceFile ),
-    //             ];
-    //         }, [] );
-    //     const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
-    //     return externalImportSourcesDeduplicated;
-    // }
+    private async save(): Promise<void> {
+
+        // Move the file paths
+        const sourceFiles: Array<SourceFile> = this.sourceFiles;
+        const sourceFilesOutPaths: Array<string> = this.sourceFiles
+            .map( ( sourceFile: SourceFile ): string => {
+                const filePath: string = sourceFile.getFilePath();
+                const absoluteEntryPath: string = path.join( this.angularPackage.cwd, this.angularPackage.entryFile );
+                const absoluteOutputPath: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir );
+                const relativeFilePath: string = path.relative( path.dirname( absoluteEntryPath ), filePath );
+                const movedFilePath: string = path.join( absoluteOutputPath, 'temp', 'transformed', relativeFilePath );
+                return movedFilePath;
+            } );
+
+        // Write files to disk
+        await Promise.all(
+            sourceFilesOutPaths.map( async( filePath: string, index: number ): Promise<void> => {
+                await writeFile( filePath, sourceFiles[ index ].getText() );
+            } )
+        );
+
+    }
 
 }

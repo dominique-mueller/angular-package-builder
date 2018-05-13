@@ -1,4 +1,8 @@
 import { posix as path } from 'path';
+
+import * as typescript from 'typescript';
+import Project from 'ts-simple-ast';
+
 import { AngularPackageConfig } from './config.interface';
 import { readFile } from './utilities/read-file';
 import { getDependencyMap } from './utilities/get-dependency-map';
@@ -44,6 +48,8 @@ export class AngularPackage {
      */
     public dependencies: { [ dependency: string ]: string };
 
+    public typescriptProject: Project;
+
     public async withConfig( absoluteAngularPackageJsonPath: string ): Promise<void> {
 
         this.cwd = path.dirname( absoluteAngularPackageJsonPath );
@@ -80,6 +86,33 @@ export class AngularPackage {
             ...Object.keys( packageJson.peerDependencies || {} )
         ];
         this.dependencies = getDependencyMap( deduplicateArray( dependencies ) );
+
+        // Create TypeScript project
+        this.createTypeScriptProject();
+
+    }
+
+    /**
+     * Create TypeScript project
+     */
+    private createTypeScriptProject(): void {
+
+        // Create TypeScript program; this also resolves all referenced modules and typings (both internal and external)
+        const entryFilePath: string = path.join( this.cwd, this.entryFile );
+        const typescriptProgram: typescript.Program = typescript.createProgram( [ entryFilePath ], {} );
+
+        // Get all source file paths, but exclude external modules & typings
+        const sourceFilePaths: Array<string> = typescriptProgram.getSourceFiles()
+            .filter( ( sourceFile: typescript.SourceFile ): boolean => {
+                return !typescriptProgram.isSourceFileFromExternalLibrary( sourceFile ) && !sourceFile.isDeclarationFile;;
+            } )
+            .map( ( sourceFile: typescript.SourceFile ): string => {
+                return sourceFile.fileName; // This is actually the path ... weird, right?
+            } );
+
+        // Create TypeScript project
+        this.typescriptProject = new Project();
+        this.typescriptProject.addExistingSourceFiles( sourceFilePaths );
 
     }
 
