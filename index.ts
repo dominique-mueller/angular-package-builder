@@ -5,21 +5,29 @@ import { AngularPackageBuilder } from './src/angular-package-builder';
 import { AngularPackageConfig, AngularSubPackageConfig, AngularPackageOptions } from './src/config.interface';
 import { readFile } from './src/utilities/read-file';
 
-/**
- * Run Angular Package Builder
- */
-export async function runAngularPackageBuilder( angularPackageJsonUrls: Array<string> ): Promise<void> {
+export class AngularPackageBuilderOrchestrator {
 
-	const cwd: string = process.cwd()
-		.replace( /\\/g, '/' );
+	private static readonly cwd: string = process.cwd().replace( /\\/g, '/' );
 
-	let angularPackagesWithSubPackages: Array<Array<AngularPackage>> = await Promise.all(
-		angularPackageJsonUrls
-			.map( async ( angularPackageJsonUrl: string ): Promise<Array<AngularPackage>> => {
+	public static async createAngularPackageBuildInformation( angularPackageJsonFilePaths: Array<string> ): Promise<any> {
+
+		// Process the given angular package json files
+		// This will return a list containing lists of angular packages (first entry is primary, others secondary)
+		const angularPackages: Array<Array<AngularPackage>> = await this.processAngularPackageJsonFiles( angularPackageJsonFilePaths );
+		const angularPackagesOrdered: Array<Array<Array<AngularPackage>>> = this.orderAngularPackages( angularPackages );
+
+		console.dir( angularPackagesOrdered, { depth: 4 } );
+
+	}
+
+	private static async processAngularPackageJsonFiles( angularPackageJsonFilePaths: Array<string> ): Promise<Array<Array<AngularPackage>>> {
+
+		return await Promise.all(
+			angularPackageJsonFilePaths.map( async ( angularPackageJsonUrl: string ): Promise<Array<AngularPackage>> => {
 
 				// Read angular package config
 				const angularPackageJson: AngularPackageConfig = await readFile( angularPackageJsonUrl );
-				const angularPackageCwd: string = path.dirname( path.join( cwd, angularPackageJsonUrl ) );
+				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonUrl ) );
 
 				// Get configuration
 				const angularPackageOptions: AngularPackageOptions = {
@@ -58,50 +66,66 @@ export async function runAngularPackageBuilder( angularPackageJsonUrls: Array<st
 				return [ primaryAngularPackage, ...secondaryAngularPackages ];
 
 			} )
-	);
-	const angularPackages: Array<AngularPackage> = [].concat( ...angularPackagesWithSubPackages );
-
-	console.dir( angularPackagesWithSubPackages, { depth: 2 } );
-
-	const packageNames: Array<string> = angularPackagesWithSubPackages.map( angularPackages => angularPackages[ 0 ].packageName );
-
-	const buildOrder: Array<any> = [];
-	const packageNamesAlreadyInBuildOrder: Array<string> = [];
-
-	while ( angularPackagesWithSubPackages.length !== 0 ) {
-
-		const nextToBuild: Array<Array<AngularPackage>> = [];
-		angularPackagesWithSubPackages = angularPackagesWithSubPackages
-			.reduce( ( packages: Array<Array<AngularPackage>>, angularPackageWithSubPackages: Array<AngularPackage> ) => {
-
-				const intraDependencies: Array<string> = Object
-					.keys( angularPackageWithSubPackages[ 0 ].dependencies )
-					.filter( ( dependency: string ): boolean => {
-						return packageNames.indexOf( dependency ) !== -1;
-					} )
-					.filter( ( dependency: string ): boolean => {
-						return packageNamesAlreadyInBuildOrder.indexOf( dependency ) === -1;
-					} );
-
-				if ( intraDependencies.length === 0 ) {
-					nextToBuild.push( angularPackageWithSubPackages );
-				} else {
-					packages.push( angularPackageWithSubPackages );
-				}
-
-				return packages;
-
-			}, [] );
-
-		buildOrder.push( nextToBuild );
-		nextToBuild.forEach( ( angularPackageWithSubPackages: Array<AngularPackage> ) => {
-			packageNamesAlreadyInBuildOrder.push( angularPackageWithSubPackages[ 0 ].packageName );
-		} );
+		);
 
 	}
 
-	console.log( 'BUILDS NO', buildOrder.length );
-	console.dir( buildOrder, { depth: 3 } );
+	private static orderAngularPackages( angularPackages: Array<Array<AngularPackage>> ): Array<Array<Array<AngularPackage>>> {
+
+		// Get package names (primary only)
+		const packageNames: Array<string> = angularPackages.map( ( angularPackages ) => {
+			return angularPackages[ 0 ].packageName;
+		} );
+		const packageNamesAlreadyInBuildChain: Array<string> = [];
+
+		const angularPackagesOrdered: Array<Array<Array<AngularPackage>>> = [];
+		while ( angularPackages.length !== 0 ) {
+
+			// Filter out angular packages which are ready to be built
+			const angularPackagesReadyForBuild: Array<Array<AngularPackage>> = [];
+			angularPackages = angularPackages
+				.filter( ( angularPackage: Array<AngularPackage> ) => {
+
+					// Find local dependencies
+					const localDependencies: Array<string> = Object
+						.keys( angularPackage[ 0 ].dependencies )
+						.filter( ( dependency: string ): boolean => {
+							return packageNames.indexOf( dependency ) !== -1 && packageNamesAlreadyInBuildChain.indexOf( dependency ) === -1;
+						} );
+
+					// If there are no local dependencies (left), add it to the build chain
+					if ( localDependencies.length === 0 ) {
+						angularPackagesReadyForBuild.push( angularPackage );
+						return false;
+					} else {
+						return true;
+					}
+
+				} );
+
+			// Add those angular packages to the build chain
+			angularPackagesOrdered.push( angularPackagesReadyForBuild );
+			const packageNamesReadyForBuild: Array<string> = angularPackagesReadyForBuild.map( ( angularPackageReadyForBuild: Array<AngularPackage> ): string => {
+				return angularPackageReadyForBuild[ 0 ].packageName;
+			} );
+			packageNamesAlreadyInBuildChain.push( ...packageNamesReadyForBuild );
+
+		}
+
+		return angularPackagesOrdered;
+
+	}
+
+}
+
+/**
+ * Run Angular Package Builder
+ */
+export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<string> ): Promise<void> {
+
+	// const angularPackages: Array<AngularPackage> = [].concat( ...angularPackagesWithSubPackages );
+
+	AngularPackageBuilderOrchestrator.createAngularPackageBuildInformation( angularPackageJsonPaths );
 
 	// const angularPackage = angularPackages[ 0 ];
 	// await AngularPackageBuilder.package( angularPackage );
