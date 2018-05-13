@@ -1,12 +1,13 @@
 import { posix as path } from 'path';
 
 import * as typescript from 'typescript';
-import Project from 'ts-simple-ast';
+import Project, { SourceFile } from 'ts-simple-ast';
 
 import { AngularPackageConfig } from './config.interface';
 import { readFile } from './utilities/read-file';
 import { getDependencyMap } from './utilities/get-dependency-map';
 import { deduplicateArray } from './utilities/deduplicate-array';
+import { AngularImportFileAnalyzer } from './transformer/imports/angular-import.file-analyzer';
 
 /**
  * Angular Package
@@ -48,6 +49,14 @@ export class AngularPackage {
      */
     public dependencies: { [ dependency: string ]: string };
 
+    /**
+     * List of external import sources
+     */
+    public externalImportSources: Array<string>;
+
+    /**
+     * TypeScript project
+     */
     public typescriptProject: Project;
 
     public async withConfig( absoluteAngularPackageJsonPath: string ): Promise<void> {
@@ -88,14 +97,17 @@ export class AngularPackage {
         this.dependencies = getDependencyMap( deduplicateArray( dependencies ) );
 
         // Create TypeScript project
-        this.createTypeScriptProject();
+        this.typescriptProject = this.createTypeScriptProject();
+        this.externalImportSources = this.discoverExternalImportSources( this.typescriptProject );
 
     }
 
     /**
      * Create TypeScript project
+     *
+     * @returns TypeScript project
      */
-    private createTypeScriptProject(): void {
+    private createTypeScriptProject(): Project {
 
         // Create TypeScript program; this also resolves all referenced modules and typings (both internal and external)
         const entryFilePath: string = path.join( this.cwd, this.entryFile );
@@ -111,8 +123,34 @@ export class AngularPackage {
             } );
 
         // Create TypeScript project
-        this.typescriptProject = new Project();
-        this.typescriptProject.addExistingSourceFiles( sourceFilePaths );
+        const typescriptProject: Project = new Project();
+        typescriptProject.addExistingSourceFiles( sourceFilePaths );
+
+        return typescriptProject;
+
+    }
+
+    /**
+     * Discover external import sources
+     *
+     * @param   typescriptProject TypeScript project (including source files)
+     * @returns                   List of external import sources
+     */
+    private discoverExternalImportSources( typescriptProject: Project ): Array<string> {
+
+        // Analyze source files for external imports
+        const externalImportSources: Array<string> = typescriptProject.getSourceFiles()
+            .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
+                return [
+                    ...externalImports,
+                    ...AngularImportFileAnalyzer.getExternalImportSources( sourceFile ),
+                ];
+            }, [] );
+
+        // Remove duplicate external imports
+        const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
+
+        return externalImportSourcesDeduplicated;
 
     }
 

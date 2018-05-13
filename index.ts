@@ -25,24 +25,6 @@ export async function runAngularPackageBuilder(	angularPackageJsonUrls: Array<st
 	const angularPackage = angularPackages[ 0 ];
 	await AngularPackageBuilder.package( angularPackage );
 
-	/**
-     * Get list of all external imports
-     */
-    // public getAllExternalImportSources(): Array<string> {
-    //     const externalImportSources: Array<string> = this.sourceFiles
-    //         .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
-    //             return [
-    //                 ...externalImports,
-    //                 ...AngularImportFileAnalyzer.getExternalImportSources( sourceFile ),
-    //             ];
-    //         }, [] );
-    //     const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
-    //     return externalImportSourcesDeduplicated;
-    // }
-
-	// console.log( Object.keys( angularPackageTransformer.sourceFilesWithPaths ) );
-	// console.log( angularPackageTransformer.sourceFiles[ 3 ].getText() );
-
 	// try {
 
 	// 	Logger.empty();
