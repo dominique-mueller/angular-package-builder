@@ -57,7 +57,7 @@
 		"jsonschema": "1.2.x",
 		"memfs": "2.8.x",
 		"proxyquire": "2.0.x",
-		"rollup": "0.57.x",
+		"rollup": "0.59.x",
 		"rollup-plugin-commonjs": "9.1.x",
 		"rollup-plugin-node-resolve": "3.3.x",
 		"semver": "5.5.x",
