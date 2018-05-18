@@ -2,18 +2,13 @@ import { posix as path } from 'path';
 
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageBuilder } from './src/angular-package-builder';
-import { AngularPackageConfig, AngularSubPackageConfig, AngularPackageOptions } from './src/config.interface';
-import { readFile } from './src/utilities/read-file';
+import { AngularPackageReader } from './src/angular-package-reader';
+
+
 
 export class AngularPackageBuilderOrchestrator {
 
-	private static readonly cwd: string = process.cwd().replace( /\\/g, '/' );
-
-	public static async createAngularPackageBuildInformation( angularPackageJsonFilePaths: Array<string> ): Promise<any> {
-
-		// Process the given angular package json files
-		// This will return a list containing lists of angular packages (first entry is primary, others secondary)
-		const angularPackages: Array<Array<AngularPackage>> = await this.processAngularPackageJsonFiles( angularPackageJsonFilePaths );
+	public static async createAngularPackageBuildInformation( angularPackages: Array<Array<AngularPackage>> ): Promise<any> {
 
 		const angularPackagesOrdered: Array<Array<Array<AngularPackage>>> = this.orderAngularPackages( angularPackages );
 
@@ -45,56 +40,6 @@ export class AngularPackageBuilderOrchestrator {
 		// console.dir( angularPackagesOrdered, { depth: 4 } );
 		// console.dir( '---' );
 		console.dir( angularPackagesOrderedOrdered, { depth: 4 } );
-
-	}
-
-	private static async processAngularPackageJsonFiles( angularPackageJsonFilePaths: Array<string> ): Promise<Array<Array<AngularPackage>>> {
-
-		return await Promise.all(
-			angularPackageJsonFilePaths.map( async ( angularPackageJsonUrl: string ): Promise<Array<AngularPackage>> => {
-
-				// Read angular package config
-				const angularPackageJson: AngularPackageConfig = await readFile( angularPackageJsonUrl );
-				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonUrl ) );
-
-				// Get configuration
-				const angularPackageOptions: AngularPackageOptions = {
-					entryFile: angularPackageJson.entryFile,
-					outDir: angularPackageJson.outDir,
-					typescriptCompilerOptions: angularPackageJson.typescriptCompilerOptions,
-					angularCompilerOptions: angularPackageJson.angularCompilerOptions,
-					dependencies: angularPackageJson.dependencies
-				};
-
-				// Create angular package
-				const primaryAngularPackage: AngularPackage = new AngularPackage();
-				await primaryAngularPackage.withConfig( angularPackageCwd, angularPackageOptions );
-
-				// Create angular packages for secondary entry points
-				const secondaryAngularPackages: Array<AngularPackage> = await Promise.all(
-					( angularPackageJson.secondaryEntries || [] ).map( async ( secondaryEntry: AngularSubPackageConfig ): Promise<AngularPackage> => {
-
-						// Get configuration
-						const angularPackageOptions: AngularPackageOptions = {
-							entryFile: secondaryEntry.entryFile,
-							outDir: angularPackageJson.outDir,
-							typescriptCompilerOptions: angularPackageJson.typescriptCompilerOptions,
-							angularCompilerOptions: angularPackageJson.angularCompilerOptions,
-							dependencies: angularPackageJson.dependencies
-						};
-
-						// Create angular package
-						const angularPackage: AngularPackage = new AngularPackage();
-						await angularPackage.withConfig( angularPackageCwd, angularPackageOptions );
-						return angularPackage;
-
-					} )
-				);
-
-				return [ primaryAngularPackage, ...secondaryAngularPackages ];
-
-			} )
-		);
 
 	}
 
@@ -198,7 +143,9 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 
 	// const angularPackages: Array<AngularPackage> = [].concat( ...angularPackagesWithSubPackages );
 
-	AngularPackageBuilderOrchestrator.createAngularPackageBuildInformation( angularPackageJsonPaths );
+	const angularPackages: Array<Array<AngularPackage>> = await AngularPackageReader.readAngularPackageJsonFiles( angularPackageJsonPaths );
+
+	AngularPackageBuilderOrchestrator.createAngularPackageBuildInformation( angularPackages );
 
 	// const angularPackage = angularPackages[ 0 ];
 	// await AngularPackageBuilder.package( angularPackage );
