@@ -19,10 +19,16 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolved when done
      */
     public static async package( angularPackage ): Promise<void> {
+
+        console.log( 'PACKAGE ...' );
+
         await this.transform( angularPackage );
         await this.compile( angularPackage );
         await this.bundle( angularPackage );
         await this.compose( angularPackage );
+
+        console.log( 'DONE.' );
+
     }
 
     /**
