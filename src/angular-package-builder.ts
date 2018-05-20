@@ -27,6 +27,10 @@ export class AngularPackageBuilder {
         await this.bundle( angularPackage );
         await this.compose( angularPackage );
 
+        // TODO: Create / update package.json files
+        // Needed: isPrimary / isSecondary flag to differenciate between creation / update
+        // Needed: The saved package.json file, or at least the path (probably better)
+
         console.log( 'DONE.' );
 
     }
