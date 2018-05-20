@@ -25,12 +25,9 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	for ( const angularPackage of flattenedBuildOrchestration ) {
 		angularPackage.addPaths( builtAngularPackages );
 		await AngularPackageBuilder.package( angularPackage );
-		builtAngularPackages[ angularPackage.packageName ] = [ path.join( angularPackage.cwd, angularPackage.outDir ) ];
+		builtAngularPackages[ angularPackage.packageName ] = [
+			path.join( angularPackage.cwd, angularPackage.outDir )
+		];
 	}
 
 }
-
-runAngularPackageBuilder( [
-	'./test/my-library/.angular-package.json',
-	'./test/my-second-library/.angular-package.json',
-] );
