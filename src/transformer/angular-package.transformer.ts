@@ -24,17 +24,6 @@ export class AngularPackageTransformer {
     };
 
     /**
-     * Source files with paths
-     */
-    public get sourceFilesWithPaths(): { [ path: string ]: string } {
-        return this.sourceFiles
-            .reduce( ( files: { [ path: string ]: string }, sourceFile: SourceFile ): { [ path: string ]: string } => {
-                files[ sourceFile.getFilePath() ] = sourceFile.getText();
-                return files;
-            }, {} );
-    }
-
-    /**
      * Angular Package
      */
     private readonly angularPackage: AngularPackage;

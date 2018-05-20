@@ -21,7 +21,6 @@ export function getDependencyMap( dependencies: Array<string> ): { [ dependency:
 		}, {} );
 
 	// Let custom dependencies overwrite pre-defined ones
-	return customDependencies;
-	// return Object.assign( {}, angularDependencies, rxjsDependencies, customDependencies );
+	return Object.assign( {}, angularDependencies, rxjsDependencies, customDependencies );
 
 }

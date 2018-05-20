@@ -19,33 +19,14 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 
 	// Flatten (sequential builds)
 	const flattenedBuildOrchestration: Array<AngularPackage> = flattenArray( buildOrchestration );
-	console.log( flattenedBuildOrchestration );
 
 	// RUN!
 	const builtAngularPackages: any = {};
 	for ( const angularPackage of flattenedBuildOrchestration ) {
-		console.log( 'PACKAGING ...' );
 		angularPackage.addPaths( builtAngularPackages );
 		await AngularPackageBuilder.package( angularPackage );
 		builtAngularPackages[ angularPackage.packageName ] = [ path.join( angularPackage.cwd, angularPackage.outDir ) ];
 	}
-
-	// angularPackageAndSubPackageBuilds.forEach( ( angularPackagesOrdered: Array<Array<Array<AngularPackage>>>, index: number ) => {
-	// 	console.log( '' );
-	// 	console.log( '  -> LIBRARY BUILD (IN PARALLEL)', index + 1 );
-	// 	angularPackagesOrdered.forEach( ( angularPackages: Array<Array<AngularPackage>>, index: number ) => {
-	// 		console.log( '     -> PACKAGE BUILD STEP', index + 1 );
-	// 		angularPackages.forEach( ( angularPackage: Array<AngularPackage>, index: number ) => {
-	// 			console.log( '        -> BUILD EXECUTION (IN PARALLEL)', index + 1 );
-	// 			angularPackage.forEach( ( subPackage: AngularPackage, index: number ) => {
-	// 				console.log( `           => ${ subPackage.packageName }` );
-	// 			} );
-	// 		} );
-	// 	} );
-	// } );
-
-	// const angularPackage = angularPackages[ 0 ];
-	// await AngularPackageBuilder.package( angularPackage );
 
 }
 
