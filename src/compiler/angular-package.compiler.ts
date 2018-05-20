@@ -68,7 +68,7 @@ export class AngularPackageCompiler {
         const entryDir: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'transformed' );
         const outDir: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', target );
         const entryFiles: Array<string> = [
-            path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'transformed', this.angularPackage.entryFile )
+            path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'transformed', path.basename( this.angularPackage.entryFile ) )
         ];
 
         // Build TypeScript configuration
@@ -78,7 +78,7 @@ export class AngularPackageCompiler {
             .withOutDir( outDir )
             .withName( this.angularPackage.packageName )
             .toTarget( target )
-            .build();
+            .build( this.angularPackage.typescriptCompilerOptions, this.angularPackage.angularCompilerOptions );
 
     }
 

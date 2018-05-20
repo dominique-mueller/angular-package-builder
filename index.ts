@@ -1,3 +1,5 @@
+import { posix as path } from 'path';
+
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageReader } from './src/angular-package-reader';
 import { AngularPackageOrchestrator } from './src/angular-package-orchestrator';
@@ -20,13 +22,13 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	console.log( flattenedBuildOrchestration );
 
 	// RUN!
-	// await flattenedBuildOrchestration.reduce( ( promises: Promise<any>, angularPackage: AngularPackage ): Promise<any> => {
-	// 	return promises.then( ( results: Array<void> ) => {
-	// 		AngularPackageBuilder.package( angularPackage ).then( ( result: void ) => {
-	// 			return [ ...results, result ];
-	// 		} );
-	// 	} );
-	// }, Promise.resolve( [] ) );
+	const builtAngularPackages: any = {};
+	for ( const angularPackage of flattenedBuildOrchestration ) {
+		console.log( 'PACKAGING ...' );
+		angularPackage.addPaths( builtAngularPackages );
+		await AngularPackageBuilder.package( angularPackage );
+		builtAngularPackages[ angularPackage.packageName ] = [ path.join( angularPackage.cwd, angularPackage.outDir ) ];
+	}
 
 	// angularPackageAndSubPackageBuilds.forEach( ( angularPackagesOrdered: Array<Array<Array<AngularPackage>>>, index: number ) => {
 	// 	console.log( '' );

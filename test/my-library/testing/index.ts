@@ -1,6 +1,6 @@
 import { LIBInputComponent } from 'my-library';
 
-export const TestingUtility {
+export class TestingUtility {
 
     getInputId( inputComponent: LIBInputComponent ): string {
         return inputComponent.id;

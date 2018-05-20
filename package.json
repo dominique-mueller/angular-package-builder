@@ -50,6 +50,7 @@
 		"chalk": "2.3.x",
 		"clean-css": "4.1.x",
 		"cpx": "1.5.x",
+		"deepmerge": "2.1.x",
 		"del": "3.0.x",
 		"fs-extra": "5.0.x",
 		"globby": "8.0.x",

@@ -89,6 +89,13 @@ export class AngularPackage {
 
     }
 
+    public addPaths( packageNameWithPaths: { [ packageName: string ]: Array<string> } ): void {
+        this.typescriptCompilerOptions.paths = {
+            ...( this.typescriptCompilerOptions.paths || {} ),
+            ...packageNameWithPaths
+        };
+    }
+
     /**
      * Create TypeScript project
      *

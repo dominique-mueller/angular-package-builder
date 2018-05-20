@@ -1,4 +1,4 @@
-import { posix as path } from 'path';
+import * as deepmerge from 'deepmerge';
 
 /**
  * TypeScript Configuartion Builder
@@ -100,11 +100,17 @@ export class TypeScriptConfigurationBuilder {
 	 *
 	 * @returns TypeScript configuration
 	 */
-	public build(): any {
+	public build( customTypeScriptCompilerOptions: any = {}, customAngularCompilerOptions: any = {} ): any {
 		return {
-			compilerOptions: this.compilerOptions,
+			compilerOptions: deepmerge(
+				this.compilerOptions,
+				customTypeScriptCompilerOptions
+			),
 			files: this.files,
-			angularCompilerOptions: this.angularCompilerOptions
+			angularCompilerOptions: deepmerge(
+				this.angularCompilerOptions,
+				customAngularCompilerOptions
+			)
 		};
 	}
 
@@ -115,6 +121,7 @@ export class TypeScriptConfigurationBuilder {
 	 */
 	private getBaseTypeScriptCompilerOptions(): any {
 		return {
+			baseUrl: '', // Necessary to use paths
 			declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
 			emitDecoratorMetadata: true, // Keep metadata about decorators
 			experimentalDecorators: true, // Enable decorators
