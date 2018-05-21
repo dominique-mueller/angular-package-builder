@@ -1,6 +1,7 @@
 import * as deepmerge from 'deepmerge';
 
 import { typescriptCompilationTargets } from './typescript-compilation-targets';
+import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
 
 /**
  * TypeScript Configuartion Builder
@@ -85,7 +86,7 @@ export class TypeScriptConfigurationBuilder {
 	 */
 	public setPackageName( packageName: string ): TypeScriptConfigurationBuilder {
 		this.angularCompilerOptions.flatModuleId = packageName; // Name of the package, used when importing from the library
-		this.angularCompilerOptions.flatModuleOutFile = this.getFileNameByPackageName( packageName ); // Name of the output file
+		this.angularCompilerOptions.flatModuleOutFile = `${ getFileNameByPackageName( packageName ) }.js`; // Name of the output file, including file type
 		return this;
 	}
 
@@ -133,23 +134,16 @@ export class TypeScriptConfigurationBuilder {
 	 *
 	 * @returns TypeScript configuration
 	 */
-	public build(): any {
+	public build(): {
+		compilerOptions: { [ option: string ]: any },
+		files: Array<string>,
+		angularCompilerOptions: { [ option: string ]: any }
+	} {
 		return {
 			compilerOptions: this.typescriptCompilerOptions,
 			files: this.files,
 			angularCompilerOptions: this.angularCompilerOptions
 		};
-	}
-
-	/**
-	 *
-	 * Get file name by package name
-	 *
-	 * @param   packageName Package name
-	 * @returns             File name
-	 */
-	private getFileNameByPackageName( packageName: string ): string {
-		return `${ packageName.split( '/' ).pop() }.js`;
 	}
 
 }

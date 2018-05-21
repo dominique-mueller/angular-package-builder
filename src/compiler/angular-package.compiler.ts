@@ -53,7 +53,7 @@ export class AngularPackageCompiler {
      * Build TypeScript configuration
      *
      * @param   target Build target
-     * @returns        TypeScript configuration
+     * @returns        Path to the tsconfig file
      */
     private async buildAndWriteTypescriptConfiguration( target: 'esm2015' | 'esm5' ): Promise<string> {
 

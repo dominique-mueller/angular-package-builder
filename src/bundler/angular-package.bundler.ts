@@ -65,11 +65,11 @@ export class AngularPackageBundler {
 
         // Build Rollup configuration
         return new RollupConfigurationBuilder()
-            .withName( this.angularPackage.packageName )
-            .excludeDependencies( this.angularPackage.dependencies )
-            .fromEntryFile( entryFile )
-            .toTarget( target )
-            .toOutDir( outDir )
+            .setPackageName( this.angularPackage.packageName )
+            .setEntry( entryFile )
+            .setTarget( target )
+            .setOutDir( outDir )
+            .setDependencies( this.angularPackage.dependencies )
             .build();
 
     }
