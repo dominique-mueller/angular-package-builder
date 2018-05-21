@@ -1,5 +1,7 @@
 import * as deepmerge from 'deepmerge';
 
+import { typescriptCompilationTargets } from './typescript-compilation-targets';
+
 /**
  * TypeScript Configuartion Builder
  */
@@ -8,120 +10,24 @@ export class TypeScriptConfigurationBuilder {
 	/**
 	 * List of entry files
 	 */
-	private readonly files: Array<string>;
+	private files: Array<string>;
 
 	/**
 	 * TypeScript compiler options
 	 */
-	private readonly compilerOptions: any;
+	private typescriptCompilerOptions: { [ option: string ]: any };
 
 	/**
-	 * Angualr compiler options
+	 * Angular compiler options
 	 */
-	private readonly angularCompilerOptions: any;
-
-	/**
-	 * TypeScript compilation targets
-	 */
-	private static readonly compilationTargets: { [ target: string ]: string } = {
-		esm2015: 'ES2015',
-		esm5: 'ES5'
-	};
+	private angularCompilerOptions: { [ option: string ]: any };
 
 	/**
 	 * Constructor
 	 */
 	constructor() {
-		this.compilerOptions = this.getBaseTypeScriptCompilerOptions();
-		this.files = [];
-		this.angularCompilerOptions = this.getBaseAngularCompilerOptions();
-	}
-
-	/**
-	 * Add entry files
-	 *
-	 * @param   files Entry files
-	 * @returns       This instance of the TypeScript configuration builder
-	 */
-	public withEntryFiles( files: Array<string> ): TypeScriptConfigurationBuilder {
-		this.files.push( ...files );
-		return this;
-	}
-
-	/**
-	 * Add entry directory path
-	 *
-	 * @param   entryDir Entry directory path
-	 * @returns          This instance of the TypeScript configuration builder
-	 */
-	public withEntryDir( entryDir: string ): TypeScriptConfigurationBuilder {
-		this.compilerOptions.rootDir = entryDir;
-		this.compilerOptions.sourceRoot = entryDir;
-		return this;
-	}
-
-	/**
-	 * Add output directory path
-	 *
-	 * @param   outDir Output directory path
-	 * @returns        This instance of the TypeScript configuration builder
-	 */
-	public withOutDir( outDir: string ): TypeScriptConfigurationBuilder {
-		this.compilerOptions.outDir = outDir;
-		return this;
-	}
-
-	/**
-	 * Add package name
-	 *
-	 * @param   packageName Package name
-	 * @returns             This instance of the TypeScript configuration builder
-	 */
-	public withName( packageName: string ): TypeScriptConfigurationBuilder {
-		const fileName: string = `${ packageName.split( '/' ).pop() }.js`;
-		this.angularCompilerOptions.flatModuleId = packageName; // Name of the package, used when importing from the library
-		this.angularCompilerOptions.flatModuleOutFile = fileName; // Name of the output file
-		return this;
-	}
-
-	/**
-	 * Add compilation target
-	 *
-	 * @param   target Compilation target
-	 * @returns        This instance of the TypeScript configuration builder
-	 */
-	public toTarget( target: 'esm2015' | 'esm5' ): TypeScriptConfigurationBuilder {
-		this.compilerOptions.target = TypeScriptConfigurationBuilder.compilationTargets[ target ];
-		return this;
-	}
-
-	/**
-	 * Build
-	 *
-	 * @returns TypeScript configuration
-	 */
-	public build( customTypeScriptCompilerOptions: any = {}, customAngularCompilerOptions: any = {} ): any {
-		return {
-			compilerOptions: deepmerge(
-				this.compilerOptions,
-				customTypeScriptCompilerOptions
-			),
-			files: this.files,
-			angularCompilerOptions: deepmerge(
-				this.angularCompilerOptions,
-				customAngularCompilerOptions
-			)
-		};
-	}
-
-	/**
-	 * Get base TypeScript compiler options
-	 *
-	 * @returns TypeScript compiler options
-	 */
-	private getBaseTypeScriptCompilerOptions(): any {
-		return {
-			baseUrl: '', // Necessary to use paths
+		this.typescriptCompilerOptions = {
+			baseUrl: '', // Necessary when using paths
 			declaration: true, // Emit TypeScript definition files (*.d.ts) for JavaScript type checking
 			emitDecoratorMetadata: true, // Keep metadata about decorators
 			experimentalDecorators: true, // Enable decorators
@@ -137,20 +43,113 @@ export class TypeScriptConfigurationBuilder {
 			pretty: true, // Pretty error messages
 			sourceMap: true // Emit sourcemap files
 		};
-	}
-
-	/**
-	 * Get base Angular Compiler Options
-	 *
-	 * @returns Angular compiler options
-	 */
-	private getBaseAngularCompilerOptions(): any {
-		return {
-			annotateForClosureCompiler: true, // Generate specific annoation (only works with 'LF' line endings)
+		this.files = [];
+		this.angularCompilerOptions = {
+			annotateForClosureCompiler: true, // Generate specific annoation
 			preserveWhitespaces: false, // Remove whitespaces for smaller bundles (#perfmatters)
 			skipTemplateCodegen: true, // Do not pre-compile templates
 			strictMetadataEmit: true // Validate emitted metadata
 		};
+	}
+
+	/**
+	 * Set entry file & directory
+	 *
+	 * @param   entryFile Entry file
+	 * @param   entryDir  Entry directory
+	 * @returns           This instance of the TypeScript configuration builder
+	 */
+	public setEntry( entryFile: string, entryDir: string ): TypeScriptConfigurationBuilder {
+		this.files.push( entryFile );
+		this.typescriptCompilerOptions.rootDir = entryDir;
+		this.typescriptCompilerOptions.sourceRoot = entryDir;
+		return this;
+	}
+
+	/**
+	 * Set output directory
+	 *
+	 * @param   outDir Output directory
+	 * @returns        This instance of the TypeScript configuration builder
+	 */
+	public setOutDir( outDir: string ): TypeScriptConfigurationBuilder {
+		this.typescriptCompilerOptions.outDir = outDir;
+		return this;
+	}
+
+	/**
+	 * Set package name
+	 *
+	 * @param   packageName Package name
+	 * @returns             This instance of the TypeScript configuration builder
+	 */
+	public setPackageName( packageName: string ): TypeScriptConfigurationBuilder {
+		this.angularCompilerOptions.flatModuleId = packageName; // Name of the package, used when importing from the library
+		this.angularCompilerOptions.flatModuleOutFile = this.getFileNameByPackageName( packageName ); // Name of the output file
+		return this;
+	}
+
+	/**
+	 * Set compilation target
+	 *
+	 * @param   target Compilation target
+	 * @returns        This instance of the TypeScript configuration builder
+	 */
+	public setCompilationTarget( target: 'esm2015' | 'esm5' ): TypeScriptConfigurationBuilder {
+		this.typescriptCompilerOptions.target = typescriptCompilationTargets[ target ];
+		return this;
+	}
+
+	/**
+	 * Set custom TypeScript compiler options
+	 *
+	 * @param   typescriptCompilerOptions Custom TypeScript compiler options
+	 * @returns                           This instance of the TypeScript configuration builder
+	 */
+	public setCustomTypescriptCompilerOptions( typescriptCompilerOptions: { [ option: string ]: any } ): TypeScriptConfigurationBuilder {
+		this.typescriptCompilerOptions = deepmerge(
+			typescriptCompilerOptions,
+			this.typescriptCompilerOptions
+		);
+		return this;
+	}
+
+	/**
+	 * Set custom Angular compiler options
+	 *
+	 * @param   angularCompilerOptions Custom Angular compiler options
+	 * @returns                        This instance of the TypeScript configuration builder
+	 */
+	public setCustomAngularCompilerOptions( angularCompilerOptions: { [ option: string ]: any } ): TypeScriptConfigurationBuilder {
+		this.angularCompilerOptions = deepmerge(
+			angularCompilerOptions,
+			this.angularCompilerOptions
+		);
+		return this;
+	}
+
+	/**
+	 * Build
+	 *
+	 * @returns TypeScript configuration
+	 */
+	public build(): any {
+		return {
+			compilerOptions: this.typescriptCompilerOptions,
+			files: this.files,
+			angularCompilerOptions: this.angularCompilerOptions
+		};
+	}
+
+	/**
+	 *
+	 * Get file name by package name
+	 *
+	 * @param   packageName Package name
+	 * @returns             File name
+	 */
+	private getFileNameByPackageName( packageName: string ): string {
+		return `${ packageName.split( '/' ).pop() }.js`;
 	}
 
 }

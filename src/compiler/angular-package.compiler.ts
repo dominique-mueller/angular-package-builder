@@ -36,17 +36,10 @@ export class AngularPackageCompiler {
     public async compile( target: 'esm2015' | 'esm5' ): Promise<void> {
 
         // Create and write TypeScript configuration
-        const tsconfig: any = this.buildTypeScriptConfiguration( target );
-		const tsconfigPath: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', `tsconfig.${ target }.json` );
-		await writeFile( tsconfigPath, tsconfig );
-
-        // Construct angular compiler cli arguments
-        const angularCompilerCliVersion: string = await getInstalledDependencyVersion( '@angular/compiler-cli' );
-        const angularCompilerCliArguments: any = semver.gte( angularCompilerCliVersion, '5.0.0' )
-            ? [ '-p', tsconfigPath ]
-            : { p: tsconfigPath };
+        const tsconfigPath: string = await this.buildAndWriteTypescriptConfiguration( target );
 
         // Run the Angular compiler
+        const angularCompilerCliArguments: any = await this.getAngularCompilerCliArguments( tsconfigPath );
         angularCompilerCli( angularCompilerCliArguments, ( errorMessage: string ): void => {
             throw new Error( [
                 `An error occured while trying to compile the TypeScript sources using the Angular Compiler.`,
@@ -62,23 +55,49 @@ export class AngularPackageCompiler {
      * @param   target Build target
      * @returns        TypeScript configuration
      */
-    private buildTypeScriptConfiguration( target: 'esm2015' | 'esm5' ): any {
+    private async buildAndWriteTypescriptConfiguration( target: 'esm2015' | 'esm5' ): Promise<string> {
 
         // Collect information
-        const entryDir: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'transformed' );
-        const outDir: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', target );
-        const entryFiles: Array<string> = [
-            path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'transformed', path.basename( this.angularPackage.entryFile ) )
-        ];
+        const baseDir: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp' );
+        const entryDir: string = path.join( baseDir, 'transformed' );
+        const outDir: string = path.join( baseDir, target );
+        const entryFile: string = path.join( baseDir, 'transformed', path.basename( this.angularPackage.entryFile ) );
 
         // Build TypeScript configuration
-        return new TypeScriptConfigurationBuilder()
-            .withEntryFiles( entryFiles )
-            .withEntryDir( entryDir )
-            .withOutDir( outDir )
-            .withName( this.angularPackage.packageName )
-            .toTarget( target )
-            .build( this.angularPackage.typescriptCompilerOptions, this.angularPackage.angularCompilerOptions );
+        const tsconfig: any = new TypeScriptConfigurationBuilder()
+            .setEntry( entryFile, entryDir )
+            .setOutDir( outDir )
+            .setPackageName( this.angularPackage.packageName )
+            .setCompilationTarget( target )
+            .setCustomTypescriptCompilerOptions( this.angularPackage.typescriptCompilerOptions )
+            .setCustomAngularCompilerOptions( this.angularPackage.angularCompilerOptions )
+            .build();
+
+        // Write TypeScript configuration file to disk
+        const tsconfigPath: string = path.join( baseDir, `tsconfig.${ target }.json` );
+        await writeFile( tsconfigPath, tsconfig );
+
+        return tsconfigPath;
+
+    }
+
+    /**
+     * Get Angular Compiler CLI arguments
+     *
+     * @param   tsconfigPath Path to tsconfig file
+     * @returns              Angular Compiller CLI arguments
+     */
+    private async getAngularCompilerCliArguments( tsconfigPath: string ): Promise<any> {
+
+        // Get the installed angular compiler CLI version
+        const angularCompilerCliVersion: string = await getInstalledDependencyVersion( '@angular/compiler-cli' );
+
+        // Construct angular compiler cli argument
+        const angularCompilerCliArguments: any = semver.gte( angularCompilerCliVersion, '5.0.0' )
+            ? [ '-p', tsconfigPath ]
+            : { p: tsconfigPath };
+
+        return angularCompilerCliArguments;
 
     }
 
