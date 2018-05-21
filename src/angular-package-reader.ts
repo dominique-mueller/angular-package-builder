@@ -1,6 +1,6 @@
 import { posix as path } from 'path';
 
-import { AngularPackageConfig, AngularSubPackageConfig, AngularPackageOptions } from './config.interface';
+import { AngularPackageConfig, AngularSubPackageConfig, AngularPackageOptions } from './angular-package-config.interface';
 import { AngularPackage } from './angular-package';
 import { readFile } from './utilities/read-file';
 
