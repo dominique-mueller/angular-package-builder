@@ -31,3 +31,8 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	}
 
 }
+
+runAngularPackageBuilder( [
+	'./test/my-library/.angular-package.json',
+	'./test/my-second-library/.angular-package.json',
+] );

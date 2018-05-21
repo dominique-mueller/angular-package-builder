@@ -1,8 +1,9 @@
 import { posix as path } from 'path';
 
+import { OutputChunk, rollup, InputOptions, OutputOptions } from 'rollup';
+
 import { AngularPackage } from '../angular-package';
 import { RollupConfigurationBuilder } from './rollup-configuration-builder';
-import { OutputChunk, rollup, InputOptions, OutputOptions } from 'rollup';
 
 /**
  * Angular Package Bundler

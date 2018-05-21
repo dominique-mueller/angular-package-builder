@@ -27,3 +27,11 @@ export const angularDependencies: { [ dependency: string ]: string } = {
 	'@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
 	'@angular/platform-browser/animations': 'ng.platformBrowser.animations'
 };
+
+export function isExternalModule( id: string, parentId: string, isResolved: boolean ): Promise<boolean | void> | boolean | void {
+
+}
+
+export function getDependency(): any {
+
+}

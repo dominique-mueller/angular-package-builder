@@ -6,6 +6,7 @@ import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
 import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
 import { rollupBundlingTargets } from './rollup-bundling-targets';
+import { RollupModuleHelper } from './rollup-module-helper';
 
 /**
  * Rollup Configuration Builder
@@ -106,12 +107,21 @@ export class RollupConfigurationBuilder {
     /**
      * Set external dependencies
      *
-     * @param   dependencies Dependencies
+     * @param   dependencies Known dependencies
      * @returns              This instance of the Rollup configuration builder
      */
-    public setDependencies( dependencies: any ): RollupConfigurationBuilder {
-        this.inputOptions.external = Object.keys( dependencies );
-        this.outputOptions.globals = dependencies;
+    public setDependencies( dependencies: { [ dependency: string ]: string | null } ): RollupConfigurationBuilder {
+
+        const dependenciesAsList: Array<string> = Object.keys( dependencies );
+        this.inputOptions.external = ( moduleName: string ): boolean => {
+            return RollupModuleHelper.isExternalModule( moduleName, dependenciesAsList );
+        };
+
+        // this.outputOptions.globals = dependencies;
+        this.outputOptions.globals = ( moduleName: string ): string => {
+            return RollupModuleHelper.deriveModuleGlobalName( moduleName, dependencies );
+        };
+
         return this;
     }
 
