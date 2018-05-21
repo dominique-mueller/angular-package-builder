@@ -3,7 +3,7 @@ import { posix as path } from 'path';
 import * as typescript from 'typescript';
 import Project, { SourceFile } from 'ts-simple-ast';
 
-import { AngularPackageOptions } from './config.interface';
+import { AngularPackageOptions } from './angular-package-config.interface';
 import { readFile } from './utilities/read-file';
 import { getDependencyMap } from './utilities/get-dependency-map';
 import { deduplicateArray } from './utilities/deduplicate-array';
