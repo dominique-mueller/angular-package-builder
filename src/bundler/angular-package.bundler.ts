@@ -1,9 +1,15 @@
 import { posix as path } from 'path';
 
+import * as semver from 'semver';
 import { OutputChunk, rollup, InputOptions, OutputOptions } from 'rollup';
 
 import { AngularPackage } from '../angular-package';
 import { RollupConfigurationBuilder } from './rollup-configuration-builder';
+import { getInstalledDependencyVersion } from '../utilities/get-installed-dependency-version';
+import { angularDependencies } from './dependencies/angular-dependencies';
+import { rxjs6Dependencies } from './dependencies/rxjs6-dependencies';
+import { rxjs5Dependencies } from './dependencies/rxjs5-dependencies';
+import { typescriptDependencies } from './dependencies/typescript-dependencies';
 
 /**
  * Angular Package Bundler
@@ -36,7 +42,7 @@ export class AngularPackageBundler {
         const { inputOptions, outputOptions }: {
             inputOptions: InputOptions,
             outputOptions: OutputOptions
-        } = this.buildRollupConfiguration( target );
+        } = await this.buildRollupConfiguration( target );
 
         // Create and write bundle
         const bundle: OutputChunk = <OutputChunk> await rollup( inputOptions );
@@ -50,10 +56,10 @@ export class AngularPackageBundler {
      * @param   target Bundle target
      * @returns        Rollup input & output configuration
      */
-    private buildRollupConfiguration( target: 'fesm2015' | 'fesm5' | 'umd' ): {
+    private async buildRollupConfiguration( target: 'fesm2015' | 'fesm5' | 'umd' ): Promise<{
         inputOptions: InputOptions,
         outputOptions: OutputOptions
-    } {
+    }> {
 
         // Collect information
         const entryFileName: string = `${ this.angularPackage.packageName.split( '/' ).pop() }.js`;
@@ -64,14 +70,40 @@ export class AngularPackageBundler {
             ? path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'bundles' )
             : path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', target );
 
+        // Collect dependency information
+        const expectedDependencies: { [ dependency: string ]: string } = await this.getExpectedDependencies();
+
         // Build Rollup configuration
         return new RollupConfigurationBuilder()
             .setPackageName( this.angularPackage.packageName )
             .setEntry( entryFile )
             .setTarget( target )
             .setOutDir( outDir )
-            .setDependencies( this.angularPackage.dependencies )
+            .setDependencies( this.angularPackage.dependencies, expectedDependencies )
             .build();
+
+    }
+
+    /**
+     * Get expected dependencies, partially based on the installed version
+     *
+     * @returns Angular Compiller CLI arguments
+     */
+    private async getExpectedDependencies(): Promise<{ [ dependency: string ]: string }> {
+
+        // Get the installed RxJS version
+        const rxjsVersion: string = await getInstalledDependencyVersion( 'rxjs' );
+
+        // Get the expected RxJS dependencies
+        const rxjsDependencies: { [ dependency: string ]: string } = semver.gte( rxjsVersion, '6.0.0' )
+            ? rxjs6Dependencies
+            : rxjs5Dependencies;
+
+        return {
+            ...angularDependencies,
+            ...rxjsDependencies,
+            ...typescriptDependencies
+        };
 
     }
 

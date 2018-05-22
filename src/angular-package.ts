@@ -5,7 +5,6 @@ import Project, { SourceFile } from 'ts-simple-ast';
 
 import { AngularPackageOptions } from './angular-package-config.interface';
 import { readFile } from './utilities/read-file';
-import { getDependencyMap } from './utilities/get-dependency-map';
 import { deduplicateArray } from './utilities/deduplicate-array';
 import { AngularImportFileAnalyzer } from './transformer/imports/angular-import.file-analyzer';
 
@@ -77,11 +76,20 @@ export class AngularPackage {
         this.angularCompilerOptions = angularPackageOptions.angularCompilerOptions || {};
 
         // Get dependencies
-        const dependencies: Array<string> = [
+        const packageDependencies: { [ dependency: string ]: string } = [
             ...Object.keys( packageJson.dependencies || {} ),
+            ...Object.keys( packageJson.devDependencies || {} ),
+            ...Object.keys( packageJson.optionalDependencies || {} ),
             ...Object.keys( packageJson.peerDependencies || {} )
-        ];
-        this.dependencies = getDependencyMap( deduplicateArray( dependencies ) );
+        ]
+            .reduce( ( dependencyMap: { [ dependency: string ]: string }, dependency: string ): { [ dependency: string ]: string } => {
+                dependencyMap[ dependency ] = ''; // This also de-duplicates the array! Fancy!
+                return dependencyMap;
+            }, {} );
+        this.dependencies = {
+            ...( angularPackageOptions.dependencies || {} ),
+            ...packageDependencies
+        };
 
         // Create TypeScript project
         this.typescriptProject = this.createTypeScriptProject();

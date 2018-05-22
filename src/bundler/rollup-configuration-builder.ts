@@ -6,7 +6,6 @@ import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
 import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
 import { rollupBundlingTargets } from './rollup-bundling-targets';
-import { RollupModuleHelper } from './rollup-module-helper';
 
 /**
  * Rollup Configuration Builder
@@ -107,19 +106,21 @@ export class RollupConfigurationBuilder {
     /**
      * Set external dependencies
      *
-     * @param   dependencies Known dependencies
-     * @returns              This instance of the Rollup configuration builder
+     * @param   knownDependencies    Known dependencies, possibly with UMD IDs
+     * @param   expectedDependencies Expected dependencies with UMD IDs
+     * @returns                      This instance of the Rollup configuration builder
      */
-    public setDependencies( dependencies: { [ dependency: string ]: string | null } ): RollupConfigurationBuilder {
+    public setDependencies( knownDependencies: { [ dependency: string ]: string }, expectedDependencies: { [ dependency: string ]: string } ): RollupConfigurationBuilder {
 
-        const dependenciesAsList: Array<string> = Object.keys( dependencies );
+        // Handle externals discovery
+        const knownDependencyModules: Array<string> = Object.keys( knownDependencies );
         this.inputOptions.external = ( moduleName: string ): boolean => {
-            return RollupModuleHelper.isExternalModule( moduleName, dependenciesAsList );
+            return this.isExternalModule( moduleName, knownDependencyModules );
         };
 
-        // this.outputOptions.globals = dependencies;
+        // Handle globals
         this.outputOptions.globals = ( moduleName: string ): string => {
-            return RollupModuleHelper.deriveModuleGlobalName( moduleName, dependencies );
+            return this.getModuleGlobalName( moduleName, knownDependencies, expectedDependencies );
         };
 
         return this;
@@ -152,6 +153,45 @@ export class RollupConfigurationBuilder {
             : '';
         const fileName: string = `${ this.outputOptions.name }${ bundleSuffix }.js`;
         return path.join( this.outDir, fileName );
+    }
+
+    /**
+     * Check if the given module is an external module, taking deep imports into account as well
+     *
+     * @param   moduleName        Module name
+     * @param   knownDependencies List of known dependencies
+     * @returns                   Flag, describing whether the given module name is an external module
+     */
+    private isExternalModule( moduleName: string, knownDependencies: Array<string> ): boolean {
+        return knownDependencies
+            .some( ( knownDependency: string ): boolean => {
+                return moduleName === knownDependency || moduleName.startsWith( `${ knownDependency }/` );
+            } );
+    }
+
+    /**
+     * Get global name for the given module, based on known & expected dependencies
+     *
+     * @param   moduleName           Module name
+     * @param   knownDependencies    Known dependencies with potential global names
+     * @param   expectedDependencies Expected dependencies with global names
+     * @returns                      Global Name (UMD ID)
+     */
+    private getModuleGlobalName( moduleName: string, knownDependencies: { [ dependency: string ]: string }, expectedDependencies: { [ dependency: string ]: string } ): string {
+
+        // Prefer known dependencies
+        if ( !!knownDependencies[ moduleName ] ) {
+            return knownDependencies[ moduleName ];
+
+        // If necessary, use the expected dependencies as a fallback
+        } else if ( !!expectedDependencies[ moduleName ] ) {
+            return expectedDependencies[ moduleName ];
+
+        // If nothing matches, let rollup figure it out
+        } else {
+            return '';
+        }
+
     }
 
 }
