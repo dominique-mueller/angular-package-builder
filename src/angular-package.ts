@@ -1,11 +1,11 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
-import * as typescript from 'typescript';
-import Project, { SourceFile } from 'ts-simple-ast';
+import Project from 'ts-simple-ast';
 
 import { AngularPackageOptions } from './angular-package-config.interface';
 import { readFile } from './utilities/read-file';
 import { ImportAnalyzer } from './analyzer/import.analyzer';
+import { createTypescriptProject } from './utilities/create-typescript-project';
 
 /**
  * Angular Package
@@ -91,7 +91,7 @@ export class AngularPackage {
         };
 
         // Create TypeScript project
-        this.typescriptProject = this.createTypeScriptProject();
+        this.typescriptProject = createTypescriptProject( path.join( this.cwd, this.entryFile ) );
         this.externalImportSources = ImportAnalyzer.getExternalImportSources( this.typescriptProject );
 
     }
@@ -101,34 +101,6 @@ export class AngularPackage {
             ...( this.typescriptCompilerOptions.paths || {} ),
             ...packageNameWithPaths
         };
-    }
-
-    /**
-     * Create TypeScript project
-     *
-     * @returns TypeScript project
-     */
-    private createTypeScriptProject(): Project {
-
-        // Create TypeScript program; this also resolves all referenced modules and typings (both internal and external)
-        const entryFilePath: string = path.join( this.cwd, this.entryFile );
-        const typescriptProgram: typescript.Program = typescript.createProgram( [ entryFilePath ], {} );
-
-        // Get all source file paths, but exclude external modules & typings
-        const sourceFilePaths: Array<string> = typescriptProgram.getSourceFiles()
-            .filter( ( sourceFile: typescript.SourceFile ): boolean => {
-                return !typescriptProgram.isSourceFileFromExternalLibrary( sourceFile ) && !sourceFile.isDeclarationFile;
-            } )
-            .map( ( sourceFile: typescript.SourceFile ): string => {
-                return sourceFile.fileName; // This is actually the path ... weird, right?
-            } );
-
-        // Create TypeScript project
-        const typescriptProject: Project = new Project();
-        typescriptProject.addExistingSourceFiles( sourceFilePaths );
-
-        return typescriptProject;
-
     }
 
 }

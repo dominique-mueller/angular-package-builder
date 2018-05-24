@@ -1,4 +1,4 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
 /**
  * Get the type of a file

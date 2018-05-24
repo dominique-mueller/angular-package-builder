@@ -25,9 +25,7 @@ export class ImportAnalyzer {
             }, [] );
 
         // Remove duplicates
-        const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
-
-        return externalImportSourcesDeduplicated;
+        return deduplicateArray( externalImportSources );
 
     }
 

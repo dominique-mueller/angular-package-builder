@@ -1,4 +1,4 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
 import * as semver from 'semver';
 import { main as angularCompilerCli } from '@angular/compiler-cli/src/main';

@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { posix as path } from 'path';
+import * as path from 'path';
 
 import { importPath, distFolderPath } from './config';
 

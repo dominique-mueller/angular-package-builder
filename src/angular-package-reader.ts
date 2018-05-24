@@ -1,4 +1,4 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
 import { AngularPackageConfig, AngularSubPackageConfig, AngularPackageOptions } from './angular-package-config.interface';
 import { AngularPackage } from './angular-package';

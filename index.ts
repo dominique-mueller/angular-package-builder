@@ -1,4 +1,4 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageReader } from './src/angular-package-reader';

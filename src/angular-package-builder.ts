@@ -1,4 +1,4 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
 import { AngularPackage } from './angular-package';
 import { AngularPackageBundler } from './bundler/angular-package.bundler';
