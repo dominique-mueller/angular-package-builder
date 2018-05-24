@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as semver from 'semver';
+import { gte } from 'semver';
 import { rollup, OutputOptions, RollupFileOptions, Bundle } from 'rollup';
 
 import { AngularPackage } from '../angular-package';
@@ -95,7 +95,7 @@ export class AngularPackageBundler {
         const rxjsVersion: string = await getInstalledDependencyVersion( 'rxjs' );
 
         // Get the expected RxJS dependencies
-        const rxjsDependencies: { [ dependency: string ]: string } = semver.gte( rxjsVersion, '6.0.0' )
+        const rxjsDependencies: { [ dependency: string ]: string } = gte( rxjsVersion, '6.0.0' )
             ? rxjs6Dependencies
             : rxjs5Dependencies;
 

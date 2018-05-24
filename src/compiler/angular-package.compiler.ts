@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as semver from 'semver';
+import { gte } from 'semver';
 import { main as angularCompilerCli } from '@angular/compiler-cli/src/main';
 
 import { AngularPackage } from '../angular-package';
@@ -93,7 +93,7 @@ export class AngularPackageCompiler {
         const angularCompilerCliVersion: string = await getInstalledDependencyVersion( '@angular/compiler-cli' );
 
         // Construct angular compiler cli argument
-        const angularCompilerCliArguments: any = semver.gte( angularCompilerCliVersion, '5.0.0' )
+        const angularCompilerCliArguments: any = gte( angularCompilerCliVersion, '5.0.0' )
             ? [ '-p', tsconfigPath ]
             : { p: tsconfigPath };
 

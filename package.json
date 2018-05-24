@@ -73,6 +73,7 @@
 		"@types/jest": "22.2.x",
 		"@types/node-sass": "3.10.x",
 		"@types/node": "10.1.x",
+		"@types/semver": "5.5.x",
 		"automatic-release": "1.1.x",
 		"babel-jest": "23.0.x",
 		"copyfiles": "2.0.x",
