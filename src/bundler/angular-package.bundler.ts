@@ -1,7 +1,7 @@
 import { posix as path } from 'path';
 
 import * as semver from 'semver';
-import { OutputChunk, rollup, InputOptions, OutputOptions } from 'rollup';
+import { rollup, OutputOptions, RollupFileOptions, Bundle } from 'rollup';
 
 import { AngularPackage } from '../angular-package';
 import { RollupConfigurationBuilder } from './rollup-configuration-builder';
@@ -40,12 +40,12 @@ export class AngularPackageBundler {
 
         // Get configuration
         const { inputOptions, outputOptions }: {
-            inputOptions: InputOptions,
+            inputOptions: RollupFileOptions,
             outputOptions: OutputOptions
         } = await this.buildRollupConfiguration( target );
 
         // Create and write bundle
-        const bundle: OutputChunk = <OutputChunk> await rollup( inputOptions );
+        const bundle: Bundle = await rollup( inputOptions );
         await bundle.write( outputOptions );
 
     }
@@ -57,7 +57,7 @@ export class AngularPackageBundler {
      * @returns        Rollup input & output configuration
      */
     private async buildRollupConfiguration( target: 'fesm2015' | 'fesm5' | 'umd' ): Promise<{
-        inputOptions: InputOptions,
+        inputOptions: RollupFileOptions,
         outputOptions: OutputOptions
     }> {
 

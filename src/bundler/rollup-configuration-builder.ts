@@ -1,6 +1,6 @@
 import { posix as path } from 'path';
 
-import { InputOptions, OutputOptions, RollupWarning } from 'rollup';
+import { OutputOptions, RollupWarning, RollupFileOptions } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
 import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
@@ -15,7 +15,7 @@ export class RollupConfigurationBuilder {
     /**
      * Rollup input options
      */
-    private readonly inputOptions: InputOptions;
+    private readonly inputOptions: RollupFileOptions;
 
     /**
      * Rollup output options
@@ -31,7 +31,7 @@ export class RollupConfigurationBuilder {
      * Constructor
      */
     constructor() {
-        this.inputOptions = <InputOptions> {
+        this.inputOptions = <RollupFileOptions> {
             onwarn: ( warning: RollupWarning ): void => {
 
                 // Supress THIS_IS_UNDEFINED warnings, as they're not having an effect on the bundle
@@ -132,7 +132,7 @@ export class RollupConfigurationBuilder {
      * @returns Rollup input & output configuration
      */
     public build(): {
-        inputOptions: InputOptions,
+        inputOptions: RollupFileOptions,
         outputOptions: OutputOptions
     } {
         this.outputOptions.file = this.deriveOutFilePath();
