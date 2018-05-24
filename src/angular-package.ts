@@ -5,8 +5,7 @@ import Project, { SourceFile } from 'ts-simple-ast';
 
 import { AngularPackageOptions } from './angular-package-config.interface';
 import { readFile } from './utilities/read-file';
-import { deduplicateArray } from './utilities/deduplicate-array';
-import { AngularImportFileAnalyzer } from './transformer/imports/angular-import.file-analyzer';
+import { ImportAnalyzer } from './analyzer/import.analyzer';
 
 /**
  * Angular Package
@@ -93,7 +92,7 @@ export class AngularPackage {
 
         // Create TypeScript project
         this.typescriptProject = this.createTypeScriptProject();
-        this.externalImportSources = this.discoverExternalImportSources( this.typescriptProject );
+        this.externalImportSources = ImportAnalyzer.getExternalImportSources( this.typescriptProject );
 
     }
 
@@ -129,30 +128,6 @@ export class AngularPackage {
         typescriptProject.addExistingSourceFiles( sourceFilePaths );
 
         return typescriptProject;
-
-    }
-
-    /**
-     * Discover external import sources
-     *
-     * @param   typescriptProject TypeScript project (including source files)
-     * @returns                   List of external import sources
-     */
-    private discoverExternalImportSources( typescriptProject: Project ): Array<string> {
-
-        // Analyze source files for external imports
-        const externalImportSources: Array<string> = typescriptProject.getSourceFiles()
-            .reduce( ( externalImports: Array<string>, sourceFile: SourceFile ): Array<string> => {
-                return [
-                    ...externalImports,
-                    ...AngularImportFileAnalyzer.getExternalImportSources( sourceFile ),
-                ];
-            }, [] );
-
-        // Remove duplicate external imports
-        const externalImportSourcesDeduplicated: Array<string> = deduplicateArray( externalImportSources );
-
-        return externalImportSourcesDeduplicated;
 
     }
 

@@ -1,5 +1,6 @@
 /**
  * Remove duplicates from array
+ *
  * Implementation inspired by: https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
  *
  * @param   array - Array containing possible duplicated
