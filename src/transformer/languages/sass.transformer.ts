@@ -1,4 +1,4 @@
-import * as sass from 'node-sass';
+import { render, Result } from 'node-sass';
 
 /**
  * SASS Transformer
@@ -18,10 +18,10 @@ export class SASSTransformer {
             if ( sassContent.length === 0 ) {
                 resolve( sassContent );
             } else {
-                sass.render( {
+                render( {
                     data: sassContent,
                     outputStyle: 'expanded' // We will minify later on
-                }, ( error: Error, sassRenderResult: sass.Result ): void => {
+                }, ( error: Error, sassRenderResult: Result ): void => {
                     resolve( sassRenderResult.css.toString() );
                 } );
             }
