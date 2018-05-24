@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { OutputOptions, RollupWarning, RollupFileOptions } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';

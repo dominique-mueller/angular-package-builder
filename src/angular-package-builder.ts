@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { AngularPackage } from './angular-package';
 import { AngularPackageBundler } from './bundler/angular-package.bundler';
@@ -84,44 +84,44 @@ export class AngularPackageBuilder {
 
             // Builds
             copyFiles(
-                path.join( angularPackage.cwd, angularPackage.outDir, 'temp', 'esm2015', '**', '*.js?(.map)' ),
-                path.join( angularPackage.cwd, angularPackage.outDir, 'esm2015' )
+                path.join( angularPackage.root, angularPackage.outDir, 'temp', 'esm2015', '**', '*.js?(.map)' ),
+                path.join( angularPackage.root, angularPackage.outDir, 'esm2015' )
             ),
             copyFiles(
-                path.join( angularPackage.cwd, angularPackage.outDir, 'temp', 'esm5', '**', '*.js?(.map)' ),
-                path.join( angularPackage.cwd, angularPackage.outDir, 'esm5' )
+                path.join( angularPackage.root, angularPackage.outDir, 'temp', 'esm5', '**', '*.js?(.map)' ),
+                path.join( angularPackage.root, angularPackage.outDir, 'esm5' )
             ),
 
             // Bundles
             copyFiles(
-                path.join( angularPackage.cwd, angularPackage.outDir, 'temp', 'fesm2015', '**', '*.js?(.map)' ),
-                path.join( angularPackage.cwd, angularPackage.outDir, 'fesm2015' )
+                path.join( angularPackage.root, angularPackage.outDir, 'temp', 'fesm2015', '**', '*.js?(.map)' ),
+                path.join( angularPackage.root, angularPackage.outDir, 'fesm2015' )
             ),
             copyFiles(
-                path.join( angularPackage.cwd, angularPackage.outDir, 'temp', 'fesm5', '**', '*.js?(.map)' ),
-                path.join( angularPackage.cwd, angularPackage.outDir, 'fesm5' )
+                path.join( angularPackage.root, angularPackage.outDir, 'temp', 'fesm5', '**', '*.js?(.map)' ),
+                path.join( angularPackage.root, angularPackage.outDir, 'fesm5' )
             ),
             copyFiles(
-                path.join( angularPackage.cwd, angularPackage.outDir, 'temp', 'bundles', '**', '*.js?(.map)' ),
-                path.join( angularPackage.cwd, angularPackage.outDir, 'bundles' )
+                path.join( angularPackage.root, angularPackage.outDir, 'temp', 'bundles', '**', '*.js?(.map)' ),
+                path.join( angularPackage.root, angularPackage.outDir, 'bundles' )
             ),
 
             // Typings
             copyFiles(
-                path.join( angularPackage.cwd, angularPackage.outDir, 'temp', 'esm2015', '**', '*.d.ts' ),
-                path.join( angularPackage.cwd, angularPackage.outDir )
+                path.join( angularPackage.root, angularPackage.outDir, 'temp', 'esm2015', '**', '*.d.ts' ),
+                path.join( angularPackage.root, angularPackage.outDir )
             ),
 
             // Angular metadata
             copyFiles(
-                path.join( angularPackage.cwd, angularPackage.outDir, 'temp', 'esm2015', '**', '*.metadata.json' ),
-                path.join( angularPackage.cwd, angularPackage.outDir )
+                path.join( angularPackage.root, angularPackage.outDir, 'temp', 'esm2015', '**', '*.metadata.json' ),
+                path.join( angularPackage.root, angularPackage.outDir )
             ),
 
         ] );
 
         // Delete temporary folder
-        await deleteFolder( path.join( angularPackage.cwd, angularPackage.outDir, 'temp' ) );
+        await deleteFolder( path.join( angularPackage.root, angularPackage.outDir, 'temp' ) );
 
     }
 

@@ -1,8 +1,7 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import Project from 'ts-simple-ast';
 
-import { AngularPackageOptions } from './angular-package-config.interface';
 import { readFile } from './utilities/read-file';
 import { ImportAnalyzer } from './analyzer/import.analyzer';
 import { createTypescriptProject } from './utilities/create-typescript-project';
@@ -15,7 +14,7 @@ export class AngularPackage {
 	/**
 	 * Angular Package project directory
 	 */
-    public cwd: string;
+    public root: string;
 
     /**
      * Entry file path (relative to cwd)
@@ -31,6 +30,11 @@ export class AngularPackage {
      * Package name
      */
     public packageName: string;
+
+    /**
+     * Flag, describing whether the trny is primary (true) or secondary (false)
+     */
+    public isPrimary: boolean;
 
 	/**
 	 * Custom TypeScript compiler options
@@ -57,27 +61,54 @@ export class AngularPackage {
      */
     public typescriptProject: Project;
 
-    public async withConfig( cwd: string, angularPackageOptions: AngularPackageOptions ): Promise<void> {
+    public setRoot( root: string ): AngularPackage {
+        this.root = root;
+        return this;
+    }
 
-        this.cwd = cwd;
+    public setEntryFileAndOutDir( entryFile: string, outDir: string ): AngularPackage {
+        this.entryFile = path.normalize( entryFile );
+        this.outDir = path.join( outDir, path.dirname( entryFile ) );
+        return this;
+    }
 
-        // Read files
-        const absolutePackageJsonPath: string = path.join( this.cwd, 'package.json' );
+    public setTypescriptCompilerOptions( typescriptCompilerOptions: { [ options: string ]: any } ): AngularPackage {
+        this.typescriptCompilerOptions = typescriptCompilerOptions;
+        return this;
+    }
+
+    public setAngularCompilerOptions( angularCompilerOptions: { [ options: string ]: any } ): AngularPackage {
+        this.angularCompilerOptions = angularCompilerOptions;
+        return this;
+    }
+
+    public setDependencies( customDependencies: { [ dependency: string ]: string } ): AngularPackage {
+        this.dependencies = customDependencies;
+        return this;
+    }
+
+    public asPrimaryEntry(): AngularPackage {
+        this.isPrimary = true;
+        return this;
+    }
+
+    public asSecondaryEntry(): AngularPackage {
+        this.isPrimary = false;
+        return this;
+    }
+
+    public async init(): Promise<AngularPackage> {
+
+        // Read package json file
+        const absolutePackageJsonPath: string = path.join( this.root, 'package.json' );
         const packageJson: any = await readFile( absolutePackageJsonPath );
 
-        // Get primary entry information
-        this.entryFile = path.normalize( angularPackageOptions.entryFile );
-        this.outDir = path.join( angularPackageOptions.outDir, path.dirname( angularPackageOptions.entryFile ) );
-        this.packageName = path.join( packageJson.name, path.dirname( angularPackageOptions.entryFile ) );
+        // Set package name
+        this.packageName = path.join( packageJson.name, path.dirname( this.entryFile ) );
 
-        // Get compiler options
-        this.typescriptCompilerOptions = angularPackageOptions.typescriptCompilerOptions || {};
-        this.angularCompilerOptions = angularPackageOptions.angularCompilerOptions || {};
-
-        // Get dependencies
+        // Extend dependencies
         const packageDependencies: { [ dependency: string ]: string } = [
             ...Object.keys( packageJson.dependencies || {} ),
-            ...Object.keys( packageJson.devDependencies || {} ),
             ...Object.keys( packageJson.optionalDependencies || {} ),
             ...Object.keys( packageJson.peerDependencies || {} )
         ]
@@ -86,20 +117,22 @@ export class AngularPackage {
                 return dependencyMap;
             }, {} );
         this.dependencies = {
-            ...( angularPackageOptions.dependencies || {} ),
-            ...packageDependencies
+            ...packageDependencies,
+            ...this.dependencies // Priority!
         };
 
         // Create TypeScript project
-        this.typescriptProject = createTypescriptProject( path.join( this.cwd, this.entryFile ) );
+        this.typescriptProject = createTypescriptProject( path.join( this.root, this.entryFile ) );
         this.externalImportSources = ImportAnalyzer.getExternalImportSources( this.typescriptProject );
+
+        return this;
 
     }
 
-    public addPaths( packageNameWithPaths: { [ packageName: string ]: Array<string> } ): void {
+    public addCustomModulePaths( moduleNameWithPaths: { [ moduleName: string ]: Array<string> } ): void {
         this.typescriptCompilerOptions.paths = {
             ...( this.typescriptCompilerOptions.paths || {} ),
-            ...packageNameWithPaths
+            ...moduleNameWithPaths
         };
     }
 

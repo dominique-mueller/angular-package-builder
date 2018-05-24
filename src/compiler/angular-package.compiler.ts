@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { gte } from 'semver';
 import { main as angularCompilerCli } from '@angular/compiler-cli/src/main';
@@ -58,7 +58,7 @@ export class AngularPackageCompiler {
     private async buildAndWriteTypescriptConfiguration( target: 'esm2015' | 'esm5' ): Promise<string> {
 
         // Collect information
-        const baseDir: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp' );
+        const baseDir: string = path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp' );
         const entryDir: string = path.join( baseDir, 'transformed' );
         const outDir: string = path.join( baseDir, target );
         const entryFile: string = path.join( baseDir, 'transformed', path.basename( this.angularPackage.entryFile ) );
