@@ -1,4 +1,4 @@
-import * as htmlMinifier from 'html-minifier';
+import { minify } from 'html-minifier';
 
 /**
  * HTML Transformer
@@ -17,7 +17,7 @@ export class HTMLTransformer {
         if ( htmlContent.length === 0 ) {
             return htmlContent;
         } else {
-            return htmlMinifier.minify( htmlContent, htmlMinifierConfiguration )
+            return minify( htmlContent, htmlMinifierConfiguration )
         }
 
     }

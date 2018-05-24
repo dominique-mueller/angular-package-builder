@@ -1,13 +1,13 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
 import * as del from 'del';
 
 /**
- * Delete a folder (meaning the folder itself plus all its children)
+ * Delete a folder (meaning the folder itself and everything in it)
  *
- * @param   folderPath - Path to the folder
- * @returns            - Promise, resolves with File content (parsed if JSON)
+ * @param   folderPath Path to the folder
+ * @returns            Promise, resolves when done
  */
-export function deleteFolder( folderPath: string ): Promise<void> {
-	return del( [ path.join( folderPath, '**' ) ] );
+export async function deleteFolder( folderPath: string ): Promise<void> {
+	await del( [ path.join( folderPath, '**' ) ] );
 }

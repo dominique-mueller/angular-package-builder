@@ -1,11 +1,13 @@
 import * as fs from 'fs';
-import { posix as path } from 'path';
+import * as path from 'path';
+
+import { getFileType } from './get-file-type';
 
 /**
- * Read a file
+ * Read a file, parsing JSON files automatically
  *
- * @param   filePath - Path to the file
- * @returns          - Promise, resolves with File content (parsed if JSON)
+ * @param   filePath Path to the file
+ * @returns          Promise, resolves with file content, or an object if JSON
  */
 export function readFile( filePath: string ): Promise<string | any> {
 	return new Promise<string | any>( ( resolve: ( fileContent: string ) => void, reject: ( error: Error ) => void ) => {
@@ -21,7 +23,7 @@ export function readFile( filePath: string ): Promise<string | any> {
 
 			// Automatically parse JSON files into JavaScript objects
 			let parsedFileContent: string | any = fileContent;
-			if ( path.extname( filePath ).substring( 1 ).toLowerCase() === 'json' ) {
+			if ( getFileType( filePath ) === 'json' ) {
 				try {
 					parsedFileContent = JSON.parse( fileContent );
 				} catch ( jsonParseError ) {

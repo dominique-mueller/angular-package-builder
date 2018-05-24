@@ -1,13 +1,13 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
 import Project, { SourceFile } from 'ts-simple-ast';
 
 import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './external-resources/angular-external-resources.interfaces';
-import { AngularExternalTemplatesFileAnalyzer } from './external-resources/angular-external-templates.file-analyzer';
-import { AngularExternalTemplatesFileTransformer } from './external-resources/angular-external-templates.file-transformer';
+import { AngularExternalTemplatesFileAnalyzer } from './external-templates/angular-external-templates.analyzer';
+import { AngularExternalTemplatesFileTransformer } from './external-templates/angular-external-templates.transformer';
 import { readFile } from '../utilities/read-file';
-import { AngularExternalStylesFileAnalyzer } from './external-resources/angular-external-styles.file-analyzer';
-import { AngularExternalStylesFileTransformer } from './external-resources/angular-external-styles.file-transformer';
+import { AngularExternalStylesAnalyzer } from './external-styles/angular-external-styles.analyzer';
+import { AngularExternalStylesTransformer } from './external-styles/angular-external-styles.transformer';
 import { writeFile } from '../utilities/write-file';
 import { AngularPackage } from '../angular-package';
 
@@ -93,7 +93,7 @@ export class AngularPackageTransformer {
             this.sourceFiles.map( async( sourceFile: SourceFile ): Promise<void> => {
 
                 // Find external styles
-                const externalStyles: Array<AngularExternalStyles> = AngularExternalStylesFileAnalyzer.getExternalStyles( sourceFile );
+                const externalStyles: Array<AngularExternalStyles> = AngularExternalStylesAnalyzer.getExternalStyles( sourceFile );
 
                 // Read and inline external styles
                 await Promise.all(
@@ -103,7 +103,7 @@ export class AngularPackageTransformer {
                                 return readFile( style.path );
                             } )
                         );
-                        await AngularExternalStylesFileTransformer.inlineExternalStyles( externalStyle, styles );
+                        await AngularExternalStylesTransformer.inlineExternalStyles( externalStyle, styles );
                     } )
                 );
 

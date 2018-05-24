@@ -1,14 +1,13 @@
-import { posix as path } from 'path';
+import * as path from 'path';
 
-import * as semver from 'semver';
-
-import { Logger } from '../logger/logger-old';
+import { satisfies } from 'semver';
 
 /**
  * Ensure a specific version of a dependency
  *
- * @param dependency      - Name of / path to the dependency
- * @param requiredVersion - Required version or version range
+ * @param   dependency      Name of / path to the dependency
+ * @param   requiredVersion Required version, or version range
+ * @returns                 Promise, resolved when done
  */
 export async function ensureDependencyVersion( dependency: string, requiredVersion: string ): Promise<void> {
 
@@ -25,8 +24,8 @@ export async function ensureDependencyVersion( dependency: string, requiredVersi
 	}
 
 	// Version check
-	if ( !semver.satisfies( installedDependencyVersion, requiredVersion ) ) {
-		Logger.warn( [
+	if ( !satisfies( installedDependencyVersion, requiredVersion ) ) {
+		throw new Error( [
 			`Version "${ installedDependencyVersion }" of "${ dependency }" is not supported by the Angular Package Builder.`,
 			`The dependency is expected to satisfy "${ requiredVersion }". Will try to continue anyway ...`
 		].join( '\n' ) );
