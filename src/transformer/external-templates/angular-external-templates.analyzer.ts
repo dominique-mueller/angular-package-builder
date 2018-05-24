@@ -1,12 +1,12 @@
 import { SyntaxKind, ClassDeclaration, SourceFile, PropertyAssignment, StringLiteral, Identifier } from 'ts-simple-ast';
 
-import { AngularExternalTemplate } from './angular-external-resources.interfaces';
-import { AngularExternalResourcesFileAnalyzer } from './angular-external-resources.file-analyzer';
+import { AngularExternalResourcesAnalyzer } from '../external-resources/angular-external-resources.analyzer';
+import { AngularExternalTemplate } from '../external-resources/angular-external-resources.interfaces';
 
 /**
  * Angular External Templates File Analyzer
  */
-export class AngularExternalTemplatesFileAnalyzer extends AngularExternalResourcesFileAnalyzer {
+export class AngularExternalTemplatesFileAnalyzer extends AngularExternalResourcesAnalyzer {
 
     /**
      * Get external templates

@@ -5,7 +5,7 @@ import { ObjectLiteralExpression, ClassDeclaration, SourceFile, Decorator, Prope
 /**
  * [Abstract] Angular External Resources Analyzer
  */
-export abstract class AngularExternalResourcesFileAnalyzer {
+export abstract class AngularExternalResourcesAnalyzer {
 
     /**
      * Get a component decorator property, throws if it does not exist

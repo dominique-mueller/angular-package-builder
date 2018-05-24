@@ -1,12 +1,12 @@
-import { AngularExternalStyles, AngularExternalResource } from './angular-external-resources.interfaces';
-import { getFileType } from '../../utilities/get-file-type';
+import { AngularExternalStyles, AngularExternalResource } from '../external-resources/angular-external-resources.interfaces';
 import { CSSTransformer } from '../languages/css.transformer';
+import { getFileType } from '../../utilities/get-file-type';
 import { SASSTransformer } from '../languages/sass.transformer';
 
 /**
- * Angular External Styles File Transformer
+ * Angular External Styles Transformer
  */
-export class AngularExternalStylesFileTransformer {
+export class AngularExternalStylesTransformer {
 
     /**
      * Inline external styles (manipulates source code!)

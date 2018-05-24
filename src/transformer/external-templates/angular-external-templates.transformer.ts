@@ -1,6 +1,6 @@
-import { AngularExternalTemplate } from './angular-external-resources.interfaces';
 import { HTMLTransformer } from '../languages/html.transformer';
 import { getFileType } from '../../utilities/get-file-type';
+import { AngularExternalTemplate } from '../external-resources/angular-external-resources.interfaces';
 
 /**
  * Angular External Templates File Transformer
