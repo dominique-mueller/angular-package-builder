@@ -69,6 +69,7 @@
 		"@types/acorn": "4.0.x",
 		"@types/clean-css": "3.4.x",
 		"@types/cpx": "1.5.x",
+		"@types/del": "3.0.x",
 		"@types/jest": "22.2.x",
 		"@types/node-sass": "3.10.x",
 		"@types/node": "10.1.x",
