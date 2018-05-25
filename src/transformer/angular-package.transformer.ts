@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import Project, { SourceFile } from 'ts-simple-ast';
 
@@ -138,8 +138,8 @@ export class AngularPackageTransformer {
         const sourceFilesOutPaths: Array<string> = this.sourceFiles
             .map( ( sourceFile: SourceFile ): string => {
                 const filePath: string = sourceFile.getFilePath();
-                const absoluteEntryPath: string = path.join( this.angularPackage.cwd, this.angularPackage.entryFile );
-                const absoluteOutputPath: string = path.join( this.angularPackage.cwd, this.angularPackage.outDir );
+                const absoluteEntryPath: string = path.join( this.angularPackage.root, this.angularPackage.entryFile );
+                const absoluteOutputPath: string = path.join( this.angularPackage.root, this.angularPackage.outDir );
                 const relativeFilePath: string = path.relative( path.dirname( absoluteEntryPath ), filePath );
                 const movedFilePath: string = path.join( absoluteOutputPath, 'temp', 'transformed', relativeFilePath );
                 return movedFilePath;

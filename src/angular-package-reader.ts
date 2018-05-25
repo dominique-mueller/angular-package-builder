@@ -1,6 +1,6 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
-import { AngularPackageConfig, AngularSubPackageConfig, AngularPackageOptions } from './angular-package-config.interface';
+import { AngularPackageConfig, AngularSubPackageConfig } from './angular-package-config.interface';
 import { AngularPackage } from './angular-package';
 import { readFile } from './utilities/read-file';
 
@@ -44,26 +44,29 @@ export class AngularPackageReader {
 				const angularPackageJson: AngularPackageConfig = await readFile( angularPackageJsonPath );
 				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonPath ) );
 
-				// Create primary angular pacakge
-				const primaryAngularPackage: AngularPackage = await this.createAngularPackage( angularPackageCwd, {
-					entryFile: angularPackageJson.entryFile,
-					outDir: angularPackageJson.outDir,
-					typescriptCompilerOptions: angularPackageJson.typescriptCompilerOptions,
-					angularCompilerOptions: angularPackageJson.angularCompilerOptions,
-					dependencies: angularPackageJson.dependencies
-				} );
+				// Create angular pacakge
+				const primaryAngularPackage: AngularPackage = await new AngularPackage()
+					.setRoot( angularPackageCwd )
+					.setEntryFileAndOutDir( angularPackageJson.entryFile, angularPackageJson.outDir )
+					.setTypescriptCompilerOptions( angularPackageJson.typescriptCompilerOptions || {} )
+					.setAngularCompilerOptions( angularPackageJson.angularCompilerOptions || {} )
+					.setDependencies( angularPackageJson.dependencies || {} )
+					.asPrimaryEntry()
+					.init();
 
 				// Create angular packages for secondary entry points
 				const secondaryAngularPackages: Array<AngularPackage> = await Promise.all(
 					( angularPackageJson.secondaryEntries || [] ).map( async ( secondaryEntry: AngularSubPackageConfig ): Promise<AngularPackage> => {
 
-						return this.createAngularPackage( angularPackageCwd, {
-							entryFile: secondaryEntry.entryFile,
-							outDir: angularPackageJson.outDir,
-							typescriptCompilerOptions: angularPackageJson.typescriptCompilerOptions,
-							angularCompilerOptions: angularPackageJson.angularCompilerOptions,
-							dependencies: angularPackageJson.dependencies
-						} );
+						// Create angular pacakge
+						return new AngularPackage()
+							.setRoot( angularPackageCwd )
+							.setEntryFileAndOutDir( secondaryEntry.entryFile, angularPackageJson.outDir )
+							.setTypescriptCompilerOptions( angularPackageJson.typescriptCompilerOptions || {} )
+							.setAngularCompilerOptions( angularPackageJson.angularCompilerOptions || {} )
+							.setDependencies( angularPackageJson.dependencies || {} )
+							.asSecondaryEntry()
+							.init();
 
 					} )
 				);
@@ -73,19 +76,6 @@ export class AngularPackageReader {
 			} )
 		);
 
-	}
-
-	/**
-	 * Create angular package by the given options
-	 *
-	 * @param   cwd     CWD of the package
-	 * @param   options Options
-	 * @returns         Promise, resolves with angular pacakge
-	 */
-	private static async createAngularPackage( cwd: string, options: AngularPackageOptions ): Promise<AngularPackage> {
-		const angularPackage: AngularPackage = new AngularPackage();
-		await angularPackage.withConfig( cwd, options );
-		return angularPackage;
 	}
 
 }

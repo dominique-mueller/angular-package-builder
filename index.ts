@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageReader } from './src/angular-package-reader';
@@ -23,10 +23,10 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	// RUN!
 	const builtAngularPackages: any = {};
 	for ( const angularPackage of flattenedBuildOrchestration ) {
-		angularPackage.addPaths( builtAngularPackages );
+		angularPackage.addCustomModulePaths( builtAngularPackages );
 		await AngularPackageBuilder.package( angularPackage );
 		builtAngularPackages[ angularPackage.packageName ] = [
-			path.join( angularPackage.cwd, angularPackage.outDir )
+			path.join( angularPackage.root, angularPackage.outDir )
 		];
 	}
 

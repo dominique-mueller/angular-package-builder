@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { ObjectLiteralExpression, ClassDeclaration, SourceFile, Decorator, PropertyAssignment, StringLiteral } from 'ts-simple-ast';
 

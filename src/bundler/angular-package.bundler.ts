@@ -1,4 +1,4 @@
-import * as path from 'path';
+import { posix as path } from 'path';
 
 import { gte } from 'semver';
 import { rollup, OutputOptions, RollupFileOptions, Bundle } from 'rollup';
@@ -64,11 +64,11 @@ export class AngularPackageBundler {
         // Collect information
         const entryFileName: string = `${ this.angularPackage.packageName.split( '/' ).pop() }.js`;
         const entryFile: string = target === 'fesm2015'
-            ? path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'esm2015', entryFileName )
-            : path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'esm5', entryFileName );
+            ? path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'esm2015', entryFileName )
+            : path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'esm5', entryFileName );
         const outDir: string = target === 'umd'
-            ? path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', 'bundles' )
-            : path.join( this.angularPackage.cwd, this.angularPackage.outDir, 'temp', target );
+            ? path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'bundles' )
+            : path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', target );
 
         // Collect dependency information
         const expectedDependencies: { [ dependency: string ]: string } = await this.getExpectedDependencies();
