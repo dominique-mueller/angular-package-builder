@@ -10,6 +10,7 @@ import { AngularExternalStylesAnalyzer } from './external-styles/angular-externa
 import { AngularExternalStylesTransformer } from './external-styles/angular-external-styles.transformer';
 import { writeFile } from '../utilities/write-file';
 import { AngularPackage } from '../angular-package';
+import { AngularPackageLogger } from '../logger/angular-package-logger';
 
 /**
  * Angular Package Transformer
@@ -44,113 +45,95 @@ export class AngularPackageTransformer {
      */
     public async transform(): Promise<void> {
 
-        // Do transformations
-        await this.inlineExternalTemplates(),
-        await this.inlineExternalStyles()
-        this.convertLineBreaks();
-
-        // Save
-        await this.save();
-
-    }
-
-    /**
-     * Inline external templates
-     *
-     * @returns Promise, resolved when done
-     */
-    private async inlineExternalTemplates(): Promise<void> {
+        let numberOfFiles: number = this.sourceFiles.length;
+        let processedFiles: number = 0;
 
         // Apply transformation for each source file
         await Promise.all(
             this.sourceFiles.map( async( sourceFile: SourceFile ): Promise<void> => {
 
-                // Find external templates
-                const externalTemplates: Array<AngularExternalTemplate> = AngularExternalTemplatesFileAnalyzer.getExternalTemplates( sourceFile );
+                // Apply transformtions
+                await this.inlineExternalTemplates( sourceFile );
+                await this.inlineExternalStyles( sourceFile );
+                this.convertLineBreaks( sourceFile );
+                await this.save( sourceFile );
 
-                // Read and inline external templates
-                await Promise.all(
-                    externalTemplates.map( async( externalTemplate: AngularExternalTemplate ): Promise<void> => {
-                        const template: string = await readFile( externalTemplate.template.path );
-                        AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
-                    } )
-                );
+                processedFiles++;
+                const relativeFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
+                const message: string = `Transform files (${ processedFiles }/${ numberOfFiles }) :: ${ relativeFilePath }`;
+                AngularPackageLogger.log( {
+                    message,
+                    progress: processedFiles / numberOfFiles
+                } );
 
             } )
         );
 
+    }
+
+    /**
+     * Inline external templates in the given file
+     *
+     * @param   sourceFile Source file
+     * @returns            Promise, resolved when done
+     */
+    private async inlineExternalTemplates( sourceFile: SourceFile ): Promise<void> {
+        await Promise.all(
+            AngularExternalTemplatesFileAnalyzer.getExternalTemplates( sourceFile )
+                .map( async( externalTemplate: AngularExternalTemplate ): Promise<void> => {
+                    const template: string = await readFile( externalTemplate.template.path );
+                    AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
+                } )
+        );
     }
 
     /**
      * Inline external styles
      *
-     * @returns Promise, resolves when done
+     * @param   sourceFile Source file
+     * @returns            Promise, resolves when done
      */
-    private async inlineExternalStyles(): Promise<void> {
-
-        // Apply transformation for each source file
+    private async inlineExternalStyles( sourceFile: SourceFile ): Promise<void> {
         await Promise.all(
-            this.sourceFiles.map( async( sourceFile: SourceFile ): Promise<void> => {
-
-                // Find external styles
-                const externalStyles: Array<AngularExternalStyles> = AngularExternalStylesAnalyzer.getExternalStyles( sourceFile );
-
-                // Read and inline external styles
-                await Promise.all(
-                    externalStyles.map( async( externalStyle: AngularExternalStyles ): Promise<void> => {
-                        const styles: Array<string> = await Promise.all(
-                            externalStyle.styles.map( ( style: AngularExternalResource ): Promise<string> => {
-                                return readFile( style.path );
-                            } )
-                        );
-                        await AngularExternalStylesTransformer.inlineExternalStyles( externalStyle, styles );
-                    } )
-                );
-
-            } )
+            AngularExternalStylesAnalyzer.getExternalStyles( sourceFile )
+                .map( async( externalStyle: AngularExternalStyles ): Promise<void> => {
+                    const styles: Array<string> = await Promise.all(
+                        externalStyle.styles.map( ( style: AngularExternalResource ): Promise<string> => {
+                            return readFile( style.path );
+                        } )
+                    );
+                    await AngularExternalStylesTransformer.inlineExternalStyles( externalStyle, styles );
+                } )
         );
-
     }
 
     /**
      * Convert line breaks
+     *
+     * @param sourceFile Source file
      */
-    private convertLineBreaks(): void {
-
-        // Apply transformation for each source file
-        this.sourceFiles.forEach( ( sourceFile: SourceFile ) => {
-            sourceFile.formatText( {
-                newLineCharacter: '\n'
-            } );
+    private convertLineBreaks( sourceFile: SourceFile ): void {
+        sourceFile.formatText( {
+            newLineCharacter: '\n' // Linux!!
         } );
-
     }
 
     /**
      * Save transformation results
      *
-     * @returns Promise, resolves when done
+     * @param   sourceFile Source file
+     * @returns            Promise, resolves when done
      */
-    private async save(): Promise<void> {
+    private async save( sourceFile: SourceFile ): Promise<void> {
 
-        // Move the file paths
-        const sourceFiles: Array<SourceFile> = this.sourceFiles;
-        const sourceFilesOutPaths: Array<string> = this.sourceFiles
-            .map( ( sourceFile: SourceFile ): string => {
-                const filePath: string = sourceFile.getFilePath();
-                const absoluteEntryPath: string = path.join( this.angularPackage.root, this.angularPackage.entryFile );
-                const absoluteOutputPath: string = path.join( this.angularPackage.root, this.angularPackage.outDir );
-                const relativeFilePath: string = path.relative( path.dirname( absoluteEntryPath ), filePath );
-                const movedFilePath: string = path.join( absoluteOutputPath, 'temp', 'transformed', relativeFilePath );
-                return movedFilePath;
-            } );
+        // Determine the file output path
+        const absoluteEntryPath: string = path.join( this.angularPackage.root, this.angularPackage.entryFile );
+        const absoluteOutputPath: string = path.join( this.angularPackage.root, this.angularPackage.outDir );
+        const relativeFilePath: string = path.relative( path.dirname( absoluteEntryPath ), sourceFile.getFilePath() );
+        const filePathOut: string = path.join( absoluteOutputPath, 'temp', 'transformed', relativeFilePath );
 
         // Write files to disk
-        await Promise.all(
-            sourceFilesOutPaths.map( async( filePath: string, index: number ): Promise<void> => {
-                await writeFile( filePath, sourceFiles[ index ].getText() );
-            } )
-        );
+        await writeFile( filePathOut, sourceFile.getText() );
 
     }
 

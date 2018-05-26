@@ -6,6 +6,7 @@ import { AngularPackage } from '../angular-package';
 import { readFile } from '../utilities/read-file';
 import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
 import { deleteFolder } from '../utilities/delete-folder';
+import { AngularPackageLogger } from '../logger/angular-package-logger';
 
 export class AngularPackageComposer {
 
@@ -18,17 +19,35 @@ export class AngularPackageComposer {
 	public async compose(): Promise<void> {
 
 		// Copy build
-		await Promise.all( [
-			this.copyBuildFiles(),
-			this.copyBundleFiles(),
-			this.copyTypingFiles(),
-			this.copyMetadataFiles()
-		] );
+		AngularPackageLogger.log( {
+			message: 'Copy build files',
+            progress: .1
+        } );
+		await this.copyBuildFiles();
 
-		// Cleanup
-		await this.cleanupTemporaryOutputFolder();
+		AngularPackageLogger.log( {
+			message: 'Copy bundles',
+            progress: .4
+        } );
+		await this.copyBundleFiles();
+
+		AngularPackageLogger.log( {
+			message: 'Copy typings',
+            progress: .7
+        } );
+		await this.copyTypingFiles();
+
+		AngularPackageLogger.log( {
+			message: 'Copy metadata files',
+            progress: .8
+        } );
+		await this.copyMetadataFiles();
 
 		// Create package.json files with entry properties
+		AngularPackageLogger.log( {
+			message: 'Add package.json file',
+            progress: .9
+        } );
 		this.angularPackage.isPrimary
 			? this.createPackageJsonForPrimaryEntry()
 			: this.createPackageJsonForSecondaryEntry();

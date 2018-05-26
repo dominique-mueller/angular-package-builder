@@ -1,11 +1,12 @@
 import { posix as path } from 'path';
 
-import { OutputOptions, RollupWarning, RollupFileOptions } from 'rollup';
+import { OutputOptions, RollupWarning, RollupFileOptions, SourceDescription } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
 import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
 
 import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
 import { rollupBundlingTargets } from './rollup-bundling-targets';
+import { AngularPackageLogger } from '../logger/angular-package-logger';
 
 /**
  * Rollup Configuration Builder
@@ -31,7 +32,7 @@ export class RollupConfigurationBuilder {
      * Constructor
      */
     constructor() {
-        this.inputOptions = <RollupFileOptions> {
+        this.inputOptions = <RollupFileOptions>{
             onwarn: ( warning: RollupWarning ): void => {
 
                 // Supress THIS_IS_UNDEFINED warnings, as they're not having an effect on the bundle
@@ -50,7 +51,33 @@ export class RollupConfigurationBuilder {
             preserveSymlinks: true, // No idea why this is required, though ...
             plugins: [
                 rollupNodeResolvePlugin(),
-                rollupCommonjsPlugin()
+                rollupCommonjsPlugin(),
+                ( () => {
+                    let processedFiles: number = 0;
+                    return {
+                        name: 'logger',
+                        load: ( id: string ) => {
+                            processedFiles++;
+                            const normalizedFilePath: string = id.toString().replace( /\\/g, path.sep );
+                            const relativeFilePath: string = normalizedFilePath.indexOf( 'node_modules' ) === -1
+                                ? path.relative( path.dirname( this.inputOptions.input ), normalizedFilePath )
+                                : `node_modules${ normalizedFilePath.split( 'node_modules' ).slice( -1 )[ 0 ] }`;
+                            AngularPackageLogger.log( {
+                                message: `Process files (${ processedFiles }) :: ${ relativeFilePath }`
+                            } );
+                        },
+                        ongenerate: ( options: OutputOptions, source: SourceDescription ) => {
+                            AngularPackageLogger.log( {
+                                message: `Generate bundle :: ${ path.basename( options.file ) }`
+                            } );
+                        },
+                        onwrite: ( options: OutputOptions, source: SourceDescription ) => {
+                            AngularPackageLogger.log( {
+                                message: `Write bundle :: ${ path.basename( options.file ) }`
+                            } );
+                        },
+                    };
+                } )()
             ]
         };
         this.outputOptions = {
@@ -183,11 +210,11 @@ export class RollupConfigurationBuilder {
         if ( !!knownDependencies[ moduleName ] ) {
             return knownDependencies[ moduleName ];
 
-        // If necessary, use the expected dependencies as a fallback
+            // If necessary, use the expected dependencies as a fallback
         } else if ( !!expectedDependencies[ moduleName ] ) {
             return expectedDependencies[ moduleName ];
 
-        // If nothing matches, let rollup figure it out
+            // If nothing matches, let rollup figure it out
         } else {
             return '';
         }
