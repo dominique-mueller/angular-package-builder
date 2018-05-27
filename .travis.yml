@@ -36,7 +36,7 @@ jobs:
     - stage: temp
       before_install:
         - npm install -g npm
-        - npm install -g ts-node
+        - npm install -g ts-node typescript
       install:
         - npm ci
       script:
