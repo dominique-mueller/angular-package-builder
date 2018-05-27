@@ -22,6 +22,10 @@ export class AngularPackageLogger {
 
     private static currentBuildStartTime: number;
 
+    private static get supportsDynamcRendering(): boolean {
+        return process.stdout.isTTY === true;
+    }
+
     public static configureNumberOfAngularPackages( numberOfAngularPackages: number ): void {
         this.numberOfAngularPackages = numberOfAngularPackages;
         this.paddingLeft = ' '.repeat( this.numberOfAngularPackages.toString().length * 2 + 4 );
@@ -49,49 +53,59 @@ export class AngularPackageLogger {
         const counter: string = chalk.blue( `[${ this.packageCounter }/${ this.numberOfAngularPackages }]` );
         const title: string = chalk.white( `Package "${ packageName }"` );
         console.log( '' );
-		console.log( `${ counter } ${ title }` );
-		console.log( '' );
+        console.log( `${ counter } ${ title }` );
+        console.log( '' );
     }
 
     /**
      * Log the current build success
      */
     public static logBuildSuccess(): void {
-        log.done();
-        this.state = [];
+        if ( this.supportsDynamicRendering ) {
+            log.done();
+            this.state = [];
+        }
         const currentBuildFinishTime: number = new Date().getTime();
         const processTime = ( ( currentBuildFinishTime - this.currentBuildStartTime ) / 1000 ).toFixed( 2 );
         this.currentBuildStartTime = 0;
         console.log( '' );
-		console.log( chalk.bold.green( `${ this.paddingLeft }Success!` ), chalk.grey( `(${ processTime } seconds)` ) );
+        console.log( chalk.bold.green( `${ this.paddingLeft }Success!` ), chalk.grey( `(${ processTime } seconds)` ) );
         console.log( '' );
     }
 
     public static logTaskStart( task: string ): void {
-        this.state.push( {
-            task,
-            status: 'running',
-            messages: []
-        } );
-        this.logToConsole();
+        if ( this.supportsDynamicRendering ) {
+            this.state.push( {
+                task,
+                status: 'running',
+                messages: []
+            } );
+            this.logToConsole();
+        } else {
+            console.log( this.createTaskLogOutput( task, 'running' ) );
+        }
     }
 
     public static logTaskSuccess(): void {
-        this.state.slice( -1 )[ 0 ].status = 'success';
-        this.logToConsole();
+        if ( this.supportsDynamicRendering ) {
+            this.state.slice( -1 )[ 0 ].status = 'success';
+            this.logToConsole();
+        }
     }
 
     public static logMessage( message: string ): void {
-        this.state.slice( -1 )[ 0 ].messages = [
-            ...this.state.slice( -1 )[ 0 ].messages.filter( ( loggerMessage: AngularPackageLoggerMessage ): boolean => {
-                return loggerMessage.type !== 'default';
-            } ),
-            {
-                type: 'default',
-                message: message
-            }
-        ];
-        this.logToConsole();
+        if ( this.supportsDynamicRendering ) {
+            this.state.slice( -1 )[ 0 ].messages = [
+                ...this.state.slice( -1 )[ 0 ].messages.filter( ( loggerMessage: AngularPackageLoggerMessage ): boolean => {
+                    return loggerMessage.type !== 'default';
+                } ),
+                {
+                    type: 'default',
+                    message: message
+                }
+            ];
+            this.logToConsole();
+        }
     }
 
     private static logToConsole(): void {

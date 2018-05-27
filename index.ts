@@ -1,7 +1,5 @@
 import { posix as path } from 'path';
 
-import chalk from 'chalk';
-
 import { AngularPackage } from './src/angular-package';
 import { AngularPackageReader } from './src/angular-package-reader';
 import { AngularPackageOrchestrator } from './src/angular-package-orchestrator';
@@ -37,8 +35,6 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 		AngularPackageLogger.logBuildSuccess();
 
 	}
-
-	console.log( '' );
 
 }
 
