@@ -21,10 +21,6 @@ export class AngularPackageBuilder {
      */
     public static async package( angularPackage: AngularPackage ): Promise<void> {
 
-        console.log( '' );
-        console.log( `PACKAGE "${ angularPackage.packageName }"` );
-        console.log( '' );
-
         await this.cleanupTemporaryOutputFolder( angularPackage );
 
         await this.transform( angularPackage );
@@ -33,12 +29,6 @@ export class AngularPackageBuilder {
         await this.compose( angularPackage );
 
         await this.cleanupTemporaryOutputFolder( angularPackage );
-
-        AngularPackageLogger.done();
-
-        console.log( '' );
-        console.log( 'DONE.' );
-        console.log( '' );
 
     }
 
@@ -49,15 +39,13 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolves when done
      */
     private static async transform( angularPackage: AngularPackage ): Promise<void> {
-        AngularPackageLogger.log( {
-            task: 'Apply transformations',
-            progress: 0
-        } );
+
         const angularPackageTransformer: AngularPackageTransformer = new AngularPackageTransformer( angularPackage );
+
+        AngularPackageLogger.logTaskStart( 'Apply transformations' );
         await angularPackageTransformer.transform();
-        AngularPackageLogger.log( {
-            progress: 1
-        } );
+        AngularPackageLogger.logTaskSuccess();
+
     }
 
     /**
@@ -70,25 +58,13 @@ export class AngularPackageBuilder {
 
         const angularPackageCompiler: AngularPackageCompiler = new AngularPackageCompiler( angularPackage );
 
-        AngularPackageLogger.log( {
-            task: 'Compile ESM2015',
-            message: 'Compile TypeScript into ES2015',
-            progress: 0
-        } );
+        AngularPackageLogger.logTaskStart( 'Compile TypeScript to ES2015' );
         await angularPackageCompiler.compile( 'esm2015' );
-        AngularPackageLogger.log( {
-            progress: 1
-        } );
+        AngularPackageLogger.logTaskSuccess();
 
-        AngularPackageLogger.log( {
-            task: 'Compile ESM5',
-            message: 'Compile TypeScript into ES5',
-            progress: 0
-        } );
+        AngularPackageLogger.logTaskStart( 'Compile TypeScript to ES5' );
         await angularPackageCompiler.compile( 'esm5' );
-        AngularPackageLogger.log( {
-            progress: 1
-        } );
+        AngularPackageLogger.logTaskSuccess();
 
     }
 
@@ -102,35 +78,17 @@ export class AngularPackageBuilder {
 
         const angularPackageBundler: AngularPackageBundler = new AngularPackageBundler( angularPackage );
 
-        AngularPackageLogger.log( {
-            task: 'Bundle FESM2015',
-            message: 'Create flat ES2015 bundle',
-            progress: 0
-        } );
+        AngularPackageLogger.logTaskStart( 'Generate flat ES2015 bundle' );
         await angularPackageBundler.bundle( 'fesm2015' );
-        AngularPackageLogger.log( {
-            progress: 1
-        } );
+        AngularPackageLogger.logTaskSuccess();
 
-        AngularPackageLogger.log( {
-            task: 'Bundle FESM5',
-            message: 'Create flat ES5 bundle',
-            progress: 0
-        } );
+        AngularPackageLogger.logTaskStart( 'Generate flat ES5 bundle' );
         await angularPackageBundler.bundle( 'fesm5' );
-        AngularPackageLogger.log( {
-            progress: 1
-        } );
+        AngularPackageLogger.logTaskSuccess();
 
-        AngularPackageLogger.log( {
-            task: 'Bundle UMD',
-            message: 'Create UMD bundle',
-            progress: 0
-        } );
+        AngularPackageLogger.logTaskStart( 'Generate UMD bundle' );
         await angularPackageBundler.bundle( 'umd' );
-        AngularPackageLogger.log( {
-            progress: 1
-        } );
+        AngularPackageLogger.logTaskSuccess();
 
     }
 
@@ -144,14 +102,9 @@ export class AngularPackageBuilder {
 
         const angularPackageComposer: AngularPackageComposer = new AngularPackageComposer( angularPackage );
 
-        AngularPackageLogger.log( {
-            task: 'Compose Package',
-            progress: 0
-        } );
+        AngularPackageLogger.logTaskStart( 'Compose package' );
         await angularPackageComposer.compose();
-        AngularPackageLogger.log( {
-            progress: 1
-        } );
+        AngularPackageLogger.logTaskSuccess();
 
     }
 

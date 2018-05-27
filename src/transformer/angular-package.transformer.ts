@@ -61,10 +61,7 @@ export class AngularPackageTransformer {
                 processedFiles++;
                 const relativeFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
                 const message: string = `Transform files (${ processedFiles }/${ numberOfFiles }) :: ${ relativeFilePath }`;
-                AngularPackageLogger.log( {
-                    message,
-                    progress: processedFiles / numberOfFiles
-                } );
+                AngularPackageLogger.logMessage( message );
 
             } )
         );

@@ -5,7 +5,6 @@ import { copyFiles } from '../utilities/copy-files';
 import { AngularPackage } from '../angular-package';
 import { readFile } from '../utilities/read-file';
 import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
-import { deleteFolder } from '../utilities/delete-folder';
 import { AngularPackageLogger } from '../logger/angular-package-logger';
 
 export class AngularPackageComposer {
@@ -19,35 +18,20 @@ export class AngularPackageComposer {
 	public async compose(): Promise<void> {
 
 		// Copy build
-		AngularPackageLogger.log( {
-			message: 'Copy build files',
-            progress: .1
-        } );
+		AngularPackageLogger.logMessage( 'Copy build files' );
 		await this.copyBuildFiles();
 
-		AngularPackageLogger.log( {
-			message: 'Copy bundles',
-            progress: .4
-        } );
+		AngularPackageLogger.logMessage( 'Copy bundles' );
 		await this.copyBundleFiles();
 
-		AngularPackageLogger.log( {
-			message: 'Copy typings',
-            progress: .7
-        } );
+		AngularPackageLogger.logMessage( 'Copy typings' );
 		await this.copyTypingFiles();
 
-		AngularPackageLogger.log( {
-			message: 'Copy metadata files',
-            progress: .8
-        } );
+		AngularPackageLogger.logMessage( 'Copy metadata file' );
 		await this.copyMetadataFiles();
 
 		// Create package.json files with entry properties
-		AngularPackageLogger.log( {
-			message: 'Add package.json file',
-            progress: .9
-        } );
+		AngularPackageLogger.logMessage( 'Compose package.json file' );
 		this.angularPackage.isPrimary
 			? this.createPackageJsonForPrimaryEntry()
 			: this.createPackageJsonForSecondaryEntry();
@@ -96,10 +80,6 @@ export class AngularPackageComposer {
 			path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'esm2015', '**', '*.metadata.json' ),
 			path.join( this.angularPackage.root, this.angularPackage.outDir )
 		);
-	}
-
-	private async cleanupTemporaryOutputFolder(): Promise<void> {
-        await deleteFolder( path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp' ) );
 	}
 
 	private async createPackageJsonForPrimaryEntry(): Promise<void> {

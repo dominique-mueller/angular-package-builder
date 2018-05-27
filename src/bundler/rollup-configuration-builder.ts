@@ -62,19 +62,13 @@ export class RollupConfigurationBuilder {
                             const relativeFilePath: string = normalizedFilePath.indexOf( 'node_modules' ) === -1
                                 ? path.relative( path.dirname( this.inputOptions.input ), normalizedFilePath )
                                 : `node_modules${ normalizedFilePath.split( 'node_modules' ).slice( -1 )[ 0 ] }`;
-                            AngularPackageLogger.log( {
-                                message: `Process files (${ processedFiles }) :: ${ relativeFilePath }`
-                            } );
+                            AngularPackageLogger.logMessage( `Processing files (${ processedFiles }) :: ${ relativeFilePath }` );
                         },
                         ongenerate: ( options: OutputOptions, source: SourceDescription ) => {
-                            AngularPackageLogger.log( {
-                                message: `Generate bundle :: ${ path.basename( options.file ) }`
-                            } );
+                            AngularPackageLogger.logMessage( `Generate bundle :: ${ path.basename( options.file ) }` );
                         },
                         onwrite: ( options: OutputOptions, source: SourceDescription ) => {
-                            AngularPackageLogger.log( {
-                                message: `Write bundle :: ${ path.basename( options.file ) }`
-                            } );
+                            AngularPackageLogger.logMessage( `Write bundle :: ${ path.basename( options.file ) }` );
                         },
                     };
                 } )()

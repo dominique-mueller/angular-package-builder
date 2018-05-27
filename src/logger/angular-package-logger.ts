@@ -7,12 +7,6 @@ export const loggerSymbols: any = {
     pointer: process.platform === 'win32' ? '>' : '❯'
 };
 
-export interface AngularPackageLoggerOptions {
-    task?: string;
-    message?: string;
-    progress?: number;
-}
-
 /**
  * Angular Package Logger
  */
@@ -20,58 +14,98 @@ export class AngularPackageLogger {
 
     private static state: Array<AngularPackageLoggerTask> = [];
 
-    public static log( options: AngularPackageLoggerOptions ): void {
+    private static numberOfAngularPackages: number = 0;
 
-        // Re-use or add new task
-        if ( options.task && ( this.state.length === 0 || this.state[ this.state.length - 1 ].task !== options.task ) ) {
-            this.state.push( {
-                messages: [],
-                task: options.task
-            } );
-        }
-        const task: AngularPackageLoggerTask = this.state[ this.state.length - 1 ];
+    private static packageCounter: number = 0;
 
-        // Set progress
-        if ( !options.progress && !task.progress ) {
-            task.progress = 0;
-        } else if ( options.progress ) {
-            task.progress = options.progress;
-        }
+    private static paddingLeft: string;
 
-        // Update message
-        if ( options.message ) {
-            task.messages = [
-                ...task.messages.filter( ( loggerMessage: AngularPackageLoggerMessage ): boolean => {
-                    return loggerMessage.type !== 'default';
-                } ),
-                {
-                    type: 'default',
-                    message: options.message
-                }
-            ];
-        }
+    private static currentBuildStartTime: number;
 
-        this.doLog();
-
+    public static configureNumberOfAngularPackages( numberOfAngularPackages: number ): void {
+        this.numberOfAngularPackages = numberOfAngularPackages;
+        this.paddingLeft = ' '.repeat( this.numberOfAngularPackages.toString().length * 2 + 4 );
     }
 
-    public static done(): void {
+    /**
+     * Log the tool name
+     *
+     * @param name Name
+     */
+    public static logTitle( name: string ): void {
+        console.log( '' );
+        console.log( process.platform === 'win32' ? chalk.white( name ) : chalk.white.underline( name ) );
+        console.log( '' );
+    }
+
+    /**
+     * Log the build start
+     *
+     * @param packageName Package name
+     */
+    public static logBuildStart( packageName: string ): void {
+        this.currentBuildStartTime = new Date().getTime();
+        this.packageCounter++;
+        const counter: string = chalk.blue( `[${ this.packageCounter }/${ this.numberOfAngularPackages }]` );
+        const title: string = chalk.white( `Package "${ packageName }"` );
+        console.log( '' );
+		console.log( `${ counter } ${ title }` );
+		console.log( '' );
+    }
+
+    /**
+     * Log the current build success
+     */
+    public static logBuildSuccess(): void {
         log.done();
         this.state = [];
+        const currentBuildFinishTime: number = new Date().getTime();
+        const processTime = ( ( currentBuildFinishTime - this.currentBuildStartTime ) / 1000 ).toFixed( 2 );
+        this.currentBuildStartTime = 0;
+        console.log( '' );
+		console.log( chalk.bold.green( `${ this.paddingLeft }Success!` ), chalk.grey( `(${ processTime } seconds)` ) );
+        console.log( '' );
     }
 
-    private static doLog(): void {
+    public static logTaskStart( task: string ): void {
+        this.state.push( {
+            task,
+            status: 'running',
+            messages: []
+        } );
+        this.logToConsole();
+    }
+
+    public static logTaskSuccess(): void {
+        this.state.slice( -1 )[ 0 ].status = 'success';
+        this.logToConsole();
+    }
+
+    public static logMessage( message: string ): void {
+        this.state.slice( -1 )[ 0 ].messages = [
+            ...this.state.slice( -1 )[ 0 ].messages.filter( ( loggerMessage: AngularPackageLoggerMessage ): boolean => {
+                return loggerMessage.type !== 'default';
+            } ),
+            {
+                type: 'default',
+                message: message
+            }
+        ];
+        this.logToConsole();
+    }
+
+    private static logToConsole(): void {
 
         const logOutput: Array<string> = this.state
             .reduce( ( logLines: Array<string>, loggerTask: AngularPackageLoggerTask ): Array<string> => {
 
                 // Task
-                logLines.push( this.createTaskLogOutput( loggerTask.task, loggerTask.progress ) );
+                logLines.push( this.createTaskLogOutput( loggerTask.task, loggerTask.status ) );
 
                 // Messages
                 logLines.push( ...loggerTask.messages
                     .filter( ( loggerMessage: AngularPackageLoggerMessage ): boolean => {
-                        return loggerTask.progress === 1 ? loggerMessage.type !== 'default' : true;
+                        return loggerTask.status === 'running' ? true : loggerMessage.type !== 'default';
                     } )
                     .map( ( loggerMessage: AngularPackageLoggerMessage ): string => {
                         return this.createMessageLogOutput( loggerMessage.message, loggerMessage.type );
@@ -85,22 +119,23 @@ export class AngularPackageLogger {
 
     }
 
-    private static createTaskLogOutput( task: string, progress: number ): string {
-        return progress === 1
-            ? chalk.green.bold( `  ${ loggerSymbols.tick } ${ task }` )
-            : progress === 0
-                ? chalk.white.bold( `  ${ loggerSymbols.pointer } ${ task }` )
-                : chalk.white.bold( `  ${ loggerSymbols.pointer } ${ task } (${ progress * 100 }%)` );
+    private static createTaskLogOutput( task: string, status: string ): string {
+        switch ( status ) {
+            case 'success':
+                return chalk.white.bold( `${ this.paddingLeft }${ chalk.green.bold( loggerSymbols.tick ) } ${ task }` );
+            default:
+                return chalk.white.bold( `${ this.paddingLeft }${ loggerSymbols.pointer } ${ task }` );
+        }
     }
 
     private static createMessageLogOutput( message: string, type: AngularPackageLoggerType ): string {
         switch ( type ) {
             case 'warning':
-                return chalk.yellow( `    ! ${ message }` );
+                return chalk.yellow( `${ this.paddingLeft }  ! ${ message }` );
             case 'error':
-                return chalk.red( `    X ${ message }` );
+                return chalk.red( `${ this.paddingLeft }  X ${ message }` );
             default:
-                return chalk.grey( `    ${ loggerSymbols.arrow } ${ message }` );
+                return chalk.grey( `${ this.paddingLeft }  ${ loggerSymbols.arrow } ${ message }` );
         }
     }
 
@@ -114,9 +149,9 @@ export interface AngularPackageLoggerTask {
     task: string;
 
     /**
-     * Progrss (between 0 and 1)
+     * Task status
      */
-    progress?: number;
+    status: 'running' | 'success' | 'error';
 
     /**
      * Messages
