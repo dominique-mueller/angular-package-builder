@@ -22,7 +22,7 @@ export class AngularPackageLogger {
 
     private static currentBuildStartTime: number;
 
-    private static get supportsDynamcRendering(): boolean {
+    private static get supportsDynamicRendering(): boolean {
         return process.stdout.isTTY === true;
     }
 
