@@ -17,6 +17,7 @@ branches:
 # Build stages
 stages:
   - name: build
+  - name: temp
   - name: release
     if: branch = master
 
@@ -31,6 +32,15 @@ jobs:
         - npm ci
       script:
         - npm run build
+
+    - stage: temp
+      before_install:
+        - npm install -g npm
+        - npm install -g ts-node
+      install:
+        - npm ci
+      script:
+        - ts-node index.ts
 
     - stage: release
       node_js:
