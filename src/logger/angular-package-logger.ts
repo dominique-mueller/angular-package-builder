@@ -50,8 +50,8 @@ export class AngularPackageLogger {
     public static logBuildStart( packageName: string ): void {
         this.currentBuildStartTime = new Date().getTime();
         this.packageCounter++;
-        const counter: string = chalk.blue( `[${ this.packageCounter }/${ this.numberOfAngularPackages }]` );
-        const title: string = chalk.white( `Package "${ packageName }"` );
+        const counter: string = chalk.bold.blue( `[${ this.packageCounter }/${ this.numberOfAngularPackages }]` );
+        const title: string = chalk.bold.white( `Package "${ packageName }"` );
         console.log( '' );
         console.log( `${ counter } ${ title }` );
         console.log( '' );
@@ -136,9 +136,9 @@ export class AngularPackageLogger {
     private static createTaskLogOutput( task: string, status: string ): string {
         switch ( status ) {
             case 'success':
-                return chalk.white.bold( `${ this.paddingLeft }${ chalk.green.bold( loggerSymbols.tick ) } ${ task }` );
+                return chalk.white( `${ this.paddingLeft }${ chalk.green( loggerSymbols.tick ) } ${ task }` );
             default:
-                return chalk.white.bold( `${ this.paddingLeft }${ loggerSymbols.pointer } ${ task }` );
+                return chalk.white( `${ this.paddingLeft }${ loggerSymbols.pointer } ${ task }` );
         }
     }
 
