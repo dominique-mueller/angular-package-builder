@@ -28,7 +28,9 @@ export class AngularPackageLogger {
 
     public static configureNumberOfAngularPackages( numberOfAngularPackages: number ): void {
         this.numberOfAngularPackages = numberOfAngularPackages;
-        this.paddingLeft = ' '.repeat( this.numberOfAngularPackages.toString().length * 2 + 4 );
+        this.paddingLeft = this.numberOfAngularPackages === 1
+            ? ''
+            : ' '.repeat( this.numberOfAngularPackages.toString().length * 2 + 4 );
     }
 
     /**
@@ -50,10 +52,12 @@ export class AngularPackageLogger {
     public static logBuildStart( packageName: string ): void {
         this.currentBuildStartTime = new Date().getTime();
         this.packageCounter++;
-        const counter: string = chalk.bold.blue( `[${ this.packageCounter }/${ this.numberOfAngularPackages }]` );
+        const counter: string = this.numberOfAngularPackages === 1
+            ? ''
+            : chalk.bold.blue( `[${ this.packageCounter }/${ this.numberOfAngularPackages }] ` );
         const title: string = chalk.bold.white( `Package "${ packageName }"` );
         console.log( '' );
-        console.log( `${ counter } ${ title }` );
+        console.log( `${ counter }${ title }` );
         console.log( '' );
     }
 
