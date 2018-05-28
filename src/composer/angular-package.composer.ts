@@ -5,7 +5,7 @@ import { copyFiles } from '../utilities/copy-files';
 import { AngularPackage } from '../angular-package';
 import { readFile } from '../utilities/read-file';
 import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
-import { deleteFolder } from '../utilities/delete-folder';
+import { AngularPackageLogger } from '../logger/angular-package-logger';
 
 export class AngularPackageComposer {
 
@@ -18,17 +18,20 @@ export class AngularPackageComposer {
 	public async compose(): Promise<void> {
 
 		// Copy build
-		await Promise.all( [
-			this.copyBuildFiles(),
-			this.copyBundleFiles(),
-			this.copyTypingFiles(),
-			this.copyMetadataFiles()
-		] );
+		AngularPackageLogger.logMessage( 'Copy build files' );
+		await this.copyBuildFiles();
 
-		// Cleanup
-		await this.cleanupTemporaryOutputFolder();
+		AngularPackageLogger.logMessage( 'Copy bundles' );
+		await this.copyBundleFiles();
+
+		AngularPackageLogger.logMessage( 'Copy typings' );
+		await this.copyTypingFiles();
+
+		AngularPackageLogger.logMessage( 'Copy metadata file' );
+		await this.copyMetadataFiles();
 
 		// Create package.json files with entry properties
+		AngularPackageLogger.logMessage( 'Compose package.json file' );
 		this.angularPackage.isPrimary
 			? this.createPackageJsonForPrimaryEntry()
 			: this.createPackageJsonForSecondaryEntry();
@@ -77,10 +80,6 @@ export class AngularPackageComposer {
 			path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'esm2015', '**', '*.metadata.json' ),
 			path.join( this.angularPackage.root, this.angularPackage.outDir )
 		);
-	}
-
-	private async cleanupTemporaryOutputFolder(): Promise<void> {
-        await deleteFolder( path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp' ) );
 	}
 
 	private async createPackageJsonForPrimaryEntry(): Promise<void> {

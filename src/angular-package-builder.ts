@@ -6,6 +6,7 @@ import { AngularPackageCompiler } from './compiler/angular-package.compiler';
 import { AngularPackageTransformer } from './transformer/angular-package.transformer';
 import { AngularPackageComposer } from './composer/angular-package.composer';
 import { deleteFolder } from './utilities/delete-folder';
+import { AngularPackageLogger } from './logger/angular-package-logger';
 
 /**
  * Angular Package Builder
@@ -20,29 +21,14 @@ export class AngularPackageBuilder {
      */
     public static async package( angularPackage: AngularPackage ): Promise<void> {
 
-        console.log( '' );
-        console.log( `PACKAGE "${ angularPackage.packageName }"` );
-
-        console.log( '  -> Cleanup ...' );
         await this.cleanupTemporaryOutputFolder( angularPackage );
 
-        console.log( '  -> Transform ...' );
         await this.transform( angularPackage );
-
-        console.log( '  -> Compile ...' );
         await this.compile( angularPackage );
-
-        console.log( '  -> Bundle ...' );
         await this.bundle( angularPackage );
-
-        console.log( '  -> Compose ...' );
         await this.compose( angularPackage );
 
-        console.log( '  -> Cleanup ...' );
         await this.cleanupTemporaryOutputFolder( angularPackage );
-
-        console.log( 'DONE.' );
-        console.log( '' );
 
     }
 
@@ -53,8 +39,13 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolves when done
      */
     private static async transform( angularPackage: AngularPackage ): Promise<void> {
+
         const angularPackageTransformer: AngularPackageTransformer = new AngularPackageTransformer( angularPackage );
-	    await angularPackageTransformer.transform();
+
+        AngularPackageLogger.logTaskStart( 'Apply transformations' );
+        await angularPackageTransformer.transform();
+        AngularPackageLogger.logTaskSuccess();
+
     }
 
     /**
@@ -64,9 +55,17 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolves when done
      */
     private static async compile( angularPackage: AngularPackage ): Promise<void> {
+
         const angularPackageCompiler: AngularPackageCompiler = new AngularPackageCompiler( angularPackage );
+
+        AngularPackageLogger.logTaskStart( 'Compile TypeScript to ES2015' );
         await angularPackageCompiler.compile( 'esm2015' );
+        AngularPackageLogger.logTaskSuccess();
+
+        AngularPackageLogger.logTaskStart( 'Compile TypeScript to ES5' );
         await angularPackageCompiler.compile( 'esm5' );
+        AngularPackageLogger.logTaskSuccess();
+
     }
 
     /**
@@ -76,10 +75,21 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolves when done
      */
     private static async bundle( angularPackage: AngularPackage ): Promise<void> {
+
         const angularPackageBundler: AngularPackageBundler = new AngularPackageBundler( angularPackage );
+
+        AngularPackageLogger.logTaskStart( 'Generate flat ES2015 bundle' );
         await angularPackageBundler.bundle( 'fesm2015' );
+        AngularPackageLogger.logTaskSuccess();
+
+        AngularPackageLogger.logTaskStart( 'Generate flat ES5 bundle' );
         await angularPackageBundler.bundle( 'fesm5' );
+        AngularPackageLogger.logTaskSuccess();
+
+        AngularPackageLogger.logTaskStart( 'Generate UMD bundle' );
         await angularPackageBundler.bundle( 'umd' );
+        AngularPackageLogger.logTaskSuccess();
+
     }
 
     /**
@@ -89,8 +99,13 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolves when done
      */
     private static async compose( angularPackage: AngularPackage ): Promise<void> {
+
         const angularPackageComposer: AngularPackageComposer = new AngularPackageComposer( angularPackage );
+
+        AngularPackageLogger.logTaskStart( 'Compose package' );
         await angularPackageComposer.compose();
+        AngularPackageLogger.logTaskSuccess();
+
     }
 
     /**
