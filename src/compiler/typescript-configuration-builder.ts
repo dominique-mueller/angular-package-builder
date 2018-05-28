@@ -62,8 +62,6 @@ export class TypeScriptConfigurationBuilder {
 	 */
 	public setEntry( entryFile: string, entryDir: string ): TypeScriptConfigurationBuilder {
 		this.files.push( entryFile );
-		this.typescriptCompilerOptions.rootDir = entryDir;
-		this.typescriptCompilerOptions.sourceRoot = entryDir;
 		return this;
 	}
 

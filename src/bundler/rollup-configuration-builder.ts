@@ -3,6 +3,7 @@ import { posix as path } from 'path';
 import { OutputOptions, RollupWarning, RollupFileOptions, SourceDescription } from 'rollup';
 import * as rollupCommonjsPlugin from 'rollup-plugin-commonjs';
 import * as rollupNodeResolvePlugin from 'rollup-plugin-node-resolve';
+import * as rollupSourcemaps from 'rollup-plugin-sourcemaps';
 
 import { getFileNameByPackageName } from '../utilities/get-file-name-by-package-name';
 import { rollupBundlingTargets } from './rollup-bundling-targets';
@@ -52,6 +53,7 @@ export class RollupConfigurationBuilder {
             plugins: [
                 rollupNodeResolvePlugin(),
                 rollupCommonjsPlugin(),
+                rollupSourcemaps(),
                 ( () => {
                     let processedFiles: number = 0;
                     return {

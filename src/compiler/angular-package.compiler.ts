@@ -47,6 +47,8 @@ export class AngularPackageCompiler {
             ].join( '\n' ) );
         } );
 
+        // TODO: Fix sourcemaps
+
     }
 
     /**
