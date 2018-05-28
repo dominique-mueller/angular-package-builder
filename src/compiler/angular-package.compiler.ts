@@ -47,7 +47,8 @@ export class AngularPackageCompiler {
             ].join( '\n' ) );
         } );
 
-        // TODO: Fix sourcemaps
+        // TODO: Fix sourcemaps (find by glob, read, manipulate, write)
+        // Should be: '../transformed' -> ''
 
     }
 
