@@ -21,7 +21,7 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	AngularPackageLogger.configureNumberOfBuildSteps( flattenedBuildOrchestration.length );
 
 	// RUN!
-	const builtAngularPackages: any = {};
+	const builtAngularPackages: { [ packageName: string ]: Array<string> } = {};
 	for ( const angularPackage of flattenedBuildOrchestration ) {
 
 		AngularPackageLogger.logBuildStart( angularPackage.packageName );
