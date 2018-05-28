@@ -18,7 +18,7 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	const angularPackages: Array<Array<AngularPackage>> = await AngularPackageReader.readAngularPackageJsonFiles( angularPackageJsonPaths );
 	const buildOrchestration: Array<Array<Array<Array<AngularPackage>>>> = AngularPackageOrchestrator.orchestrateAngularPackagesBuild( angularPackages );
 	const flattenedBuildOrchestration: Array<AngularPackage> = flattenArray( buildOrchestration );
-	AngularPackageLogger.configureNumberOfAngularPackages( flattenedBuildOrchestration.length );
+	AngularPackageLogger.configureNumberOfBuildSteps( flattenedBuildOrchestration.length );
 
 	// RUN!
 	const builtAngularPackages: any = {};
