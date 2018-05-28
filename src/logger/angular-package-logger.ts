@@ -20,6 +20,8 @@ export class AngularPackageLogger {
 
     private static paddingLeft: string;
 
+    private static counterLength: number;
+
     private static currentBuildStartTime: number;
 
     private static get supportsDynamicRendering(): boolean {
@@ -28,9 +30,10 @@ export class AngularPackageLogger {
 
     public static configureNumberOfAngularPackages( numberOfAngularPackages: number ): void {
         this.numberOfAngularPackages = numberOfAngularPackages;
+        this.counterLength = this.numberOfAngularPackages.toString().length;
         this.paddingLeft = this.numberOfAngularPackages === 1
             ? ''
-            : ' '.repeat( this.numberOfAngularPackages.toString().length * 2 + 4 );
+            : ' '.repeat( this.counterLength * 2 + 4 );
     }
 
     /**
@@ -52,9 +55,11 @@ export class AngularPackageLogger {
     public static logBuildStart( packageName: string ): void {
         this.currentBuildStartTime = new Date().getTime();
         this.packageCounter++;
+        const packageCounterPadding: string = '0'
+            .repeat( this.numberOfAngularPackages.toString().length - this.packageCounter.toString().length );
         const counter: string = this.numberOfAngularPackages === 1
             ? ''
-            : chalk.bold.blue( `[${ this.packageCounter }/${ this.numberOfAngularPackages }] ` );
+            : chalk.bold.blue( `[${ packageCounterPadding }${ this.packageCounter }/${ this.numberOfAngularPackages }] ` );
         const title: string = chalk.bold.white( `Package "${ packageName }"` );
         console.log( '' );
         console.log( `${ counter }${ title }` );
