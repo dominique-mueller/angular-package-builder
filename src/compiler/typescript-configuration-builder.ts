@@ -38,6 +38,7 @@ export class TypeScriptConfigurationBuilder {
 				'dom.iterable',
 				'scripthost'
 			],
+			inlineSources: true, // Include original source code in sourcemaps
 			module: 'ES2015', // Always generate ES6 modules, meaning we use 'import' and 'export'
 			moduleResolution: 'node', // Module resolution strategy
 			newLine: 'LF', // Always use 'LF' as line endings in order to make closure compiler annotations work correctly
@@ -62,8 +63,6 @@ export class TypeScriptConfigurationBuilder {
 	 */
 	public setEntry( entryFile: string, entryDir: string ): TypeScriptConfigurationBuilder {
 		this.files.push( entryFile );
-		this.typescriptCompilerOptions.rootDir = entryDir;
-		this.typescriptCompilerOptions.sourceRoot = entryDir;
 		return this;
 	}
 

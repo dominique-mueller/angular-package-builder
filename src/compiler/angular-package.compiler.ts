@@ -1,5 +1,6 @@
 import { posix as path } from 'path';
 
+import * as del from 'del';
 import { gte } from 'semver';
 import { main as angularCompilerCli } from '@angular/compiler-cli/src/main';
 
@@ -7,6 +8,7 @@ import { AngularPackage } from '../angular-package';
 import { writeFile } from '../utilities/write-file';
 import { TypeScriptConfigurationBuilder } from './typescript-configuration-builder';
 import { getInstalledDependencyVersion } from '../utilities/get-installed-dependency-version';
+import { copyFiles } from '../utilities/copy-files';
 
 /**
  * Angular Package Compiler
@@ -47,6 +49,16 @@ export class AngularPackageCompiler {
             ].join( '\n' ) );
         } );
 
+        // Move build files
+        const buildFilesPattern: string = '*.+(js?(.map)|d.ts.|json)';
+        await copyFiles(
+            path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'transformed', '**', buildFilesPattern ),
+            path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', target )
+        );
+        await del( [
+            path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'transformed', '**', buildFilesPattern )
+        ] );
+
     }
 
     /**
@@ -58,10 +70,10 @@ export class AngularPackageCompiler {
     private async buildAndWriteTypescriptConfiguration( target: 'esm2015' | 'esm5' ): Promise<string> {
 
         // Collect information
-        const baseDir: string = path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp' );
-        const entryDir: string = path.join( baseDir, 'transformed' );
-        const outDir: string = path.join( baseDir, target );
-        const entryFile: string = path.join( baseDir, 'transformed', path.basename( this.angularPackage.entryFile ) );
+        const tempDir: string = path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp' );
+        const entryDir: string = path.join( tempDir, 'transformed' );
+        const outDir: string = path.join( tempDir, 'transformed' ); // Same as entry directory in order to not break sourcemap paths
+        const entryFile: string = path.join( tempDir, 'transformed', path.basename( this.angularPackage.entryFile ) );
 
         // Build TypeScript configuration
         const tsconfig: any = new TypeScriptConfigurationBuilder()
@@ -74,7 +86,7 @@ export class AngularPackageCompiler {
             .build();
 
         // Write TypeScript configuration file to disk
-        const tsconfigPath: string = path.join( baseDir, `tsconfig.${ target }.json` );
+        const tsconfigPath: string = path.join( tempDir, `tsconfig.${ target }.json` );
         await writeFile( tsconfigPath, tsconfig );
 
         return tsconfigPath;
