@@ -10,6 +10,9 @@
             ],
             "@my-library/ui/*": [
                 "./my-library-ui/*"
+            ],
+            "@my-library/tracking/*": [
+                "./my-library-tracking/*"
             ]
         }
     }

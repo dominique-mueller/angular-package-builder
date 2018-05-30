@@ -1,5 +1,5 @@
 {
-	"name": "@my-library/core",
+	"name": "@my-library/tracking",
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
