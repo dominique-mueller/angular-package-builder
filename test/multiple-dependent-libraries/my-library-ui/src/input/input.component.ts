@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 
-import { UIFormControlRegistryService } from 'my-library/src/tracking/form-control-registry.service';
+import { UIFormControlRegistryService } from '@my-library/core';
 
 /**
  * UI Input component

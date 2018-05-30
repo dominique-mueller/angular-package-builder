@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { MyLibraryCoreModule } from '@my-library/core';
+
 import { UIInputComponent } from './input/input.component';
 
 /**
@@ -14,7 +16,8 @@ import { UIInputComponent } from './input/input.component';
 		UIInputComponent
 	],
 	imports: [
-		CommonModule
+		CommonModule,
+		MyLibraryCoreModule
 	]
 } )
 export class MyLibraryUIModule {}

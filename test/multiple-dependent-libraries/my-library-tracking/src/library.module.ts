@@ -6,7 +6,7 @@ import { UITrackingService } from './tracking/tracking.service';
  * My Library Tracking Module
  */
 @NgModule( {
-	providers:[
+	providers: [
 		UITrackingService
 	]
 } )
