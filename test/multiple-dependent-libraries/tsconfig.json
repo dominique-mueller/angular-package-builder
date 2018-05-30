@@ -5,11 +5,11 @@
         "baseUrl": ".",
         "rootDir": ".",
         "paths": {
-            "my-library/*": [
-                "./my-library/*"
+            "@my-library/core/*": [
+                "./my-library-core/*"
             ],
-            "my-second-library/*": [
-                "./my-second-library/*"
+            "@my-library/ui/*": [
+                "./my-library-ui/*"
             ]
         }
     }
