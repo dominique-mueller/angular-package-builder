@@ -85,7 +85,7 @@
 		"automatic-release": "1.1.x",
 		"babel-jest": "23.0.x",
 		"copyfiles": "2.0.x",
-		"jest": "23.0.x",
+		"jest": "23.1.x",
 		"rimraf": "2.6.x",
 		"rxjs": "5.5.x",
 		"ts-jest": "22.4.x",
