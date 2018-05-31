@@ -50,7 +50,7 @@ export class AngularPackageCompiler {
         } );
 
         // Move build files
-        const buildFilesPattern: string = '*.+(js?(.map)|d.ts.|json)';
+        const buildFilesPattern: string = '*.+(js?(.map)|d.ts|json)';
         await copyFiles(
             path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'transformed', '**', buildFilesPattern ),
             path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', target )
