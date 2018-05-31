@@ -1,0 +1,16 @@
+{
+	"name": "@my-library/ui",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"build:lib": "angular-package-builder && copyfiles package.json dist"
+	},
+	"peerDependencies": {
+		"@angular/common": "5.x",
+		"@angular/core": "5.x",
+		"@angular/platform-browser": "5.x"
+	},
+	"dependencies": {
+		"@my-library/core": "1.0.0"
+	}
+}

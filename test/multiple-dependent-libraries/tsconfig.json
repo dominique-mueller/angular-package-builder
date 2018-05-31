@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "rootDir": ".",
+        "paths": {
+            "@my-library/core/*": [
+                "./my-library-core/*"
+            ],
+            "@my-library/ui/*": [
+                "./my-library-ui/*"
+            ],
+            "@my-library/tracking/*": [
+                "./my-library-tracking/*"
+            ]
+        }
+    }
+}

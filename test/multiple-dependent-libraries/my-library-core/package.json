@@ -1,0 +1,11 @@
+{
+	"name": "@my-library/core",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"build:lib": "angular-package-builder && copyfiles package.json dist"
+	},
+	"peerDependencies": {
+		"@angular/core": "5.x"
+	}
+}

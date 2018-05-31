@@ -39,6 +39,7 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 }
 
 runAngularPackageBuilder( [
-	'./test/my-library/.angular-package.json',
-	'./test/my-second-library/.angular-package.json',
+	'./test/multiple-dependent-libraries/my-library-core/.angular-package.json',
+	'./test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
+	'./test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
 ] );
