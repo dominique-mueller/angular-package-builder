@@ -1,53 +1,57 @@
+import * as fs from 'fs';
+
 /**
  * Metadata File Wrapper
  */
 export class MetadataFile {
 
     /**
-     * Metadata file
+     * File content
      */
-    private metadataFile: any;
+    private file: any;
 
     /**
-     * Read metadata file from source
+     * Constructor
      */
-    public fromSource( path: string ): void {
-        // TODO: Read and parse as JSON
+    constructor( path: string ) {
+        const fileContent: string = fs.readFileSync( path, 'utf-8' );
+        const parsedFileContent: any = JSON.parse( fileContent );
+        this.file = parsedFileContent;
     }
 
     /**
      * Get the export name
      */
     public getExportName(): string {
-        return this.metadataFile.importAs;
+        return this.file.importAs;
     }
 
     /**
      * Get items with origins
      */
     public getItemsWithOrigins(): { [ type: string ]: string } {
-        return this.metadataFile.origins;
+        return this.file.origins;
     }
 
     /**
      * Get items
      */
     public getItems(): Array<string> {
-        return Object.keys( this.metadataFile.metadata );
+        return Object.keys( this.file.metadata );
     }
 
     /**
      * Get the inlined template of the given component type
      */
     public getInlinedComponentTemplate( type: string ): string {
-        return this.metadataFile.metadata[ type ].decorators[ 0 ].arguments[ 0 ].template;
+        return this.file.metadata[ type ].decorators[ 0 ].arguments[ 0 ].template;
     }
 
     /**
      * Tet the inlined styles of the given component type
      */
     public getInlinedComponentStyles( type: string ): Array<string> {
-        return this.metadataFile.metadata[ type ].decorators[ 0 ].arguments[ 0 ].styles;
+        return this.file.metadata[ type ].decorators[ 0 ].arguments[ 0 ].styles;
     }
 
 }
