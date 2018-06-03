@@ -4,6 +4,7 @@
 		"ts",
 		"json"
 	],
+	"setupTestFrameworkScriptFile": "./jest.setup.js",
 	"transform": {
 		"^.+\\.tsx?$": "ts-jest"
 	},
