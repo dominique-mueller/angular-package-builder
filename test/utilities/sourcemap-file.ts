@@ -1,7 +1,5 @@
 import * as fs from 'fs';
 
-import { simplifyFileContent } from './simplify-file-content';
-
 /**
  * Sourcemap file
  */
@@ -45,7 +43,7 @@ export class SourcemapFile {
 	public getSources(): { [ path: string ]: string } {
 		return this.parsedFile.sources
 			.reduce( ( sources: { [ path: string ]: string }, source: string, index: number ): { [ path: string ]: string } => {
-				sources[ source ] = simplifyFileContent( this.parsedFile.sourcesContent[ index ] );
+				sources[ source ] = this.parsedFile.sourcesContent[ index ];
 				return sources;
 			}, {} );
 	}

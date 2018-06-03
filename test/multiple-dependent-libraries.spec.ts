@@ -1,15 +1,9 @@
-import * as fs from 'fs';
-
 import { runAngularPackageBuilder } from '../index';
 
-import { JavascriptES2015File } from './utilities/es2015-file';
-import { JavascriptES5File } from './utilities/es5-file';
-import { JavascriptUMDFile } from './utilities/umd-file';
-import { SourcemapFile } from './utilities/sourcemap-file';
-import { simplifyFileContent } from './utilities/simplify-file-content';
 import { expectES2015 } from './expects/expect-es2015';
 import { expectES5 } from './expects/expect-es5';
 import { expectUMD } from './expects/expect-umd';
+import { expectSourcemap } from './expects/expect-sourcemap';
 
 describe( 'Multiple dependent libraries', () => {
 
@@ -36,32 +30,9 @@ describe( 'Multiple dependent libraries', () => {
 		} );
 
 		describe( 'Output: SourceMaps for FESM2015 bundle', () => {
-
-			let file: SourcemapFile;
-
-			it( 'should exist', () => {
-				file = new SourcemapFile( 'test/multiple-dependent-libraries/my-library-core/dist/fesm2015/core.js.map' );
+			expectSourcemap( 'test/multiple-dependent-libraries/my-library-core/dist/fesm2015/core.js.map', {
+				numberOfSourceFiles: 2
 			} );
-
-			it( 'should not be empty', () => {
-				expect( file.isEmpty() ).toBe( false );
-			} );
-
-			it( 'should reference the bundle file', () => {
-				expect( file.getFileName() ).toBe( 'core.js' );
-			} );
-
-			it( 'should reference all the source files', () => {
-				expect( file.getSources() ).toEqual( {
-					'src/library.module.ts': simplifyFileContent(
-						fs.readFileSync( 'test/multiple-dependent-libraries/my-library-core/src/library.module.ts', 'utf-8' )
-					),
-					'src/form-control-registry/form-control-registry.service.ts': simplifyFileContent(
-						fs.readFileSync( 'test/multiple-dependent-libraries/my-library-core/src/form-control-registry/form-control-registry.service.ts', 'utf-8' )
-					),
-				} );
-			} );
-
 		} );
 
 		describe( 'Output: FESM5 bundle', () => {
@@ -74,32 +45,9 @@ describe( 'Multiple dependent libraries', () => {
 		} );
 
 		describe( 'Output: SourceMaps for FESM5 bundle', () => {
-
-			let file: SourcemapFile;
-
-			it( 'should exist', () => {
-				file = new SourcemapFile( 'test/multiple-dependent-libraries/my-library-core/dist/fesm5/core.js.map' );
+			expectSourcemap( 'test/multiple-dependent-libraries/my-library-core/dist/fesm5/core.js.map', {
+				numberOfSourceFiles: 2
 			} );
-
-			it( 'should not be empty', () => {
-				expect( file.isEmpty() ).toBe( false );
-			} );
-
-			it( 'should reference the bundle file', () => {
-				expect( file.getFileName() ).toBe( 'core.js' );
-			} );
-
-			it( 'should reference all the source files', () => {
-				expect( file.getSources() ).toEqual( {
-					'src/library.module.ts': simplifyFileContent(
-						fs.readFileSync( 'test/multiple-dependent-libraries/my-library-core/src/library.module.ts', 'utf-8' )
-					),
-					'src/form-control-registry/form-control-registry.service.ts': simplifyFileContent(
-						fs.readFileSync( 'test/multiple-dependent-libraries/my-library-core/src/form-control-registry/form-control-registry.service.ts', 'utf-8' )
-					),
-				} );
-			} );
-
 		} );
 
 		describe( 'Output: UMD bundle', () => {
@@ -112,32 +60,9 @@ describe( 'Multiple dependent libraries', () => {
 		} );
 
 		describe( 'Output: SourceMaps for UMD bundle', () => {
-
-			let file: SourcemapFile;
-
-			it( 'should exist', () => {
-				file = new SourcemapFile( 'test/multiple-dependent-libraries/my-library-core/dist/bundles/core.umd.js.map' );
+			expectSourcemap( 'test/multiple-dependent-libraries/my-library-core/dist/bundles/core.umd.js.map', {
+				numberOfSourceFiles: 2
 			} );
-
-			it( 'should not be empty', () => {
-				expect( file.isEmpty() ).toBe( false );
-			} );
-
-			it( 'should reference the bundle file', () => {
-				expect( file.getFileName() ).toBe( 'core.umd.js' );
-			} );
-
-			it( 'should reference all the source files', () => {
-				expect( file.getSources() ).toEqual( {
-					'src/library.module.ts': simplifyFileContent(
-						fs.readFileSync( 'test/multiple-dependent-libraries/my-library-core/src/library.module.ts', 'utf-8' )
-					),
-					'src/form-control-registry/form-control-registry.service.ts': simplifyFileContent(
-						fs.readFileSync( 'test/multiple-dependent-libraries/my-library-core/src/form-control-registry/form-control-registry.service.ts', 'utf-8' )
-					),
-				} );
-			} );
-
 		} );
 
 	} );
