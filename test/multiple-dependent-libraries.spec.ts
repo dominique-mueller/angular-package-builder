@@ -20,6 +20,29 @@ describe( 'Multiple dependent libraries', () => {
 
 	describe( 'Package: @my-library/core', () => {
 
+		describe( 'Output: ES2015 build', () => {
+			describe( '(core.js)', () => {
+				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/core.js' );
+			} );
+			describe( '(index.js)', () => {
+				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/index.js' );
+			} );
+			describe( '(src/library.module.js)', () => {
+				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/src/library.module.js', {
+					classNames: [
+						'MyLibraryCoreModule'
+					]
+				} );
+			} );
+			describe( '(src/form-control-registry/form-control-registry.service.js)', () => {
+				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/src/form-control-registry/form-control-registry.service.js', {
+					classNames: [
+						'UIFormControlRegistryService'
+					]
+				} );
+			} );
+		} );
+
 		describe( 'Output: FESM2015 bundle', () => {
 			expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/fesm2015/core.js', {
 				classNames: [

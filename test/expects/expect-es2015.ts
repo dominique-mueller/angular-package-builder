@@ -17,15 +17,16 @@ export function expectES2015( filePath: string, checks?: {
 		expect( file.isEmpty() ).toBe( false );
 	} );
 
-	it( 'should be of ES2015 language level', () => {
-		expect( file.isES2015LanguageLevel() ).toBe( true );
-	} );
-
-	it( 'should be of ES module format', () => {
-		expect( file.isESModule() ).toBe( true );
-	} );
-
 	if ( checks && checks.classNames ) {
+
+		it( 'should be of ES2015 language level', () => {
+			expect( file.isES2015LanguageLevel() ).toBe( true );
+		} );
+
+		it( 'should be of ES module format', () => {
+			expect( file.isESModule() ).toBe( true );
+		} );
+
 		it( 'should contain the classes', () => {
 			checks.classNames.forEach( ( className: string ): void => {
 				expect( file.hasClass( className ) ).toBe( true );
