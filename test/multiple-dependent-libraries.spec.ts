@@ -7,6 +7,9 @@ import { JavascriptES5File } from './utilities/es5-file';
 import { JavascriptUMDFile } from './utilities/umd-file';
 import { SourcemapFile } from './utilities/sourcemap-file';
 import { simplifyFileContent } from './utilities/simplify-file-content';
+import { expectES2015 } from './expects/expect-es2015';
+import { expectES5 } from './expects/expect-es5';
+import { expectUMD } from './expects/expect-umd';
 
 describe( 'Multiple dependent libraries', () => {
 
@@ -24,30 +27,12 @@ describe( 'Multiple dependent libraries', () => {
 	describe( 'Package: @my-library/core', () => {
 
 		describe( 'Output: FESM2015 bundle', () => {
-
-			let file: JavascriptES2015File;
-
-			it( 'should exist', () => {
-				file = new JavascriptES2015File( 'test/multiple-dependent-libraries/my-library-core/dist/fesm2015/core.js' );
+			expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/fesm2015/core.js', {
+				classNames: [
+					'MyLibraryCoreModule',
+					'UIFormControlRegistryService'
+				]
 			} );
-
-			it( 'should not be empty', () => {
-				expect( file.isEmpty() ).toBe( false );
-			} );
-
-			it( 'should be of ES2015 language level', () => {
-				expect( file.isES2015LanguageLevel() ).toBe( true );
-			} );
-
-			it( 'should be of ES module format', () => {
-				expect( file.isESModule() ).toBe( true );
-			} );
-
-			it( 'should contain the classes', () => {
-				expect( file.hasClass( 'MyLibraryCoreModule' ) ).toBe( true );
-				expect( file.hasClass( 'UIFormControlRegistryService' ) ).toBe( true );
-			} );
-
 		} );
 
 		describe( 'Output: SourceMaps for FESM2015 bundle', () => {
@@ -80,30 +65,12 @@ describe( 'Multiple dependent libraries', () => {
 		} );
 
 		describe( 'Output: FESM5 bundle', () => {
-
-			let file: JavascriptES5File;
-
-			it( 'should exist', () => {
-				file = new JavascriptES5File( 'test/multiple-dependent-libraries/my-library-core/dist/fesm5/core.js' );
+			expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/fesm5/core.js', {
+				classNames: [
+					'MyLibraryCoreModule',
+					'UIFormControlRegistryService'
+				]
 			} );
-
-			it( 'should not be empty', () => {
-				expect( file.isEmpty() ).toBe( false );
-			} );
-
-			it( 'should be of ES2015 language level', () => {
-				expect( file.isES5LanguageLevel() ).toBe( true );
-			} );
-
-			it( 'should be of ES module format', () => {
-				expect( file.isESModule() ).toBe( true );
-			} );
-
-			it( 'should contain the classes', () => {
-				expect( file.hasClass( 'MyLibraryCoreModule' ) ).toBe( true );
-				expect( file.hasClass( 'UIFormControlRegistryService' ) ).toBe( true );
-			} );
-
 		} );
 
 		describe( 'Output: SourceMaps for FESM5 bundle', () => {
@@ -136,30 +103,12 @@ describe( 'Multiple dependent libraries', () => {
 		} );
 
 		describe( 'Output: UMD bundle', () => {
-
-			let file: JavascriptUMDFile;
-
-			it( 'should exist', () => {
-				file = new JavascriptUMDFile( 'test/multiple-dependent-libraries/my-library-core/dist/bundles/core.umd.js' );
+			expectUMD( 'test/multiple-dependent-libraries/my-library-core/dist/bundles/core.umd.js', {
+				classNames: [
+					'MyLibraryCoreModule',
+					'UIFormControlRegistryService'
+				]
 			} );
-
-			it( 'should not be empty', () => {
-				expect( file.isEmpty() ).toBe( false );
-			} );
-
-			it( 'should be of ES2015 language level', () => {
-				expect( file.isES5LanguageLevel() ).toBe( true );
-			} );
-
-			it( 'should be of UMD module format', () => {
-				expect( file.isUMDModule() ).toBe( true );
-			} );
-
-			it( 'should contain the classes', () => {
-				expect( file.hasClass( 'MyLibraryCoreModule' ) ).toBe( true );
-				expect( file.hasClass( 'UIFormControlRegistryService' ) ).toBe( true );
-			} );
-
 		} );
 
 		describe( 'Output: SourceMaps for UMD bundle', () => {
