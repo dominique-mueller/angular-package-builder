@@ -58,6 +58,29 @@ describe( 'Multiple dependent libraries', () => {
 			} );
 		} );
 
+		describe( 'Output: ES5 build', () => {
+			describe( '(core.js)', () => {
+				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/core.js' );
+			} );
+			describe( '(index.js)', () => {
+				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/index.js' );
+			} );
+			describe( '(src/library.module.js)', () => {
+				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/src/library.module.js', {
+					classNames: [
+						'MyLibraryCoreModule'
+					]
+				} );
+			} );
+			describe( '(src/form-control-registry/form-control-registry.service.js)', () => {
+				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/src/form-control-registry/form-control-registry.service.js', {
+					classNames: [
+						'UIFormControlRegistryService'
+					]
+				} );
+			} );
+		} );
+
 		describe( 'Output: FESM5 bundle', () => {
 			expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/fesm5/core.js', {
 				classNames: [

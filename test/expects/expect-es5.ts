@@ -17,20 +17,22 @@ export function expectES5( filePath: string, checks?: {
 		expect( file.isEmpty() ).toBe( false );
 	} );
 
-	it( 'should be of ES5 language level', () => {
-		expect( file.isES5LanguageLevel() ).toBe( true );
-	} );
-
-	it( 'should be of ES module format', () => {
-		expect( file.isESModule() ).toBe( true );
-	} );
-
 	if ( checks && checks.classNames ) {
+
+		it( 'should be of ES5 language level', () => {
+			expect( file.isES5LanguageLevel() ).toBe( true );
+		} );
+
+		it( 'should be of ES module format', () => {
+			expect( file.isESModule() ).toBe( true );
+		} );
+
 		it( 'should contain the classes', () => {
 			checks.classNames.forEach( ( className: string ): void => {
 				expect( file.hasClass( className ) ).toBe( true );
 			} );
 		} );
+
 	}
 
 }
