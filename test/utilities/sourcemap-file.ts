@@ -6,33 +6,44 @@ import * as fs from 'fs';
 export class SourcemapFile {
 
 	/**
-	 * File content
+	 * File content (unparsed)
 	 */
-	private file: any;
+	private readonly file: string;
+
+	/**
+	 * File content (parsed)
+	 */
+	private readonly parsedFile: any;
 
 	/**
 	 * Constructor
 	 */
 	constructor( path: string ) {
-		const fileContent: string = fs.readFileSync( path, 'utf-8' );
-        const parsedFileContent: any = JSON.parse( fileContent );
-        this.file = parsedFileContent;
+		this.file = fs.readFileSync( path, 'utf-8' );
+        this.parsedFile = JSON.parse( this.file );
+	}
+
+	/**
+	 * Check if the file is empty
+	 */
+	public isEmpty(): boolean {
+		return this.file.length === 0;
 	}
 
 	/**
 	 * Get the name of the file this sourcemap is for
 	 */
 	public getFileName(): void {
-		return this.file.file;
+		return this.parsedFile.file;
 	}
 
 	/**
 	 * Get sources (path -> content)
 	 */
 	public getSources(): { [ path: string ]: string } {
-		return this.file.sources
+		return this.parsedFile.sources
 			.reduce( ( sources: { [ path: string ]: string }, source: string, index: number ): { [ path: string ]: string } => {
-				sources[ source ] = this.file.sourcesContent[ index ];
+				sources[ source ] = this.parsedFile.sourcesContent[ index ];
 				return sources;
 			}, {} );
 	}

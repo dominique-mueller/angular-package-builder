@@ -5,25 +5,36 @@ import * as fs from 'fs';
  */
 export class PackageFile {
 
+	/**
+	 * File content (unparsed)
+	 */
+	private readonly file: string;
+
     /**
-     * File content
+     * File content (parsed)
      */
-    private file: any;
+    private readonly parsedFile: any;
 
     /**
      * Constructor
      */
     constructor( path: string ) {
-        const fileContent: string = fs.readFileSync( path, 'utf-8' );
-        const parsedFileContent: any = JSON.parse( fileContent );
-        this.file = parsedFileContent;
-    }
+        this.file = fs.readFileSync( path, 'utf-8' );
+        this.parsedFile = JSON.parse( this.file );
+	}
+
+	/**
+	 * Check if the file is empty
+	 */
+	public isEmpty(): boolean {
+		return this.file.length === 0;
+	}
 
     /**
      * Get the export name
      */
     public getPackageName(): string {
-        return this.file.name;
+        return this.parsedFile.name;
     }
 
 	/**
@@ -31,14 +42,14 @@ export class PackageFile {
 	 */
 	public getEntries(): { [ entry: string ]: string } {
 		return {
-			module: this.file.module,
-			es2015: this.file.es2015,
-			esm5: this.file.esm5,
-			esm2015: this.file.esm2015,
-			fesm5: this.file.fesm5,
-			fesm2015: this.file.fesm2015,
-			main: this.file.main,
-			typings: this.file.typings
+			module: this.parsedFile.module,
+			es2015: this.parsedFile.es2015,
+			esm5: this.parsedFile.esm5,
+			esm2015: this.parsedFile.esm2015,
+			fesm5: this.parsedFile.fesm5,
+			fesm2015: this.parsedFile.fesm2015,
+			main: this.parsedFile.main,
+			typings: this.parsedFile.typings
 		};
 	}
 

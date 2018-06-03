@@ -5,53 +5,64 @@ import * as fs from 'fs';
  */
 export class MetadataFile {
 
-    /**
-     * File content
+     /**
+     * File content (unparsed)
      */
-    private file: any;
+    private readonly file: string;
+
+    /**
+     * File content (parsed)
+     */
+    private readonly parsedFile: any;
 
     /**
      * Constructor
      */
     constructor( path: string ) {
-        const fileContent: string = fs.readFileSync( path, 'utf-8' );
-        const parsedFileContent: any = JSON.parse( fileContent );
-        this.file = parsedFileContent;
+        this.file = fs.readFileSync( path, 'utf-8' );
+        this.parsedFile = JSON.parse( this.file );
+    }
+
+    /**
+     * Check if the file is empty
+     */
+    public isEmpty(): boolean {
+        return this.file.length === 0;
     }
 
     /**
      * Get the export name
      */
     public getExportName(): string {
-        return this.file.importAs;
+        return this.parsedFile.importAs;
     }
 
     /**
      * Get items with origins
      */
     public getItemsWithOrigins(): { [ type: string ]: string } {
-        return this.file.origins;
+        return this.parsedFile.origins;
     }
 
     /**
      * Get items
      */
     public getItems(): Array<string> {
-        return Object.keys( this.file.metadata );
+        return Object.keys( this.parsedFile.metadata );
     }
 
     /**
      * Get the inlined template of the given component type
      */
     public getInlinedComponentTemplate( type: string ): string {
-        return this.file.metadata[ type ].decorators[ 0 ].arguments[ 0 ].template;
+        return this.parsedFile.metadata[ type ].decorators[ 0 ].arguments[ 0 ].template;
     }
 
     /**
      * Tet the inlined styles of the given component type
      */
     public getInlinedComponentStyles( type: string ): Array<string> {
-        return this.file.metadata[ type ].decorators[ 0 ].arguments[ 0 ].styles;
+        return this.parsedFile.metadata[ type ].decorators[ 0 ].arguments[ 0 ].styles;
     }
 
 }
