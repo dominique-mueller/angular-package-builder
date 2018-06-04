@@ -4,6 +4,7 @@ import { expectES2015 } from './expects/expect-es2015';
 import { expectES5 } from './expects/expect-es5';
 import { expectUMD } from './expects/expect-umd';
 import { expectSourcemap } from './expects/expect-sourcemap';
+import { expectMetadata } from './expects/expect-metadata';
 
 describe( 'Multiple dependent libraries', () => {
 
@@ -110,6 +111,19 @@ describe( 'Multiple dependent libraries', () => {
 				numberOfSourceFiles: 2
 			} );
 		} );
+
+		describe( 'Output: Metadata', () => {
+			expectMetadata( 'test/multiple-dependent-libraries/my-library-core/dist/core.metadata.json', {
+				packageName: '@my-library/core',
+				classNames: [
+					'MyLibraryCoreModule',
+					'UIFormControlRegistryService'
+				]
+			} );
+		} );
+
+		// TODO: Typings
+		// TODO: Package JSON
 
 	} );
 
