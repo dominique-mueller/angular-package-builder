@@ -2,14 +2,16 @@ import { runAngularPackageBuilder } from '../index';
 
 import { expectES2015 } from './expects/expect-es2015';
 import { expectES5 } from './expects/expect-es5';
-import { expectUMD } from './expects/expect-umd';
-import { expectSourcemap } from './expects/expect-sourcemap';
 import { expectMetadata } from './expects/expect-metadata';
+import { expectSourcemap } from './expects/expect-sourcemap';
+import { expectTypings } from './expects/expect-typings';
+import { expectUMD } from './expects/expect-umd';
 
 describe( 'Multiple dependent libraries', () => {
 
 	beforeAll( async () => {
 
+		// TODO: Uncomment the following
 		// Build packages
 		// await runAngularPackageBuilder( [
 		// 	'test/multiple-dependent-libraries/my-library-core/.angular-package.json',
@@ -112,7 +114,30 @@ describe( 'Multiple dependent libraries', () => {
 			} );
 		} );
 
-		describe( 'Output: Metadata', () => {
+		describe( 'Output: TypeScript type definitions', () => {
+			describe( '(core.d.ts)', () => {
+				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/core.d.ts' );
+			} );
+			describe( '(index.d.ts)', () => {
+				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/index.d.ts' );
+			} );
+			describe( '(src/library.module.d.ts)', () => {
+				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/src/library.module.d.ts', {
+					classNames: [
+						'MyLibraryCoreModule'
+					]
+				} );
+			} );
+			describe( '(src/form-control-registry/form-control-registry.service.d.ts)', () => {
+				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/src/form-control-registry/form-control-registry.service.d.ts', {
+					classNames: [
+						'UIFormControlRegistryService'
+					]
+				} );
+			} );
+		} );
+
+		describe( 'Output: Angular Metadata', () => {
 			expectMetadata( 'test/multiple-dependent-libraries/my-library-core/dist/core.metadata.json', {
 				packageName: '@my-library/core',
 				classNames: [
@@ -122,8 +147,11 @@ describe( 'Multiple dependent libraries', () => {
 			} );
 		} );
 
-		// TODO: Typings
 		// TODO: Package JSON
+
+		// TODO: Check for inline templates & styles
+
+		// TODO: Unify test case for library
 
 	} );
 
