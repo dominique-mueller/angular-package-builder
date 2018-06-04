@@ -4,6 +4,9 @@
 		"ts",
 		"json"
 	],
+	"modulePathIgnorePatterns": [
+		"/dist/"
+	],
 	"setupTestFrameworkScriptFile": "./jest.setup.js",
 	"transform": {
 		"^.+\\.tsx?$": "ts-jest"
