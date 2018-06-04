@@ -148,10 +148,14 @@ describe( 'Multiple dependent libraries', () => {
 		} );
 
 		// TODO: Package JSON
+		// TODO: Check that other package.json information are still present
 
 		// TODO: Check for inline templates & styles
 
-		// TODO: Unify test case for library
+		// TODO: Unify test case for library (one configuration object per library test)
+		// -> rootPath (simpler)
+		// -> packageName
+		// -> files + classNames
 
 	} );
 
