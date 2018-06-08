@@ -1,8 +1,8 @@
 import { posix as path } from 'path';
 import * as fs from 'fs';
 
-import { SourcemapFile } from '../utilities/sourcemap-file';
-import { simplifyFileContent } from '../utilities/simplify-file-content';
+import { SourcemapFile } from './sourcemap-file';
+import { simplifyFileContent } from '../simplify-file-content';
 
 /**
  * Expect Sourcemap file

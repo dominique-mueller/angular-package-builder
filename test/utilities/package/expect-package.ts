@@ -1,4 +1,4 @@
-import { PackageFile } from '../utilities/package-file';
+import { PackageFile } from './package-file';
 
 /**
  * Expect package.json file

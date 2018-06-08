@@ -1,4 +1,4 @@
-import { JavascriptUMDFile } from '../utilities/umd-file';
+import { JavascriptUMDFile } from './umd-file';
 
 /**
  * Expect UMD file

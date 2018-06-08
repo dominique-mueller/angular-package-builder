@@ -1,7 +1,7 @@
 import { posix as path } from 'path';
 import * as fs from 'fs';
 
-import { MetadataFile } from '../utilities/metadata-file';
+import { MetadataFile } from './metadata-file';
 
 /**
  * Expect metadata file

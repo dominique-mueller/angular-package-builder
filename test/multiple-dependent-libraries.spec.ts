@@ -1,12 +1,12 @@
 import { runAngularPackageBuilder } from '../index';
 
-import { expectES2015 } from './expects/expect-es2015';
-import { expectES5 } from './expects/expect-es5';
-import { expectMetadata } from './expects/expect-metadata';
-import { expectSourcemap } from './expects/expect-sourcemap';
-import { expectTypings } from './expects/expect-typings';
-import { expectUMD } from './expects/expect-umd';
-import { expectPackage } from './expects/expect-package';
+import { expectES2015 } from './utilities/es2015/expect-es2015';
+import { expectES5 } from './utilities/es5/expect-es5';
+import { expectMetadata } from './utilities/metadata/expect-metadata';
+import { expectSourcemap } from './utilities/sourcemap/expect-sourcemap';
+import { expectTypings } from './utilities/typings/expect-typings';
+import { expectUMD } from './utilities/umd/expect-umd';
+import { expectPackage } from './utilities/package/expect-package';
 
 describe( 'Multiple dependent libraries', () => {
 
@@ -155,16 +155,6 @@ describe( 'Multiple dependent libraries', () => {
 			} );
 
 		} );
-
-		// TODO: Package JSON
-		// TODO: Check that other package.json information are still present
-
-		// TODO: Check for inline templates & styles
-
-		// TODO: Unify test case for library (one configuration object per library test)
-		// -> rootPath (simpler)
-		// -> packageName
-		// -> files + classNames
 
 	} );
 

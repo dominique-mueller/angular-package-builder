@@ -1,4 +1,4 @@
-import { TypingsFile } from '../utilities/typings-file';
+import { TypingsFile } from './typings-file';
 
 /**
  * Expect Typings file

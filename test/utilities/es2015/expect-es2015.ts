@@ -1,16 +1,16 @@
-import { JavascriptES5File } from '../utilities/es5-file';
+import { JavascriptES2015File } from './es2015-file';
 
 /**
- * Expect ES5 file
+ * Expect ES2015 file
  */
-export function expectES5( filePath: string, checks?: {
+export function expectES2015( filePath: string, checks?: {
 	classNames?: Array<string>
 } ): void {
 
-	let file: JavascriptES5File;
+	let file: JavascriptES2015File;
 
 	it( 'should exist', () => {
-		file = new JavascriptES5File( filePath );
+		file = new JavascriptES2015File( filePath );
 	} );
 
 	it( 'should not be empty', () => {
@@ -19,8 +19,8 @@ export function expectES5( filePath: string, checks?: {
 
 	if ( checks && checks.classNames ) {
 
-		it( 'should be of ES5 language level', () => {
-			expect( file.isES5LanguageLevel() ).toBe( true );
+		it( 'should be of ES2015 language level', () => {
+			expect( file.isES2015LanguageLevel() ).toBe( true );
 		} );
 
 		it( 'should be of ES module format', () => {
@@ -32,7 +32,6 @@ export function expectES5( filePath: string, checks?: {
 				expect( file.hasClass( className ) ).toBe( true );
 			} );
 		} );
-
 	}
 
 }
