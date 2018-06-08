@@ -6,6 +6,7 @@ import { expectMetadata } from './expects/expect-metadata';
 import { expectSourcemap } from './expects/expect-sourcemap';
 import { expectTypings } from './expects/expect-typings';
 import { expectUMD } from './expects/expect-umd';
+import { expectPackage } from './expects/expect-package';
 
 describe( 'Multiple dependent libraries', () => {
 
@@ -145,6 +146,14 @@ describe( 'Multiple dependent libraries', () => {
 					'UIFormControlRegistryService'
 				]
 			} );
+		} );
+
+		describe( 'Output: Package File', () => {
+
+			expectPackage( 'test/multiple-dependent-libraries/my-library-core/dist/package.json', {
+				packageName: '@my-library/core'
+			} );
+
 		} );
 
 		// TODO: Package JSON
