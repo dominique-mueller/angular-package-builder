@@ -10,7 +10,7 @@ import { expectTypings } from './utilities/typings/expect-typings';
 import { expectUMD } from './utilities/umd/expect-umd';
 import { expectPackage } from './utilities/package/expect-package';
 
-export const myLibraryCoreLibrary: any = {
+export const myLibraryCoreLibrary: any = { // TODO: Interface
 	packageName: '@my-library/core',
 	root: 'test/multiple-dependent-libraries/my-library-core',
 	files: [
@@ -43,9 +43,9 @@ expectLibrary( myLibraryCoreLibrary );
 
 export function expectLibrary( library: any ): void {
 
-	beforeAll( async () => {
+	// TODO: Uncomment the following & extract from here!
+	// beforeAll( async () => {
 
-		// TODO: Uncomment the following
 		// Build packages
 		// await runAngularPackageBuilder( [
 		// 	'test/multiple-dependent-libraries/my-library-core/.angular-package.json',
@@ -53,7 +53,7 @@ export function expectLibrary( library: any ): void {
 		// 	'test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
 		// ] );
 
-	} );
+	// } );
 
 	const fileName: string = library.packageName.split( '/' ).pop();
 	const filesWithSourcemaps: Array<string> = library.files
