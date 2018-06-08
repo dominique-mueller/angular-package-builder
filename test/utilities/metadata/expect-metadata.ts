@@ -29,7 +29,7 @@ export function expectMetadata( filePath: string, checks?: {
 
 	}
 
-	if ( checks && checks.classNames ) {
+	if ( checks && checks.classNames && checks.classNames.length > 0 ) {
 
 		it ( 'should contain metadata for all classes', () => {
 			expect( file.getItems() ).toEqual( checks.classNames );

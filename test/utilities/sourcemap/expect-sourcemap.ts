@@ -8,7 +8,7 @@ import { simplifyFileContent } from '../simplify-file-content';
  * Expect Sourcemap file
  */
 export function expectSourcemap( filePath: string, checks: {
-	numberOfSourceFiles: number
+	sourceFiles: Array<string>
 } ): void {
 
 	let file: SourcemapFile;
@@ -31,7 +31,7 @@ export function expectSourcemap( filePath: string, checks: {
 		const sources: { [ path: string ]: string } = file.getSources();
 		const rootPath: string = filePath.split( '/dist/' )[ 0 ];
 
-		expect( Object.keys( sources ).length === checks.numberOfSourceFiles );
+		expect( Object.keys( sources ).sort() ).toEqual( checks.sourceFiles.sort() );
 		Object
 			.keys( sources )
 			.forEach( ( sourcePath: string ): void => {

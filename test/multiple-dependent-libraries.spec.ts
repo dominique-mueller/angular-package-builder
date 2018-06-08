@@ -1,3 +1,5 @@
+import { posix as path } from 'path';
+
 import { runAngularPackageBuilder } from '../index';
 
 import { expectES2015 } from './utilities/es2015/expect-es2015';
@@ -8,7 +10,38 @@ import { expectTypings } from './utilities/typings/expect-typings';
 import { expectUMD } from './utilities/umd/expect-umd';
 import { expectPackage } from './utilities/package/expect-package';
 
-describe( 'Multiple dependent libraries', () => {
+export const myLibraryCoreLibrary: any = {
+	packageName: '@my-library/core',
+	root: 'test/multiple-dependent-libraries/my-library-core',
+	files: [
+		{
+			path: 'core', // TODO: Implicit
+			hasSourcemap: false
+		},
+		{
+			path: 'index',
+			hasSourcemap: false
+		},
+		{
+			path: 'src/library.module',
+			classNames: [
+				'MyLibraryCoreModule'
+			],
+			hasSourcemap: true
+		},
+		{
+			path: 'src/form-control-registry/form-control-registry.service',
+			classNames: [
+				'UIFormControlRegistryService'
+			],
+			hasSourcemap: true
+		}
+	]
+};
+
+expectLibrary( myLibraryCoreLibrary );
+
+export function expectLibrary( library: any ): void {
 
 	beforeAll( async () => {
 
@@ -22,140 +55,128 @@ describe( 'Multiple dependent libraries', () => {
 
 	} );
 
-	describe( 'Package: @my-library/core', () => {
+	const fileName: string = library.packageName.split( '/' ).pop();
+	const filesWithSourcemaps: Array<string> = library.files
+		.filter( ( file: any ): boolean => {
+			return file.hasSourcemap;
+		} )
+		.map( ( file: any ): string => {
+			return `${ file.path }.ts`;
+		} );
+	const allClassNames: Array<string> = library.files.reduce( ( allClassNames: Array<string>, file: any ) => {
+		allClassNames.push( ...( file.classNames || [] ) );
+		return allClassNames;
+	}, [] );
+
+	describe( `Package: ${ library.packageName }`, () => {
 
 		describe( 'Output: ES2015 build', () => {
-			describe( '(core.js)', () => {
-				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/core.js' );
-			} );
-			describe( '(index.js)', () => {
-				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/index.js' );
-			} );
-			describe( '(src/library.module.js)', () => {
-				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/src/library.module.js', {
-					classNames: [
-						'MyLibraryCoreModule'
-					]
+
+			library.files.forEach( ( file: any ) => {
+
+				describe( `(${ file.path }.js)`, () => {
+					expectES2015( path.join( library.root, 'dist', 'esm2015', `${ file.path }.js` ), {
+						classNames: file.classNames
+					} );
 				} );
+
 			} );
-			describe( '(src/form-control-registry/form-control-registry.service.js)', () => {
-				expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/esm2015/src/form-control-registry/form-control-registry.service.js', {
-					classNames: [
-						'UIFormControlRegistryService'
-					]
-				} );
-			} );
+
 		} );
 
 		describe( 'Output: FESM2015 bundle', () => {
-			expectES2015( 'test/multiple-dependent-libraries/my-library-core/dist/fesm2015/core.js', {
-				classNames: [
-					'MyLibraryCoreModule',
-					'UIFormControlRegistryService'
-				]
+
+			expectES2015( path.join( library.root, 'dist', 'fesm2015', `${ fileName }.js` ), {
+				classNames: allClassNames
 			} );
+
 		} );
 
 		describe( 'Output: SourceMaps for FESM2015 bundle', () => {
-			expectSourcemap( 'test/multiple-dependent-libraries/my-library-core/dist/fesm2015/core.js.map', {
-				numberOfSourceFiles: 2
+
+			expectSourcemap( path.join( library.root, 'dist', 'fesm2015', `${ fileName }.js.map` ), {
+				sourceFiles: filesWithSourcemaps
 			} );
+
 		} );
 
 		describe( 'Output: ES5 build', () => {
-			describe( '(core.js)', () => {
-				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/core.js' );
-			} );
-			describe( '(index.js)', () => {
-				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/index.js' );
-			} );
-			describe( '(src/library.module.js)', () => {
-				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/src/library.module.js', {
-					classNames: [
-						'MyLibraryCoreModule'
-					]
+
+			library.files.forEach( ( file: any ) => {
+
+				describe( `(${ file.path }.js)`, () => {
+					expectES5( path.join( library.root, 'dist', 'esm5', `${ file.path }.js` ), {
+						classNames: file.classNames
+					} );
 				} );
+
 			} );
-			describe( '(src/form-control-registry/form-control-registry.service.js)', () => {
-				expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/esm5/src/form-control-registry/form-control-registry.service.js', {
-					classNames: [
-						'UIFormControlRegistryService'
-					]
-				} );
-			} );
+
 		} );
 
 		describe( 'Output: FESM5 bundle', () => {
-			expectES5( 'test/multiple-dependent-libraries/my-library-core/dist/fesm5/core.js', {
-				classNames: [
-					'MyLibraryCoreModule',
-					'UIFormControlRegistryService'
-				]
+
+			expectES5( path.join( library.root, 'dist', 'fesm5', `${ fileName }.js` ), {
+				classNames: allClassNames
 			} );
+
 		} );
 
 		describe( 'Output: SourceMaps for FESM5 bundle', () => {
-			expectSourcemap( 'test/multiple-dependent-libraries/my-library-core/dist/fesm5/core.js.map', {
-				numberOfSourceFiles: 2
+
+			expectSourcemap( path.join( library.root, 'dist', 'fesm5', `${ fileName }.js.map` ), {
+				sourceFiles: filesWithSourcemaps
 			} );
+
 		} );
 
 		describe( 'Output: UMD bundle', () => {
-			expectUMD( 'test/multiple-dependent-libraries/my-library-core/dist/bundles/core.umd.js', {
-				classNames: [
-					'MyLibraryCoreModule',
-					'UIFormControlRegistryService'
-				]
+
+			expectUMD( path.join( library.root, 'dist', 'bundles', `${ fileName }.umd.js` ), {
+				classNames: allClassNames
 			} );
+
 		} );
 
 		describe( 'Output: SourceMaps for UMD bundle', () => {
-			expectSourcemap( 'test/multiple-dependent-libraries/my-library-core/dist/bundles/core.umd.js.map', {
-				numberOfSourceFiles: 2
+
+			expectSourcemap( path.join( library.root, 'dist', 'bundles', `${ fileName }.umd.js.map` ), {
+				sourceFiles: filesWithSourcemaps
 			} );
+
 		} );
 
 		describe( 'Output: TypeScript type definitions', () => {
-			describe( '(core.d.ts)', () => {
-				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/core.d.ts' );
-			} );
-			describe( '(index.d.ts)', () => {
-				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/index.d.ts' );
-			} );
-			describe( '(src/library.module.d.ts)', () => {
-				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/src/library.module.d.ts', {
-					classNames: [
-						'MyLibraryCoreModule'
-					]
+
+			library.files.forEach( ( file: any ) => {
+
+				describe( `(${ file.path }.d.ts)`, () => {
+					expectTypings( path.join( library.root, 'dist', `${ file.path }.d.ts` ), {
+						classNames: file.classNames
+					} );
 				} );
+
 			} );
-			describe( '(src/form-control-registry/form-control-registry.service.d.ts)', () => {
-				expectTypings( 'test/multiple-dependent-libraries/my-library-core/dist/src/form-control-registry/form-control-registry.service.d.ts', {
-					classNames: [
-						'UIFormControlRegistryService'
-					]
-				} );
-			} );
+
 		} );
 
 		describe( 'Output: Angular Metadata', () => {
-			expectMetadata( 'test/multiple-dependent-libraries/my-library-core/dist/core.metadata.json', {
-				packageName: '@my-library/core',
-				classNames: [
-					'MyLibraryCoreModule',
-					'UIFormControlRegistryService'
-				]
+
+			expectMetadata( path.join( library.root, 'dist', `${ fileName }.metadata.json` ), {
+				packageName: library.packageName,
+				classNames: allClassNames
 			} );
+
 		} );
 
 		describe( 'Output: Package File', () => {
 
-			expectPackage( 'test/multiple-dependent-libraries/my-library-core/dist/package.json', {
-				packageName: '@my-library/core'
+			expectPackage( path.join( library.root, 'dist', 'package.json' ), {
+				packageName: library.packageName
 			} );
 
 		} );
 
 	} );
 
-} );
+}

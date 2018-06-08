@@ -17,7 +17,7 @@ export function expectES2015( filePath: string, checks?: {
 		expect( file.isEmpty() ).toBe( false );
 	} );
 
-	if ( checks && checks.classNames ) {
+	if ( checks && checks.classNames && checks.classNames.length > 0 ) {
 
 		it( 'should be of ES2015 language level', () => {
 			expect( file.isES2015LanguageLevel() ).toBe( true );

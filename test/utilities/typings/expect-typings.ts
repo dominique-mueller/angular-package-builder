@@ -17,7 +17,7 @@ export function expectTypings( filePath: string, checks?: {
 		expect( file.isEmpty() ).toBe( false );
 	} );
 
-	if ( checks && checks.classNames ) {
+	if ( checks && checks.classNames && checks.classNames.length > 0 ) {
 
 		it( 'should contain the classes', () => {
 			checks.classNames.forEach( ( className: string ): void => {

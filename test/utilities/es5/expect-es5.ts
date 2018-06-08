@@ -17,7 +17,7 @@ export function expectES5( filePath: string, checks?: {
 		expect( file.isEmpty() ).toBe( false );
 	} );
 
-	if ( checks && checks.classNames ) {
+	if ( checks && checks.classNames && checks.classNames.length > 0 ) {
 
 		it( 'should be of ES5 language level', () => {
 			expect( file.isES5LanguageLevel() ).toBe( true );
