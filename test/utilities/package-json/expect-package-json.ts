@@ -1,17 +1,17 @@
-import { PackageFile } from './package-file';
+import { PackageJsonFile } from './package-json-file';
 
 /**
  * Expect package.json file
  */
-export function expectPackage( filePath: string, checks: {
+export function expectPackageJson( filePath: string, checks: {
 	packageName: string,
 } ): void {
 
-	let file: PackageFile;
+	let file: PackageJsonFile;
 	const fileName: string = checks.packageName.split( '/' ).pop();
 
 	it( 'should exist and be valid JSON', () => {
-		file = new PackageFile( filePath );
+		file = new PackageJsonFile( filePath );
 	} );
 
 	it( 'should not be empty', () => {

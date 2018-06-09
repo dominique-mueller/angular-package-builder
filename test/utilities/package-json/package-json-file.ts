@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 
 /**
- * Package File Wrapper
+ * Package JSON File Wrapper
  */
-export class PackageFile {
+export class PackageJsonFile {
 
 	/**
 	 * File content (unparsed)
