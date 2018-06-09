@@ -1,4 +1,10 @@
 {
+	"collectCoverage": true,
+	"collectCoverageFrom" : [
+		"<rootDir>/src/**",
+		"<rootDir>/index.ts"
+	],
+	"coverageDirectory": "<rootDir>/coverage",
 	"moduleFileExtensions": [
 		"js",
 		"ts",
@@ -7,10 +13,9 @@
 	"modulePathIgnorePatterns": [
 		"/dist/"
 	],
-	"setupTestFrameworkScriptFile": "./jest.setup.js",
+	"setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
+	"testRegex": "^.+\\.spec.ts$",
 	"transform": {
-		"^.+\\.tsx?$": "ts-jest"
-	},
-	"testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
-	"verbose": true
+		"^.+\\.ts$": "ts-jest"
+	}
 }
