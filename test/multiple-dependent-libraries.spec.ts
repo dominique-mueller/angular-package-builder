@@ -10,7 +10,7 @@ import { expectTypings } from './utilities/typings/expect-typings';
 import { expectUMD } from './utilities/umd/expect-umd';
 import { expectPackage } from './utilities/package/expect-package';
 
-export const myLibraryCoreLibrary: any = { // TODO: Interface
+export const myLibraryCoreLibrary: ExpectLibraryDefinition = {
 	packageName: '@my-library/core',
 	root: 'test/multiple-dependent-libraries/my-library-core',
 	files: [
@@ -35,9 +35,21 @@ export const myLibraryCoreLibrary: any = { // TODO: Interface
 	]
 };
 
+export interface ExpectLibraryDefinition {
+	packageName: string;
+	root: string;
+	files: Array<ExpectLibraryDefinitionFile>;
+}
+
+export interface ExpectLibraryDefinitionFile {
+	path: string;
+	classNames?: Array<string>;
+	hasSourcemap: boolean;
+}
+
 expectLibrary( myLibraryCoreLibrary );
 
-export function expectLibrary( library: any ): void {
+export function expectLibrary( library: ExpectLibraryDefinition ): void {
 
 	// TODO: Uncomment the following & extract from here!
 	// beforeAll( async () => {
@@ -51,18 +63,21 @@ export function expectLibrary( library: any ): void {
 
 	// } );
 
-	const fileName: string = library.packageName.split( '/' ).pop();
+	const fileName: string = library.packageName
+		.split( '/' )
+		.pop();
 	const filesWithSourcemaps: Array<string> = library.files
-		.filter( ( file: any ): boolean => {
+		.filter( ( file: ExpectLibraryDefinitionFile ): boolean => {
 			return file.hasSourcemap;
 		} )
-		.map( ( file: any ): string => {
+		.map( ( file: ExpectLibraryDefinitionFile ): string => {
 			return `${ file.path }.ts`;
 		} );
-	const allClassNames: Array<string> = library.files.reduce( ( allClassNames: Array<string>, file: any ) => {
-		allClassNames.push( ...( file.classNames || [] ) );
-		return allClassNames;
-	}, [] );
+	const allClassNames: Array<string> = library.files
+		.reduce( ( allClassNames: Array<string>, file: ExpectLibraryDefinitionFile ): Array<string> => {
+			allClassNames.push( ...( file.classNames || [] ) );
+			return allClassNames;
+		}, [] );
 
 	describe( `Package: ${ library.packageName }`, () => {
 
@@ -72,7 +87,7 @@ export function expectLibrary( library: any ): void {
 				expectES2015( path.join( library.root, 'dist', 'esm2015', `${ fileName }.js` ) );
 			} );
 
-			library.files.forEach( ( file: any ) => {
+			library.files.forEach( ( file: ExpectLibraryDefinitionFile ) => {
 
 				describe( `(${ file.path }.js)`, () => {
 					expectES2015( path.join( library.root, 'dist', 'esm2015', `${ file.path }.js` ), {
@@ -106,7 +121,7 @@ export function expectLibrary( library: any ): void {
 				expectES5( path.join( library.root, 'dist', 'esm2015', `${ fileName }.js` ) );
 			} );
 
-			library.files.forEach( ( file: any ) => {
+			library.files.forEach( ( file: ExpectLibraryDefinitionFile ) => {
 
 				describe( `(${ file.path }.js)`, () => {
 					expectES5( path.join( library.root, 'dist', 'esm5', `${ file.path }.js` ), {
@@ -156,7 +171,7 @@ export function expectLibrary( library: any ): void {
 				expectTypings( path.join( library.root, 'dist', 'esm2015', `${ fileName }.js` ) );
 			} );
 
-			library.files.forEach( ( file: any ) => {
+			library.files.forEach( ( file: ExpectLibraryDefinitionFile ) => {
 
 				describe( `(${ file.path }.d.ts)`, () => {
 					expectTypings( path.join( library.root, 'dist', `${ file.path }.d.ts` ), {
