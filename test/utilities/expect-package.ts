@@ -14,6 +14,7 @@ import { expectPackageJson } from './package-json/expect-package-json';
 export interface ExpectPackageDefinition {
 	packageName: string;
 	root: string;
+	rootFolder?: string;
 	files: Array<ExpectPackageDefinitionFile>;
 }
 
@@ -47,19 +48,22 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 			allClassNames.push( ...( file.classNames || [] ) );
 			return allClassNames;
 		}, [] );
+	if ( !packageDefinition.rootFolder ) {
+		packageDefinition.rootFolder = '';
+	}
 
 	describe( `Package: ${ packageDefinition.packageName }`, () => {
 
 		describe( 'Output: ES2015 build', () => {
 
 			describe( `(${ fileName }.js)`, () => {
-				expectES2015( path.join( packageDefinition.root, 'dist', 'esm2015', `${ fileName }.js` ) );
+				expectES2015( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'esm2015', `${ fileName }.js` ) );
 			} );
 
 			packageDefinition.files.forEach( ( file: ExpectPackageDefinitionFile ) => {
 
 				describe( `(${ file.path }.js)`, () => {
-					expectES2015( path.join( packageDefinition.root, 'dist', 'esm2015', `${ file.path }.js` ), {
+					expectES2015( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'esm2015', `${ file.path }.js` ), {
 						classNames: file.classNames
 					} );
 				} );
@@ -70,7 +74,7 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: FESM2015 bundle', () => {
 
-			expectES2015( path.join( packageDefinition.root, 'dist', 'fesm2015', `${ fileName }.js` ), {
+			expectES2015( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'fesm2015', `${ fileName }.js` ), {
 				classNames: allClassNames
 			} );
 
@@ -78,7 +82,8 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: SourceMaps for FESM2015 bundle', () => {
 
-			expectSourcemap( path.join( packageDefinition.root, 'dist', 'fesm2015', `${ fileName }.js.map` ), {
+			expectSourcemap( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'fesm2015', `${ fileName }.js.map` ), {
+				sourceRoot: path.join( packageDefinition.root, packageDefinition.rootFolder ),
 				sourceFiles: filesWithSourcemaps
 			} );
 
@@ -87,13 +92,13 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 		describe( 'Output: ES5 build', () => {
 
 			describe( `(${ fileName }.js)`, () => {
-				expectES5( path.join( packageDefinition.root, 'dist', 'esm2015', `${ fileName }.js` ) );
+				expectES5( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'esm2015', `${ fileName }.js` ) );
 			} );
 
 			packageDefinition.files.forEach( ( file: ExpectPackageDefinitionFile ) => {
 
 				describe( `(${ file.path }.js)`, () => {
-					expectES5( path.join( packageDefinition.root, 'dist', 'esm5', `${ file.path }.js` ), {
+					expectES5( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'esm5', `${ file.path }.js` ), {
 						classNames: file.classNames
 					} );
 				} );
@@ -104,7 +109,7 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: FESM5 bundle', () => {
 
-			expectES5( path.join( packageDefinition.root, 'dist', 'fesm5', `${ fileName }.js` ), {
+			expectES5( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'fesm5', `${ fileName }.js` ), {
 				classNames: allClassNames
 			} );
 
@@ -112,7 +117,8 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: SourceMaps for FESM5 bundle', () => {
 
-			expectSourcemap( path.join( packageDefinition.root, 'dist', 'fesm5', `${ fileName }.js.map` ), {
+			expectSourcemap( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'fesm5', `${ fileName }.js.map` ), {
+				sourceRoot: path.join( packageDefinition.root, packageDefinition.rootFolder ),
 				sourceFiles: filesWithSourcemaps
 			} );
 
@@ -120,7 +126,7 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: UMD bundle', () => {
 
-			expectUMD( path.join( packageDefinition.root, 'dist', 'bundles', `${ fileName }.umd.js` ), {
+			expectUMD( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'bundles', `${ fileName }.umd.js` ), {
 				classNames: allClassNames
 			} );
 
@@ -128,7 +134,8 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: SourceMaps for UMD bundle', () => {
 
-			expectSourcemap( path.join( packageDefinition.root, 'dist', 'bundles', `${ fileName }.umd.js.map` ), {
+			expectSourcemap( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'bundles', `${ fileName }.umd.js.map` ), {
+				sourceRoot: path.join( packageDefinition.root, packageDefinition.rootFolder ),
 				sourceFiles: filesWithSourcemaps
 			} );
 
@@ -137,13 +144,13 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 		describe( 'Output: TypeScript type definitions', () => {
 
 			describe( `(${ fileName }.d.ts)`, () => {
-				expectTypings( path.join( packageDefinition.root, 'dist', 'esm2015', `${ fileName }.js` ) );
+				expectTypings( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'esm2015', `${ fileName }.js` ) );
 			} );
 
 			packageDefinition.files.forEach( ( file: ExpectPackageDefinitionFile ) => {
 
 				describe( `(${ file.path }.d.ts)`, () => {
-					expectTypings( path.join( packageDefinition.root, 'dist', `${ file.path }.d.ts` ), {
+					expectTypings( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, `${ file.path }.d.ts` ), {
 						classNames: file.classNames
 					} );
 				} );
@@ -154,7 +161,7 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: Angular Metadata', () => {
 
-			expectMetadata( path.join( packageDefinition.root, 'dist', `${ fileName }.metadata.json` ), {
+			expectMetadata( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, `${ fileName }.metadata.json` ), {
 				packageName: packageDefinition.packageName,
 				classNames: allClassNames
 			} );
@@ -163,7 +170,7 @@ export function expectPackage( packageDefinition: ExpectPackageDefinition ): voi
 
 		describe( 'Output: Package File', () => {
 
-			expectPackageJson( path.join( packageDefinition.root, 'dist', 'package.json' ), {
+			expectPackageJson( path.join( packageDefinition.root, 'dist', packageDefinition.rootFolder, 'package.json' ), {
 				packageName: packageDefinition.packageName
 			} );
 

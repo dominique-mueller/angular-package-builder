@@ -28,7 +28,7 @@ export class TypingsFile {
      * Check if the file includes a class with the given name
      */
     public hasClass( className: string ): boolean {
-        return this.file.indexOf( `export declare class ${ className } {` ) !== -1;
+        return this.file.indexOf( `export declare class ${ className }` ) !== -1;
     }
 
 }

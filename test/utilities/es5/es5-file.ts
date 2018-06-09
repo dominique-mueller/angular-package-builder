@@ -62,8 +62,8 @@ export class JavascriptES5File {
      * Check if the file includes a class with the given name
      */
     public hasClass( className: string ): boolean {
-        return this.file.indexOf( `var ${ className } =` ) !== -1 &&
-            this.file.indexOf( `function ${ className }() {` ) !== -1;
+        return this.file.indexOf( `var ${ className }` ) !== -1 &&
+            this.file.indexOf( `function ${ className }` ) !== -1;
     }
 
 }

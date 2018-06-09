@@ -1,10 +1,11 @@
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement, Injectable } from '@angular/core';
 
 /**
- * UI Input Component Test Utilify
+ * Input Component Test Utility
  */
-export class UIInputComponentTestUtility {
+@Injectable()
+export class MyLibraryInputComponentTestUtility {
 
 	/**
 	 * Get input element from the given input component elemnet

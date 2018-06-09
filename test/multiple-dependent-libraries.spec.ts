@@ -1,39 +1,114 @@
 import { runAngularPackageBuilder } from '../index';
 import { expectPackage } from './utilities/expect-package'
 
-// TODO: Uncomment the following & extract from here!
-// beforeAll( async () => {
+/**
+ * Unit Test: Multiple Dependent Libraries
+ */
+describe( 'Multiple Dependent Libraries', () => {
 
-// Build packages
-// await runAngularPackageBuilder( [
-// 	'test/multiple-dependent-libraries/my-library-core/.angular-package.json',
-// 	'test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
-// 	'test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
-// ] );
+	beforeAll( async () => {
 
-// } );
+		// Build packages
+		await runAngularPackageBuilder( [
+			'test/multiple-dependent-libraries/my-library-core/.angular-package.json',
+			'test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
+			'test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
+		] );
 
-expectPackage( {
-	packageName: '@my-library/core',
-	root: 'test/multiple-dependent-libraries/my-library-core',
-	files: [
-		{
-			path: 'index',
-			hasSourcemap: false
-		},
-		{
-			path: 'src/library.module',
-			classNames: [
-				'MyLibraryCoreModule'
-			],
-			hasSourcemap: true
-		},
-		{
-			path: 'src/form-control-registry/form-control-registry.service',
-			classNames: [
-				'UIFormControlRegistryService'
-			],
-			hasSourcemap: true
-		}
-	]
+	} );
+
+	expectPackage( {
+		packageName: '@my-library/core',
+		root: 'test/multiple-dependent-libraries/my-library-core',
+		files: [
+			{
+				path: 'index',
+				hasSourcemap: false
+			},
+			{
+				path: 'src/library.module',
+				classNames: [
+					'MyLibraryCoreModule'
+				],
+				hasSourcemap: true
+			},
+			{
+				path: 'src/form-control-registry/form-control-registry.service',
+				classNames: [
+					'MyLibraryFormControlRegistryService'
+				],
+				hasSourcemap: true
+			}
+		]
+	} );
+
+	expectPackage( {
+		packageName: '@my-library/tracking',
+		root: 'test/multiple-dependent-libraries/my-library-tracking',
+		files: [
+			{
+				path: 'index',
+				hasSourcemap: false
+			},
+			{
+				path: 'src/library.module',
+				classNames: [
+					'MyLibraryTrackingModule'
+				],
+				hasSourcemap: true
+			},
+			{
+				path: 'src/tracking/tracking.service',
+				classNames: [
+					'MyLibraryTrackingService'
+				],
+				hasSourcemap: true
+			}
+		]
+	} );
+
+	expectPackage( {
+		packageName: '@my-library/ui',
+		root: 'test/multiple-dependent-libraries/my-library-ui',
+		files: [
+			{
+				path: 'index',
+				hasSourcemap: false
+			},
+			{
+				path: 'src/library.module',
+				classNames: [
+					'MyLibraryUIModule'
+				],
+				hasSourcemap: true
+			},
+			{
+				path: 'src/input/input.component',
+				classNames: [
+					'MyLibraryInputComponent'
+				],
+				hasSourcemap: true
+			}
+		]
+	} );
+
+	expectPackage( {
+		packageName: '@my-library/ui/testing',
+		root: 'test/multiple-dependent-libraries/my-library-ui',
+		rootFolder: 'testing',
+		files: [
+			{
+				path: 'index',
+				hasSourcemap: false
+			},
+			{
+				path: 'input/input.test-utility',
+				classNames: [
+					'MyLibraryInputComponentTestUtility'
+				],
+				hasSourcemap: true
+			}
+		]
+	} );
+
 } );

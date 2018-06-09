@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 
-import { UITrackingService } from './tracking/tracking.service';
+import { MyLibraryTrackingService } from './tracking/tracking.service';
 
 /**
- * My Library Tracking Module
+ * Tracking Module
  */
 @NgModule( {
 	providers: [
-		UITrackingService
+		MyLibraryTrackingService
 	]
 } )
 export class MyLibraryTrackingModule {}

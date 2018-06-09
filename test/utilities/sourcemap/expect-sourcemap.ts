@@ -8,7 +8,8 @@ import { simplifyFileContent } from '../simplify-file-content';
  * Expect Sourcemap file
  */
 export function expectSourcemap( filePath: string, checks: {
-	sourceFiles: Array<string>
+	sourceRoot: string;
+	sourceFiles: Array<string>;
 } ): void {
 
 	let file: SourcemapFile;
@@ -29,14 +30,22 @@ export function expectSourcemap( filePath: string, checks: {
 	it( 'should reference all the source files', () => {
 
 		const sources: { [ path: string ]: string } = file.getSources();
-		const rootPath: string = filePath.split( '/dist/' )[ 0 ];
 
 		expect( Object.keys( sources ).sort() ).toEqual( checks.sourceFiles.sort() );
 		Object
 			.keys( sources )
 			.forEach( ( sourcePath: string ): void => {
-				const sourceContent: string = fs.readFileSync( path.join( rootPath, sourcePath ), 'utf-8' );
-				expect( simplifyFileContent( sources[ sourcePath ] ) ).toBe( simplifyFileContent( sourceContent ) );
+
+				const sourceContent: string = fs.readFileSync( path.join( checks.sourceRoot, sourcePath ), 'utf-8' );
+				const simplifiedSourceContent: string = simplifyFileContent( sourceContent )
+					.replace( /templateUrl:'.*'/g, '' ) // Ignore template
+					.replace( /styleUrls:\[.*\]/g, '' ); // Ignore styles
+				const simplifiedSourcemapContent: string = simplifyFileContent( sources[ sourcePath ] )
+					.replace( /template:'.*'/g, '' ) // Ignore template
+					.replace( /styles:\[.*\]/g, '' ); // Ignore styles
+
+				expect( simplifiedSourcemapContent ).toBe( simplifyFileContent( simplifiedSourceContent ) );
+
 			} );
 
 	} );

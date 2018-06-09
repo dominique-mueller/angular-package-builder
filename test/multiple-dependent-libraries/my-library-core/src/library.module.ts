@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 
-import { UIFormControlRegistryService } from './form-control-registry/form-control-registry.service';
+import { MyLibraryFormControlRegistryService } from './form-control-registry/form-control-registry.service';
 
 /**
  * My Library Core Module
  */
 @NgModule( {
 	providers: [
-		UIFormControlRegistryService
+		MyLibraryFormControlRegistryService
 	]
 } )
 export class MyLibraryCoreModule {}

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 /**
- * UI Tracking Service
+ * Tracking Service
  */
 @Injectable()
-export class UITrackingService {
+export class MyLibraryTrackingService {
 
 	/**
 	 * Track page

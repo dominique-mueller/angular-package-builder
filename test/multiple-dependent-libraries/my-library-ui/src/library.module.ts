@@ -3,17 +3,17 @@ import { NgModule } from '@angular/core';
 
 import { MyLibraryCoreModule } from '@my-library/core';
 
-import { UIInputComponent } from './input/input.component';
+import { MyLibraryInputComponent } from './input/input.component';
 
 /**
- * My Library UI Module
+ * UI Module
  */
 @NgModule( {
 	declarations: [
-		UIInputComponent
+		MyLibraryInputComponent
 	],
 	exports: [
-		UIInputComponent
+		MyLibraryInputComponent
 	],
 	imports: [
 		CommonModule,
