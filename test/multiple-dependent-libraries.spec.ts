@@ -15,10 +15,6 @@ export const myLibraryCoreLibrary: any = { // TODO: Interface
 	root: 'test/multiple-dependent-libraries/my-library-core',
 	files: [
 		{
-			path: 'core', // TODO: Implicit
-			hasSourcemap: false
-		},
-		{
 			path: 'index',
 			hasSourcemap: false
 		},
@@ -72,6 +68,10 @@ export function expectLibrary( library: any ): void {
 
 		describe( 'Output: ES2015 build', () => {
 
+			describe( `(${ fileName }.js)`, () => {
+				expectES2015( path.join( library.root, 'dist', 'esm2015', `${ fileName }.js` ) );
+			} );
+
 			library.files.forEach( ( file: any ) => {
 
 				describe( `(${ file.path }.js)`, () => {
@@ -101,6 +101,10 @@ export function expectLibrary( library: any ): void {
 		} );
 
 		describe( 'Output: ES5 build', () => {
+
+			describe( `(${ fileName }.js)`, () => {
+				expectES5( path.join( library.root, 'dist', 'esm2015', `${ fileName }.js` ) );
+			} );
 
 			library.files.forEach( ( file: any ) => {
 
@@ -147,6 +151,10 @@ export function expectLibrary( library: any ): void {
 		} );
 
 		describe( 'Output: TypeScript type definitions', () => {
+
+			describe( `(${ fileName }.d.ts)`, () => {
+				expectTypings( path.join( library.root, 'dist', 'esm2015', `${ fileName }.js` ) );
+			} );
 
 			library.files.forEach( ( file: any ) => {
 
