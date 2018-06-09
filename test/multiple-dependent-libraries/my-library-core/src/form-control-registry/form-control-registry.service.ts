@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 /**
- * UI Form Control Registry Service
+ * Form Control Registry Service
  */
 @Injectable()
-export class UIFormControlRegistryService {
+export class MyLibraryFormControlRegistryService {
 
 	/**
 	 * Tracking Log

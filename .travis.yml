@@ -4,9 +4,7 @@ sudo: false
 language: node_js
 node_js:
   "lts/*"
-cache:
-  directories:
-    - node_modules
+cache: false
 notifications:
   email: false
 branches:
@@ -17,7 +15,7 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: temp
+  - name: test package
   - name: release
     if: branch = master
 
@@ -33,14 +31,13 @@ jobs:
       script:
         - npm run build
 
-    - stage: temp
+    - stage: test package
       before_install:
         - npm install -g npm
-        - npm install -g ts-node typescript
       install:
         - npm ci
       script:
-        - ts-node index.ts
+        - npm run test:package
 
     - stage: release
       node_js:

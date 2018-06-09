@@ -38,8 +38,8 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 
 }
 
-runAngularPackageBuilder( [
-	'./test/multiple-dependent-libraries/my-library-core/.angular-package.json',
-	'./test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
-	'./test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
-] );
+// runAngularPackageBuilder( [
+// 	'./test/multiple-dependent-libraries/my-library-core/.angular-package.json',
+// 	'./test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
+// 	'./test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
+// ] );

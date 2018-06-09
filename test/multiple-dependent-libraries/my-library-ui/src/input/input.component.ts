@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 
-import { UIFormControlRegistryService } from '@my-library/core';
+import { MyLibraryFormControlRegistryService } from '@my-library/core';
 
 /**
- * UI Input component
+ * Input component
  */
 @Component( {
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,7 +13,7 @@ import { UIFormControlRegistryService } from '@my-library/core';
 		'./input.component.scss'
 	]
 } )
-export class UIInputComponent implements OnInit, OnDestroy {
+export class MyLibraryInputComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Input ID
@@ -42,14 +42,14 @@ export class UIInputComponent implements OnInit, OnDestroy {
 	/**
 	 * Form control registry service
 	 */
-	private readonly formControlRegistryService: UIFormControlRegistryService;
+	private readonly formControlRegistryService: MyLibraryFormControlRegistryService;
 
 	/**
 	 * Constructor
 	 *
 	 * @param formControlRegistryService Form control registry service
 	 */
-	constructor( formControlRegistryService: UIFormControlRegistryService ) {
+	constructor( formControlRegistryService: MyLibraryFormControlRegistryService ) {
 		this.id = null;
 		this.label = '';
 		this.model = '';

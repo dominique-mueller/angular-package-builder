@@ -1,18 +1,21 @@
 {
-	"moduleDirectories": [
-		"node_modules",
-		"test/my-library/dist"
+	"collectCoverage": true,
+	"collectCoverageFrom" : [
+		"<rootDir>/src/**",
+		"<rootDir>/index.ts"
 	],
+	"coverageDirectory": "<rootDir>/coverage",
 	"moduleFileExtensions": [
 		"js",
 		"ts",
 		"json"
 	],
-	"rootDir": ".",
+	"modulePathIgnorePatterns": [
+		"/dist/"
+	],
+	"setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
+	"testRegex": "^.+\\.spec.ts$",
 	"transform": {
-		"^.+\\.js$": "babel-jest",
-		"^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-	},
-	"testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
-	"verbose": true
+		"^.+\\.ts$": "ts-jest"
+	}
 }
