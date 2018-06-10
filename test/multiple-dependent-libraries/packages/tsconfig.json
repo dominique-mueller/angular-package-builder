@@ -5,14 +5,14 @@
         "baseUrl": ".",
         "rootDir": ".",
         "paths": {
-            "@my-library/core/*": [
-                "./my-library-core/*"
+            "@library/core/*": [
+                "./library-core/*"
             ],
-            "@my-library/ui/*": [
-                "./my-library-ui/*"
+            "@library/ui/*": [
+                "./library-ui/*"
             ],
-            "@my-library/tracking/*": [
-                "./my-library-tracking/*"
+            "@library/tracking/*": [
+                "./library-tracking/*"
             ]
         }
     }

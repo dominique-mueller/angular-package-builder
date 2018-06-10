@@ -17,7 +17,7 @@ export class HTMLTransformer {
         if ( htmlContent.length === 0 ) {
             return htmlContent;
         } else {
-            return minify( htmlContent, htmlMinifierConfiguration )
+            return minify( htmlContent, htmlMinifierConfiguration );
         }
 
     }

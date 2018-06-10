@@ -1,6 +1,6 @@
 import { posix as path } from 'path';
 
-import Project, { SourceFile } from 'ts-simple-ast';
+import { SourceFile } from 'ts-simple-ast';
 
 import { AngularExternalTemplate, AngularExternalStyles, AngularExternalResource } from './external-resources/angular-external-resources.interfaces';
 import { AngularExternalTemplatesFileAnalyzer } from './external-templates/angular-external-templates.analyzer';

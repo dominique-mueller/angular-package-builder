@@ -54,14 +54,14 @@ export class MetadataFile {
     /**
      * Get the inlined template of the given component type
      */
-    public getInlinedComponentTemplate( type: string ): string {
+    public getInlinedTemplate( type: string ): string {
         return this.parsedFile.metadata[ type ].decorators[ 0 ].arguments[ 0 ].template;
     }
 
     /**
      * Tet the inlined styles of the given component type
      */
-    public getInlinedComponentStyles( type: string ): Array<string> {
+    public getInlinedStyles( type: string ): Array<string> {
         return this.parsedFile.metadata[ type ].decorators[ 0 ].arguments[ 0 ].styles;
     }
 
