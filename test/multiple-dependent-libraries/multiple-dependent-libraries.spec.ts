@@ -1,5 +1,5 @@
-import { runAngularPackageBuilder } from '../index';
-import { expectPackage } from './utilities/expect-package'
+import { runAngularPackageBuilder } from '../../index';
+import { expectPackage } from '../utilities/expect-package'
 
 /**
  * Unit Test: Multiple Dependent Libraries
@@ -10,16 +10,16 @@ describe( 'Multiple Dependent Libraries', () => {
 
 		// Build packages
 		await runAngularPackageBuilder( [
-			'test/multiple-dependent-libraries/my-library-core/.angular-package.json',
-			'test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
-			'test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
+			'test/multiple-dependent-libraries/packages/my-library-core/.angular-package.json',
+			'test/multiple-dependent-libraries/packages/my-library-ui/.angular-package.json',
+			'test/multiple-dependent-libraries/packages/my-library-tracking/.angular-package.json',
 		] );
 
 	} );
 
 	expectPackage( {
 		packageName: '@my-library/core',
-		root: 'test/multiple-dependent-libraries/my-library-core',
+		root: 'test/multiple-dependent-libraries/packages/my-library-core',
 		files: [
 			{
 				path: 'index',
@@ -44,7 +44,7 @@ describe( 'Multiple Dependent Libraries', () => {
 
 	expectPackage( {
 		packageName: '@my-library/tracking',
-		root: 'test/multiple-dependent-libraries/my-library-tracking',
+		root: 'test/multiple-dependent-libraries/packages/my-library-tracking',
 		files: [
 			{
 				path: 'index',
@@ -69,7 +69,7 @@ describe( 'Multiple Dependent Libraries', () => {
 
 	expectPackage( {
 		packageName: '@my-library/ui',
-		root: 'test/multiple-dependent-libraries/my-library-ui',
+		root: 'test/multiple-dependent-libraries/packages/my-library-ui',
 		files: [
 			{
 				path: 'index',
@@ -94,7 +94,7 @@ describe( 'Multiple Dependent Libraries', () => {
 
 	expectPackage( {
 		packageName: '@my-library/ui/testing',
-		root: 'test/multiple-dependent-libraries/my-library-ui',
+		root: 'test/multiple-dependent-libraries/packages/my-library-ui',
 		rootFolder: 'testing',
 		files: [
 			{
