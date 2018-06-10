@@ -1,7 +1,7 @@
 import { posix as path } from 'path';
 
 import { gte } from 'semver';
-import { rollup, OutputOptions, RollupFileOptions, Bundle } from 'rollup';
+import { rollup, OutputOptions, RollupFileOptions, RollupSingleFileBuild } from 'rollup';
 
 import { AngularPackage } from '../angular-package';
 import { RollupConfigurationBuilder } from './rollup-configuration-builder';
@@ -45,7 +45,7 @@ export class AngularPackageBundler {
         } = await this.buildRollupConfiguration( target );
 
         // Create and write bundle
-        const bundle: Bundle = await rollup( inputOptions );
+        const bundle: RollupSingleFileBuild = await rollup( inputOptions );
         await bundle.write( outputOptions );
 
     }
