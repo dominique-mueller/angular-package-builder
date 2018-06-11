@@ -78,8 +78,20 @@ export class AngularPackageTransformer {
         await Promise.all(
             AngularExternalTemplatesFileAnalyzer.getExternalTemplates( sourceFile )
                 .map( async( externalTemplate: AngularExternalTemplate ): Promise<void> => {
-                    const template: string = await readFile( externalTemplate.template.path );
-                    AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
+                    try {
+                        const template: string = await readFile( externalTemplate.template.path );
+                        AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
+                    } catch ( error ) {
+                        const sourceFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
+                        const templatePath: string = path.relative( this.angularPackage.root, externalTemplate.template.path );
+                        AngularPackageLogger.logMessage( [
+                            'An error occured while reading an external template file. Details:',
+                            `- Source File: "${ sourceFilePath }"`,
+                            `- Template URL: "${ externalTemplate.template.node.getText().replace( /'/g, '' ) }"`,
+                            `- Resolved Template Path: "${ templatePath }"`
+                        ].join( '\n' ), 'error' );
+                        throw new Error(); // Bubble-up
+                    }
                 } )
         );
     }

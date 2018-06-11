@@ -27,7 +27,12 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 		AngularPackageLogger.logBuildStart( angularPackage.packageName );
 
 		angularPackage.addCustomModulePaths( builtAngularPackages );
-		await AngularPackageBuilder.package( angularPackage );
+		try {
+			await AngularPackageBuilder.package( angularPackage );
+		} catch ( error ) {
+			AngularPackageLogger.logBuildError();
+			break; // Exit the whole build execution
+		}
 		builtAngularPackages[ angularPackage.packageName ] = [
 			path.join( angularPackage.root, angularPackage.outDir )
 		];
