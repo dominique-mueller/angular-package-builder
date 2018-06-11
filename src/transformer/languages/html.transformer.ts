@@ -14,10 +14,10 @@ export class HTMLTransformer {
     public static minify( htmlContent: string ): string {
 
         // Minify HTML, skip if empty
-        if ( htmlContent.length === 0 ) {
-            return htmlContent;
+        if ( htmlContent.trim() === '' ) {
+            return '';
         } else {
-            return minify( htmlContent, htmlMinifierConfiguration )
+            return minify( htmlContent, htmlMinifierConfiguration );
         }
 
     }

@@ -15,8 +15,8 @@ export class SASSTransformer {
         return new Promise<string>( ( resolve: ( sassContent: string ) => void, reject: ( error: Error ) => void ): void => {
 
             // Compile SASS to CSS, skip if empty
-            if ( sassContent.length === 0 ) {
-                resolve( sassContent );
+            if ( sassContent.trim() === '' ) {
+                resolve( '' );
             } else {
                 render( {
                     data: sassContent,

@@ -64,4 +64,24 @@ export class JavascriptES2015File {
         return this.file.indexOf( `class ${ className }` ) !== -1;
     }
 
+    /**
+     * Get inline styles
+     */
+    public getInlineStyles(): Array<string> {
+        return ( this.file.match( /styles: \[[\n ]*'.*'[\n ]*\]/g ) || [] )
+            .map( ( result: string ): string => {
+                return result.split( '\'' )[ 1 ];
+            } );
+    }
+
+    /**
+     * Get inline templates
+     */
+    public getInlineTemplates(): Array<string> {
+        return ( this.file.match( /template: [\n ]*'.*'[\n ]*/g ) || [] )
+            .map( ( result: string ): string => {
+                return result.split( '\'' )[ 1 ];
+            } );
+    }
+
 }

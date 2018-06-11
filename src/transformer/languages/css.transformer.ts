@@ -14,8 +14,8 @@ export class CSSTransformer {
     public static minify( cssContent: string ): string {
 
         // Minify CSS, skip if empty
-        if ( cssContent.length === 0 ) {
-            return cssContent;
+        if ( cssContent.trim() === '' ) {
+            return '';
         } else {
             return new CleanCSS( <any> {
                 level: 0 // No optimization
