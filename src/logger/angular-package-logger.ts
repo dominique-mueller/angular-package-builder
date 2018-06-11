@@ -257,16 +257,16 @@ export class AngularPackageLogger {
             case 'warning':
                 return chalk.yellow( `${this.leftIndentation}  ! ${message}` );
             case 'error':
-                return chalk.red(
+                return chalk.white(
                     message
                         .split( '\n' )
                         .map( ( messagePart: string, index: number ): string => {
                             return index === 0
-                                ? `${ this.leftIndentation }  ${loggerSymbols.error} ${ messagePart }`
-                                : `${ this.leftIndentation }    ${ messagePart }`;
+                                ? chalk.red( `${this.leftIndentation}  ${loggerSymbols.error} ${messagePart}` )
+                                : chalk.grey( `${this.leftIndentation}    ${messagePart}` );
                         } )
                         .join( '\n' )
-                    );
+                );
             default:
                 return chalk.grey( `${this.leftIndentation}  ${loggerSymbols.arrow} ${message}` );
         }

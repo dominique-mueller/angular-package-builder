@@ -85,10 +85,11 @@ export class AngularPackageTransformer {
                         const sourceFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
                         const templatePath: string = path.relative( this.angularPackage.root, externalTemplate.template.path );
                         AngularPackageLogger.logMessage( [
-                            'An error occured while reading an external template file. Details:',
-                            `- Source File: "${ sourceFilePath }"`,
-                            `- Template URL: "${ externalTemplate.template.node.getText().replace( /'/g, '' ) }"`,
-                            `- Resolved Template Path: "${ templatePath }"`
+                            'An error occured while reading an external template file.',
+                            `Details: Source File: "${ sourceFilePath }"`,
+                            `         Template URL: "${ externalTemplate.template.node.getText().replace( /'/g, '' ) }"`,
+                            `         Resolved Template: "${ templatePath }"`,
+                            'Make sure the template URL is correct, and the template does exist.'
                         ].join( '\n' ), 'error' );
                         throw new Error(); // Bubble-up
                     }
