@@ -37,7 +37,7 @@ export class AngularExternalTemplatesFileTransformer {
             case 'html':
                 return HTMLTransformer.minify( template );
             default:
-                throw new Error( 'Unsupported file!' );
+                throw new Error( `The file type "${ fileType }" is not supported for external templates.` );
         }
 
     }

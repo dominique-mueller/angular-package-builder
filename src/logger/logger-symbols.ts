@@ -1,4 +1,4 @@
-import { isWindows } from "../utilities/is-windows";
+import { isWindows } from '../utilities/is-windows';
 
 /**
  * Logger symbols

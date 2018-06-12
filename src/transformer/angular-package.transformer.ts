@@ -50,7 +50,7 @@ export class AngularPackageTransformer {
 
         // Apply transformation for each source file
         await Promise.all(
-            this.sourceFiles.map( async( sourceFile: SourceFile ): Promise<void> => {
+            this.sourceFiles.map( async ( sourceFile: SourceFile ): Promise<void> => {
 
                 // Apply transformtions
                 await this.inlineExternalTemplates( sourceFile );
@@ -60,7 +60,7 @@ export class AngularPackageTransformer {
 
                 processedFiles++;
                 const relativeFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
-                const message: string = `Transform files (${ processedFiles }/${ numberOfFiles }) :: ${ relativeFilePath }`;
+                const message: string = `Transform files (${processedFiles}/${numberOfFiles}) :: ${relativeFilePath}`;
                 AngularPackageLogger.logMessage( message );
 
             } )
@@ -77,9 +77,34 @@ export class AngularPackageTransformer {
     private async inlineExternalTemplates( sourceFile: SourceFile ): Promise<void> {
         await Promise.all(
             AngularExternalTemplatesFileAnalyzer.getExternalTemplates( sourceFile )
-                .map( async( externalTemplate: AngularExternalTemplate ): Promise<void> => {
-                    const template: string = await readFile( externalTemplate.template.path );
-                    AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
+                .map( async ( externalTemplate: AngularExternalTemplate ): Promise<void> => {
+
+                    // Read
+                    let template: string;
+                    try {
+                        template = await readFile( externalTemplate.template.path );
+                    } catch ( error ) {
+                        this.handleExternalTemplateError(
+                            'An error occured while reading an external template.',
+                            'Make sure the template URL is correct, and the referenced template file does exist.',
+                            externalTemplate,
+                            sourceFile
+                        );
+                    }
+
+                    // Transform and inline
+                    try {
+                        await AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
+                    } catch ( error ) {
+                        this.handleExternalTemplateError(
+                            'An error occured while transforming an external template.',
+                            'Make sure the external template has a supported file format and is syntactically correct.',
+                            externalTemplate,
+                            sourceFile,
+                            error
+                        );
+                    }
+
                 } )
         );
     }
@@ -93,13 +118,43 @@ export class AngularPackageTransformer {
     private async inlineExternalStyles( sourceFile: SourceFile ): Promise<void> {
         await Promise.all(
             AngularExternalStylesAnalyzer.getExternalStyles( sourceFile )
-                .map( async( externalStyle: AngularExternalStyles ): Promise<void> => {
+                .map( async ( externalStyle: AngularExternalStyles ): Promise<void> => {
+
+                    // Read
                     const styles: Array<string> = await Promise.all(
-                        externalStyle.styles.map( ( style: AngularExternalResource ): Promise<string> => {
-                            return readFile( style.path );
+                        externalStyle.styles.map( async ( style: AngularExternalResource ): Promise<string> => {
+                            try {
+                                return await readFile( style.path );
+                            } catch ( error ) {
+                                this.handleExternalStyleError(
+                                    'An error occured while reading an external style.',
+                                    'Make sure the style URL is correct, and the referenced style file does exist.',
+                                    externalStyle,
+                                    style,
+                                    sourceFile
+                                );
+                            }
                         } )
                     );
-                    await AngularExternalStylesTransformer.inlineExternalStyles( externalStyle, styles );
+
+                    // Transform and inline
+                    await Promise.all(
+                        styles.map( async ( style: string, index: number ): Promise<void> => {
+                            try {
+                                await AngularExternalStylesTransformer.inlineExternalStyle( externalStyle, externalStyle.styles[ index ], style );
+                            } catch ( error ) {
+                                this.handleExternalStyleError(
+                                    'An error occured while transforming an external style.',
+                                    'Make sure the external style has a supported file format and is syntactically correct.',
+                                    externalStyle,
+                                    externalStyle.styles[ index ],
+                                    sourceFile,
+                                    error,
+                                );
+                            }
+                        } )
+                    );
+
                 } )
         );
     }
@@ -131,6 +186,92 @@ export class AngularPackageTransformer {
 
         // Write files to disk
         await writeFile( filePathOut, sourceFile.getText() );
+
+    }
+
+    /**
+     * Log external template read error
+     *
+     * @param message          Message
+     * @param tip              Tip
+     * @param externalTemplate External template
+     * @param sourceFile       Source file
+     * @param details          Error details
+     */
+    private handleExternalTemplateError (
+        message: string,
+        tip: string,
+        externalTemplate: AngularExternalTemplate,
+        sourceFile: SourceFile,
+        details?: Error
+    ): void {
+
+        // Collect information
+        const templateUrl: string = externalTemplate.template.node.getText().replace( /'/g, '' );
+        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalTemplate.node.getStart() );
+        const templateFilePath: string = `./${path.relative( this.angularPackage.root, externalTemplate.template.path )}`;
+
+        const errorMessageDetails = !details || details.message === ''
+            ? ''
+            : `\n\nDetails:        ${details.message}`;
+
+        // Log & re-throw
+        const errorMessage: string = [
+            `${ message }${errorMessageDetails}`,
+            '',
+            `Source file:    ${sourceFilePath} (at ${line + 1}:${character + 1})`,
+            `Template url:   ${templateUrl}`,
+            `Resolved file:  ${templateFilePath}`,
+            '',
+            `Tip: ${ tip }`
+        ].join( '\n' );
+        AngularPackageLogger.logMessage( errorMessage, 'error' );
+        throw new Error( errorMessage );
+
+    }
+
+    /**
+     * Log external style transform error
+     *
+     * @param message        Message
+     * @param tip            Tip
+     * @param externalStyles External styles
+     * @param externalStyle  External style
+     * @param sourceFile     Source file
+     * @param details        Error details
+     */
+    private handleExternalStyleError(
+        message: string,
+        tip: string,
+        externalStyles: AngularExternalStyles,
+        externalStyle: AngularExternalResource,
+        sourceFile: SourceFile,
+        details?: Error,
+    ): void {
+
+        // Collect information
+        const styleUrl: string = externalStyle.node.getText().replace( /'/g, '' );
+        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalStyles.node.getStart() );
+        const styleFilePath: string = `./${path.relative( this.angularPackage.root, externalStyle.path )}`;
+
+        const errorMessageDetails = !details || details.message === ''
+            ? ''
+            : `\n\nDetails:        ${details.message}`;
+
+        // Log & re-throw
+        const errorMessage: string = [
+            `${ message }${errorMessageDetails}`,
+            '',
+            `Source file:    ${sourceFilePath} (at ${line + 1}:${character + 1})`,
+            `Style url:      ${styleUrl}`,
+            `Resolved file:  ${styleFilePath}`,
+            '',
+            `Tip: ${ tip }`
+        ].join( '\n' );
+        AngularPackageLogger.logMessage( errorMessage, 'error' );
+        throw new Error( errorMessage );
 
     }
 

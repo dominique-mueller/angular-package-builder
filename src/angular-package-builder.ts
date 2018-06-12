@@ -43,9 +43,14 @@ export class AngularPackageBuilder {
 
         const angularPackageTransformer: AngularPackageTransformer = new AngularPackageTransformer( angularPackage );
 
-        AngularPackageLogger.logTaskStart( 'Apply transformations' );
-        await angularPackageTransformer.transform();
-        AngularPackageLogger.logTaskSuccess();
+        try {
+            AngularPackageLogger.logTaskStart( 'Apply transformations' );
+            await angularPackageTransformer.transform();
+            AngularPackageLogger.logTaskSuccess();
+        } catch( error ) {
+            AngularPackageLogger.logTaskError();
+            throw new Error();
+        }
 
     }
 

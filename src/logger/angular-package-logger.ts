@@ -47,6 +47,8 @@ export class AngularPackageLogger {
      * @param numberOfBuildSteps Number of build steps (aka Angular Packages to built)
      */
     public static configureNumberOfBuildSteps( numberOfBuildSteps: number ): void {
+        this.currentBuildStepNumber = 0;
+        this.currentBuildRuntime = undefined;
         this.numberOfBuildSteps = numberOfBuildSteps;
         this.buildNumberMaxNumberOfDigits = this.numberOfBuildSteps.toString().length;
         this.leftIndentation = this.numberOfBuildSteps === 1
@@ -102,11 +104,32 @@ export class AngularPackageLogger {
         }
 
         // Calculate build runtime
-        this.currentBuildRuntime = new Date().getTime() -  this.currentBuildRuntime;
+        this.currentBuildRuntime = new Date().getTime() - this.currentBuildRuntime;
 
         // Log
         console.log( '' );
         console.log( chalk.bold.green( `${ this.leftIndentation }Success!` ), chalk.grey( `(${ ( this.currentBuildRuntime / 1000 ).toFixed( 2 ) } seconds)` ) );
+        console.log( '' );
+
+    }
+
+    /**
+     * Log the current build error
+     */
+    public static logBuildError(): void {
+
+        // Bake in dynamic logging
+        if ( supportsAdvancedLogging() ) {
+            log.done();
+            this.state = [];
+        }
+
+        // Calculate build runtime
+        this.currentBuildRuntime = new Date().getTime() - this.currentBuildRuntime;
+
+        // Log
+        console.log( '' );
+        console.log( chalk.bold.red( `${ this.leftIndentation }Error!` ), chalk.grey( `(${ ( this.currentBuildRuntime / 1000 ).toFixed( 2 ) } seconds)` ) );
         console.log( '' );
 
     }
@@ -146,24 +169,45 @@ export class AngularPackageLogger {
     }
 
     /**
+     * Log the current task error
+     */
+    public static logTaskError(): void {
+
+        // Log
+        if ( supportsAdvancedLogging() ) {
+            this.state.slice( -1 )[ 0 ].status = 'error';
+            this.logToConsoleAdvanced();
+        }
+
+    }
+
+    /**
      * Log message
      *
      * @param message Message
      */
-    public static logMessage( message: string ): void {
+    public static logMessage( message: string, type: AngularPackageLoggerMessageType = 'default' ): void {
 
         // Log (replaced default messages, but keeps other kinds of messages)
         if ( supportsAdvancedLogging() ) {
+
             this.state.slice( -1 )[ 0 ].messages = [
                 ...this.state.slice( -1 )[ 0 ].messages.filter( ( loggerMessage: AngularPackageLoggerMessage ): boolean => {
                     return loggerMessage.type !== 'default';
                 } ),
                 {
-                    type: 'default',
+                    type,
                     message: message
                 }
             ];
             this.logToConsoleAdvanced();
+
+        } else {
+
+            if ( type !== 'default' ) {
+                console.log( this.createMessageLogOutput( message, type ) );
+            }
+
         }
 
     }
@@ -208,6 +252,8 @@ export class AngularPackageLogger {
         switch ( status ) {
             case 'success':
                 return chalk.white( `${ this.leftIndentation }${ chalk.green( loggerSymbols.tick ) } ${ task }` );
+            case 'error':
+                return chalk.white( `${ this.leftIndentation }${ chalk.red( loggerSymbols.error ) } ${ task }` );
             default:
                 return chalk.white( `${ this.leftIndentation }${ loggerSymbols.pointer } ${ task }` );
         }
@@ -224,7 +270,15 @@ export class AngularPackageLogger {
             case 'warning':
                 return chalk.yellow( `${ this.leftIndentation }  ! ${ message }` );
             case 'error':
-                return chalk.red( `${ this.leftIndentation }  X ${ message }` );
+                return chalk.white(
+                    [ '', ...message.split( '\n' ) ]
+                        .map( ( messagePart: string, index: number ): string => {
+                            return index === 1
+                                ? chalk.red( `${ this.leftIndentation }  ${ chalk.bgRed.white( ' ERROR ' ) } ${ messagePart }` )
+                                : chalk.white( `${ this.leftIndentation }          ${ messagePart }` );
+                        } )
+                        .join( '\n' )
+                );
             default:
                 return chalk.grey( `${ this.leftIndentation }  ${ loggerSymbols.arrow } ${ message }` );
         }

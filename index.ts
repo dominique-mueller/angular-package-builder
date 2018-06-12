@@ -27,7 +27,14 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 		AngularPackageLogger.logBuildStart( angularPackage.packageName );
 
 		angularPackage.addCustomModulePaths( builtAngularPackages );
-		await AngularPackageBuilder.package( angularPackage );
+
+		try {
+			await AngularPackageBuilder.package( angularPackage );
+		} catch ( error ) {
+			AngularPackageLogger.logBuildError();
+			throw new Error( error.message ); // Bubble up
+		}
+
 		builtAngularPackages[ angularPackage.packageName ] = [
 			path.join( angularPackage.root, angularPackage.outDir )
 		];
@@ -37,9 +44,3 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	}
 
 }
-
-// runAngularPackageBuilder( [
-// 	'./test/multiple-dependent-libraries/my-library-core/.angular-package.json',
-// 	'./test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
-// 	'./test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
-// ] );

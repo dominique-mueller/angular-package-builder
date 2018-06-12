@@ -1,4 +1,4 @@
-import { render, Result } from 'node-sass';
+import { render, Result, SassError } from 'node-sass';
 
 /**
  * SASS Transformer
@@ -21,8 +21,16 @@ export class SASSTransformer {
                 render( {
                     data: sassContent,
                     outputStyle: 'expanded' // We will minify later on
-                }, ( error: Error, sassRenderResult: Result ): void => {
+                }, ( error: SassError, sassRenderResult: Result ): void => {
+
+                    // Handle error
+                    if ( error ) {
+                        reject( new Error( `[SASS Compiler] ${error.message} (at ${error.line}:${error.column})` ) );
+                        return;
+                    }
+
                     resolve( sassRenderResult.css.toString() );
+
                 } );
             }
 

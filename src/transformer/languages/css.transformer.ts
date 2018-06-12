@@ -17,11 +17,19 @@ export class CSSTransformer {
         if ( cssContent.trim() === '' ) {
             return '';
         } else {
-            return new CleanCSS( <any> {
+
+            // Minify
+            const minified: CleanCSS.Output = new CleanCSS( <any>{
                 level: 0 // No optimization
-            } )
-                .minify( cssContent )
-                .styles;
+            } ).minify( cssContent );
+
+            // Handle errors
+            if ( minified.errors.length > 0 ) {
+                throw new Error( `[CSS Minifier] ${ minified.errors.join( '\n' ) }` ); // No idea when this actually happens ...
+            }
+
+            return minified.styles;
+
         }
 
     }

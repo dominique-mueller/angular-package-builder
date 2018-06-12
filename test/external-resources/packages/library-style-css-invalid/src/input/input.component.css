@@ -1,0 +1,16 @@
+ui-input {
+	display: block;
+}
+
+.ui-input__container {
+	padding
+
+.ui-input__label {
+	color: #333;
+	font-size: 1.4rem;
+	cursor: pointer;
+}
+
+.ui-input__field {
+	border: 1px solid #999;
+}
