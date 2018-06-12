@@ -1,5 +1,5 @@
 {
-	"name": "library-style-unknown",
+	"name": "library-style-unsupported",
 	"version": "1.0.0",
 	"private": true,
 	"peerDependencies": {

@@ -88,7 +88,7 @@ describe( 'External resources', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-template-unknown/.angular-package.json'
+					'test/external-resources/packages/library-template-unsupported/.angular-package.json'
 				] );
 			} catch( error ) {
 				angularPackageBuilderError = error;
@@ -236,7 +236,7 @@ describe( 'External resources', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-style-unknown/.angular-package.json'
+					'test/external-resources/packages/library-style-unsupported/.angular-package.json'
 				] );
 			} catch( error ) {
 				angularPackageBuilderError = error;
