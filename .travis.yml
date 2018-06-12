@@ -40,6 +40,7 @@ jobs:
       script:
         - ts-node ./test/multiple-dependent-libraries/packages/build.ts # Success
         - ts-node ./test/external-resources/packages/library-template-missing/build.ts # Error
+        - ts-node ./test/external-resources/packages/library-style-missing/build.ts # Error
 
     - stage: test package
       before_install:

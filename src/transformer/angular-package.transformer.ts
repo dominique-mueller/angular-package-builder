@@ -78,43 +78,15 @@ export class AngularPackageTransformer {
         await Promise.all(
             AngularExternalTemplatesFileAnalyzer.getExternalTemplates( sourceFile )
                 .map( async ( externalTemplate: AngularExternalTemplate ): Promise<void> => {
+                    let template: string;
                     try {
-                        const template: string = await readFile( externalTemplate.template.path );
-                        AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
+                        template = await readFile( externalTemplate.template.path );
                     } catch ( error ) {
                         this.handleExternalTemplateError( externalTemplate, sourceFile );
                     }
+                    AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
                 } )
         );
-    }
-
-    /**
-     * Log external template error
-     *
-     * @param externalTemplate External template
-     * @param sourceFile       Source file
-     */
-    private handleExternalTemplateError( externalTemplate: AngularExternalTemplate, sourceFile: SourceFile ): void {
-
-        // Collect information
-        const templateUrl: string = externalTemplate.template.node.getText().replace( /'/g, '' );
-        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
-        const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalTemplate.node.getStart() );
-        const templateFilePath: string = `./${path.relative( this.angularPackage.root, externalTemplate.template.path )}`;
-
-        // Log & re-throw
-        const errorMessage: string = [
-            `An error occured while inlining an external template.`,
-            '',
-            `Source file:    ${sourceFilePath} (${line + 1}:${character + 1})`,
-            `Template url:   ${templateUrl}`,
-            `Resolved file:  ${templateFilePath}`,
-            '',
-            'Tip: Make sure the template URL is correct, and the referenced template file does actually exist.'
-        ].join( '\n' );
-        AngularPackageLogger.logMessage( errorMessage, 'error' );
-        throw new Error( errorMessage );
-
     }
 
     /**
@@ -128,8 +100,12 @@ export class AngularPackageTransformer {
             AngularExternalStylesAnalyzer.getExternalStyles( sourceFile )
                 .map( async ( externalStyle: AngularExternalStyles ): Promise<void> => {
                     const styles: Array<string> = await Promise.all(
-                        externalStyle.styles.map( ( style: AngularExternalResource ): Promise<string> => {
-                            return readFile( style.path );
+                        externalStyle.styles.map( async( style: AngularExternalResource ): Promise<string> => {
+                            try {
+                                return await readFile( style.path );
+                            } catch ( error ) {
+                                this.handleExternalStyleError( externalStyle, style, sourceFile );
+                            }
                         } )
                     );
                     await AngularExternalStylesTransformer.inlineExternalStyles( externalStyle, styles );
@@ -164,6 +140,65 @@ export class AngularPackageTransformer {
 
         // Write files to disk
         await writeFile( filePathOut, sourceFile.getText() );
+
+    }
+
+    /**
+     * Log external template error
+     *
+     * @param externalTemplate External template
+     * @param sourceFile       Source file
+     */
+    private handleExternalTemplateError( externalTemplate: AngularExternalTemplate, sourceFile: SourceFile ): void {
+
+        // Collect information
+        const templateUrl: string = externalTemplate.template.node.getText().replace( /'/g, '' );
+        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalTemplate.node.getStart() );
+        const templateFilePath: string = `./${path.relative( this.angularPackage.root, externalTemplate.template.path )}`;
+
+        // Log & re-throw
+        const errorMessage: string = [
+            `An error occured while inlining an external template.`,
+            '',
+            `Source file:    ${sourceFilePath} (${line + 1}:${character + 1})`,
+            `Template url:   ${templateUrl}`,
+            `Resolved file:  ${templateFilePath}`,
+            '',
+            'Tip: Make sure the template URL is correct, and the referenced template file does actually exist.'
+        ].join( '\n' );
+        AngularPackageLogger.logMessage( errorMessage, 'error' );
+        throw new Error( errorMessage );
+
+    }
+
+    /**
+     * Log external template error
+     *
+     * @param externalStyles External styles
+     * @param externalStyle  External style
+     * @param sourceFile     Source file
+     */
+    private handleExternalStyleError( externalStyles: AngularExternalStyles, externalStyle: AngularExternalResource, sourceFile: SourceFile ): void {
+
+        // Collect information
+        const styleUrl: string = externalStyle.node.getText().replace( /'/g, '' );
+        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalStyles.node.getStart() );
+        const styleFilePath: string = `./${path.relative( this.angularPackage.root, externalStyle.path )}`;
+
+        // Log & re-throw
+        const errorMessage: string = [
+            `An error occured while inlining an external style.`,
+            '',
+            `Source file:    ${sourceFilePath} (${line + 1}:${character + 1})`,
+            `Style url:      ${styleUrl}`,
+            `Resolved file:  ${styleFilePath}`,
+            '',
+            'Tip: Make sure the style URL is correct, and the referenced style file does actually exist.'
+        ].join( '\n' );
+        AngularPackageLogger.logMessage( errorMessage, 'error' );
+        throw new Error( errorMessage );
 
     }
 

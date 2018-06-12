@@ -135,4 +135,24 @@ describe( 'External resources', () => {
 
 	} );
 
+	describe( 'External style (missing)', () => {
+
+		it ( 'should throw an error', async() => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/external-resources/packages/library-style-missing/.angular-package.json'
+				] );
+			} catch( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+			expect( angularPackageBuilderError.message ).not.toBe( '' );
+
+		} );
+
+	} );
+
 } );
