@@ -5,9 +5,9 @@ import { expectInlineTemplate } from '../utilities/expect-inline-template';
 /**
  * Unit Test: External Resources
  */
-describe( 'External Resources', () => {
+describe( 'External resources', () => {
 
-	describe( '(template)', () => {
+	describe( 'External template', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -25,7 +25,7 @@ describe( 'External Resources', () => {
 
 	} );
 
-	describe( '(empty template)', () => {
+	describe( 'External template, empty', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -43,7 +43,7 @@ describe( 'External Resources', () => {
 
 	} );
 
-	describe( '(missing template)', () => {
+	describe( 'External template, missing', () => {
 
 		it ( 'should throw an error', async() => {
 
@@ -63,7 +63,7 @@ describe( 'External Resources', () => {
 
 	} );
 
-	describe( '(CSS style)', () => {
+	describe( 'External CSS style', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -81,7 +81,7 @@ describe( 'External Resources', () => {
 
 	} );
 
-	describe( '(empty CSS style)', () => {
+	describe( 'External CSS style, empty', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -99,7 +99,7 @@ describe( 'External Resources', () => {
 
 	} );
 
-	describe( '(SASS style)', () => {
+	describe( 'External SASS style', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -117,7 +117,7 @@ describe( 'External Resources', () => {
 
 	} );
 
-	describe( '(empty SASS style)', () => {
+	describe( 'External SASS style, empty', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
