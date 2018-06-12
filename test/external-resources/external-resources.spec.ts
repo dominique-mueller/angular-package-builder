@@ -11,7 +11,7 @@ describe( 'External Resources', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-template-html/.angular-package.json',
+				'test/external-resources/packages/library-template-html/.angular-package.json'
 			] );
 		} );
 
@@ -29,7 +29,7 @@ describe( 'External Resources', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-template-html-empty/.angular-package.json',
+				'test/external-resources/packages/library-template-html-empty/.angular-package.json'
 			] );
 		} );
 
@@ -43,11 +43,31 @@ describe( 'External Resources', () => {
 
 	} );
 
+	describe( '(missing template)', () => {
+
+		it ( 'should throw an error', async() => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/external-resources/packages/library-template-html-error/.angular-package.json'
+				] );
+			} catch( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+			expect( angularPackageBuilderError.message ).not.toBe( '' );
+
+		} );
+
+	} );
+
 	describe( '(CSS style)', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-css/.angular-package.json',
+				'test/external-resources/packages/library-style-css/.angular-package.json'
 			] );
 		} );
 
@@ -65,7 +85,7 @@ describe( 'External Resources', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-css-empty/.angular-package.json',
+				'test/external-resources/packages/library-style-css-empty/.angular-package.json'
 			] );
 		} );
 
@@ -83,7 +103,7 @@ describe( 'External Resources', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-scss/.angular-package.json',
+				'test/external-resources/packages/library-style-scss/.angular-package.json'
 			] );
 		} );
 
@@ -101,7 +121,7 @@ describe( 'External Resources', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-scss-empty/.angular-package.json',
+				'test/external-resources/packages/library-style-scss-empty/.angular-package.json'
 			] );
 		} );
 

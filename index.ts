@@ -31,7 +31,7 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 			await AngularPackageBuilder.package( angularPackage );
 		} catch ( error ) {
 			AngularPackageLogger.logBuildError();
-			break; // Exit the whole build execution
+			throw new Error( error.message ); // Bubble up
 		}
 		builtAngularPackages[ angularPackage.packageName ] = [
 			path.join( angularPackage.root, angularPackage.outDir )
@@ -42,9 +42,3 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 	}
 
 }
-
-// runAngularPackageBuilder( [
-// 	'./test/multiple-dependent-libraries/my-library-core/.angular-package.json',
-// 	'./test/multiple-dependent-libraries/my-library-ui/.angular-package.json',
-// 	'./test/multiple-dependent-libraries/my-library-tracking/.angular-package.json',
-// ] );

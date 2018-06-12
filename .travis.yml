@@ -38,7 +38,7 @@ jobs:
       install:
         - npm ci
       script:
-        - ts-node .\test\external-resources\packages\library-template-html-error\build.ts
+        - ts-node ./test/external-resources/packages/library-template-html-error/build.ts
 
     - stage: test package
       before_install:

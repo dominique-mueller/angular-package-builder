@@ -82,8 +82,7 @@ export class AngularPackageTransformer {
                         const template: string = await readFile( externalTemplate.template.path );
                         AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
                     } catch ( error ) {
-                        this.logExternalTemplateError( externalTemplate, sourceFile );
-                        throw new Error(); // Bubble-up
+                        this.handleExternalTemplateError( externalTemplate, sourceFile );
                     }
                 } )
         );
@@ -95,7 +94,7 @@ export class AngularPackageTransformer {
      * @param externalTemplate External template
      * @param sourceFile       Source file
      */
-    private logExternalTemplateError( externalTemplate: AngularExternalTemplate, sourceFile: SourceFile ): void {
+    private handleExternalTemplateError( externalTemplate: AngularExternalTemplate, sourceFile: SourceFile ): void {
 
         // Collect information
         const templateUrl: string = externalTemplate.template.node.getText().replace( /'/g, '' );
@@ -103,8 +102,8 @@ export class AngularPackageTransformer {
         const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalTemplate.node.getStart() );
         const templateFilePath: string = `./${path.relative( this.angularPackage.root, externalTemplate.template.path )}`;
 
-        // Log
-        AngularPackageLogger.logMessage( [
+        // Log & re-throw
+        const errorMessage: string = [
             `An error occured while inlining an external template.`,
             '',
             `Source file:    ${sourceFilePath} (${line + 1}:${character + 1})`,
@@ -112,7 +111,9 @@ export class AngularPackageTransformer {
             `Resolved file:  ${templateFilePath}`,
             '',
             'Tip: Make sure the template URL is correct, and the referenced template file does actually exist.'
-        ].join( '\n' ), 'error' );
+        ].join( '\n' );
+        AngularPackageLogger.logMessage( errorMessage, 'error' );
+        throw new Error( errorMessage );
 
     }
 
