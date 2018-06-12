@@ -99,7 +99,7 @@ export class AngularPackageTransformer {
                     } catch ( error ) {
                         this.handleExternalTemplateError(
                             'An error occured while transforming an external template.',
-                            'Make sure the external template is valid.',
+                            'Make sure the external template has a supported file format and is syntactically correct.',
                             externalTemplate,
                             sourceFile,
                             error
@@ -147,7 +147,7 @@ export class AngularPackageTransformer {
                             } catch ( error ) {
                                 this.handleExternalStyleError(
                                     'An error occured while transforming an external style.',
-                                    'Make sure the external style is valid.',
+                                    'Make sure the external style has a supported file format and is syntactically correct.',
                                     externalStyle,
                                     externalStyle.styles[ index ],
                                     sourceFile,

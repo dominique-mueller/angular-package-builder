@@ -7,7 +7,7 @@ import { expectInlineTemplate } from '../utilities/expect-inline-template';
  */
 describe( 'External resources', () => {
 
-	describe( 'External template', () => {
+	describe( 'External HTML template', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -25,7 +25,7 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External template (empty)', () => {
+	describe( 'External HTML template (empty)', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -40,6 +40,25 @@ describe( 'External resources', () => {
 			'LibraryInputComponent',
 			''
 		);
+
+	} );
+
+	describe( 'External HTML template (invalid)', () => {
+
+		it ( 'should throw an error', async() => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/external-resources/packages/library-template-html-invalid/.angular-package.json'
+				] );
+			} catch( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
 
 	} );
 
@@ -62,14 +81,14 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External HTML template (invalid)', () => {
+	describe( 'External template (unsupported file type)', () => {
 
 		it ( 'should throw an error', async() => {
 
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-template-html-invalid/.angular-package.json'
+					'test/external-resources/packages/library-template-unknown/.angular-package.json'
 				] );
 			} catch( error ) {
 				angularPackageBuilderError = error;
@@ -199,6 +218,25 @@ describe( 'External resources', () => {
 			try {
 				await runAngularPackageBuilder( [
 					'test/external-resources/packages/library-style-missing/.angular-package.json'
+				] );
+			} catch( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
+	describe( 'External style (unsupported file type)', () => {
+
+		it ( 'should throw an error', async() => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/external-resources/packages/library-style-unknown/.angular-package.json'
 				] );
 			} catch( error ) {
 				angularPackageBuilderError = error;
