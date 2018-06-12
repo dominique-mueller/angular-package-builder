@@ -166,6 +166,9 @@ export class AngularPackageLogger {
 
     }
 
+    /**
+     * Log the current task error
+     */
     public static logTaskError(): void {
 
         // Log
@@ -185,6 +188,7 @@ export class AngularPackageLogger {
 
         // Log (replaced default messages, but keeps other kinds of messages)
         if ( supportsAdvancedLogging() ) {
+
             this.state.slice( -1 )[ 0 ].messages = [
                 ...this.state.slice( -1 )[ 0 ].messages.filter( ( loggerMessage: AngularPackageLoggerMessage ): boolean => {
                     return loggerMessage.type !== 'default';
@@ -195,6 +199,13 @@ export class AngularPackageLogger {
                 }
             ];
             this.logToConsoleAdvanced();
+
+        } else {
+
+            if ( type !== 'default' ) {
+                console.log( this.createMessageLogOutput( message, type ) );
+            }
+
         }
 
     }

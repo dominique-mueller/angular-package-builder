@@ -88,8 +88,7 @@ export class AngularPackageTransformer {
                             'An error occured while reading an external template.',
                             'Make sure the template URL is correct, and the referenced template file does exist.',
                             externalTemplate,
-                            sourceFile,
-                            error
+                            sourceFile
                         );
                     }
 
@@ -132,8 +131,7 @@ export class AngularPackageTransformer {
                                     'Make sure the style URL is correct, and the referenced style file does exist.',
                                     externalStyle,
                                     style,
-                                    sourceFile,
-                                    error,
+                                    sourceFile
                                 );
                             }
                         } )
