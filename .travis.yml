@@ -15,6 +15,7 @@ branches:
 # Build stages
 stages:
   - name: build
+  - name: logging
   - name: test package
   - name: release
     if: branch = master
@@ -30,6 +31,14 @@ jobs:
         - npm ci
       script:
         - npm run build
+
+    - stage: logging
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      script:
+        - ts-node .\test\external-resources\packages\library-template-html-error\build.ts
 
     - stage: test package
       before_install:

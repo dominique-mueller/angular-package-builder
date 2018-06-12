@@ -50,7 +50,7 @@ export class AngularPackageTransformer {
 
         // Apply transformation for each source file
         await Promise.all(
-            this.sourceFiles.map( async( sourceFile: SourceFile ): Promise<void> => {
+            this.sourceFiles.map( async ( sourceFile: SourceFile ): Promise<void> => {
 
                 // Apply transformtions
                 await this.inlineExternalTemplates( sourceFile );
@@ -60,7 +60,7 @@ export class AngularPackageTransformer {
 
                 processedFiles++;
                 const relativeFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
-                const message: string = `Transform files (${ processedFiles }/${ numberOfFiles }) :: ${ relativeFilePath }`;
+                const message: string = `Transform files (${processedFiles}/${numberOfFiles}) :: ${relativeFilePath}`;
                 AngularPackageLogger.logMessage( message );
 
             } )
@@ -77,24 +77,43 @@ export class AngularPackageTransformer {
     private async inlineExternalTemplates( sourceFile: SourceFile ): Promise<void> {
         await Promise.all(
             AngularExternalTemplatesFileAnalyzer.getExternalTemplates( sourceFile )
-                .map( async( externalTemplate: AngularExternalTemplate ): Promise<void> => {
+                .map( async ( externalTemplate: AngularExternalTemplate ): Promise<void> => {
                     try {
                         const template: string = await readFile( externalTemplate.template.path );
                         AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
                     } catch ( error ) {
-                        const sourceFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
-                        const templatePath: string = path.relative( this.angularPackage.root, externalTemplate.template.path );
-                        AngularPackageLogger.logMessage( [
-                            'An error occured while reading an external template file.',
-                            `Details: Source File: "${ sourceFilePath }"`,
-                            `         Template URL: "${ externalTemplate.template.node.getText().replace( /'/g, '' ) }"`,
-                            `         Resolved Template: "${ templatePath }"`,
-                            'Make sure the template URL is correct, and the template does exist.'
-                        ].join( '\n' ), 'error' );
+                        this.logExternalTemplateError( externalTemplate, sourceFile );
                         throw new Error(); // Bubble-up
                     }
                 } )
         );
+    }
+
+    /**
+     * Log external template error
+     *
+     * @param externalTemplate External template
+     * @param sourceFile       Source file
+     */
+    private logExternalTemplateError( externalTemplate: AngularExternalTemplate, sourceFile: SourceFile ): void {
+
+        // Collect information
+        const templateUrl: string = externalTemplate.template.node.getText().replace( /'/g, '' );
+        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalTemplate.node.getStart() );
+        const templateFilePath: string = `./${path.relative( this.angularPackage.root, externalTemplate.template.path )}`;
+
+        // Log
+        AngularPackageLogger.logMessage( [
+            `An error occured while inlining an external template.`,
+            '',
+            `Source file:    ${sourceFilePath} (${line + 1}:${character + 1})`,
+            `Template url:   ${templateUrl}`,
+            `Resolved file:  ${templateFilePath}`,
+            '',
+            'Tip: Make sure the template URL is correct, and the referenced template file does actually exist.'
+        ].join( '\n' ), 'error' );
+
     }
 
     /**
@@ -106,7 +125,7 @@ export class AngularPackageTransformer {
     private async inlineExternalStyles( sourceFile: SourceFile ): Promise<void> {
         await Promise.all(
             AngularExternalStylesAnalyzer.getExternalStyles( sourceFile )
-                .map( async( externalStyle: AngularExternalStyles ): Promise<void> => {
+                .map( async ( externalStyle: AngularExternalStyles ): Promise<void> => {
                     const styles: Array<string> = await Promise.all(
                         externalStyle.styles.map( ( style: AngularExternalResource ): Promise<string> => {
                             return readFile( style.path );
