@@ -25,7 +25,7 @@ export class SASSTransformer {
 
                     // Handle error
                     if ( error ) {
-                        reject( new Error( `SASS compiler: ${error.message} (at ${error.line}:${error.column})` ) );
+                        reject( new Error( `[SASS Compiler] ${error.message} (at ${error.line}:${error.column})` ) );
                         return;
                     }
 

@@ -11,30 +11,27 @@ export class CSSTransformer {
      * @param   cssContent CSS content
      * @returns            Minified CSS content
      */
-    public static minify( cssContent: string ): Promise<string> {
-        return new Promise<string>( ( resolve: ( cssContent: string ) => void, reject: ( error: Error ) => void ): void => {
+    public static minify( cssContent: string ): string {
 
-            // Minify CSS, skip if empty
-            if ( cssContent.trim() === '' ) {
-                resolve( '' );
-            } else {
+        // Minify CSS, skip if empty
+        if ( cssContent.trim() === '' ) {
+            return '';
+        } else {
 
-                // Minify
-                const minified: CleanCSS.Output = new CleanCSS( <any>{
-                    level: 0 // No optimization
-                } ).minify( cssContent );
+            // Minify
+            const minified: CleanCSS.Output = new CleanCSS( <any>{
+                level: 0 // No optimization
+            } ).minify( cssContent );
 
-                // Handle errors
-                if ( minified.errors.length > 0 ) {
-                    reject( new Error( minified.errors.join( '\n' ) ) );
-                    return;
-                }
-
-                resolve( minified.styles );
-
+            // Handle errors
+            if ( minified.errors.length > 0 ) {
+                throw new Error( `[CSS Minifier] ${ minified.errors.join( '\n' ) }` ); // No idea when this actually happens ...
             }
 
-        } );
+            return minified.styles;
+
+        }
+
     }
 
 }

@@ -62,6 +62,25 @@ describe( 'External resources', () => {
 
 	} );
 
+	describe( 'External HTML template (invalid)', () => {
+
+		it ( 'should throw an error', async() => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/external-resources/packages/library-template-html-invalid/.angular-package.json'
+				] );
+			} catch( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
 	describe( 'External CSS style', () => {
 
 		beforeAll( async() => {
