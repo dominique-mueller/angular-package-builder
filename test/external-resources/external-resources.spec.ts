@@ -25,7 +25,7 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External template, empty', () => {
+	describe( 'External template (empty)', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -43,14 +43,14 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External template, missing', () => {
+	describe( 'External template (missing)', () => {
 
 		it ( 'should throw an error', async() => {
 
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-template-html-error/.angular-package.json'
+					'test/external-resources/packages/library-template-missing/.angular-package.json'
 				] );
 			} catch( error ) {
 				angularPackageBuilderError = error;
@@ -81,7 +81,7 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External CSS style, empty', () => {
+	describe( 'External CSS style (empty)', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
@@ -117,7 +117,7 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External SASS style, empty', () => {
+	describe( 'External SASS style (empty)', () => {
 
 		beforeAll( async() => {
 			await runAngularPackageBuilder( [
