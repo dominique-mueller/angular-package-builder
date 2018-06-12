@@ -47,6 +47,8 @@ export class AngularPackageLogger {
      * @param numberOfBuildSteps Number of build steps (aka Angular Packages to built)
      */
     public static configureNumberOfBuildSteps( numberOfBuildSteps: number ): void {
+        this.currentBuildStepNumber = 0;
+        this.currentBuildRuntime = undefined;
         this.numberOfBuildSteps = numberOfBuildSteps;
         this.buildNumberMaxNumberOfDigits = this.numberOfBuildSteps.toString().length;
         this.leftIndentation = this.numberOfBuildSteps === 1
@@ -98,6 +100,7 @@ export class AngularPackageLogger {
         // Bake in dynamic logging
         if ( supportsAdvancedLogging() ) {
             log.done();
+            this.state = [];
         }
 
         // Calculate build runtime
@@ -107,8 +110,6 @@ export class AngularPackageLogger {
         console.log( '' );
         console.log( chalk.bold.green( `${ this.leftIndentation }Success!` ), chalk.grey( `(${ ( this.currentBuildRuntime / 1000 ).toFixed( 2 ) } seconds)` ) );
         console.log( '' );
-
-        AngularPackageLogger.reset();
 
     }
 
@@ -120,6 +121,7 @@ export class AngularPackageLogger {
         // Bake in dynamic logging
         if ( supportsAdvancedLogging() ) {
             log.done();
+            this.state = [];
         }
 
         // Calculate build runtime
@@ -129,8 +131,6 @@ export class AngularPackageLogger {
         console.log( '' );
         console.log( chalk.bold.red( `${ this.leftIndentation }Error!` ), chalk.grey( `(${ ( this.currentBuildRuntime / 1000 ).toFixed( 2 ) } seconds)` ) );
         console.log( '' );
-
-        AngularPackageLogger.reset();
 
     }
 
@@ -282,18 +282,6 @@ export class AngularPackageLogger {
             default:
                 return chalk.grey( `${ this.leftIndentation }  ${ loggerSymbols.arrow } ${ message }` );
         }
-    }
-
-    /**
-     * Reset the logger
-     */
-    private static reset(): void {
-        AngularPackageLogger.state = [];
-        AngularPackageLogger.numberOfBuildSteps = 0;
-        AngularPackageLogger.currentBuildStepNumber = 0;
-        AngularPackageLogger.currentBuildRuntime = undefined;
-        AngularPackageLogger.leftIndentation = undefined;
-        AngularPackageLogger.buildNumberMaxNumberOfDigits = undefined;
     }
 
 }
