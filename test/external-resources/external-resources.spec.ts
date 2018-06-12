@@ -57,7 +57,6 @@ describe( 'External resources', () => {
 			}
 
 			expect( angularPackageBuilderError ).not.toBeNull();
-			expect( angularPackageBuilderError.message ).not.toBe( '' );
 
 		} );
 
@@ -99,6 +98,25 @@ describe( 'External resources', () => {
 
 	} );
 
+	describe( 'External CSS style (invalid)', () => {
+
+		it ( 'should throw an error', async() => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/external-resources/packages/library-style-css-invalid/.angular-package.json'
+				] );
+			} catch( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
 	describe( 'External SASS style', () => {
 
 		beforeAll( async() => {
@@ -135,6 +153,25 @@ describe( 'External resources', () => {
 
 	} );
 
+	describe( 'External SASS style (invalid)', () => {
+
+		it ( 'should throw an error', async() => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/external-resources/packages/library-style-scss-invalid/.angular-package.json'
+				] );
+			} catch( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
 	describe( 'External style (missing)', () => {
 
 		it ( 'should throw an error', async() => {
@@ -149,7 +186,6 @@ describe( 'External resources', () => {
 			}
 
 			expect( angularPackageBuilderError ).not.toBeNull();
-			expect( angularPackageBuilderError.message ).not.toBe( '' );
 
 		} );
 

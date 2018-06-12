@@ -82,7 +82,7 @@ export class AngularPackageTransformer {
                     try {
                         template = await readFile( externalTemplate.template.path );
                     } catch ( error ) {
-                        this.handleExternalTemplateError( externalTemplate, sourceFile );
+                        this.handleExternalTemplateReadError( externalTemplate, sourceFile );
                     }
                     AngularExternalTemplatesFileTransformer.inlineExternalTemplate( externalTemplate, template );
                 } )
@@ -99,16 +99,29 @@ export class AngularPackageTransformer {
         await Promise.all(
             AngularExternalStylesAnalyzer.getExternalStyles( sourceFile )
                 .map( async ( externalStyle: AngularExternalStyles ): Promise<void> => {
+
+                    // Read
                     const styles: Array<string> = await Promise.all(
-                        externalStyle.styles.map( async( style: AngularExternalResource ): Promise<string> => {
+                        externalStyle.styles.map( async ( style: AngularExternalResource ): Promise<string> => {
                             try {
                                 return await readFile( style.path );
                             } catch ( error ) {
-                                this.handleExternalStyleError( externalStyle, style, sourceFile );
+                                this.handleExternalStyleReadError( externalStyle, style, sourceFile );
                             }
                         } )
                     );
-                    await AngularExternalStylesTransformer.inlineExternalStyles( externalStyle, styles );
+
+                    // Transform and inline
+                    await Promise.all(
+                        styles.map( async ( style: string, index: number ): Promise<void> => {
+                            try {
+                                await AngularExternalStylesTransformer.inlineExternalStyle( externalStyle, externalStyle.styles[ index ], style );
+                            } catch ( error ) {
+                                this.handleExternalStyleTransformError( externalStyle, externalStyle.styles[ index ], sourceFile, error );
+                            }
+                        } )
+                    );
+
                 } )
         );
     }
@@ -144,12 +157,12 @@ export class AngularPackageTransformer {
     }
 
     /**
-     * Log external template error
+     * Log external template read error
      *
      * @param externalTemplate External template
      * @param sourceFile       Source file
      */
-    private handleExternalTemplateError( externalTemplate: AngularExternalTemplate, sourceFile: SourceFile ): void {
+    private handleExternalTemplateReadError( externalTemplate: AngularExternalTemplate, sourceFile: SourceFile ): void {
 
         // Collect information
         const templateUrl: string = externalTemplate.template.node.getText().replace( /'/g, '' );
@@ -159,9 +172,9 @@ export class AngularPackageTransformer {
 
         // Log & re-throw
         const errorMessage: string = [
-            `An error occured while inlining an external template.`,
+            `An error occured while reading an external template.`,
             '',
-            `Source file:    ${sourceFilePath} (${line + 1}:${character + 1})`,
+            `Source file:    ${sourceFilePath} (at ${line + 1}:${character + 1})`,
             `Template url:   ${templateUrl}`,
             `Resolved file:  ${templateFilePath}`,
             '',
@@ -173,13 +186,13 @@ export class AngularPackageTransformer {
     }
 
     /**
-     * Log external template error
+     * Log external style read error
      *
      * @param externalStyles External styles
      * @param externalStyle  External style
      * @param sourceFile     Source file
      */
-    private handleExternalStyleError( externalStyles: AngularExternalStyles, externalStyle: AngularExternalResource, sourceFile: SourceFile ): void {
+    private handleExternalStyleReadError( externalStyles: AngularExternalStyles, externalStyle: AngularExternalResource, sourceFile: SourceFile ): void {
 
         // Collect information
         const styleUrl: string = externalStyle.node.getText().replace( /'/g, '' );
@@ -189,13 +202,48 @@ export class AngularPackageTransformer {
 
         // Log & re-throw
         const errorMessage: string = [
-            `An error occured while inlining an external style.`,
+            `An error occured while reading an external style.`,
             '',
-            `Source file:    ${sourceFilePath} (${line + 1}:${character + 1})`,
+            `Source file:    ${sourceFilePath} (at ${line + 1}:${character + 1})`,
             `Style url:      ${styleUrl}`,
             `Resolved file:  ${styleFilePath}`,
             '',
             'Tip: Make sure the style URL is correct, and the referenced style file does actually exist.'
+        ].join( '\n' );
+        AngularPackageLogger.logMessage( errorMessage, 'error' );
+        throw new Error( errorMessage );
+
+    }
+
+    /**
+     * Log external style transform error
+     *
+     * @param externalStyles External styles
+     * @param externalStyle  External style
+     * @param sourceFile     Source file
+     * @param details        Details
+     */
+    private handleExternalStyleTransformError( externalStyles: AngularExternalStyles, externalStyle: AngularExternalResource, sourceFile: SourceFile, details: Error ): void {
+
+        // Collect information
+        const styleUrl: string = externalStyle.node.getText().replace( /'/g, '' );
+        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalStyles.node.getStart() );
+        const styleFilePath: string = `./${path.relative( this.angularPackage.root, externalStyle.path )}`;
+
+        const errorMessageDetails = !details || details.message === ''
+            ? ''
+            : `\n\nDetails:        ${details.message}`;
+
+        // Log & re-throw
+        const errorMessage: string = [
+            `An error occured while transforming an external style.${errorMessageDetails}`,
+            '',
+            `Source file:    ${sourceFilePath} (at ${line + 1}:${character + 1})`,
+            `Style url:      ${styleUrl}`,
+            `Resolved file:  ${styleFilePath}`,
+            '',
+            'Tip: Make sure the referenced style is valid.'
         ].join( '\n' );
         AngularPackageLogger.logMessage( errorMessage, 'error' );
         throw new Error( errorMessage );
