@@ -15,8 +15,8 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: logging
   - name: test package
+  - name: logging
   - name: release
     if: branch = master
 
@@ -38,14 +38,23 @@ jobs:
       install:
         - npm ci
       script:
-        - ts-node ./test/multiple-dependent-libraries/packages/build.ts # Success
-        - ts-node ./test/external-resources/packages/library-template-html-invalid/build.ts # Error
-        - ts-node ./test/external-resources/packages/library-template-missing/build.ts # Error
-        - ts-node ./test/external-resources/packages/library-template-unsupported/build.ts # Error
-        - ts-node ./test/external-resources/packages/library-style-css-invalid/build.ts # Error
-        - ts-node ./test/external-resources/packages/library-style-scss-invalid/build.ts # Error
-        - ts-node ./test/external-resources/packages/library-style-missing/build.ts # Error
-        - ts-node ./test/external-resources/packages/library-style-unsupported/build.ts # Error
+        # Success
+        - ts-node ./test/multiple-dependent-libraries/packages/build.ts
+
+        # Transformation errors
+        - ts-node ./test/errors/packages/library-template-html-invalid/build.ts
+        - ts-node ./test/errors/packages/library-template-missing/build.ts
+        - ts-node ./test/errors/packages/library-template-unsupported/build.ts
+        - ts-node ./test/errors/packages/library-style-css-invalid/build.ts
+        - ts-node ./test/errors/packages/library-style-scss-invalid/build.ts
+        - ts-node ./test/errors/packages/library-style-missing/build.ts
+        - ts-node ./test/errors/packages/library-style-unsupported/build.ts
+
+        # Compilation errors
+        - ts-node ./test/errors/packages/library-error-angular-compiler/build.ts
+        - ts-node ./test/errors/packages/library-error-angular-compiler-2/build.ts
+        - ts-node ./test/errors/packages/library-error-tsickle/build.ts
+        - ts-node ./test/errors/packages/library-error-typescript/build.ts
 
     - stage: test package
       before_install:

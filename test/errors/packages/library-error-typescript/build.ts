@@ -1,7 +1,7 @@
 import { runAngularPackageBuilder } from '../../../..';
 
 runAngularPackageBuilder( [
-	'test/external-resources/packages/library-template-missing/.angular-package.json'
+	'test/errors/packages/library-error-typescript/.angular-package.json'
 ] ).catch( ( error: Error ) => {
 	// Do nothing
 } );

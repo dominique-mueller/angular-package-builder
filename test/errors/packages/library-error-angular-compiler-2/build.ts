@@ -1,7 +1,7 @@
 import { runAngularPackageBuilder } from '../../../..';
 
 runAngularPackageBuilder( [
-	'test/external-resources/packages/library-style-scss-invalid/.angular-package.json'
+	'test/errors/packages/library-error-angular-compiler-2/.angular-package.json'
 ] ).catch( ( error: Error ) => {
 	// Do nothing
 } );
