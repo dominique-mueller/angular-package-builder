@@ -15,8 +15,8 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: logging
   - name: test package
+  - name: logging
   - name: release
     if: branch = master
 
