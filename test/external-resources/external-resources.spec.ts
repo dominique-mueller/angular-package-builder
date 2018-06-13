@@ -25,7 +25,7 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External HTML template (empty)', () => {
+	describe( 'External empty HTML template', () => {
 
 		beforeAll( async () => {
 			await runAngularPackageBuilder( [
@@ -40,63 +40,6 @@ describe( 'External resources', () => {
 			'LibraryInputComponent',
 			''
 		);
-
-	} );
-
-	describe( 'External HTML template (invalid)', () => {
-
-		it( 'should throw an error', async () => {
-
-			let angularPackageBuilderError: Error | null = null;
-			try {
-				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-template-html-invalid/.angular-package.json'
-				] );
-			} catch ( error ) {
-				angularPackageBuilderError = error;
-			}
-
-			expect( angularPackageBuilderError ).not.toBeNull();
-
-		} );
-
-	} );
-
-	describe( 'External template (missing)', () => {
-
-		it( 'should throw an error', async () => {
-
-			let angularPackageBuilderError: Error | null = null;
-			try {
-				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-template-missing/.angular-package.json'
-				] );
-			} catch ( error ) {
-				angularPackageBuilderError = error;
-			}
-
-			expect( angularPackageBuilderError ).not.toBeNull();
-
-		} );
-
-	} );
-
-	describe( 'External template (unsupported file type)', () => {
-
-		it( 'should throw an error', async () => {
-
-			let angularPackageBuilderError: Error | null = null;
-			try {
-				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-template-unsupported/.angular-package.json'
-				] );
-			} catch ( error ) {
-				angularPackageBuilderError = error;
-			}
-
-			expect( angularPackageBuilderError ).not.toBeNull();
-
-		} );
 
 	} );
 
@@ -118,7 +61,7 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External CSS style (empty)', () => {
+	describe( 'External empty CSS style', () => {
 
 		beforeAll( async () => {
 			await runAngularPackageBuilder( [
@@ -133,25 +76,6 @@ describe( 'External resources', () => {
 			'LibraryInputComponent',
 			''
 		);
-
-	} );
-
-	describe( 'External CSS style (invalid)', () => {
-
-		it( 'should throw an error', async () => {
-
-			let angularPackageBuilderError: Error | null = null;
-			try {
-				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-style-css-invalid/.angular-package.json'
-				] );
-			} catch ( error ) {
-				angularPackageBuilderError = error;
-			}
-
-			expect( angularPackageBuilderError ).not.toBeNull();
-
-		} );
 
 	} );
 
@@ -173,7 +97,7 @@ describe( 'External resources', () => {
 
 	} );
 
-	describe( 'External SASS style (empty)', () => {
+	describe( 'External empty SASS style', () => {
 
 		beforeAll( async () => {
 			await runAngularPackageBuilder( [
@@ -188,63 +112,6 @@ describe( 'External resources', () => {
 			'LibraryInputComponent',
 			''
 		);
-
-	} );
-
-	describe( 'External SASS style (invalid)', () => {
-
-		it( 'should throw an error', async () => {
-
-			let angularPackageBuilderError: Error | null = null;
-			try {
-				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-style-scss-invalid/.angular-package.json'
-				] );
-			} catch ( error ) {
-				angularPackageBuilderError = error;
-			}
-
-			expect( angularPackageBuilderError ).not.toBeNull();
-
-		} );
-
-	} );
-
-	describe( 'External style (missing)', () => {
-
-		it( 'should throw an error', async () => {
-
-			let angularPackageBuilderError: Error | null = null;
-			try {
-				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-style-missing/.angular-package.json'
-				] );
-			} catch ( error ) {
-				angularPackageBuilderError = error;
-			}
-
-			expect( angularPackageBuilderError ).not.toBeNull();
-
-		} );
-
-	} );
-
-	describe( 'External style (unsupported file type)', () => {
-
-		it( 'should throw an error', async () => {
-
-			let angularPackageBuilderError: Error | null = null;
-			try {
-				await runAngularPackageBuilder( [
-					'test/external-resources/packages/library-style-unsupported/.angular-package.json'
-				] );
-			} catch ( error ) {
-				angularPackageBuilderError = error;
-			}
-
-			expect( angularPackageBuilderError ).not.toBeNull();
-
-		} );
 
 	} );
 
