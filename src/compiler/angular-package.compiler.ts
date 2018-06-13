@@ -118,9 +118,10 @@ export class AngularPackageCompiler {
      */
     private handleAngularCompilerCliError( error: string ): Array<string> {
 
+        // Collect information
         let message: string;
-        let body: Array<string>;
-        switch( true ) {
+        let details: string;
+        switch ( true ) {
 
             // Error from tsickle
             //
@@ -128,23 +129,7 @@ export class AngularPackageCompiler {
             // transformed/src/input/input.component.ts(50,2): warning TS0: the type annotation on @param is redundant with its TypeScript type, remove the {...} part
             case /(error|warning) TS0/.test( error ):
                 message = 'An error occured while optimizing the sources for the Closure Compiler with tsickle.';
-                const tsickleSourceFile: string = error
-                    .split( ':' )[ 0 ] // Cut of unnecessary information
-                    .replace( /^transformed/, '.' ) // Fix path
-                    .split( '(' ).join( ' (' ) // Add space between path and line-character information
-                    .replace( ',', ':' ); // Replace character comma-separator with colon
-                const tsickleErrorCode: string = error
-                    .split( ':' )[ 1 ] // Cut of unnecessary information
-                    .trim(); // Remove whitespaces around
-                const tsickleErrorMessage: string = error
-                    .split( ':' )[ 2 ] // Cut of unnecessary information
-                    .trim() // Remove whitespaces around
-                    .replace( /\.$/, '' ); // Remove dot at the end
-                body = [
-                    `Source file:  ${ tsickleSourceFile }`,
-                    `Code:         ${ tsickleErrorCode[ 0 ].toUpperCase() }${ tsickleErrorCode.slice( 1 ) }`,
-                    `Message:      ${ tsickleErrorMessage[ 0 ].toUpperCase() }${ tsickleErrorMessage.slice( 1 ) }`
-                ];
+                details = this.constructTypescriptErrorDetails( error );
                 break;
 
             // Error from TypeScript
@@ -153,23 +138,7 @@ export class AngularPackageCompiler {
             // transformed/src/input/input.component.ts(56,31): error TS2345: Argument of type 'false' is not assignable to parameter of type 'string'.
             case /(error|warning) TS[0-9]+/.test( error ):
                 message = 'An error occured while compiling the sources with the TypeScript Compiler.';
-                const typescriptSourceFile: string = error
-                    .split( ':' )[ 0 ] // Cut of unnecessary information
-                    .replace( /^transformed/, '.' ) // Fix path
-                    .split( '(' ).join( ' (' ) // Add space between path and line-character information
-                    .replace( ',', ':' ); // Replace character comma-separator with colon
-                const typescriptErrorCode: string = error
-                    .split( ':' )[ 1 ] // Cut of unnecessary information
-                    .trim(); // Remove whitespaces around
-                const typescriptErrorMessage: string = error
-                    .split( ':' )[ 2 ] // Cut of unnecessary information
-                    .trim() // Remove whitespaces around
-                    .replace( /\.$/, '' ); // Remove dot at the end
-                body = [
-                    `Source file:  ${ typescriptSourceFile }`,
-                    `Code:         ${ typescriptErrorCode[ 0 ].toUpperCase() }${ typescriptErrorCode.slice( 1 ) }`,
-                    `Message:      ${ typescriptErrorMessage[ 0 ].toUpperCase() }${ typescriptErrorMessage.slice( 1 ) }`
-                ];
+                details = this.constructTypescriptErrorDetails( error );
                 break;
 
             // Error from Angular Compiler
@@ -190,68 +159,13 @@ export class AngularPackageCompiler {
             //    at reduceLeft (C:\Users\DOM\Projekte\angular-package-builder\node_modules\typescript\lib\typescript.js:2697:30)
             case /compiler-cli/.test( error ):
                 message = 'An error occured while compiling the sources with the Angular Compiler.';
-                const angularCompilerErrorLines: Array<string> = error
-                    .replace( /^: Error: /, '' ) // Remove leading error
-                    .split( '\n' ) // Split lines
-                    .filter( ( errorLine: string ): boolean => { // Filter out stracktrace
-                        return !errorLine.trim().startsWith( 'at' );
-                    } )
-                    .map( ( errorLine: string ): string => { // Align to left
-                        return errorLine.trim();
-                    } );
-                const basePath: string = path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'transformed' );
-                const angularCompilerSourceFile: string = angularCompilerErrorLines
-                    .reverse() // Prefer latest appearance of path
-                    .find( ( errorLine: string ): boolean => { // Get first line starting with file path
-                        return new RegExp( `^${ basePath }`, 'g' ).test( errorLine );
-                    } )
-                    .split( ' ' )[ 0 ] // Remove unnecessary information
-                    .replace( new RegExp( basePath, 'g' ), '.' ) // Fix path
-                    .replace( /:(\d+):(\d+):/, ' ($1:$2)' ); // Fix line-character style
-                const angularCompilerDetails: Array<string> = angularCompilerErrorLines
-                    .reverse() // Revert reverse
-                    .map( ( errorLine: string ): string => {
-                        return new RegExp( `^${ basePath }`, 'g' ).test( errorLine )
-                            ? errorLine.split( ' ' ).slice( 1 ).join( ' ' )
-                            : errorLine;
-                    } );
-                const angularCompilerMessage: Array<string> = angularCompilerDetails
-                    .filter( ( errorLine: string ): boolean => { // Filter out details objcet
-                        return errorLine[ 0 ] !== '{';
-                    } )
-                    .filter( ( errorLine: string ): boolean => { // Filter out empty lines
-                        return errorLine.trim() !== '';
-                    } )
-                    .map( ( errorLine: string, index: number ): string => { // Format
-                        return index === 0
-                            ? `Message:      ${ errorLine }`
-                            : `              ${ errorLine }`;
-                    } );
-                const angularCompilerObject: Array<string> = JSON.stringify(
-                    JSON.parse(
-                        angularCompilerDetails
-                            .find( ( errorLine: string ): boolean => {
-                                return errorLine[ 0 ] === '{';
-                            } )
-                        ),
-                    null,
-                    '  '
-                    )
-                    .split( '\n' )
-                    .map( ( objectLine: string, index: number ): string => {
-                        return index === 0
-                            ? `Details:      ${ objectLine }`
-                            : `              ${ objectLine }`;
-                    } );
-                body = [
-                    `Source File:  ${ angularCompilerSourceFile }`,
-                    ...angularCompilerMessage,
-                    ...angularCompilerObject
-                ];
+                details = this.constructAngularCompilerErrorDetails( error );
                 break;
 
+            // Fallback
             default:
-                message = '';
+                message = 'An error occured while compiling the sources.';
+                details = error;
                 break;
 
         }
@@ -260,12 +174,127 @@ export class AngularPackageCompiler {
         const errorMessage: string = [
             message,
             '',
-            body.join( '\n' ),
+            details,
             '',
             'Tip: For known pitfalls, also see https://github.com/dominique-mueller/angular-package-builder#known-pitfalls-with-solutions'
         ].join( '\n' );
         AngularPackageLogger.logMessage( errorMessage, 'error' );
         throw new Error( errorMessage );
+
+    }
+
+    /**
+     * Construct Typescript error details
+     *
+     * @param   error Error
+     * @returns       Error details
+     */
+    private constructTypescriptErrorDetails( error: string ): string {
+
+        // Get source file
+        const sourceFile: string = error
+            .split( ':' )[ 0 ] // Cut of unnecessary information
+            .replace( /^transformed/, '.' ) // Fix path
+            .split( '(' ).join( ' (' ) // Add space between path and line-character information
+            .replace( ',', ':' ); // Replace character comma-separator with colon
+
+        // Get error / warning code
+        const errorCode: string = error
+            .split( ':' )[ 1 ] // Cut of unnecessary information
+            .trim(); // Remove whitespaces around
+
+        // Get error message
+        const errorMessage: string = error
+            .split( ':' )[ 2 ] // Cut of unnecessary information
+            .trim() // Remove whitespaces around
+            .replace( /\.$/, '' ); // Remove dot at the end
+
+        // Construct details
+        return [
+            `Source file:  ${ sourceFile }`,
+            `Code:         ${ errorCode[ 0 ].toUpperCase() }${ errorCode.slice( 1 ) }`,
+            `Message:      ${ errorMessage[ 0 ].toUpperCase() }${ errorMessage.slice( 1 ) }`
+        ].join( '\n' );
+
+    }
+
+    /**
+     * Construct Angular Compiler error details
+     *
+     * @param   error Error
+     * @returns       Error details
+     */
+    private constructAngularCompilerErrorDetails( error: string ): string {
+
+        // Cleanup error message and split into lines
+        const errorLines: Array<string> = error
+            .replace( /^: Error: /, '' ) // Remove leading error
+            .split( '\n' ) // Split lines
+            .filter( ( errorLine: string ): boolean => { // Filter out stracktrace
+                return !errorLine.trim().startsWith( 'at' );
+            } )
+            .map( ( errorLine: string ): string => { // Align to left
+                return errorLine.trim();
+            } );
+
+        // Get sorce file
+        const basePath: string = path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'transformed' );
+        const sourceFile: string = errorLines
+            .reverse() // Prefer latest appearance of path
+            .find( ( errorLine: string ): boolean => { // Get first line starting with file path
+                return new RegExp( `^${ basePath }`, 'g' ).test( errorLine );
+            } )
+            .split( ' ' )[ 0 ] // Remove unnecessary information
+            .replace( new RegExp( basePath, 'g' ), '.' ) // Fix path
+            .replace( /:(\d+):(\d+):/, ' ($1:$2)' ); // Fix line-character style
+
+        // Get error messages
+        const errorMessages: Array<string> = errorLines
+            .reverse() // Revert reverse
+            .map( ( errorLine: string ): string => {
+                return new RegExp( `^${ basePath }`, 'g' ).test( errorLine )
+                    ? errorLine.split( ' ' ).slice( 1 ).join( ' ' )
+                    : errorLine;
+            } );
+
+        // Get error message (without details object)
+        const errorMessage: Array<string> = errorMessages
+            .filter( ( errorLine: string ): boolean => { // Filter out details objcet
+                return errorLine[ 0 ] !== '{';
+            } )
+            .filter( ( errorLine: string ): boolean => { // Filter out empty lines
+                return errorLine.trim() !== '';
+            } )
+            .map( ( errorLine: string, index: number ): string => { // Format
+                return index === 0
+                    ? `Message:      ${ errorLine }`
+                    : `              ${ errorLine }`;
+            } );
+
+        // Get error details object
+        const errorDetails: Array<string> = JSON.stringify(
+            JSON.parse(
+                errorMessages
+                    .find( ( errorLine: string ): boolean => {
+                        return errorLine[ 0 ] === '{';
+                    } )
+            ),
+            null,
+            '  ' // Indentation
+        )
+            .split( '\n' )
+            .map( ( objectLine: string, index: number ): string => { // Format
+                return index === 0
+                    ? `Details:      ${ objectLine }`
+                    : `              ${ objectLine }`;
+            } );
+
+        // Construct details
+        return [
+            `Source File:  ${ sourceFile }`,
+            ...errorMessage,
+            ...errorDetails
+        ].join( '\n' );
 
     }
 

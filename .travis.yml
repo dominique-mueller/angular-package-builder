@@ -46,6 +46,10 @@ jobs:
         - ts-node ./test/external-resources/packages/library-style-scss-invalid/build.ts # Error
         - ts-node ./test/external-resources/packages/library-style-missing/build.ts # Error
         - ts-node ./test/external-resources/packages/library-style-unsupported/build.ts # Error
+        - ts-node ./test/errors/packages/library-error-angular-compiler/build.ts # Error
+        - ts-node ./test/errors/packages/library-error-angular-compiler-2/build.ts # Error
+        - ts-node ./test/errors/packages/library-error-angular-tsickle/build.ts # Error
+        - ts-node ./test/errors/packages/library-error-angular-typescript/build.ts # Error
 
     - stage: test package
       before_install:
