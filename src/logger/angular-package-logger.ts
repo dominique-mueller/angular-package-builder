@@ -275,7 +275,9 @@ export class AngularPackageLogger {
                         .map( ( messagePart: string, index: number ): string => {
                             return index === 1
                                 ? chalk.red( `${ this.leftIndentation }  ${ chalk.bgRed.white( ' ERROR ' ) } ${ messagePart }` )
-                                : chalk.white( `${ this.leftIndentation }          ${ messagePart }` );
+                                : messagePart.startsWith( 'Tip' )
+                                    ? chalk.yellow( `${ this.leftIndentation }          ${ messagePart }` )
+                                    : chalk.white( `${ this.leftIndentation }          ${ messagePart }` );
                         } )
                         .join( '\n' )
                 );
