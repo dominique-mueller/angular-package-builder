@@ -1,5 +1,5 @@
 {
-	"name": "library-error-angular-compiler",
+	"name": "library-error-rollup",
 	"version": "1.0.0",
 	"private": true,
 	"peerDependencies": {
