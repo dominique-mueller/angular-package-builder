@@ -5,6 +5,7 @@ import { isWindows } from '../utilities/is-windows';
  */
 export const loggerSymbols: { [ name: string ]: string } = {
     arrow: isWindows() ? '→' : '➜',
+    error: 'X',
     tick: isWindows() ? '√' : '✔',
     pointer: isWindows() ? '>' : '❯'
 };

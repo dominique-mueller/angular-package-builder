@@ -42,7 +42,7 @@ export class AngularExternalStylesTransformer {
             case 'sass':
                 return CSSTransformer.minify( await SASSTransformer.compileToCss( style ) );
             default:
-                throw new Error( `The file type "${ fileType }" is not supported for external styles.` );
+                throw new Error( `Angular Package Builder: The file type "${ fileType }" is not supported for external styles.` );
         }
 
     }

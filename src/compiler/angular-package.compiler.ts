@@ -39,12 +39,14 @@ export class AngularPackageCompiler {
     public async compile( target: 'esm2015' | 'esm5' ): Promise<void> {
 
         // Create and write TypeScript configuration
-        const tsconfigPath: string = await this.buildAndWriteTypescriptConfiguration( target );
+        const tsconfig: any = await this.buildTypescriptConfiguration( target );
+        const tsconfigPath: string = path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', `tsconfig.${ target }.json` );
+        await writeFile( tsconfigPath, tsconfig );
 
         // Run the Angular compiler
         const angularCompilerCliArguments: any = await this.getAngularCompilerCliArguments( tsconfigPath );
         angularCompilerCli( angularCompilerCliArguments, ( error: string ): void => {
-            this.handleAngularCompilerCliError( error );
+            this.handleAngularCompilerCliError( error, tsconfig.compilerOptions.target );
         } );
 
         // Move build files
@@ -63,9 +65,9 @@ export class AngularPackageCompiler {
      * Build TypeScript configuration
      *
      * @param   target Build target
-     * @returns        Path to the tsconfig file
+     * @returns        Typescript configuration
      */
-    private async buildAndWriteTypescriptConfiguration( target: 'esm2015' | 'esm5' ): Promise<string> {
+    private async buildTypescriptConfiguration( target: 'esm2015' | 'esm5' ): Promise<any> {
 
         // Collect information
         const tempDir: string = path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp' );
@@ -74,7 +76,7 @@ export class AngularPackageCompiler {
         const entryFile: string = path.join( tempDir, 'transformed', path.basename( this.angularPackage.entryFile ) );
 
         // Build TypeScript configuration
-        const tsconfig: any = new TypeScriptConfigurationBuilder()
+        return new TypeScriptConfigurationBuilder()
             .setEntry( entryFile, entryDir )
             .setOutDir( outDir )
             .setPackageName( this.angularPackage.packageName )
@@ -82,12 +84,6 @@ export class AngularPackageCompiler {
             .setCustomTypescriptCompilerOptions( this.angularPackage.typescriptCompilerOptions )
             .setCustomAngularCompilerOptions( this.angularPackage.angularCompilerOptions )
             .build();
-
-        // Write TypeScript configuration file to disk
-        const tsconfigPath: string = path.join( tempDir, `tsconfig.${ target }.json` );
-        await writeFile( tsconfigPath, tsconfig );
-
-        return tsconfigPath;
 
     }
 
@@ -114,12 +110,12 @@ export class AngularPackageCompiler {
     /**
      * Handle Angular Compiler CLI error
      *
-     * @param error Error message
+     * @param error  Error message
+     * @param target Build target
      */
-    private handleAngularCompilerCliError( error: string ): Array<string> {
+    private handleAngularCompilerCliError( error: string, target: string ): void {
 
         // Collect information
-        let message: string;
         let details: string;
         switch ( true ) {
 
@@ -128,8 +124,7 @@ export class AngularPackageCompiler {
             // Example:
             // transformed/src/input/input.component.ts(50,2): warning TS0: the type annotation on @param is redundant with its TypeScript type, remove the {...} part
             case /(error|warning) TS0/.test( error ):
-                message = 'An error occured while optimizing the sources for the Closure Compiler with tsickle.';
-                details = this.constructTypescriptErrorDetails( error );
+                details = this.constructTypescriptErrorDetails( error, 'tsickle' );
                 break;
 
             // Error from TypeScript
@@ -137,8 +132,7 @@ export class AngularPackageCompiler {
             // Example:
             // transformed/src/input/input.component.ts(56,31): error TS2345: Argument of type 'false' is not assignable to parameter of type 'string'.
             case /(error|warning) TS[0-9]+/.test( error ):
-                message = 'An error occured while compiling the sources with the TypeScript Compiler.';
-                details = this.constructTypescriptErrorDetails( error );
+                details = this.constructTypescriptErrorDetails( error, 'TypeScript' );
                 break;
 
             // Error from Angular Compiler
@@ -158,13 +152,11 @@ export class AngularPackageCompiler {
             //    at C:\Users\DOM\Projekte\angular-package-builder\node_modules\typescript\lib\typescript.js:3025:86
             //    at reduceLeft (C:\Users\DOM\Projekte\angular-package-builder\node_modules\typescript\lib\typescript.js:2697:30)
             case /compiler-cli/.test( error ):
-                message = 'An error occured while compiling the sources with the Angular Compiler.';
-                details = this.constructAngularCompilerErrorDetails( error );
+                details = this.constructAngularCompilerErrorDetails( error, 'Angular Compiler' );
                 break;
 
             // Fallback
             default:
-                message = 'An error occured while compiling the sources.';
                 details = error;
                 break;
 
@@ -172,7 +164,7 @@ export class AngularPackageCompiler {
 
         // Log & re-throw
         const errorMessage: string = [
-            message,
+            `An error occured while compiling the sources to ${ target }.`,
             '',
             details,
             '',
@@ -186,10 +178,11 @@ export class AngularPackageCompiler {
     /**
      * Construct Typescript error details
      *
-     * @param   error Error
-     * @returns       Error details
+     * @param   error  Error
+     * @param   origin Error origin
+     * @returns        Error details
      */
-    private constructTypescriptErrorDetails( error: string ): string {
+    private constructTypescriptErrorDetails( error: string, origin: string ): string {
 
         // Get source file
         const sourceFile: string = error
@@ -211,9 +204,11 @@ export class AngularPackageCompiler {
 
         // Construct details
         return [
-            `Source file:  ${ sourceFile }`,
-            `Code:         ${ errorCode[ 0 ].toUpperCase() }${ errorCode.slice( 1 ) }`,
-            `Message:      ${ errorMessage[ 0 ].toUpperCase() }${ errorMessage.slice( 1 ) }`
+            `Details:    ${ errorMessage[ 0 ].toUpperCase() }${ errorMessage.slice( 1 ) }`,
+            '',
+            `Caused by:  ${ origin }`,
+            `Code:       ${ errorCode[ 0 ].toUpperCase() }${ errorCode.slice( 1 ) }`,
+            `File:       ${ sourceFile } [to be compiled]`
         ].join( '\n' );
 
     }
@@ -221,10 +216,11 @@ export class AngularPackageCompiler {
     /**
      * Construct Angular Compiler error details
      *
-     * @param   error Error
-     * @returns       Error details
+     * @param   error  Error
+     * @param   origin Error origin
+     * @returns        Error details
      */
-    private constructAngularCompilerErrorDetails( error: string ): string {
+    private constructAngularCompilerErrorDetails( error: string, origin: string ): string {
 
         // Cleanup error message and split into lines
         const errorLines: Array<string> = error
@@ -267,8 +263,8 @@ export class AngularPackageCompiler {
             } )
             .map( ( errorLine: string, index: number ): string => { // Format
                 return index === 0
-                    ? `Message:      ${ errorLine }`
-                    : `              ${ errorLine }`;
+                    ? `Message:    ${ errorLine }`
+                    : `            ${ errorLine }`;
             } );
 
         // Get error details object
@@ -285,14 +281,16 @@ export class AngularPackageCompiler {
             .split( '\n' )
             .map( ( objectLine: string, index: number ): string => { // Format
                 return index === 0
-                    ? `Details:      ${ objectLine }`
-                    : `              ${ objectLine }`;
+                    ? `Details:    ${ objectLine }`
+                    : `            ${ objectLine }`;
             } );
 
         // Construct details
         return [
-            `Source File:  ${ sourceFile }`,
             ...errorMessage,
+            '',
+            `Caused by:  ${ origin } [to be compiled]`,
+            `File:       ${ sourceFile }`,
             ...errorDetails
         ].join( '\n' );
 

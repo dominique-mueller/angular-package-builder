@@ -55,6 +55,7 @@ jobs:
         - ts-node ./test/errors/packages/library-error-angular-compiler-2/build.ts
         - ts-node ./test/errors/packages/library-error-tsickle/build.ts
         - ts-node ./test/errors/packages/library-error-typescript/build.ts
+        - ts-node ./test/errors/packages/library-error-rollup/build.ts
 
     - stage: test package
       before_install:

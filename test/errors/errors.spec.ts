@@ -178,4 +178,23 @@ describe( 'Error Handling', () => {
 
 	} );
 
+	describe( 'Step: Bundling', () => {
+
+		it( 'should throw an error when a Rollup error occurs', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/packages/library-template-rollup/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
 } );
