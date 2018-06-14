@@ -64,6 +64,9 @@ jobs:
         - npm ci
       script:
         - npm run test:package
+      after_success:
+        # Upload coverage if the tests are running green
+        - npm run test:coverage
 
     - stage: release
       node_js:
