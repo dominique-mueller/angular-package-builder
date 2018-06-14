@@ -117,17 +117,26 @@ export class AngularPackageBundler {
      *
      * @param error   Error
      * @param target  Bundle target
-     * @param outFile Out file
+     * @param file    Out file
      */
-    private handleRollupError( error: Error, target: string, outFile: string ): void {
+    private handleRollupError( error: Error, target: string, file: string ): void {
+
+        // Collect information
+        const relativeFilePath: string = file
+            .split( '/' )
+            .slice( -2 ) // Only use first folder & filename
+            .join( '/' );
 
         // Log & re-throw
         const errorMessage: string = [
             `An error occured while creating the ${ target } bundle.`,
             '',
-            `Target file:  ./${ outFile.split( '/' ).slice( -2 ).join( '/' ) }`,
-            'Caused by:    Rollup',
-            `Error:        ${ error.message }`
+            `Details:    ${ error.message }`,
+            '',
+            'Caused by:  Rollup',
+            `File:       ./${ relativeFilePath } [to be generated]`,
+            '',
+            'Tip: For known pitfalls, also see https://github.com/dominique-mueller/angular-package-builder#known-pitfalls-with-solutions'
         ].join( '\n' );
         AngularPackageLogger.logMessage( errorMessage, 'error' );
         throw new Error( errorMessage );

@@ -25,7 +25,7 @@ export class CSSTransformer {
 
             // Handle errors
             if ( minified.errors.length > 0 ) {
-                throw new Error( `[CSS Minifier] ${ minified.errors.join( '\n' ) }` ); // No idea when this actually happens ...
+                throw new Error( `CSS Minifier: ${ minified.errors.join( '\n' ) }` ); // No idea when this actually happens ...
             }
 
             return minified.styles;

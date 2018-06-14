@@ -60,7 +60,7 @@ export class AngularPackageTransformer {
 
                 processedFiles++;
                 const relativeFilePath: string = path.relative( this.angularPackage.root, sourceFile.getFilePath() );
-                const message: string = `Transform files (${processedFiles}/${numberOfFiles}) :: ${relativeFilePath}`;
+                const message: string = `Transform files (${ processedFiles }/${ numberOfFiles }) :: ${ relativeFilePath }`;
                 AngularPackageLogger.logMessage( message );
 
             } )
@@ -88,7 +88,8 @@ export class AngularPackageTransformer {
                             'An error occured while reading an external template.',
                             'Make sure the template URL is correct, and the referenced template file does exist.',
                             externalTemplate,
-                            sourceFile
+                            sourceFile,
+                            new Error( `File System: ${ error.message.split( '[' )[ 1 ].split( ']' )[ 0 ] }` )
                         );
                     }
 
@@ -131,7 +132,8 @@ export class AngularPackageTransformer {
                                     'Make sure the style URL is correct, and the referenced style file does exist.',
                                     externalStyle,
                                     style,
-                                    sourceFile
+                                    sourceFile,
+                                    new Error( `File System: ${ error.message.split( '[' )[ 1 ].split( ']' )[ 0 ] }` )
                                 );
                             }
                         } )
@@ -198,31 +200,32 @@ export class AngularPackageTransformer {
      * @param sourceFile       Source file
      * @param details          Error details
      */
-    private handleExternalTemplateError (
+    private handleExternalTemplateError(
         message: string,
         tip: string,
         externalTemplate: AngularExternalTemplate,
         sourceFile: SourceFile,
-        details?: Error
+        details: Error
     ): void {
 
         // Collect information
         const templateUrl: string = externalTemplate.template.node.getText().replace( /'/g, '' );
-        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const sourceFilePath: string = `./${ path.relative( this.angularPackage.root, sourceFile.getFilePath() ) }`;
         const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalTemplate.node.getStart() );
-        const templateFilePath: string = `./${path.relative( this.angularPackage.root, externalTemplate.template.path )}`;
-
-        const errorMessageDetails = !details || details.message === ''
-            ? ''
-            : `\n\nDetails:        ${details.message}`;
+        const templateFilePath: string = `./${ path.relative( this.angularPackage.root, externalTemplate.template.path ) }`;
+        const origin: string = details.message.split( ':' )[ 0 ];
+        const messageWithoutOrigin: string = details.message.split( ':' ).slice( 1 ).join( ':' ).trim();
 
         // Log & re-throw
         const errorMessage: string = [
-            `${ message }${errorMessageDetails}`,
+            message,
             '',
-            `Source file:    ${sourceFilePath} (at ${line + 1}:${character + 1})`,
-            `Template url:   ${templateUrl}`,
-            `Resolved file:  ${templateFilePath}`,
+            `Details:        ${ messageWithoutOrigin }`,
+            '',
+            `Caused by:      ${ origin }`,
+            `File:           ${ sourceFilePath } (at ${ line + 1 }:${ character + 1 }) [to be transformed]`,
+            `Template url:   ${ templateUrl }`,
+            `Template file:  ${ templateFilePath }`,
             '',
             `Tip: ${ tip }`
         ].join( '\n' );
@@ -247,26 +250,27 @@ export class AngularPackageTransformer {
         externalStyles: AngularExternalStyles,
         externalStyle: AngularExternalResource,
         sourceFile: SourceFile,
-        details?: Error,
+        details: Error,
     ): void {
 
         // Collect information
         const styleUrl: string = externalStyle.node.getText().replace( /'/g, '' );
-        const sourceFilePath: string = `./${path.relative( this.angularPackage.root, sourceFile.getFilePath() )}`;
+        const sourceFilePath: string = `./${ path.relative( this.angularPackage.root, sourceFile.getFilePath() ) }`;
         const { line, character } = sourceFile.compilerNode.getLineAndCharacterOfPosition( externalStyles.node.getStart() );
-        const styleFilePath: string = `./${path.relative( this.angularPackage.root, externalStyle.path )}`;
-
-        const errorMessageDetails = !details || details.message === ''
-            ? ''
-            : `\n\nDetails:        ${details.message}`;
+        const styleFilePath: string = `./${ path.relative( this.angularPackage.root, externalStyle.path ) }`;
+        const origin: string = details.message.split( ':' )[ 0 ];
+        const messageWithoutOrigin: string = details.message.split( ':' ).slice( 1 ).join( ':' ).trim();
 
         // Log & re-throw
         const errorMessage: string = [
-            `${ message }${errorMessageDetails}`,
+            message,
             '',
-            `Source file:    ${sourceFilePath} (at ${line + 1}:${character + 1})`,
-            `Style url:      ${styleUrl}`,
-            `Resolved file:  ${styleFilePath}`,
+            `Details:     ${ messageWithoutOrigin }`,
+            '',
+            `Caused by:   ${ origin }`,
+            `File:        ${ sourceFilePath } (at ${ line + 1 }:${ character + 1 }) [to be transformed]`,
+            `Style url:   ${ styleUrl }`,
+            `Style file:  ${ styleFilePath }`,
             '',
             `Tip: ${ tip }`
         ].join( '\n' );

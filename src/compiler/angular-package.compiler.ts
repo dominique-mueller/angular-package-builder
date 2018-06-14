@@ -204,10 +204,11 @@ export class AngularPackageCompiler {
 
         // Construct details
         return [
-            `Source file:  ${ sourceFile }`,
-            `Caused by:    ${ origin }`,
-            `Code:         ${ errorCode[ 0 ].toUpperCase() }${ errorCode.slice( 1 ) }`,
-            `Message:      ${ errorMessage[ 0 ].toUpperCase() }${ errorMessage.slice( 1 ) }`
+            `Details:    ${ errorMessage[ 0 ].toUpperCase() }${ errorMessage.slice( 1 ) }`,
+            '',
+            `Caused by:  ${ origin }`,
+            `Code:       ${ errorCode[ 0 ].toUpperCase() }${ errorCode.slice( 1 ) }`,
+            `File:       ${ sourceFile } [to be compiled]`
         ].join( '\n' );
 
     }
@@ -262,8 +263,8 @@ export class AngularPackageCompiler {
             } )
             .map( ( errorLine: string, index: number ): string => { // Format
                 return index === 0
-                    ? `Message:      ${ errorLine }`
-                    : `              ${ errorLine }`;
+                    ? `Message:    ${ errorLine }`
+                    : `            ${ errorLine }`;
             } );
 
         // Get error details object
@@ -280,15 +281,16 @@ export class AngularPackageCompiler {
             .split( '\n' )
             .map( ( objectLine: string, index: number ): string => { // Format
                 return index === 0
-                    ? `Details:      ${ objectLine }`
-                    : `              ${ objectLine }`;
+                    ? `Details:    ${ objectLine }`
+                    : `            ${ objectLine }`;
             } );
 
         // Construct details
         return [
-            `Source File:  ${ sourceFile }`,
-            `Caused by:    ${ origin }`,
             ...errorMessage,
+            '',
+            `Caused by:  ${ origin } [to be compiled]`,
+            `File:       ${ sourceFile }`,
             ...errorDetails
         ].join( '\n' );
 

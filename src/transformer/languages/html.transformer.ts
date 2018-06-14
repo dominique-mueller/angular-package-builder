@@ -21,7 +21,7 @@ export class HTMLTransformer {
                 return minify( htmlContent, htmlMinifierConfiguration );
             } catch( error ) {
                 // Static message, as the actual error message does not contain any useful information
-                throw new Error( '[HTML Parser] Parse error, the HTML seems to be invalid.' );
+                throw new Error( 'HTML Parser: Parse error, the HTML seems to be invalid.' );
             }
         }
 
