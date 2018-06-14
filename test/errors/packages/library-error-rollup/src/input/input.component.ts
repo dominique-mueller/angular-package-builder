@@ -1,0 +1,62 @@
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+
+import * as moment from 'moment';
+
+/**
+ * Input component
+ */
+@Component( {
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'ui-input',
+	styleUrls: [
+		'./input.component.scss'
+	],
+	templateUrl: './input.component.html'
+} )
+export class LibraryInputComponent {
+
+	/**
+	 * Input ID
+	 */
+	@Input()
+	public id: string | null;
+
+	/**
+	 * Input Label
+	 */
+	@Input()
+	public label: string;
+
+	/**
+	 * Input Model
+	 */
+	@Input()
+	public model: string;
+
+	/**
+	 * Input Model change, emitting the new model value
+	 */
+	@Output()
+	public modelChange: EventEmitter<string>;
+
+	/**
+	 * Constructor
+	 */
+	constructor() {
+		this.id = null;
+		this.label = '';
+		this.model = '';
+		this.modelChange = new EventEmitter<string>();
+		const now: moment.Moment = moment();
+	}
+
+	/**
+	 * Change event listener
+	 *
+	 * @param newModel - New model
+	 */
+	public onChange( newModel: string ): void {
+		this.modelChange.emit( newModel );
+	}
+
+}
