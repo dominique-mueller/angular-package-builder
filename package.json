@@ -36,6 +36,7 @@
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
 		"test:package": "jest --config jest.config.json --runInBand --no-cache",
 		"test:integration": "cd test/my-app && npm run build",
+		"test:coverage": "codecov -f coverage/coverage-final.json",
 		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
 	},
 	"peerDependencies": {
@@ -83,6 +84,7 @@
 		"@types/node": "10.1.x",
 		"@types/semver": "5.5.x",
 		"automatic-release": "1.1.x",
+		"codecov": "3.0.x",
 		"copyfiles": "2.0.x",
 		"jest": "23.1.x",
 		"moment": "2.22.x",
