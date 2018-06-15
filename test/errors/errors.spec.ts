@@ -202,7 +202,7 @@ describe( 'Error & Warning Handling', () => {
 				angularPackageBuilderError = error;
 			}
 
-			expect( angularPackageBuilderError ).not.toBeNull();
+			expect( angularPackageBuilderError ).toBeNull();
 
 		} );
 
