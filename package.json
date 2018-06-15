@@ -81,7 +81,7 @@
 		"@types/globby": "6.1.x",
 		"@types/log-update": "2.0.x",
 		"@types/node-sass": "3.10.x",
-		"@types/node": "10.1.x",
+		"@types/node": "10.3.x",
 		"@types/semver": "5.5.x",
 		"automatic-release": "1.1.x",
 		"codecov": "3.0.x",
