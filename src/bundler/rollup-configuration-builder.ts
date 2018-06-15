@@ -30,6 +30,11 @@ export class RollupConfigurationBuilder {
     private outDir: string;
 
     /**
+     * Bundle target
+     */
+    private target: string;
+
+    /**
      * Constructor
      */
     constructor() {
@@ -43,10 +48,27 @@ export class RollupConfigurationBuilder {
                     return;
                 }
 
-                // Supress UNUSED_EXTERNAL_IMPORT warnings, as they're optimzation warnings
+                // Create message
+                const message: Array<string> = [
+                    `A warning got emitted while creating the ${ this.target.toUpperCase() } bundle.`,
+                    '',
+                    `Details:    ${ warning.message }`,
+                    '',
+                    `Caused by:  Rollup`,
+                    `Code:       ${ warning.code }`
+                ];
+
+                // Add tip / note for unused external imports
                 if ( warning.code === 'UNUSED_EXTERNAL_IMPORT' ) {
-                    return;
+                    message.push( '', 'Tip: Remove the unused import from your source files to get rid of this warning.' );
+
+                    if( warning.message.indexOf( 'QueryList' ) !== -1 && warning.message.indexOf( '@angular/core' ) !== -1 ) {
+                        message.push( 'Note: This warning might be caused by a known bug in the Angular Compiler (see https://github.com/angular/angular/issues/21280).' );
+                    }
+
                 }
+
+                AngularPackageLogger.logMessage( message.join( '\n' ), 'warning' );
 
             },
             preserveSymlinks: true, // No idea why this is required, though ...
@@ -119,6 +141,7 @@ export class RollupConfigurationBuilder {
      * @returns        This instance of the Rollup configuration builder
      */
     public setTarget( target: 'fesm2015' | 'fesm5' | 'umd' ): RollupConfigurationBuilder {
+        this.target = target;
         this.outputOptions.format = rollupBundlingTargets[ target ];
         return this;
     }

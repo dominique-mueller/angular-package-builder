@@ -1,11 +1,11 @@
 import { runAngularPackageBuilder } from '../../index';
 
 /**
- * Unit Test: Error Handling
+ * Unit Test: Error & Warning Handling
  */
-describe( 'Error Handling', () => {
+describe( 'Error & Warning Handling', () => {
 
-	describe( 'Step: Transformation', () => {
+	describe( 'Errors', () => {
 
 		it( 'should throw an error when the external HTML template file does not exist', async () => {
 
@@ -112,10 +112,6 @@ describe( 'Error Handling', () => {
 
 		} );
 
-	} );
-
-	describe( 'Step: Compilation', () => {
-
 		it( 'should throw an error when a TypeScript error occurs', async () => {
 
 			let angularPackageBuilderError: Error | null = null;
@@ -176,10 +172,6 @@ describe( 'Error Handling', () => {
 
 		} );
 
-	} );
-
-	describe( 'Step: Bundling', () => {
-
 		it( 'should throw an error when a Rollup error occurs', async () => {
 
 			let angularPackageBuilderError: Error | null = null;
@@ -192,6 +184,25 @@ describe( 'Error Handling', () => {
 			}
 
 			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
+	describe( 'Warnings', () => {
+
+		it( 'should run through successfully when a Rollup warning gets emitted', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/packages/library-warning-rollup/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).toBeNull();
 
 		} );
 
