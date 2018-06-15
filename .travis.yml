@@ -58,7 +58,7 @@ jobs:
         - ts-node ./test/errors/packages/library-error-rollup/build.ts
 
         # Warnings
-        - ts-node ./test/warnings/packages/library-warning-rollup/build.ts
+        - ts-node ./test/errors/packages/library-warning-rollup/build.ts
 
     - stage: test package
       before_install:
