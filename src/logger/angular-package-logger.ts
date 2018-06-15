@@ -268,7 +268,20 @@ export class AngularPackageLogger {
     private static createMessageLogOutput( message: string, type: AngularPackageLoggerMessageType ): string {
         switch ( type ) {
             case 'warning':
-                return chalk.yellow( `${ this.leftIndentation }  ! ${ message }` );
+                return chalk.white(
+                    [ '', ...message.split( '\n' ), '' ]
+                        .map( ( messagePart: string, index: number ): string => {
+                            return index === 1
+                                ? chalk.yellow( `${ this.leftIndentation }  ${ chalk.bgYellow.white( ' WARNING ' ) } ${ messagePart }` )
+                                : messagePart.startsWith( 'Tip' )
+                                    ? chalk.yellow( `${ this.leftIndentation }            ${ messagePart }` )
+                                    : messagePart.startsWith( 'Note' )
+                                        ? chalk.gray( `${ this.leftIndentation }            ${ messagePart }` )
+                                        : chalk.white( `${ this.leftIndentation }            ${ messagePart }` );
+                        } )
+                        .join( '\n' )
+                    );
+                // return chalk.yellow( `${ this.leftIndentation }  ! ${ message }` );
             case 'error':
                 return chalk.white(
                     [ '', ...message.split( '\n' ) ]
@@ -277,7 +290,9 @@ export class AngularPackageLogger {
                                 ? chalk.red( `${ this.leftIndentation }  ${ chalk.bgRed.white( ' ERROR ' ) } ${ messagePart }` )
                                 : messagePart.startsWith( 'Tip' )
                                     ? chalk.yellow( `${ this.leftIndentation }          ${ messagePart }` )
-                                    : chalk.white( `${ this.leftIndentation }          ${ messagePart }` );
+                                    : messagePart.startsWith( 'Note' )
+                                        ? chalk.gray( `${ this.leftIndentation }          ${ messagePart }` )
+                                        : chalk.white( `${ this.leftIndentation }          ${ messagePart }` );
                         } )
                         .join( '\n' )
                 );
