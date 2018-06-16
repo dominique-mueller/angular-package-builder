@@ -1,5 +1,5 @@
 {
-	"name": "@library-circular-dependencies-two/ui",
+	"name": "@library-inner-circular-dependencies-two/ui",
 	"version": "1.0.0",
 	"private": true,
 	"peerDependencies": {
@@ -8,6 +8,6 @@
 		"@angular/platform-browser": "5.x"
 	},
 	"dependencies": {
-		"@library-circular-dependencies-two/core": "1.0.0"
+		"@library-inner-circular-dependencies-two/core": "1.0.0"
 	}
 }

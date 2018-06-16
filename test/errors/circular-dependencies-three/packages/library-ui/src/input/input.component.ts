@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 
-import { LibraryFormControlRegistryService } from '@library-cirulcar-dependencies-three/core';
+import { LibraryFormControlRegistryService } from '@library-circular-dependencies-three/core';
 
 /**
  * Input component

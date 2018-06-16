@@ -5,13 +5,13 @@
         "baseUrl": ".",
         "rootDir": ".",
         "paths": {
-            "@library-cirulcar-dependencies-two/core/*": [
+            "@library-circular-dependencies-two/core/*": [
                 "./library-core/*"
             ],
-            "@library-cirulcar-dependencies-two/ui/*": [
+            "@library-circular-dependencies-two/ui/*": [
                 "./library-ui/*"
             ],
-            "@library-cirulcar-dependencies-two/tracking/*": [
+            "@library-circular-dependencies-two/tracking/*": [
                 "./library-tracking/*"
             ]
         }

@@ -1,5 +1,5 @@
 {
-	"name": "@library-circular-dependencies-two/tracking",
+	"name": "@library-inner-circular-dependencies-two/core",
 	"version": "1.0.0",
 	"private": true,
 	"peerDependencies": {

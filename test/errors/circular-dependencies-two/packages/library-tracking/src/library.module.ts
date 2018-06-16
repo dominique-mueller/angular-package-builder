@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { LibraryTrackingService } from '@library-cirulcar-dependencies-two/tracking/src/tracking/tracking.service';
+import { LibraryTrackingService } from './tracking/tracking.service';
 
 /**
  * Tracking Module

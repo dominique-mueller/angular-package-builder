@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 
-import { LibraryFormControlRegistryService } from '@library-circular-dependencies-two/core';
+import { LibraryFormControlRegistryService } from '@library-inner-circular-dependencies-two/core';
+
+import { LibraryInputComponentTestUtility } from '@library-inner-circular-dependencies-two/ui/testing';
 
 /**
  * Input component

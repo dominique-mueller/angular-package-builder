@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { LibraryCoreModule } from '@library-cirulcar-dependencies-three/core';
+import { LibraryCoreModule } from '@library-circular-dependencies-three/core';
 
-import { LibraryInputComponent } from '@library-cirulcar-dependencies-three/ui/src/input/input.component';
+import { LibraryInputComponent } from './input/input.component';
 
 /**
  * UI Module

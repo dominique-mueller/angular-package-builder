@@ -1,2 +1,2 @@
-export * from '@library-cirulcar-dependencies-two/ui/src/library.module';
-export * from '@library-cirulcar-dependencies-two/ui/src/input/input.component';
+export * from './src/library.module';
+export * from './src/input/input.component';

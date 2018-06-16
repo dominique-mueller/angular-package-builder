@@ -198,6 +198,14 @@ export class AngularPackageOrchestrator {
 
 				} );
 
+			// If there are no packages for the next build, we've detected a circular dependency
+			if ( angularPackagesForNextBuild.length === 0 ) {
+
+				// Handle error
+				this.handleCircularDependencyError( angularPackagesNotYetInBuilds );
+
+			}
+
 			// Add new round of angular packages to the build chain
 			builds.push( angularPackagesForNextBuild );
 			const packageNamesReadyForBuild: Array<string> = angularPackagesForNextBuild

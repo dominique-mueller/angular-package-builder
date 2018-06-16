@@ -5,13 +5,13 @@
         "baseUrl": ".",
         "rootDir": ".",
         "paths": {
-            "@library-circular-dependencies-three/core/*": [
+            "@library-inner-circular-dependencies-two/core/*": [
                 "./library-core/*"
             ],
-            "@library-circular-dependencies-three/ui/*": [
+            "@library-inner-circular-dependencies-two/ui/*": [
                 "./library-ui/*"
             ],
-            "@library-circular-dependencies-three/tracking/*": [
+            "@library-inner-circular-dependencies-two/tracking/*": [
                 "./library-tracking/*"
             ]
         }

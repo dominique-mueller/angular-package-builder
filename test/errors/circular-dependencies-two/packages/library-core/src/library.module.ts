@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { LibraryFormControlRegistryService } from '@library-cirulcar-dependencies-two/core/src/form-control-registry/form-control-registry.service';
+import { LibraryFormControlRegistryService } from './form-control-registry/form-control-registry.service';
 
 /**
  * My Library Core Module
