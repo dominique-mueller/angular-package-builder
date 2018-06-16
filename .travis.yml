@@ -44,6 +44,7 @@ jobs:
         # Circular dependencies errors
         - ts-node ./test/errors/circular-dependencies-two/packages/build.ts
         - ts-node ./test/errors/circular-dependencies-three/packages/build.ts
+        - ts-node ./test/errors/inner-circular-dependencies-two/packages/build.ts
 
         # Transformation errors
         - ts-node ./test/errors/library-template-html-invalid/build.ts

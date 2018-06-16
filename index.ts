@@ -21,7 +21,7 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 		buildOrchestration = AngularPackageOrchestrator.orchestrateAngularPackagesBuild( angularPackages );
 	} catch ( error ) {
 		AngularPackageLogger.logPreparationMessage( error.message, 'error' );
-		return;
+		throw new Error( error.message );
 	}
 	const flattenedBuildOrchestration: Array<AngularPackage> = flattenArray( buildOrchestration );
 	AngularPackageLogger.configureNumberOfBuildSteps( flattenedBuildOrchestration.length );

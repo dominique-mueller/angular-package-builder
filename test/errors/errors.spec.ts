@@ -7,7 +7,7 @@ describe( 'Error & Warning Handling', () => {
 
 	describe( 'Circular Dependency Errors', () => {
 
-		it( 'should throw an error when two dependencies create a circular dependency', async () => {
+		it( 'should throw an error when two packages create a circular dependency', async () => {
 
 			let angularPackageBuilderError: Error | null = null;
 			try {
@@ -20,11 +20,11 @@ describe( 'Error & Warning Handling', () => {
 				angularPackageBuilderError = error;
 			}
 
-			expect( angularPackageBuilderError ).toBeNull();
+			expect( angularPackageBuilderError ).not.toBeNull();
 
 		} );
 
-		it( 'should throw an error when three dependencies create a circular dependency', async () => {
+		it( 'should throw an error when three packages create a circular dependency', async () => {
 
 			let angularPackageBuilderError: Error | null = null;
 			try {
@@ -37,7 +37,24 @@ describe( 'Error & Warning Handling', () => {
 				angularPackageBuilderError = error;
 			}
 
-			expect( angularPackageBuilderError ).toBeNull();
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+		it( 'should throw an error when one package creates an inner circular dependency', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/inner-circular-dependencies-two/packages/library-core/.angular-package.json',
+					'test/errors/inner-circular-dependencies-two/packages/library-tracking/.angular-package.json',
+					'test/errors/inner-circular-dependencies-two/packages/library-ui/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
 
 		} );
 
