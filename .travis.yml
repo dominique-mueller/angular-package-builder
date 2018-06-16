@@ -39,7 +39,7 @@ jobs:
         - npm ci
       script:
         # Success
-        - ts-node ./test/multiple-dependent-libraries/packages/build.ts
+        - ts-node ./test/multiple-libraries/packages/build.ts
 
         # Circular dependencies errors
         - ts-node ./test/errors/circular-dependencies-two/packages/build.ts
