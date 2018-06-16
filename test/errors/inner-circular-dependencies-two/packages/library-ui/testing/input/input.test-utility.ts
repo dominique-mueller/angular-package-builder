@@ -1,7 +1,7 @@
 import { By } from '@angular/platform-browser';
 import { DebugElement, Injectable } from '@angular/core';
 
-import { LibraryInputComponent } from '@library-inner-cirulcar-dependencies-two/ui';
+import { LibraryInputComponent } from '@library-inner-circular-dependencies-two/ui';
 
 /**
  * Input Component Test Utility
