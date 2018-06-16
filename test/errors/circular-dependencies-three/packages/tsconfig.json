@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "rootDir": ".",
+        "paths": {
+            "@library-circular-dependencies-three/core/*": [
+                "./library-core/*"
+            ],
+            "@library-circular-dependencies-three/ui/*": [
+                "./library-ui/*"
+            ],
+            "@library-circular-dependencies-three/tracking/*": [
+                "./library-tracking/*"
+            ]
+        }
+    }
+}

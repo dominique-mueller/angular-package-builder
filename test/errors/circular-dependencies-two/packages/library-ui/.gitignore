@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+dist-angular-package-builder/
+
+# Development
+.vscode
+
+# Logs
+*.log
+
+# Other
+*.todo
+*.old
+*.temp
+*.tmp

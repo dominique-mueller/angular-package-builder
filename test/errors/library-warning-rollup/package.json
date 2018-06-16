@@ -1,0 +1,10 @@
+{
+	"name": "library-warning-rollup",
+	"version": "1.0.0",
+	"private": true,
+	"peerDependencies": {
+		"@angular/common": "5.x",
+		"@angular/core": "5.x",
+		"@angular/platform-browser": "5.x"
+	}
+}

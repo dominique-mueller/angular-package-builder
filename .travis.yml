@@ -32,34 +32,6 @@ jobs:
       script:
         - npm run build
 
-    - stage: logging
-      before_install:
-        - npm install -g npm typescript ts-node
-      install:
-        - npm ci
-      script:
-        # Success
-        - ts-node ./test/multiple-dependent-libraries/packages/build.ts
-
-        # Transformation errors
-        - ts-node ./test/errors/packages/library-template-html-invalid/build.ts
-        - ts-node ./test/errors/packages/library-template-missing/build.ts
-        - ts-node ./test/errors/packages/library-template-unsupported/build.ts
-        - ts-node ./test/errors/packages/library-style-css-invalid/build.ts
-        - ts-node ./test/errors/packages/library-style-scss-invalid/build.ts
-        - ts-node ./test/errors/packages/library-style-missing/build.ts
-        - ts-node ./test/errors/packages/library-style-unsupported/build.ts
-
-        # Compilation errors
-        - ts-node ./test/errors/packages/library-error-angular-compiler/build.ts
-        - ts-node ./test/errors/packages/library-error-angular-compiler-2/build.ts
-        - ts-node ./test/errors/packages/library-error-tsickle/build.ts
-        - ts-node ./test/errors/packages/library-error-typescript/build.ts
-        - ts-node ./test/errors/packages/library-error-rollup/build.ts
-
-        # Warnings
-        - ts-node ./test/errors/packages/library-warning-rollup/build.ts
-
     - stage: test package
       before_install:
         - npm install -g npm
@@ -70,6 +42,39 @@ jobs:
       after_success:
         # Upload coverage if the tests are running green
         - npm run test:coverage
+
+    - stage: logging
+      before_install:
+        - npm install -g npm typescript ts-node
+      install:
+        - npm ci
+      script:
+        # Success
+        - ts-node ./test/multiple-libraries/packages/build.ts
+
+        # Circular dependencies errors
+        - ts-node ./test/errors/circular-dependencies-two/packages/build.ts
+        - ts-node ./test/errors/circular-dependencies-three/packages/build.ts
+        - ts-node ./test/errors/inner-circular-dependencies-two/packages/build.ts
+
+        # Transformation errors
+        - ts-node ./test/errors/library-template-html-invalid/build.ts
+        - ts-node ./test/errors/library-template-missing/build.ts
+        - ts-node ./test/errors/library-template-unsupported/build.ts
+        - ts-node ./test/errors/library-style-css-invalid/build.ts
+        - ts-node ./test/errors/library-style-scss-invalid/build.ts
+        - ts-node ./test/errors/library-style-missing/build.ts
+        - ts-node ./test/errors/library-style-unsupported/build.ts
+
+        # Compilation errors
+        - ts-node ./test/errors/library-error-angular-compiler/build.ts
+        - ts-node ./test/errors/library-error-angular-compiler-2/build.ts
+        - ts-node ./test/errors/library-error-tsickle/build.ts
+        - ts-node ./test/errors/library-error-typescript/build.ts
+        - ts-node ./test/errors/library-error-rollup/build.ts
+
+        # Warnings
+        - ts-node ./test/errors/library-warning-rollup/build.ts
 
     - stage: release
       node_js:

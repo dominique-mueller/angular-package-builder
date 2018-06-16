@@ -1,0 +1,11 @@
+{
+	"name": "@library-circular-dependencies-three/core",
+	"version": "1.0.0",
+	"private": true,
+	"peerDependencies": {
+		"@angular/core": "5.x"
+	},
+	"dependencies": {
+		"@library-circular-dependencies-three/tracking": "1.0.0"
+	}
+}

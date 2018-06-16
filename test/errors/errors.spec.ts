@@ -5,6 +5,61 @@ import { runAngularPackageBuilder } from '../../index';
  */
 describe( 'Error & Warning Handling', () => {
 
+	describe( 'Circular Dependency Errors', () => {
+
+		it( 'should throw an error when two packages create a circular dependency', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/circular-dependencies-two/packages/library-core/.angular-package.json',
+					'test/errors/circular-dependencies-two/packages/library-tracking/.angular-package.json',
+					'test/errors/circular-dependencies-two/packages/library-ui/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+		it( 'should throw an error when three packages create a circular dependency', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/circular-dependencies-three/packages/library-core/.angular-package.json',
+					'test/errors/circular-dependencies-three/packages/library-tracking/.angular-package.json',
+					'test/errors/circular-dependencies-three/packages/library-ui/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+		it( 'should throw an error when one package creates an inner circular dependency', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/inner-circular-dependencies-two/packages/library-core/.angular-package.json',
+					'test/errors/inner-circular-dependencies-two/packages/library-tracking/.angular-package.json',
+					'test/errors/inner-circular-dependencies-two/packages/library-ui/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
 	describe( 'Errors', () => {
 
 		it( 'should throw an error when the external HTML template file does not exist', async () => {
@@ -12,7 +67,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-template-missing/.angular-package.json'
+					'test/errors/library-template-missing/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -27,7 +82,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-template-html-invalid/.angular-package.json'
+					'test/errors/library-template-html-invalid/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -42,7 +97,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-template-unsupported/.angular-package.json'
+					'test/errors/library-template-unsupported/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -57,7 +112,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-style-missing/.angular-package.json'
+					'test/errors/library-style-missing/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -72,7 +127,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-style-css-invalid/.angular-package.json'
+					'test/errors/library-style-css-invalid/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -87,7 +142,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-style-scss-invalid/.angular-package.json'
+					'test/errors/library-style-scss-invalid/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -102,7 +157,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-style-unsupported/.angular-package.json'
+					'test/errors/library-style-unsupported/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -117,7 +172,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-error-typescript/.angular-package.json'
+					'test/errors/library-error-typescript/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -132,7 +187,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-error-tsickle/.angular-package.json'
+					'test/errors/library-error-tsickle/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -147,7 +202,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-error-angular-compiler/.angular-package.json'
+					'test/errors/library-error-angular-compiler/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -162,7 +217,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-error-angular-compiler/.angular-package.json'
+					'test/errors/library-error-angular-compiler/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -177,7 +232,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-template-rollup/.angular-package.json'
+					'test/errors/library-template-rollup/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -196,7 +251,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/packages/library-warning-rollup/.angular-package.json'
+					'test/errors/library-warning-rollup/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
