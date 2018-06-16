@@ -204,7 +204,7 @@ export class AngularPackageCompiler {
 
         // Construct details
         return [
-            `Details:    ${ errorMessage[ 0 ].toUpperCase() }${ errorMessage.slice( 1 ) }`,
+            `Message:    ${ errorMessage[ 0 ].toUpperCase() }${ errorMessage.slice( 1 ) }`,
             '',
             `Caused by:  ${ origin }`,
             `Code:       ${ errorCode[ 0 ].toUpperCase() }${ errorCode.slice( 1 ) }`,

@@ -220,7 +220,7 @@ export class AngularPackageTransformer {
         const errorMessage: string = [
             message,
             '',
-            `Details:        ${ messageWithoutOrigin }`,
+            `Message:        ${ messageWithoutOrigin }`,
             '',
             `Caused by:      ${ origin }`,
             `File:           ${ sourceFilePath } (at ${ line + 1 }:${ character + 1 }) [to be transformed]`,
@@ -265,7 +265,7 @@ export class AngularPackageTransformer {
         const errorMessage: string = [
             message,
             '',
-            `Details:     ${ messageWithoutOrigin }`,
+            `Message:     ${ messageWithoutOrigin }`,
             '',
             `Caused by:   ${ origin }`,
             `File:        ${ sourceFilePath } (at ${ line + 1 }:${ character + 1 }) [to be transformed]`,

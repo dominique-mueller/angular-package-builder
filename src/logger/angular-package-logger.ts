@@ -34,7 +34,7 @@ export class AngularPackageLogger {
     /**
      * Indentation on the left (used whne logging build details)
      */
-    private static leftIndentation: string;
+    private static leftIndentation: string = '';
 
     /**
      * Maximum number of build number digits (used for padding the current task number to the same length)
@@ -181,6 +181,10 @@ export class AngularPackageLogger {
 
     }
 
+    public static logPreparationMessage( message: string, type: AngularPackageLoggerMessageType ): void {
+        console.log( this.createMessageLogOutput( message, type ) );
+    }
+
     /**
      * Log message
      *
@@ -266,38 +270,40 @@ export class AngularPackageLogger {
      * @param type    Message type
      */
     private static createMessageLogOutput( message: string, type: AngularPackageLoggerMessageType ): string {
+        const leftIndentation: string = this.leftIndentation && this.leftIndentation !== ''
+            ? `${ this.leftIndentation }  `
+            : '';
         switch ( type ) {
             case 'warning':
                 return chalk.white(
                     [ '', ...message.split( '\n' ), '' ]
                         .map( ( messagePart: string, index: number ): string => {
                             return index === 1
-                                ? chalk.yellow( `${ this.leftIndentation }  ${ chalk.bgYellow.white( ' WARNING ' ) } ${ messagePart }` )
+                                ? chalk.yellow( `${ leftIndentation }${ chalk.bgYellow.white( ' WARNING ' ) } ${ messagePart }` )
                                 : messagePart.startsWith( 'Tip' )
-                                    ? chalk.yellow( `${ this.leftIndentation }            ${ messagePart }` )
+                                    ? chalk.yellow( `${ leftIndentation }          ${ messagePart }` )
                                     : messagePart.startsWith( 'Note' )
-                                        ? chalk.gray( `${ this.leftIndentation }            ${ messagePart }` )
-                                        : chalk.white( `${ this.leftIndentation }            ${ messagePart }` );
+                                        ? chalk.gray( `${ leftIndentation }          ${ messagePart }` )
+                                        : chalk.white( `${ leftIndentation }          ${ messagePart }` );
                         } )
                         .join( '\n' )
                     );
-                // return chalk.yellow( `${ this.leftIndentation }  ! ${ message }` );
             case 'error':
                 return chalk.white(
                     [ '', ...message.split( '\n' ) ]
                         .map( ( messagePart: string, index: number ): string => {
                             return index === 1
-                                ? chalk.red( `${ this.leftIndentation }  ${ chalk.bgRed.white( ' ERROR ' ) } ${ messagePart }` )
+                                ? chalk.red( `${ leftIndentation }${ chalk.bgRed.white( ' ERROR ' ) } ${ messagePart }` )
                                 : messagePart.startsWith( 'Tip' )
-                                    ? chalk.yellow( `${ this.leftIndentation }          ${ messagePart }` )
+                                    ? chalk.yellow( `${ leftIndentation }        ${ messagePart }` )
                                     : messagePart.startsWith( 'Note' )
-                                        ? chalk.gray( `${ this.leftIndentation }          ${ messagePart }` )
-                                        : chalk.white( `${ this.leftIndentation }          ${ messagePart }` );
+                                        ? chalk.gray( `${ leftIndentation }        ${ messagePart }` )
+                                        : chalk.white( `${ leftIndentation }        ${ messagePart }` );
                         } )
                         .join( '\n' )
                 );
             default:
-                return chalk.grey( `${ this.leftIndentation }  ${ loggerSymbols.arrow } ${ message }` );
+                return chalk.grey( `${ leftIndentation }${ loggerSymbols.arrow } ${ message }` );
         }
     }
 

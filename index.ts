@@ -16,7 +16,13 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 
 	// Create Angular package definitions for each angular package json file
 	const angularPackages: Array<Array<AngularPackage>> = await AngularPackageReader.readAngularPackageJsonFiles( angularPackageJsonPaths );
-	const buildOrchestration: Array<Array<Array<Array<AngularPackage>>>> = AngularPackageOrchestrator.orchestrateAngularPackagesBuild( angularPackages );
+	let buildOrchestration: Array<Array<Array<Array<AngularPackage>>>>;
+	try {
+		buildOrchestration = AngularPackageOrchestrator.orchestrateAngularPackagesBuild( angularPackages );
+	} catch ( error ) {
+		AngularPackageLogger.logPreparationMessage( error.message, 'error' );
+		return;
+	}
 	const flattenedBuildOrchestration: Array<AngularPackage> = flattenArray( buildOrchestration );
 	AngularPackageLogger.configureNumberOfBuildSteps( flattenedBuildOrchestration.length );
 

@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "rootDir": ".",
+        "paths": {
+            "@library-cirulcar-dependencies-two/core/*": [
+                "./library-core/*"
+            ],
+            "@library-cirulcar-dependencies-two/ui/*": [
+                "./library-ui/*"
+            ],
+            "@library-cirulcar-dependencies-two/tracking/*": [
+                "./library-tracking/*"
+            ]
+        }
+    }
+}

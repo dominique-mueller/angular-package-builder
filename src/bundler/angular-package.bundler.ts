@@ -131,7 +131,7 @@ export class AngularPackageBundler {
         const errorMessage: string = [
             `An error occured while creating the ${ target } bundle.`,
             '',
-            `Details:    ${ error.message }`,
+            `Message:    ${ error.message }`,
             '',
             'Caused by:  Rollup',
             `File:       ./${ relativeFilePath } [to be generated]`,

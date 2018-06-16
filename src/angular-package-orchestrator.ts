@@ -1,4 +1,6 @@
 import { AngularPackage } from './angular-package';
+import { loggerSymbols } from './logger/logger-symbols';
+import { flattenArray } from './utilities/flatten-array';
 
 /**
  * Angular Package Orchestrator
@@ -28,7 +30,7 @@ export class AngularPackageOrchestrator {
 
 		return angularPackageAndSubPackageBuilds;
 
-    }
+	}
 
 	/**
 	 * Discover the build steps for a list of angular packages (between libraries), in the correct order based on the dependency definitions
@@ -100,6 +102,20 @@ export class AngularPackageOrchestrator {
 					}
 
 				} );
+
+			// If there are no packages for the next build, we've detected a circular dependency
+			if ( angularPackagesForNextBuild.length === 0 ) {
+
+				// Get primary entry points and their names
+				const angularPackagesWithCircularDependencies: Array<AngularPackage> = angularPackagesNotYetInBuilds
+					.map( ( angularPackage: Array<AngularPackage> ): AngularPackage => {
+						return angularPackage[ 0 ];
+					} );
+
+				// Handle error
+				this.handleCircularDependencyError( angularPackagesWithCircularDependencies );
+
+			}
 
 			// Add new round of angular packages to the build chain
 			builds.push( angularPackagesForNextBuild );
@@ -193,6 +209,60 @@ export class AngularPackageOrchestrator {
 		}
 
 		return builds;
+
+	}
+
+	/**
+	 * Handle cirulcar dependency error
+	 *
+	 * @param angularPackagesWithCircularDependencies Angular packages with circular dependencies
+	 */
+	private static handleCircularDependencyError( angularPackagesWithCircularDependencies: Array<AngularPackage> ): void {
+
+		// Get package names
+		const angularPackageNames: Array<string> = angularPackagesWithCircularDependencies
+			.map( ( angularPackage: AngularPackage ): string => {
+				return angularPackage.packageName;
+			} );
+
+		// Create details log
+		const errorDetails: Array<string> = flattenArray(
+			angularPackagesWithCircularDependencies
+				.map( ( angularPackage: AngularPackage ): Array<string> => {
+					return [
+						`Package "${ angularPackage.packageName }"`,
+						...Object.keys( angularPackage.dependencies )
+							.filter( ( dependency: string ): boolean => {
+								return angularPackageNames.indexOf( dependency ) !== -1;
+							} )
+							.map( ( dependency: string ): string => {
+								return `  ${ loggerSymbols.arrow } depends on "${ dependency }"`;
+							} )
+					];
+				} )
+		);
+
+		// Create log message
+		const errorMessage: string = [
+			'An error occured while starting the build.',
+			'',
+			'Message:    Circular dependencies detected.',
+			'',
+			'Caused by:  Angular Package Builder',
+			...errorDetails
+				.map( ( errorLine: string, index: number ): string => {
+					return index === 0
+						? `Details:    ${ errorLine }`
+						: `            ${ errorLine }`;
+				} ),
+			'',
+			'Tip: Verify that all dependencies are defined correctly, and remove any circular dependencies between them.',
+			'',
+			''
+		].join( '\n' );
+
+		throw new Error( errorMessage );
+
 	}
 
 }
