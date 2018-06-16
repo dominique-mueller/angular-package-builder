@@ -6,5 +6,4 @@ runAngularPackageBuilder( [
 	'test/errors/inner-circular-dependencies-two/packages/library-tracking/.angular-package.json'
 ] ).catch( ( error: Error ) => {
 	// Do nothing
-	console.log( error );
 } );

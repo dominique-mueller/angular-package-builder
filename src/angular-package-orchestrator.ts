@@ -106,8 +106,6 @@ export class AngularPackageOrchestrator {
 			// If there are no packages for the next build, we've detected a circular dependency
 			if ( angularPackagesForNextBuild.length === 0 ) {
 
-
-
 				// Handle error
 				this.handleAngularPackagesWithSubPackagesCircularDependencyError( angularPackagesNotYetInBuilds );
 
