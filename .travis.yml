@@ -43,8 +43,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -59,8 +59,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -75,8 +75,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -93,8 +93,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -109,8 +109,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -125,8 +125,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -143,8 +143,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -159,8 +159,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -175,8 +175,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -193,8 +193,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -209,8 +209,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -225,8 +225,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -243,8 +243,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -259,8 +259,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -275,8 +275,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -293,8 +293,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -311,8 +311,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -327,8 +327,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -345,8 +345,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -361,8 +361,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -377,8 +377,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
@@ -395,8 +395,8 @@ jobs:
       install:
         - npm ci
         - npm run build
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
-        - rm -rf node_modules/@types
         - node ./test/multiple-libraries/packages/build.js
         - npm ci
       script:
