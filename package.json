@@ -40,8 +40,8 @@
 		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
 	},
 	"peerDependencies": {
-		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",
-		"@angular/compiler": ">= 5.0.0 < 6.0.0",
+		"@angular/compiler-cli": "< 7.0.0",
+		"@angular/compiler": "< 7.0.0",
 		"typescript": ">= 2.4.2"
 	},
 	"optionalDependencies": {
@@ -66,11 +66,11 @@
 		"ts-simple-ast": "12.4.x"
 	},
 	"devDependencies": {
-		"@angular/common": "5.2.x",
-		"@angular/compiler-cli": "5.2.x",
-		"@angular/compiler": "5.2.x",
-		"@angular/core": "5.2.x",
-		"@angular/platform-browser": "5.2.x",
+		"@angular/common": "6.0.x",
+		"@angular/compiler-cli": "6.0.x",
+		"@angular/compiler": "6.0.x",
+		"@angular/core": "6.0.x",
+		"@angular/platform-browser": "6.0.x",
 		"@types/acorn": "4.0.x",
 		"@types/clean-css": "3.4.x",
 		"@types/cpx": "1.5.x",
