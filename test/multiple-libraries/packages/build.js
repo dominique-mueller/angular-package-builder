@@ -1,4 +1,4 @@
-const runAngularPackageBuilder = require( '../../../dist' ).runAngularPackageBuilder;
+const runAngularPackageBuilder = require( 'angular-package-builder' ).runAngularPackageBuilder;
 
 runAngularPackageBuilder( [
 	'./library-tracking/.angular-package.json',

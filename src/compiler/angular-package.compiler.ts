@@ -45,16 +45,12 @@ export class AngularPackageCompiler {
 
         // Run the Angular compiler
         const angularCompilerCliArguments: any = await this.getAngularCompilerCliArguments( tsconfigPath );
-        angularCompilerCli( angularCompilerCliArguments, ( error: string ): void => {
+        await angularCompilerCli( angularCompilerCliArguments, ( error: string ): void => {
             this.handleAngularCompilerCliError( error, tsconfig.compilerOptions.target );
         } );
 
         // Move build files
         const buildFilesPattern: string = '*.+(js?(.map)|d.ts|json)';
-        await copyFiles(
-            path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'transformed', buildFilesPattern ),
-            path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', target )
-        );
         await copyFiles(
             path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', 'transformed', '**', buildFilesPattern ),
             path.join( this.angularPackage.root, this.angularPackage.outDir, 'temp', target )
