@@ -1,9 +1,0 @@
-{
-	"name": "angular-package-builder-app",
-	"version": "1.0.0",
-	"private": true,
-	"scripts": {
-		"build": "ng build --prod --extract-licenses false --preserve-symlinks",
-		"start": "ng serve --aot --preserve-symlinks"
-	}
-}

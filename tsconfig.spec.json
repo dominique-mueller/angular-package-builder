@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"baseUrl": "",
+		"declaration": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"outDir": "./dist-test/test",
+		"removeComments": true,
+		"target": "es2016",
+		"sourceMap": true,
+		"paths": {
+            "angular-package-builder-dist": [
+                "./dist"
+            ]
+        }
+	},
+	"include": [
+		"test/**/*.spec.ts",
+		"test/utilities/**/*.ts"
+	]
+}
