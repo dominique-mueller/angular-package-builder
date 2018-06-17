@@ -1,4 +1,4 @@
-import { runAngularPackageBuilder } from 'angular-package-builder';
+import { runAngularPackageBuilder } from 'angular-package-builder-dist';
 
 import { expectPackage } from '../utilities/expect-package';
 

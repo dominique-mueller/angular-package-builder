@@ -1,4 +1,4 @@
-import { runAngularPackageBuilder } from 'angular-package-builder';
+import { runAngularPackageBuilder } from 'angular-package-builder-dist';
 
 import { expectInlineStyle } from '../utilities/expect-inline-style';
 import { expectInlineTemplate } from '../utilities/expect-inline-template';

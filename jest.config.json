@@ -1,21 +1,19 @@
 {
 	"collectCoverage": true,
-	"collectCoverageFrom" : [
+	"collectCoverageFrom": [
 		"<rootDir>/index.ts",
 		"<rootDir>/src/**",
 		"!<rootDir>/src/logger/**"
 	],
 	"coverageDirectory": "<rootDir>/coverage",
-	"globals": {
-      "ts-jest": {
-        "tsConfigFile": "test/tsconfig.json"
-      }
-    },
 	"moduleFileExtensions": [
 		"js",
 		"ts",
 		"json"
 	],
+	"moduleNameMapper": {
+		"angular-package-builder-dist": "<rootDir>/dist"
+	},
 	"modulePathIgnorePatterns": [
 		"/dist/"
 	],
