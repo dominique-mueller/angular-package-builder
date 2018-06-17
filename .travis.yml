@@ -43,8 +43,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -56,8 +57,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -69,8 +71,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -84,8 +87,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -97,8 +101,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -110,8 +115,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -125,8 +131,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -138,8 +145,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -151,8 +159,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -166,8 +175,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -179,8 +189,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -192,8 +203,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -207,8 +219,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -220,8 +233,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -233,8 +247,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -248,8 +263,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -263,8 +279,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -276,8 +293,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -291,8 +309,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -304,8 +323,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -317,8 +337,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
@@ -332,8 +353,9 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - cd dist && npm install --production && cd ..
         - npm run build:spec
+        - cd dist && npm install --production && cd ..
+        - rm -rf node_modules
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package:js
