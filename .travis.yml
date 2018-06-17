@@ -3,7 +3,7 @@ dist: trusty
 sudo: false
 language: node_js
 node_js:
-  "node"
+  "lts/*"
 cache: false
 notifications:
   email: false
@@ -29,6 +29,8 @@ jobs:
   include:
 
     - stage: build
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
       script:
@@ -40,6 +42,8 @@ jobs:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.1.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -54,6 +58,8 @@ jobs:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.2.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -68,6 +74,8 @@ jobs:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.3.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -84,6 +92,8 @@ jobs:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.1.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -98,6 +108,8 @@ jobs:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.2.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -112,6 +124,8 @@ jobs:
         - ANGULAR=4.1.x
         - TYPESCRIPT=2.3.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -128,6 +142,8 @@ jobs:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.1.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -142,6 +158,8 @@ jobs:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.2.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -156,6 +174,8 @@ jobs:
         - ANGULAR=4.2.x
         - TYPESCRIPT=2.3.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -172,6 +192,8 @@ jobs:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.1.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -186,6 +208,8 @@ jobs:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.2.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -200,6 +224,8 @@ jobs:
         - ANGULAR=4.3.x
         - TYPESCRIPT=2.3.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -216,6 +242,8 @@ jobs:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.1.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -230,6 +258,8 @@ jobs:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.2.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -244,6 +274,8 @@ jobs:
         - ANGULAR=4.4.x
         - TYPESCRIPT=2.3.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -260,6 +292,8 @@ jobs:
         - ANGULAR=5.0.x
         - TYPESCRIPT=2.4.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -276,6 +310,8 @@ jobs:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.4.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -290,6 +326,8 @@ jobs:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.5.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -306,6 +344,8 @@ jobs:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.4.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -320,6 +360,8 @@ jobs:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.5.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -334,6 +376,8 @@ jobs:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.6.x
         - RXJS=5.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -350,6 +394,8 @@ jobs:
         - ANGULAR=6.0.x
         - TYPESCRIPT=2.7.x
         - RXJS=6.x
+      before_install:
+        - npm install -g npm
       install:
         - npm ci
         - npm run build
@@ -363,7 +409,9 @@ jobs:
     - stage: logging
       before_install:
         - typescript ts-node
-      install:
+      before_install:
+        - npm install -g npm
+        install:
         - npm ci
       script:
 
@@ -409,7 +457,9 @@ jobs:
         - git checkout -qf "$TRAVIS_COMMIT";
         #  Fix Travis CI issue of detached heads in git
         - git checkout master
-      install:
+      before_install:
+        - npm install -g npm
+        install:
         - npm ci
       script:
         - npm run build
