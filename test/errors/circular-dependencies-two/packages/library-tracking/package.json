@@ -3,6 +3,6 @@
 	"version": "1.0.0",
 	"private": true,
 	"peerDependencies": {
-		"@angular/core": "5.x"
+		"@angular/core": "*"
 	}
 }

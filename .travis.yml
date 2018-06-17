@@ -15,7 +15,7 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: test package
+  - name: test (package)
   - name: logging
   - name: release
     if: branch = master
@@ -25,16 +25,12 @@ jobs:
   include:
 
     - stage: build
-      before_install:
-        - npm install -g npm
       install:
         - npm ci
       script:
         - npm run build
 
-    - stage: test package
-      before_install:
-        - npm install -g npm
+    - stage: test (package)
       install:
         - npm ci
       script:
@@ -45,7 +41,7 @@ jobs:
 
     - stage: logging
       before_install:
-        - npm install -g npm typescript ts-node
+        - typescript ts-node
       install:
         - npm ci
       script:
@@ -91,8 +87,6 @@ jobs:
         - git checkout -qf "$TRAVIS_COMMIT";
         #  Fix Travis CI issue of detached heads in git
         - git checkout master
-      before_install:
-        - npm install -g npm
       install:
         - npm ci
       script:
