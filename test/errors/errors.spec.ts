@@ -22,7 +22,22 @@ describe( 'Error & Warning Handling', () => {
 
 		} );
 
-		it( 'should throw an error if the angular package file is invalid JSNO', async () => {
+		it( 'should throw an error if the angular package file is invalid JSON', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/library-error-config-broken/packages/library-core/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+		it( 'should throw an error if the angular package file does not follow the JSON schema', async () => {
 
 			let angularPackageBuilderError: Error | null = null;
 			try {

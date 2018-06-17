@@ -1,4 +1,4 @@
 {
-	"entryFile": "./index.ts"
-	"outDir": "./dist"
+	"entryFile": "./index.ts",
+	"fake": "true"
 }

@@ -27,6 +27,19 @@
 		"dependencies": {
 			"description": "Map of external dependencies",
 			"type": "object"
+		},
+		"secondaryEntries": {
+			"description": "List of secondary package entries",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"entryFile": {
+						"description": "Path to the secondary entry file",
+						"type": "string"
+					}
+				}
+			}
 		}
 	},
 	"additionalProperties": false,
