@@ -42,7 +42,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -53,7 +53,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -64,7 +64,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -77,7 +77,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -88,7 +88,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -99,7 +99,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -112,7 +112,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -123,7 +123,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -134,7 +134,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -147,7 +147,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -158,7 +158,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -169,7 +169,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -182,7 +182,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -193,7 +193,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -204,7 +204,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -217,7 +217,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -230,7 +230,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -241,7 +241,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -254,7 +254,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -265,7 +265,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -276,7 +276,7 @@ jobs:
         - RXJS=5.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
@@ -289,7 +289,7 @@ jobs:
         - RXJS=6.x
       install:
         - npm ci
-        - npm run build
+        - npm run build && cd dist && npm install --production && cd .. # Build & install angular-package-builder locally
         - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
       script:
         - npm run test:package
