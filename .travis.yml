@@ -52,6 +52,10 @@ jobs:
         # Success
         - ts-node ./test/multiple-libraries/packages/build.ts
 
+        # Angular Package confiuration file
+        - ts-node ./test/errors/library-error-config-missing/packages/build.ts
+        - ts-node ./test/errors/library-error-config-invalid/packages/build.ts
+
         # Circular dependencies errors
         - ts-node ./test/errors/circular-dependencies-two/packages/build.ts
         - ts-node ./test/errors/circular-dependencies-three/packages/build.ts

@@ -41,10 +41,15 @@ export class AngularPackageReader {
 			angularPackageJsonPaths.map( async ( angularPackageJsonPath: string ): Promise<Array<AngularPackage>> => {
 
 				// Read angular package config
-				const angularPackageJson: AngularPackageConfig = await readFile( angularPackageJsonPath );
-				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonPath ) );
+				let angularPackageJson: AngularPackageConfig;
+				try {
+					angularPackageJson = await readFile( angularPackageJsonPath );
+				} catch ( error ) {
+					this.handleReadError( error, angularPackageJsonPath );
+				}
 
-				// Create angular pacakge
+				// Create angular package
+				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonPath ) );
 				const primaryAngularPackage: AngularPackage = await new AngularPackage()
 					.setRoot( angularPackageCwd )
 					.setEntryFileAndOutDir( angularPackageJson.entryFile, angularPackageJson.outDir )
@@ -75,6 +80,32 @@ export class AngularPackageReader {
 
 			} )
 		);
+
+	}
+
+	/**
+	 * Handle angular package configuration read error
+	 *
+	 * @param error Error
+	 */
+	private static handleReadError( error: Error, angularPackageJsonPath: string ): void {
+
+		// Create log message
+		const errorMessage: string = [
+			'An error occured while starting the build.',
+			'',
+			'Message:    Cannot read the angular package configuration file.',
+			'',
+			'Caused by:  File System',
+			`File:       ${ angularPackageJsonPath[ 0 ] === './' ? '' : './' }${ angularPackageJsonPath }`,
+			`Details:    ${ error.message.split( '[' )[ 1 ].split( ']' )[ 0 ] }`,
+			'',
+			'Tip: Verify the path is correct, the file exists and the file is valid JSON.',
+			'',
+			''
+		].join( '\n' );
+
+		throw new Error( errorMessage );
 
 	}
 
