@@ -6,6 +6,11 @@
 		"!<rootDir>/src/logger/**"
 	],
 	"coverageDirectory": "<rootDir>/coverage",
+	"globals": {
+      "ts-jest": {
+        "tsConfigFile": "test/tsconfig.json"
+      }
+    },
 	"moduleFileExtensions": [
 		"js",
 		"ts",

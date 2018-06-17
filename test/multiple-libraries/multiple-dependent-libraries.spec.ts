@@ -1,5 +1,6 @@
-import { runAngularPackageBuilder } from '../..';
-import { expectPackage } from '../utilities/expect-package'
+import { runAngularPackageBuilder } from 'angular-package-builder';
+
+import { expectPackage } from '../utilities/expect-package';
 
 /**
  * Unit Test: Multiple Dependent Libraries
