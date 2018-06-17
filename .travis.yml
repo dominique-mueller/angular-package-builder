@@ -43,12 +43,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.0.x
@@ -57,12 +57,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.0.x
@@ -71,12 +71,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 4.1
     -
@@ -87,12 +87,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.1.x
@@ -101,12 +101,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.1.x
@@ -115,12 +115,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 4.2
     -
@@ -131,12 +131,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.2.x
@@ -145,12 +145,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.2.x
@@ -159,12 +159,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 4.3
     -
@@ -175,12 +175,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.3.x
@@ -189,12 +189,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.3.x
@@ -203,12 +203,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 4.4
     -
@@ -219,12 +219,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.4.x
@@ -233,12 +233,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=4.4.x
@@ -247,12 +247,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 5.0
     -
@@ -263,12 +263,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 5.1
     -
@@ -279,12 +279,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=5.1.x
@@ -293,12 +293,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 5.2
     -
@@ -309,12 +309,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=5.2.x
@@ -323,12 +323,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
     -
       env:
         - ANGULAR=5.2.x
@@ -337,12 +337,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     # Test: Angular 6.0
     -
@@ -353,12 +353,12 @@ jobs:
       install:
         - npm ci
         - npm run build
-        - npm run build:spec
-        - cd dist && npm install --production && cd ..
-        - rm -rf node_modules
-        - npm install jest@23.1.x @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - npm install @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/core@$ANGULAR @angular/common@$ANGULAR typescript@$TYPESCRIPT rxjs@$RXJS --no-save --no-package-lock
+        - rm -rf node_modules/@types
+        - node ./test/multiple-libraries/packages/build.js
+        - npm ci
       script:
-        - npm run test:package:js
+        - npm run test:package:ts
 
     - stage: logging
       before_install:
