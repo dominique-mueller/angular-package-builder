@@ -5,6 +5,55 @@ import { runAngularPackageBuilder } from '../../index';
  */
 describe( 'Error & Warning Handling', () => {
 
+	describe( 'Angular Package JSON', () => {
+
+		it( 'should throw an error if the angular package file cannot be found', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/library-error-config-missing/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+		it( 'should throw an error if the angular package file is invalid JSON', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/library-error-config-broken/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+		it( 'should throw an error if the angular package file does not follow the JSON schema', async () => {
+
+			let angularPackageBuilderError: Error | null = null;
+			try {
+				await runAngularPackageBuilder( [
+					'test/errors/library-error-config-invalid/.angular-package.json'
+				] );
+			} catch ( error ) {
+				angularPackageBuilderError = error;
+			}
+
+			expect( angularPackageBuilderError ).not.toBeNull();
+
+		} );
+
+	} );
+
 	describe( 'Circular Dependency Errors', () => {
 
 		it( 'should throw an error when two packages create a circular dependency', async () => {

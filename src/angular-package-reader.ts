@@ -1,8 +1,12 @@
 import { posix as path } from 'path';
 
+import { Schema, validate, ValidatorResult, ValidationError } from 'jsonschema';
+
 import { AngularPackageConfig, AngularSubPackageConfig } from './angular-package-config.interface';
 import { AngularPackage } from './angular-package';
 import { readFile } from './utilities/read-file';
+
+import * as angularPackageSchema from '../angular-package.schema.json';
 
 /**
  * Angular Package Reader
@@ -41,10 +45,21 @@ export class AngularPackageReader {
 			angularPackageJsonPaths.map( async ( angularPackageJsonPath: string ): Promise<Array<AngularPackage>> => {
 
 				// Read angular package config
-				const angularPackageJson: AngularPackageConfig = await readFile( angularPackageJsonPath );
-				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonPath ) );
+				let angularPackageJson: AngularPackageConfig;
+				try {
+					angularPackageJson = await readFile( angularPackageJsonPath );
+				} catch ( error ) {
+					this.handleReadError( error, angularPackageJsonPath );
+				}
 
-				// Create angular pacakge
+				// Validate project configuration
+				const validatorResult: ValidatorResult = validate( angularPackageJson, <Schema>angularPackageSchema );
+				if ( !validatorResult.valid ) {
+					this.handleValidationError( validatorResult.errors, angularPackageJsonPath );
+				}
+
+				// Create angular package
+				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonPath ) );
 				const primaryAngularPackage: AngularPackage = await new AngularPackage()
 					.setRoot( angularPackageCwd )
 					.setEntryFileAndOutDir( angularPackageJson.entryFile, angularPackageJson.outDir )
@@ -75,6 +90,68 @@ export class AngularPackageReader {
 
 			} )
 		);
+
+	}
+
+	/**
+	 * Handle angular package configuration read error
+	 *
+	 * @param error Error
+	 */
+	private static handleReadError( error: Error, angularPackageJsonPath: string ): void {
+
+		// Create log message
+		const errorMessage: string = [
+			'An error occured while starting the build.',
+			'',
+			'Message:    Cannot read the angular package configuration file.',
+			'',
+			'Caused by:  File System',
+			`File:       ${ angularPackageJsonPath[ 0 ] === './' ? '' : './' }${ angularPackageJsonPath }`,
+			`Details:    ${ error.message.split( '[' )[ 1 ].split( ']' )[ 0 ] }`,
+			'',
+			'Tip: Verify the path is correct, the file exists and the file is valid JSON.',
+			'',
+			''
+		].join( '\n' );
+
+		throw new Error( errorMessage );
+
+	}
+
+	/**
+	 * Handle angular package configuration validation error
+	 *
+	 * @param errors Validation errors
+	 */
+	private static handleValidationError( errors: Array<ValidationError>, angularPackageJsonPath: string ): void {
+
+		const errorDetails: Array<string> = errors
+			.map( ( error: ValidationError ): string => {
+				return `${ error.property.replace( 'instance.', '' ).replace( 'instance', '' ) } ${ error.message }`.trim();
+			} )
+			.map( ( error: string, index: number ): string => {
+				return index === 0
+					? `Details:    ${ error[ 0 ].toUpperCase() }${ error.slice( 1 ) }`
+					: `            ${ error[ 0 ].toUpperCase() }${ error.slice( 1 ) }`;
+			} );
+
+		// Create log message
+		const errorMessage: string = [
+			'An error occured while starting the build.',
+			'',
+			'Message:    The angular package file is not valid.',
+			'',
+			'Caused by:  Angular Package File Validator',
+			`File:       ${ angularPackageJsonPath[ 0 ] === './' ? '' : './' }${ angularPackageJsonPath }`,
+			...errorDetails,
+			'',
+			'Tip: Verify that the angular package file is valid, following the schema defined in "angular-package.schema.json".',
+			'',
+			''
+		].join( '\n' );
+
+		throw new Error( errorMessage );
 
 	}
 
