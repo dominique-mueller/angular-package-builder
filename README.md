@@ -40,13 +40,19 @@ npm install angular-package-builder --save-dev
 
 ### Requirements
 
-The following version ranges of Angular, TypeScript and NodeJS are supported / required:
+The following is a list of the Angular version supported by the Angular Package Builder. The table also references the TypeScript and RxJS
+versions which are officially supported for each Angular version. Diverging from this matrix is surely possible yet might result to
+unexpected issues. The last column defines the minimal required NodeJS version.
 
-| Package Builder | Angular            | TypeScript         | NodeJS     |
-| --------------- | ------------------ | ------------------ | ---------- |
-| `>= 1.0.0`      | `>= 5.0.0 < 5.1.0` | `>= 2.4.2 < 2.5.0` | `>= 7.6.0` |
-| `>= 1.0.0`      | `>= 5.1.0 < 5.2.0` | `>= 2.4.2 < 2.6.0` | `>= 7.6.0` |
-| `>= 1.0.0`      | `>= 5.2.0 < 6.0.0` | `>= 2.4.2 < 2.7.0` | `>= 7.6.0` |
+| Angular                                 | TypeScript              | RxJS  | NodeJS     |
+| --------------------------------------- | ----------------------- | ----- | ---------- |
+| `4.0.x` `4.1.x` `4.2.x` `4.3.x` `4.4.x` | `2.1.x` `2.2.x` `2.3.x` | `5.x` | `>= 7.6.0` |
+| `5.0.x`                                 | `2.4.x`                 | `5.x` | `>= 7.6.0` |
+| `5.1.x`                                 | `2.4.x` `2.5.x`         | `5.x` | `>= 7.6.0` |
+| `5.2.x`                                 | `2.4.x` `2.5.x` `2.6.x` | `5.x` | `>= 7.6.0` |
+| `6.0.x`                                 | `2.7.x`                 | `6.x` | `>= 8.0.0` |
+
+> Angular versions `2.x` are not supported.
 
 <br><br><br>
 
