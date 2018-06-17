@@ -12,7 +12,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/library-error-config-missing/packages/library-core/.angular-package.json'
+					'test/errors/library-error-config-missing/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -27,7 +27,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/library-error-config-broken/packages/library-core/.angular-package.json'
+					'test/errors/library-error-config-broken/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
@@ -42,7 +42,7 @@ describe( 'Error & Warning Handling', () => {
 			let angularPackageBuilderError: Error | null = null;
 			try {
 				await runAngularPackageBuilder( [
-					'test/errors/library-error-config-invalid/packages/library-core/.angular-package.json'
+					'test/errors/library-error-config-invalid/.angular-package.json'
 				] );
 			} catch ( error ) {
 				angularPackageBuilderError = error;
