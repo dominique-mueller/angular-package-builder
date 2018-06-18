@@ -31,9 +31,9 @@ export function expectSourcemap( filePath: string, checks: {
 
 		const sources: { [ path: string ]: string } = file.getSources();
 
-		expect( Object.keys( sources ).sort() ).toEqual( checks.sourceFiles.sort() );
-		Object
-			.keys( sources )
+		expect( Object.keys( sources ).sort() ).toEqual( expect.arrayContaining( checks.sourceFiles.sort() ) );
+
+		checks.sourceFiles
 			.forEach( ( sourcePath: string ): void => {
 
 				const sourceContent: string = fs.readFileSync( path.join( checks.sourceRoot, sourcePath ), 'utf-8' );
