@@ -35,7 +35,7 @@
 		"build:spec": "tsc -p tsconfig.spec.json && copyfiles \"test/**\" dist-test",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
-		"test:package": "jest --config jest.config.json --runInBand --no-cache",
+		"test:package": "jest ./test/multiple-libraries/multiple-dependent-libraries.spec.ts ./test/external-resources/external-resources.spec.ts --config jest.config.json --runInBand --no-cache",
 		"test:coverage": "codecov -f coverage/coverage-final.json",
 		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
 	},

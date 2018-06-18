@@ -1,4 +1,4 @@
-import { runAngularPackageBuilder } from 'angular-package-builder-dist';
+import { runAngularPackageBuilder } from '../../';
 
 /**
  * Unit Test: Error & Warning Handling
