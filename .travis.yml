@@ -43,9 +43,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -58,9 +58,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -73,9 +73,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
 
@@ -90,9 +90,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -105,9 +105,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -120,9 +120,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     # Test: Angular 4.2
@@ -136,9 +136,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -151,9 +151,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -166,9 +166,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     # Test: Angular 4.3
@@ -182,9 +182,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -197,9 +197,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -212,9 +212,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     # Test: Angular 4.4
@@ -228,9 +228,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -243,9 +243,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -258,9 +258,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     # Test: Angular 5.0
@@ -274,9 +274,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     # Test: Angular 5.1
@@ -290,9 +290,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -305,9 +305,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     # Test: Angular 5.2
@@ -321,9 +321,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -336,9 +336,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     -
@@ -351,9 +351,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
     # Test: Angular 6.0
@@ -367,9 +367,9 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@6.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix ./test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@6.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js && node ./test/external-resources/build.js
-        - rm -rf node_modules && npm ci
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
         - node ./test/errors/build.js
 
