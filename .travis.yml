@@ -38,18 +38,361 @@ jobs:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.1.x
       before_install:
-        - npm install -g npm # TODO: Remove whne upgrading to latest Node
+        - npm install -g npm
       install:
         - npm ci
-      script:
-        # We build the library, install the dependencies for the test packages, build the packages - and reinstall
+      before_script:
         - npm run build
         - rm -rf node_modules
         - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
         - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.0.x
+        - TYPESCRIPT=2.2.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.0.x
+        - TYPESCRIPT=2.3.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
 
-        # Now we can check the build results
+    # Test: Angular 4.1
+    -
+      env:
+        - ANGULAR=4.1.x
+        - TYPESCRIPT=2.1.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.1.x
+        - TYPESCRIPT=2.2.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.1.x
+        - TYPESCRIPT=2.3.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    # Test: Angular 4.2
+    -
+      env:
+        - ANGULAR=4.2.x
+        - TYPESCRIPT=2.1.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.2.x
+        - TYPESCRIPT=2.2.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.2.x
+        - TYPESCRIPT=2.3.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    # Test: Angular 4.3
+    -
+      env:
+        - ANGULAR=4.3.x
+        - TYPESCRIPT=2.1.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.3.x
+        - TYPESCRIPT=2.2.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.3.x
+        - TYPESCRIPT=2.3.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    # Test: Angular 4.4
+    -
+      env:
+        - ANGULAR=4.4.x
+        - TYPESCRIPT=2.1.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.4.x
+        - TYPESCRIPT=2.2.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.4.x
+        - TYPESCRIPT=2.3.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    # Test: Angular 5.0
+    -
+      env:
+        - ANGULAR=5.0.x
+        - TYPESCRIPT=2.4.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    # Test: Angular 5.1
+    -
+      env:
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.4.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.5.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    # Test: Angular 5.2
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.4.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.5.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.6.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
+        - npm run test:package
+    # Test: Angular 6.0
+    -
+      env:
+        - ANGULAR=5.0.x
+        - TYPESCRIPT=2.7.x
+      before_install:
+        - npm install -g npm
+      install:
+        - npm ci
+      before_script:
+        - npm run build
+        - rm -rf node_modules
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@6.x --no-save --no-package-lock
+        - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
+        - npm ci
+      script:
         - npm run test:package
 
     - stage: logging
