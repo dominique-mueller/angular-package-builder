@@ -41,16 +41,15 @@ jobs:
         - npm install -g npm # TODO: Remove whne upgrading to latest Node
       install:
         - npm ci
-
-        # We build the library, install the dependencies for the test packages, build the packages
+      script:
+        # We build the library, install the dependencies for the test packages, build the packages - and reinstall
         - npm run build
         - rm -rf node_modules
-        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
-        - ls test/multiple-libraries/packages
+        - npm install --prefix test/multiple-libraries/packages $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
         - cd ./test/multiple-libraries/packages && node build.js && cd ../../..
-
         - npm ci
-      script:
+
+        # Now we can check the build results
         - npm run test:package
 
     - stage: logging
