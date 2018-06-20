@@ -54,7 +54,7 @@ export class AngularPackageCompatibilityChecker {
 				'A list of compatible Angular versions can be found here: https://github.com/dominique-mueller/angular-package-builder#requirements',
 				'',
 				'Trying to continue anyway ...'
-			].join() );
+			].join( '\n' ) );
 		}
 
 		// Throw TypeScript version error
@@ -66,7 +66,7 @@ export class AngularPackageCompatibilityChecker {
 				'A matrix of Angular-TypeScript compatibility can be found here: https://github.com/dominique-mueller/angular-package-builder#requirements',
 				'',
 				'Trying to continue anyway ...'
-			].join() );
+			].join( '\n' ) );
 		}
 
 	}

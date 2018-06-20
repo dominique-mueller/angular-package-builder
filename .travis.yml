@@ -187,7 +187,7 @@ jobs:
         - npm ci
       script:
         - npm run build
-        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core2.4.x @angular/compiler2.4.x @angular/compiler-cli2.4.x @angular/common2.4.x @angular/platform-browser2.4.x typescript@2.1.x rxjs@5.x --no-save --no-package-lock
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@2.4.x @angular/compiler@2.4.x @angular/compiler-cli@2.4.x @angular/common@2.4.x @angular/platform-browser@2.4.x typescript@2.1.x rxjs@5.x --no-save --no-package-lock
         - node ./test/multiple-libraries/build.js || true # Allow failure
     -
       env:

@@ -6,7 +6,7 @@ import { AngularPackageOrchestrator } from './src/angular-package-orchestrator';
 import { AngularPackageBuilder } from './src/angular-package-builder';
 import { flattenArray } from './src/utilities/flatten-array';
 import { AngularPackageLogger } from './src/logger/angular-package-logger';
-import { AngularPackageCompatibilityChecker } from './src/angular-package-compatibility-checkre';
+import { AngularPackageCompatibilityChecker } from './src/angular-package-compatibility-checker';
 
 /**
  * Run Angular Package Builder
