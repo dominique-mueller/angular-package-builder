@@ -32,19 +32,18 @@
 	},
 	"scripts": {
 		"build": "tsc -p tsconfig.json && copyfiles \"bin/**\" angular-package.schema.json package.json dist",
-		"build:spec": "tsc -p tsconfig.spec.json && copyfiles \"test/**\" dist-test",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
 		"test:package": "jest ./test/multiple-libraries/multiple-dependent-libraries.spec.ts ./test/external-resources/external-resources.spec.ts --config jest.config.json --runInBand --no-cache",
 		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
 	},
 	"peerDependencies": {
-		"@angular/compiler-cli": ">= 5.0.0 < 6.0.0",
-		"@angular/compiler": ">= 5.0.0 < 6.0.0",
-		"typescript": ">= 2.4.2"
+		"@angular/compiler-cli": ">= 4.0.0",
+		"@angular/compiler": ">= 4.0.0",
+		"typescript": ">= 2.4.0"
 	},
 	"optionalDependencies": {
-		"node-sass": ">= 4.3.0"
+		"node-sass": ">= 4.5.0"
 	},
 	"dependencies": {
 		"chalk": "2.4.x",
@@ -66,11 +65,11 @@
 		"typescript": "2.9.x"
 	},
 	"devDependencies": {
-		"@angular/common": "5.2.x",
-		"@angular/compiler-cli": "5.2.x",
-		"@angular/compiler": "5.2.x",
-		"@angular/core": "5.2.x",
-		"@angular/platform-browser": "5.2.x",
+		"@angular/common": "6.0.x",
+		"@angular/compiler-cli": "6.0.x",
+		"@angular/compiler": "6.0.x",
+		"@angular/core": "6.0.x",
+		"@angular/platform-browser": "6.0.x",
 		"@types/acorn": "4.0.x",
 		"@types/clean-css": "3.4.x",
 		"@types/cpx": "1.5.x",
@@ -88,7 +87,7 @@
 		"jest": "23.1.x",
 		"moment": "2.22.x",
 		"rimraf": "2.6.x",
-		"rxjs": "5.5.x",
+		"rxjs": "6.2.x",
 		"ts-jest": "22.4.x"
 	}
 }
