@@ -1,6 +1,18 @@
+const runAngularPackageBuilder = require( 'angular-package-builder' ).runAngularPackageBuilder;
+
 ( async () => {
 
-	console.log( 'BUILD FOR TEST: MULTIPLE LIBRARIES' );
-	await require( './packages/build' ).build();
+	try {
+
+		await runAngularPackageBuilder( [
+			'test/multiple-libraries/packages/library-tracking/.angular-package.json',
+			'test/multiple-libraries/packages/library-ui/.angular-package.json',
+			'test/multiple-libraries/packages/library-core/.angular-package.json'
+		] );
+
+	} catch ( error ) {
+		// Do nothing
+	}
+
 
 } )();
