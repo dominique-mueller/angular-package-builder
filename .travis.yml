@@ -15,7 +15,7 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: test package
+  - name: test (package)
   - name: logging
   - name: release
     if: branch = master
@@ -25,65 +25,159 @@ jobs:
   include:
 
     - stage: build
-      before_install:
-        - npm install -g npm
       install:
         - npm ci
       script:
         - npm run build
 
-    - stage: test package
-      before_install:
-        - npm install -g npm
+    # Test: Angular 4.0
+    - stage: test (package)
+      env:
+        - ANGULAR=4.0.x
+        - TYPESCRIPT=2.1.x
       install:
         - npm ci
       script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
         - npm run test:package
-      after_success:
-        # Upload coverage if the tests are running green
-        - npm run test:coverage
-
-    - stage: logging
-      before_install:
-        - npm install -g npm typescript ts-node
+    -
+      env:
+        - ANGULAR=4.0.x
+        - TYPESCRIPT=2.2.x
       install:
         - npm ci
       script:
-        # Success
-        - ts-node ./test/multiple-libraries/packages/build.ts
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=4.0.x
+        - TYPESCRIPT=2.3.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
 
-        # Angular Package confiuration file
-        - ts-node ./test/errors/library-error-config-missing/build.ts
-        - ts-node ./test/errors/library-error-config-broken/build.ts
-        - ts-node ./test/errors/library-error-config-invalid/build.ts
-
-        # Circular dependencies errors
-        - ts-node ./test/errors/circular-dependencies-two/packages/build.ts
-        - ts-node ./test/errors/circular-dependencies-three/packages/build.ts
-        - ts-node ./test/errors/inner-circular-dependencies-two/packages/build.ts
-
-        # Transformation errors
-        - ts-node ./test/errors/library-template-html-invalid/build.ts
-        - ts-node ./test/errors/library-template-missing/build.ts
-        - ts-node ./test/errors/library-template-unsupported/build.ts
-        - ts-node ./test/errors/library-style-css-invalid/build.ts
-        - ts-node ./test/errors/library-style-scss-invalid/build.ts
-        - ts-node ./test/errors/library-style-missing/build.ts
-        - ts-node ./test/errors/library-style-unsupported/build.ts
-
-        # Compilation errors
-        - ts-node ./test/errors/library-error-angular-compiler/build.ts
-        - ts-node ./test/errors/library-error-angular-compiler-2/build.ts
-        - ts-node ./test/errors/library-error-tsickle/build.ts
-        - ts-node ./test/errors/library-error-typescript/build.ts
-        - ts-node ./test/errors/library-error-rollup/build.ts
-
-        # Warnings
-        - ts-node ./test/errors/library-warning-rollup/build.ts
+    # Test: Angular 5.0
+    -
+      env:
+        - ANGULAR=5.0.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    # Test: Angular 5.1
+    -
+      env:
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.1.x
+        - TYPESCRIPT=2.5.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    # Test: Angular 5.2
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.4.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.5.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    -
+      env:
+        - ANGULAR=5.2.x
+        - TYPESCRIPT=2.6.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@5.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    # Test: Angular 6.0
+    -
+      env:
+        - ANGULAR=6.0.x
+        - TYPESCRIPT=2.7.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@6.x --no-save --no-package-lock
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
 
     - stage: release
-      node_js:
-        - "lts/*"
       before_install:
         # Clone the whole repository because we also need the develop branch for releasing (Travis only gives us the master by default)
         - git clone "https://github.com/$TRAVIS_REPO_SLUG.git" "$TRAVIS_REPO_SLUG";
@@ -91,8 +185,6 @@ jobs:
         - git checkout -qf "$TRAVIS_COMMIT";
         #  Fix Travis CI issue of detached heads in git
         - git checkout master
-      before_install:
-        - npm install -g npm
       install:
         - npm ci
       script:

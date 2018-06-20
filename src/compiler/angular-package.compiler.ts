@@ -45,7 +45,7 @@ export class AngularPackageCompiler {
 
         // Run the Angular compiler
         const angularCompilerCliArguments: any = await this.getAngularCompilerCliArguments( tsconfigPath );
-        angularCompilerCli( angularCompilerCliArguments, ( error: string ): void => {
+        await angularCompilerCli( angularCompilerCliArguments, ( error: string ): void => {
             this.handleAngularCompilerCliError( error, tsconfig.compilerOptions.target );
         } );
 

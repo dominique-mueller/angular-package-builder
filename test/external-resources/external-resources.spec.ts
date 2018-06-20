@@ -1,4 +1,3 @@
-import { runAngularPackageBuilder } from '../../index';
 import { expectInlineStyle } from '../utilities/expect-inline-style';
 import { expectInlineTemplate } from '../utilities/expect-inline-template';
 
@@ -8,12 +7,6 @@ import { expectInlineTemplate } from '../utilities/expect-inline-template';
 describe( 'External resources', () => {
 
 	describe( 'External HTML template', () => {
-
-		beforeAll( async () => {
-			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-template-html/.angular-package.json'
-			] );
-		} );
 
 		expectInlineTemplate(
 			'test/external-resources/packages/library-template-html/dist',
@@ -27,12 +20,6 @@ describe( 'External resources', () => {
 
 	describe( 'External empty HTML template', () => {
 
-		beforeAll( async () => {
-			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-template-html-empty/.angular-package.json'
-			] );
-		} );
-
 		expectInlineTemplate(
 			'test/external-resources/packages/library-template-html-empty/dist',
 			'library-template-html-empty',
@@ -44,12 +31,6 @@ describe( 'External resources', () => {
 	} );
 
 	describe( 'External CSS style', () => {
-
-		beforeAll( async () => {
-			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-css/.angular-package.json'
-			] );
-		} );
 
 		expectInlineStyle(
 			'test/external-resources/packages/library-style-css/dist',
@@ -63,12 +44,6 @@ describe( 'External resources', () => {
 
 	describe( 'External empty CSS style', () => {
 
-		beforeAll( async () => {
-			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-css-empty/.angular-package.json'
-			] );
-		} );
-
 		expectInlineStyle(
 			'test/external-resources/packages/library-style-css-empty/dist',
 			'library-style-css-empty',
@@ -81,12 +56,6 @@ describe( 'External resources', () => {
 
 	describe( 'External SASS style', () => {
 
-		beforeAll( async () => {
-			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-scss/.angular-package.json'
-			] );
-		} );
-
 		expectInlineStyle(
 			'test/external-resources/packages/library-style-scss/dist',
 			'library-style-scss',
@@ -98,12 +67,6 @@ describe( 'External resources', () => {
 	} );
 
 	describe( 'External empty SASS style', () => {
-
-		beforeAll( async () => {
-			await runAngularPackageBuilder( [
-				'test/external-resources/packages/library-style-scss-empty/.angular-package.json'
-			] );
-		} );
 
 		expectInlineStyle(
 			'test/external-resources/packages/library-style-scss-empty/dist',

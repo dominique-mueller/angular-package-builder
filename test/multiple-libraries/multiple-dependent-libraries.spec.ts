@@ -1,21 +1,9 @@
-import { runAngularPackageBuilder } from '../..';
-import { expectPackage } from '../utilities/expect-package'
+import { expectPackage } from '../utilities/expect-package';
 
 /**
  * Unit Test: Multiple Dependent Libraries
  */
 describe( 'Multiple Dependent Libraries', () => {
-
-	beforeAll( async () => {
-
-		// Build packages
-		await runAngularPackageBuilder( [
-			'test/multiple-libraries/packages/library-core/.angular-package.json',
-			'test/multiple-libraries/packages/library-ui/.angular-package.json',
-			'test/multiple-libraries/packages/library-tracking/.angular-package.json'
-		] );
-
-	} );
 
 	expectPackage( {
 		packageName: '@library/core',

@@ -1,11 +1,4 @@
 {
-	"collectCoverage": true,
-	"collectCoverageFrom" : [
-		"<rootDir>/index.ts",
-		"<rootDir>/src/**",
-		"!<rootDir>/src/logger/**"
-	],
-	"coverageDirectory": "<rootDir>/coverage",
 	"moduleFileExtensions": [
 		"js",
 		"ts",
