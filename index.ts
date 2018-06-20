@@ -17,7 +17,7 @@ export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<s
 
 	// Check versions
 	try {
-		AngularPackageCompatibilityChecker.checkCompatibility();
+		await AngularPackageCompatibilityChecker.checkCompatibility();
 	} catch ( error ) {
 		AngularPackageLogger.logPreparationMessage( error.message, 'warning' );
 	}
