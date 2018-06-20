@@ -1,19 +1,9 @@
 {
-	"collectCoverage": true,
-	"collectCoverageFrom": [
-		"<rootDir>/index.ts",
-		"<rootDir>/src/**",
-		"!<rootDir>/src/logger/**"
-	],
-	"coverageDirectory": "<rootDir>/coverage",
 	"moduleFileExtensions": [
 		"js",
 		"ts",
 		"json"
 	],
-	"moduleNameMapper": {
-		"angular-package-builder-dist": "<rootDir>/dist"
-	},
 	"modulePathIgnorePatterns": [
 		"/dist/"
 	],

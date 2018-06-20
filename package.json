@@ -34,8 +34,7 @@
 		"build": "tsc -p tsconfig.json && copyfiles \"bin/**\" angular-package.schema.json package.json dist",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
-		"test:package": "jest ./test/multiple-libraries/multiple-dependent-libraries.spec.ts ./test/external-resources/external-resources.spec.ts --config jest.config.json --runInBand --no-cache",
-		"quick": "cd test/my-library && ts-node ../../test/angular-package-builder.bin.ts"
+		"test:package": "jest --config jest.config.json --runInBand --no-cache"
 	},
 	"peerDependencies": {
 		"@angular/compiler-cli": ">= 4.0.0",
