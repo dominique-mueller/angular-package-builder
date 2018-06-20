@@ -1,3 +1,5 @@
+const runAngularPackageBuilder = require( 'angular-package-builder' ).runAngularPackageBuilder;
+
 ( async () => {
 
 	console.log( 'BUILD FOR TEST: ERRORS & WARNINGS' );

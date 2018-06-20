@@ -1,11 +1,37 @@
+const runAngularPackageBuilder = require( 'angular-package-builder' ).runAngularPackageBuilder;
+
 ( async () => {
 
 	console.log( 'BUILD FOR TEST: EXTERNAL RESOURCES' );
-	await require( './packages/library-style-css/build.js' ).build();
-	await require( './packages/library-style-css-empty/build.js' ).build();
-	await require( './packages/library-style-scss/build.js' ).build();
-	await require( './packages/library-style-scss-empty/build.js' ).build();
-	await require( './packages/library-template-html/build.js' ).build();
-	await require( './packages/library-template-html-empty/build.js' ).build();
+
+	try {
+
+		await runAngularPackageBuilder( [
+			'test/external-resources/packages/library-style-css/.angular-package.json'
+		] );
+
+		await runAngularPackageBuilder( [
+			'test/external-resources/packages/library-style-css-empty/.angular-package.json'
+		] );
+
+		await runAngularPackageBuilder( [
+			'test/external-resources/packages/library-style-scss/.angular-package.json'
+		] );
+
+		await runAngularPackageBuilder( [
+			'test/external-resources/packages/library-style-scss-empty/.angular-package.json'
+		] );
+
+		await runAngularPackageBuilder( [
+			'test/external-resources/packages/library-template-html/.angular-package.json'
+		] );
+
+		await runAngularPackageBuilder( [
+			'test/external-resources/packages/library-template-html-empty/.angular-package.json'
+		] );
+
+	} catch ( error ) {
+		// Do nothing
+	}
 
 } )();
