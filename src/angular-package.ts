@@ -104,7 +104,7 @@ export class AngularPackage {
         const packageJson: any = await readFile( absolutePackageJsonPath );
 
         // Set package name
-        this.packageName = path.join( packageJson.name, path.dirname( this.entryFile ) );
+        this.packageName = path.join( packageJson.name, this.isPrimary ? '' : path.dirname( this.entryFile ) );
 
         // Extend dependencies
         const packageDependencies: { [ dependency: string ]: string } = [
