@@ -6,7 +6,6 @@ import { AngularPackageOrchestrator } from './src/angular-package-orchestrator';
 import { AngularPackageBuilder } from './src/angular-package-builder';
 import { flattenArray } from './src/utilities/flatten-array';
 import { AngularPackageLogger } from './src/logger/angular-package-logger';
-import { AngularPackageCompatibilityChecker } from './src/angular-package-compatibility-checker';
 
 /**
  * Run Angular Package Builder
@@ -14,13 +13,6 @@ import { AngularPackageCompatibilityChecker } from './src/angular-package-compat
 export async function runAngularPackageBuilder( angularPackageJsonPaths: Array<string> ): Promise<void> {
 
 	AngularPackageLogger.logTitle( 'Angular Package Builder' );
-
-	// Check versions
-	try {
-		await AngularPackageCompatibilityChecker.checkCompatibility();
-	} catch ( error ) {
-		AngularPackageLogger.logPreparationMessage( error.message, 'warning' );
-	}
 
 	// Create Angular package definitions for each angular package json file
 	let angularPackages: Array<Array<AngularPackage>>;
