@@ -66,9 +66,13 @@ export class AngularPackage {
         return this;
     }
 
-    public setEntryFileAndOutDir( entryFile: string, outDir: string ): AngularPackage {
+    public setEntryFile( entryFile: string ): AngularPackage {
         this.entryFile = path.normalize( entryFile );
-        this.outDir = path.join( outDir, path.dirname( entryFile ) );
+        return this;
+    }
+
+    public setOutDir( outDir: string ): AngularPackage {
+        this.outDir = path.normalize( outDir );
         return this;
     }
 
@@ -99,12 +103,18 @@ export class AngularPackage {
 
     public async init(): Promise<AngularPackage> {
 
+        // Correct output folder if secondary entry point
+        const outDirSubFolder: string = this.isPrimary
+            ? ''
+            : path.dirname( this.entryFile ).split( '/' ).slice( -1 )[ 0 ];
+        this.outDir = path.join( this.outDir, outDirSubFolder );
+
         // Read package json file
         const absolutePackageJsonPath: string = path.join( this.root, 'package.json' );
         const packageJson: any = await readFile( absolutePackageJsonPath );
 
         // Set package name
-        this.packageName = path.join( packageJson.name, path.dirname( this.entryFile ) );
+        this.packageName = path.join( packageJson.name, outDirSubFolder );
 
         // Extend dependencies
         const packageDependencies: { [ dependency: string ]: string } = [
