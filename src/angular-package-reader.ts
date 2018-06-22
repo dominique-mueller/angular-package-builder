@@ -62,7 +62,8 @@ export class AngularPackageReader {
 				const angularPackageCwd: string = path.dirname( path.join( this.cwd, angularPackageJsonPath ) );
 				const primaryAngularPackage: AngularPackage = await new AngularPackage()
 					.setRoot( angularPackageCwd )
-					.setEntryFileAndOutDir( angularPackageJson.entryFile, angularPackageJson.outDir )
+					.setEntryFile( angularPackageJson.entryFile )
+					.setOutDir( angularPackageJson.outDir )
 					.setTypescriptCompilerOptions( angularPackageJson.typescriptCompilerOptions || {} )
 					.setAngularCompilerOptions( angularPackageJson.angularCompilerOptions || {} )
 					.setDependencies( angularPackageJson.dependencies || {} )
@@ -76,7 +77,8 @@ export class AngularPackageReader {
 						// Create angular pacakge
 						return new AngularPackage()
 							.setRoot( angularPackageCwd )
-							.setEntryFileAndOutDir( secondaryEntry.entryFile, angularPackageJson.outDir )
+							.setEntryFile( secondaryEntry.entryFile )
+							.setOutDir( angularPackageJson.outDir )
 							.setTypescriptCompilerOptions( angularPackageJson.typescriptCompilerOptions || {} )
 							.setAngularCompilerOptions( angularPackageJson.angularCompilerOptions || {} )
 							.setDependencies( angularPackageJson.dependencies || {} )

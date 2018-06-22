@@ -1,0 +1,9 @@
+{
+	"entryFile": "./src/index.ts",
+	"outDir": "./dist",
+	"secondaryEntries": [
+		{
+			"entryFile": "./src/testing/index.ts"
+		}
+	]
+}
