@@ -1,4 +1,5 @@
 import { render, Result, SassError } from 'node-sass';
+import * as nodeSassTildeImporter from 'node-sass-tilde-importer';
 
 /**
  * SASS Transformer
@@ -20,6 +21,9 @@ export class SASSTransformer {
             } else {
                 render( {
                     data: sassContent,
+                    importer: [
+                        nodeSassTildeImporter
+                    ],
                     outputStyle: 'expanded' // We will minify later on
                 }, ( error: SassError, sassRenderResult: Result ): void => {
 
