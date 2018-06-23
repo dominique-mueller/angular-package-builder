@@ -2,7 +2,7 @@
 
 # angular-package-builder
 
-**Packages your Angular 5+ library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).**
+**Packages your Angular 4+ library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).**
 
 [![npm version](https://img.shields.io/npm/v/angular-package-builder.svg?maxAge=3600&style=flat)](https://www.npmjs.com/package/angular-package-builder)
 [![dependency status](https://img.shields.io/david/dominique-mueller/angular-package-builder.svg?maxAge=3600&style=flat)](https://david-dm.org/dominique-mueller/angular-package-builder)
@@ -28,7 +28,8 @@ Features include:
 
 The result is a package, following the official **[Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview)**:
 
-- :green_book: JavaScript build (ES2015, ES5) & bundles (ES2015, ES5, UMD)
+- :green_book: JavaScript build (ES2015, ES5)
+- :orange_book: JavaScript bundles (flat ES2015, flat ES5, UMD)
 - :blue_book: TypeScript type definition files
 - :closed_book: Angular AoT metadata file
 - :notebook_with_decorative_cover: `package.json` file, pointing to entry files
@@ -99,40 +100,21 @@ The two options seen above are also the only required ones:
   - Usually, the build output folder is named `dist`
   - Don't forget to add the `outDir` path to your `.gitignore` file
 
+#### Directory structure
+
 The following directory structure is recommended:
 
 ``` javascript
-- dist/...               // Output
-- src/...                // Source
-- .angular-package.json  // Build config
-- index.ts               // Entry file
-- package.json           // Package
+── dist/                  // Output
+   └── ...
+── src/                   // Source
+   └── ...
+── .angular-package.json  // Build config
+── index.ts               // Entry file
+── package.json           // Package
 ```
 
-<br>
-
-### Step 2: Add build script to `package.json`
-
-Now, run **angular-package-builder** within one of your `package.json` scripts. The command accepts an unordered list of paths to
-`.angular-package.json` files as parameters. For instance:
-
-``` json
-{
-  "scripts": {
-    "build": "angular-package-builder ./my-library/.angular-package.json"
-  }
-}
-```
-
-Packaging your library is now as simple as:
-
-``` bash
-npm run build
-```
-
-<br>
-
-### Addition: Building multiple entry points
+#### Secondary entry points
 
 Angular, for instance, has packages with multiple entry points: `@angular/core` as the primary, and `@angular/core/testing` as the (here
 only) secondary. Within the `.angular-package.json` file, you can define any number of secondary entry points using the `secondaryEntries`
@@ -151,11 +133,22 @@ option. For instance:
 }
 ```
 
-> No change in the build script required!
-
 <br>
 
-### Addition: Building multiple libraries
+### Step 2: Add build script to `package.json`
+
+Now, run **angular-package-builder** within one of your `package.json` scripts. The command accepts an unordered list of paths to
+`.angular-package.json` files as parameters. For instance:
+
+``` json
+{
+  "scripts": {
+    "build": "angular-package-builder ./my-library/.angular-package.json"
+  }
+}
+```
+
+#### Multiple libraries
 
 Angular, again, consists of multiple packages, all united in a single Git repository (called monorepo). The **Angular Package Builder** is
 able to build multiple libraries using a single command. Building more libraries means adding more `.angular-package.json` files to the
@@ -257,25 +250,25 @@ We recommend to only use a single barrel / `index.ts` file at the root of you li
 
 ### Forbidden JSDoc tags
 
-When building a library with the `annotateForClosureCompiler` option enabled - which it is by default - not all JSDoc tags are allowed. In particular, any tag which describes the type of classes, methods or variables is not allowed because redundant (the TypeScript code already contains this kind of information). If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain. The list of forbidden tags include:
+The usage of type-related JSDoc tags / information within JSdoc tags is disallowed, reason being that the TypeScript syntax already exposes
+this kind of information. Forbidden are (amongst other things):
 
-- types in parameters (e.g. `@param {string} myOption`)
-- type tags on variables (e.g. `@type {string}`)
-- class or function tags such as `@constructor` or `@class`.
+- type information in parameter tags (e.g. `@param {string} myOption`)
+- type-related tags on variables, functions, classes (e.g. `@type`, `@constructor`, `@function`, `@class`)
+- tags regarding visibility (e.g. `@private`, `@public`)
+- further redundant tags such as `@static`, `@extends`, `@implements`
 
-> The full list of allowed JSDoc tags can be found **[in the tsickle source](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
+> The full list of allowed / disallowed JSDoc tags can be found
+**[in the tsickle source](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
 
-``` text
-ERROR: An error occured while trying to compile the TypeScript sources using the Angular Compiler.
-       [tsickle] XXX: warning TS0: the type annotation on @param is redundant with its TypeScript type,
-                 remove the {...} part
-```
+If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain:
+
+![Angular Package Builder Preview](/docs/error-tsickle-jsdoc.png?raw=true)
 
 #### Solution
 
-Preferably, remove all redundant JSDoc tags until the Angular Compiler is happy. As an alternative, you could also set the `annotateForClosureCompiler` option in the `angularCompilerOptions` to `false` - but we don't recommend it.
-
-> For bigger libraries, removing those JSDoc tags manually is quite a paint and might actually take a very long time. We recommend an IDE or code editor with a search-and-replace functionality that can work with regular expressions to speed up this process (e.g. **[Visual Studio Code](https://code.visualstudio.com/)**).
+Preferably, remove all redundant JSDoc tags until the Angular Compiler is happy. As an alternative, one could also set the
+`annotateForClosureCompiler` option in the `angularCompilerOptions` to `false` - but it's not recommended.
 
 <br>
 
