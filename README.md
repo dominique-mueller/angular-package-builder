@@ -230,7 +230,8 @@ missing or you want to overwrite a dependency definition, you can declare them i
 
 ## Known pitfalls with solutions
 
-There are quite a few pitfalls when packaging an Angular library. Most of them are all but obvious, and the fix is not always clear. The following is a collection of known pitfally, plus tips on how to solve them.
+There are quite a few pitfalls when packaging an Angular library. Most of them are all but obvious, and the fix is not always clear. The
+following is a collection of known pitfally, plus tips on how to solve them.
 
 > Feel free to extend this list by **[creating an issue](https://github.com/dominique-mueller/angular-package-builder/issues/new)**!
 
@@ -238,13 +239,19 @@ There are quite a few pitfalls when packaging an Angular library. Most of them a
 
 ### Caution with barrels
 
-Usually, libraries are built in a way which allows them to be imported by a single import source (normalle the name of the module / package). This can be achieved by re-exporting the implementation (spread accross multiple files) with a so-called **[Barrel](https://angular.io/guide/glossary#barrel)**, in other word an `index.ts` file.
+Usually, libraries are built in a way that allows us to import them from a single source (normally the module name). This is achieved by
+re-exporting the implementation (spread accross multiple files) with a so-called
+**[Barrel](https://angular.io/guide/glossary#barrel)** (normally `index.ts`).
 
-While this very common technique works like a charm for the top barrel, *issues might occur when - somewhere within the library - two barrels meet each other*. Funnily enough, should such a constellation lead to any issues, it won't be appeatant right away; chances are good that the Angular Package Builder will succeed, and the compilation output will probably look correct. However, when trying to import the library into an Angular application later on,an error will be thrown (e.g. "injected dependencies cannot be resolved").
+Now, *issues might occur when - somewhere within the library - two barrels meet each other*. Funnily enough, should such a constellation
+lead to any issues, it won't be appearant right away: Chances are good that the **Angular Package Builder** will succeed, and the
+compilation output might also look correct. At the latest, when trying to import the library into an Angular application, an error will be
+thrown (something like "injected dependencies cannot be resolved").
 
 #### Solution
 
-We recommend to only use a single barrel / `index.ts` file at the root of you library, re-exporting all public functionality from that place.
+We recommend to only use a single barrel / `index.ts` file at the root of you library, re-exporting all public functionality from that
+single place.
 
 <br>
 
@@ -268,7 +275,7 @@ If any of those tags are being used anyway, the Angular Compiler (`tsickle` to b
 #### Solution
 
 Preferably, remove all redundant JSDoc tags until the Angular Compiler is happy. As an alternative, one could also set the
-`annotateForClosureCompiler` option in the `angularCompilerOptions` to `false` - but it's not recommended.
+`annotateForClosureCompiler` option in the `angularCompilerOptions` to `false` - but it's not recommended. Read the **[Angular annotateForClosureCompiler documentation](https://angular.io/guide/aot-compiler#annotateforclosurecompiler)** for further information.
 
 <br>
 
@@ -298,7 +305,8 @@ This issue can be solved in two ways:
 - Prefered: Add the `@dynamic`JSdoc tag to the comment describing the static method (or, if this should not work, the class containing the
   static method). Then, the Angular Compiler will make an exception for this piece of code when validating the generated metadata.
 - Alternative: Set the `strictMetadataEmit` option in the `angularCompilerOptions` object to `false`. Then, however, other metadata
-  validation issues will no longer be visible.
+  validation issues will no longer be visible. Read the
+  **[Angular strictMetadataEmit documentation](https://angular.io/guide/aot-compiler#strictmetadataemit)** for further information.
 
 > Also see **[this Angular issue on GitHub](https://github.com/angular/angular/issues/19698)**.
 
@@ -306,19 +314,17 @@ This issue can be solved in two ways:
 
 ### Synthetic imports
 
-Often, we integrate long-existing libraries into our Angular projects. **[Moment.js](https://momentjs.com/)**, for example, is one of the
-libraries often used when working with dates. Due to its age, it's published as a single-entry ES5 module - which means people usually write
-the following TypeScript code to import Moment.js into a file:
+Often, we integrate long-existing libraries into our Angular projects. **[Moment.js](https://momentjs.com/)**, for instance, is one of *the*
+libraries used when working with dates. Due to its age, however, it's still published as a single-entry ES5 module - which means people
+usually write the following TypeScript code to import the library:
 
 ``` typescript
 import * as moment from 'moment';
 ```
 
-When trying to package an Angular library using the import statement above, an error will be thrown. In particular:
+When trying to package an Angular library using the import statement above, an error will be thrown:
 
-``` text
-ERROR: Error: Cannot call a namespace ('moment')
-```
+![Angular Package Builder - synthetic imports](/docs/error-synthetic.png?raw=true)
 
 #### Solution
 
@@ -339,6 +345,11 @@ Then, change the affected import statements to default import statements. For in
 ``` typescript
 import moment from 'moment';
 ```
+
+Alternatively, you could also consider **[Moment ES6](https://github.com/Agamnentzar/moment-es6)** - it wraps around Moment.js and exports
+it in an ES6-compatible (and thus TypeScript-compatible) way.
+
+> Also see **[this Moment.js issue on GitHub](https://github.com/moment/moment/issues/3748)**.
 
 <br><br><br>
 
