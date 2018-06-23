@@ -15,13 +15,24 @@
 
 ## What it does
 
-These days, setting up build chains for frontend projects requires lots of knowledge and time. Especially when developing libraries for the **Angular ecosystem**, there is a fair amount of things to do to get an Angular library published just right.
+These days, setting up build chains for frontend projects requires lots of knowledge and time. When working with Angular, in particular, there is a fair amount of things to do in order to get an Angular library published just right.
 
-The **Angular Package Builder** is here to help. Once setup, this NodeJS-based command line tool will build your Angular library by using a single command, allowing developers to focus on the important things - developing! Under the hood, the **Angular Package Builder** will do tasks such as:
+The **Angular Package Builder** is here to help! Once set up, this NodeJS-based command line tool will build your Angular libraries with a single command, allowing developers to focus on the important things - developing!
 
-- inlining (and compiling) external resources (HTML, CSS, SASS)
-- compiling TypeScript sources into JavaScript (ES2015, ES5)
-- generating JavaScript bundles (ESM2015, ESM5, UMD)
+Features include:
+
+- :package: Support for primary and (multiple) secondary entry points
+- :gift: Support for multiple libraries (e.g. in a monorepo)
+- :page_facing_up: Inlining of external resources, such as templates (HTML) and styles (CSS, SASS)
+-  :hammer: Custom configurations (Angular compiler options, TypeScipt compiler options, external dependencies)
+
+The result is a package, following the official **[Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview)**:
+
+- :heavy_check_mark: JavaScript build (ES2015, ES5)
+- :heavy_check_mark: JavaScript bundles (flat ES2015, flat ES5, UMD)
+- :heavy_check_mark: TypeScript type definition files
+- :heavy_check_mark: Angular AoT metadata file
+- :heavy_check_mark: `package.json` file, pointing to entry files
 
 > Please note that the **Angular Package Builder** only builds libraries for **Angular version 5 and up**.
 
