@@ -31,27 +31,27 @@ The result is a package, following the official **[Angular Package Format](https
 - :green_book: JavaScript build (ES2015, ES5) & bundles (ES2015, ES5, UMD)
 - :blue_book: TypeScript type definition files
 - :closed_book: Angular AoT metadata file
-- :package: `package.json` file, pointing to entry files
+- :notebook_with_decorative_cover: `package.json` file, pointing to entry files
 
-> Please note that the **Angular Package Builder** only builds libraries for **Angular version 5 and up**.
-
-![Angular Package Builder Preview](/docs/preview.png?raw=true)
+![Angular Package Builder Preview](/docs/preview.gif?raw=true)
 
 <br><br><br>
 
 ## How to install
 
-You can get the **angular-package-builder** via **npm** by either adding it as a new *devDependency* to your `package.json` file and running
-`npm install`, or running the following command:
+You can get the **angular-package-builder** via **npm** by adding it as a new *devDependency* to your `package.json` file and running
+`npm install`. Alternatively, run the following command:
 
 ``` bash
 npm install angular-package-builder --save-dev
 ```
 
-### Requirements
+<br>
 
-The following is a list of the Angular version supported by the Angular Package Builder. The table also references the TypeScript and RxJS
-versions which are officially supported for each Angular version. Diverging from this matrix is surely possible yet might result to
+### Angular compatibility
+
+The following lists the Angular versions supported by the **Angular Package Builder**. The table also mentions the TypeScript and RxJS
+versions which are officially supported by each Angular version. Diverging from this matrix is surely possible yet might lead to
 unexpected issues. The last column defines the minimal required NodeJS version.
 
 | Angular                                 | TypeScript              | RxJS  | NodeJS     |
@@ -62,7 +62,7 @@ unexpected issues. The last column defines the minimal required NodeJS version.
 | `5.2.x`                                 | `2.4.x` `2.5.x` `2.6.x` | `5.x` | `>= 7.6.0` |
 | `6.0.x`                                 | `2.7.x`                 | `6.x` | `>= 8.0.0` |
 
-> Angular versions `2.x` are not supported.
+> Angular 2 is not supported. Angular versions newer than `6.0.x` might work, yet have not not been tested.
 
 <br><br><br>
 
@@ -70,78 +70,120 @@ unexpected issues. The last column defines the minimal required NodeJS version.
 
 In most cases, integrating **angular-package-builder** into a project is very straightforward.
 
-> The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
-
-> A list of public (exemplary) GitHub repositories using this tool is available **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
-
-<br>
-
-### Step 1: Add `package.json` script
-
-First, make sure to run **angular-package-builder** within one of your `package.json` scripts. For instance:
-
-``` json
-{
-  "scripts": {
-    "build": "angular-package-builder"
-  }
-}
-```
-
-In addition, there are two (optional, and usually not needed) parameters available:
-
-- `--config <PATH>` allows you to define a custom path to your `.angular-package.json` file
-- `--debug` emits the output of intermediate build steps to the disk (into the `dist-angular-package-builder` folder)
-
-> You can always run `angular-package-builder --help` to get a full list of available command line parameters.
+> The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup
+> a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
 
 <br>
 
-### Step 2: Create `.angular-package.json` file
+### Step 1: Create `.angular-package.json` file
 
-Then, create a `.angular-package.json` file in your project's root folder, and place in your configuration. For instance:
+Now, every library requires a `.angular-package.json` file to be present, placed directly next to the `package.json` file of that library.
+Within that `.angular-package.json` file, you can place the build onfiguration for your library.
+
+A minimal configuration looks like the following:
 
 ``` json
 {
   "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
-  "entryFile": "./src/lib/index.ts",
+  "entryFile": "./index.ts",
   "outDir": "./dist"
 }
 ```
 
-The two options seen above are always required. In particular:
+The two options seen above are also the only required ones:
 
-- `entryFile` is the relative path to the entry file (usually an `index.ts`) file
-  - All further files that are part of the library must be placed into the same folder, or some place deeper in the folder tree (the Angular Package Format recommends a folder named `src` containing all other files)
-- `outDir` is the relative path to the build output directory
-  - Don't forget to add the outDir path to your `.gitignore` file
+- `entryFile` is the relative path to the primary entry file
+  - Usually, entry files are named `index.ts`
+  - All further files of the library must be within the same folder, or some place deeper in the directory
+- `outDir` is the relative path to the build output folder
+  - Usually, the build output folder is named `dist`
+  - Don't forget to add the `outDir` path to your `.gitignore` file
+
+The following directory structure is recommended:
+
+``` javascript
+- dist/...               // Output
+- src/...                // Source
+- .angular-package.json  // Build config
+- index.ts               // Entry file
+- package.json           // Package
+```
 
 <br>
 
-### Step 3: Define `package.json` entry points
+### Step 2: Add build script to `package.json`
 
-Finally, reference your build output by adding the following fields to your `package.json` (change file names and paths based on your package name and publish folder):
+Now, run **angular-package-builder** within one of your `package.json` scripts. The command accepts an unordered list of paths to
+`.angular-package.json` files as parameters. For instance:
 
 ``` json
 {
-  "typings": "./[package-name].d.ts",
-  "main": "./bundles/[package-name].umd.js",
-  "module": "./esm5/[package-name].js",
-  "es2015": "./esm2015/[package-name].js",
+  "scripts": {
+    "build": "angular-package-builder ./my-library/.angular-package.json"
+  }
 }
 ```
+
+Packaging your library is now as simple as:
+
+``` bash
+npm run build
+```
+
+<br>
+
+### Addition: Building multiple entry points
+
+Angular, for instance, has packages with multiple entry points: `@angular/core` as the primary, and `@angular/core/testing` as the (here
+only) secondary. Within the `.angular-package.json` file, you can define any number of secondary entry points using the `secondaryEntries`
+option. For instance:
+
+``` json
+{
+  "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
+  "entryFile": "./index.ts",
+  "outDir": "./dist",
+  "secondaryEntries": [
+    {
+      "entryFile": "./testing/index.ts"
+    }
+  ]
+}
+```
+
+> No change in the build script required!
+
+<br>
+
+### Addition: Building multiple libraries
+
+Angular, again, consists of multiple packages, all united in a single Git repository (called monorepo). The **Angular Package Builder** is
+able to build multiple libraries using a single command. Building more libraries means adding more `.angular-package.json` files to the
+corresponding npm script. For example:
+
+``` json
+{
+  "scripts": {
+    "build": "angular-package-builder ./lib-one/.angular-package.json ./lib-two/.angular-package.json"
+  }
+}
+```
+
+> The order of the parameters does not matter as the **Angular Package Builder** will derive the build order independently.
 
 <br><br><br>
 
 ## Advanced configuration
 
-Usually, configuring the `entryFile` and `outDir` should be sufficient for most libraries. For more advanced use cases or requirements, you can extend your `.angular-package.json` file further.
+Usually, configuring the `entryFile` and `outDir` should be sufficient for most libraries. For more advanced use cases or requirements, you
+can extend the build configuration in your `.angular-package.json` file(s).
 
 <br>
 
 ### TypeScript compiler options
 
-One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`, `skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
+One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`,
+`skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
 
 ``` json
 {
@@ -151,15 +193,19 @@ One of the things you might want to configure specifically for your project is T
 }
 ```
 
-See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html)** for the full list of available options.
+See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html)** for the full
+list of available options.
 
-> The following options cannot be changed: `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`, `sourceRoot` and `target`.
+> The following options cannot be changed:<br>
+> `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`,
+> `sourceRoot` and `target`
 
 <br>
 
 ### Angular compiler options
 
-Furthermore, you might also decide to configure the Angular compiler differently. Common options are `annotateForClosureCompiler`, `preserveWhitespaces` and `strictMetadataEmit`. For instance:
+Furthermore, you might also decide to configure the Angular compiler differently. Common options are `annotateForClosureCompiler`,
+`preserveWhitespaces` and `strictMetadataEmit`. For instance:
 
 ``` json
 {
@@ -169,13 +215,15 @@ Furthermore, you might also decide to configure the Angular compiler differently
 }
 ```
 
-> The following options cannot be changed: `flatModuleId`, `flatModuleOutFile` and `skipTemplateCodegen`.
+> The following options cannot be changed:<br>
+> `flatModuleId`, `flatModuleOutFile` and `skipTemplateCodegen`
 
 <br>
 
 ### Dependencies
 
-By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is missing or you want to overwrite a dependency definition, you can declare them in the form of `package -> global constant`. For instance:
+By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is
+missing or you want to overwrite a dependency definition, you can declare them in the form of `package -> global constant`. For instance:
 
 ``` json
 {
