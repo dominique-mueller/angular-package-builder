@@ -21,18 +21,17 @@ The **Angular Package Builder** is here to help! Once set up, this NodeJS-based 
 
 Features include:
 
-- :package: Support for primary and (multiple) secondary entry points
+- :pushpin: Support for primary and (multiple) secondary entry points
 - :gift: Support for multiple libraries (e.g. in a monorepo)
 - :page_facing_up: Inlining of external resources, such as templates (HTML) and styles (CSS, SASS)
--  :hammer: Custom configurations (Angular compiler options, TypeScipt compiler options, external dependencies)
+- :hammer: Custom configurations (Angular compiler options, TypeScipt compiler options, external dependencies)
 
 The result is a package, following the official **[Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview)**:
 
-- :heavy_check_mark: JavaScript build (ES2015, ES5)
-- :heavy_check_mark: JavaScript bundles (flat ES2015, flat ES5, UMD)
-- :heavy_check_mark: TypeScript type definition files
-- :heavy_check_mark: Angular AoT metadata file
-- :heavy_check_mark: `package.json` file, pointing to entry files
+- :green_book: JavaScript build (ES2015, ES5) & bundles (ES2015, ES5, UMD)
+- :blue_book: TypeScript type definition files
+- :closed_book: Angular AoT metadata file
+- :package: `package.json` file, pointing to entry files
 
 > Please note that the **Angular Package Builder** only builds libraries for **Angular version 5 and up**.
 
