@@ -263,7 +263,7 @@ this kind of information. Forbidden are (amongst other things):
 
 If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain:
 
-![Angular Package Builder Preview](/docs/error-jsdoc.png?raw=true)
+![Angular Package Builder - forbidden JSdoc error](/docs/error-jsdoc.png?raw=true)
 
 #### Solution
 
@@ -272,27 +272,35 @@ Preferably, remove all redundant JSDoc tags until the Angular Compiler is happy.
 
 <br>
 
-### Metadata validation errors
+### Angular metadata generation errors
 
-If your library contains custom validators or utilities, you might run into an issue where - at compilation time - the `Angular Compiler CLI` throws an error while validating the generated `metadata.json` file. In particular, the error occurs when using closures (e.g. arrow functions) within static class methods.
+Especially when writing custom factories for `NgModules`, one might run into Angular metadata generation issues, usually resulting in errors
+like `Lambda not supported` or `Reference to a non-exported function`.
 
-``` text
-ERROR: An error occured while trying to compile the TypeScript sources using the Angular Compiler.
-       [TypeScript] Error: XXX Error encountered in metadata generated for exported symbol XXX
-       [TypeScript] XXX Metadata collected contains an error that will be reported at runtime: Function
-                    calls are not supported. Consider replacing the function or lambda with a reference
-                    to an exported function.
-       [TypeScript] {"__symbolic":"error","message":"Function call not supported","line":XX,"character":XX}
-```
+![Angular Package Builder - metadata generation error](/docs/error-lambda.png?raw=true)
 
 #### Solution
 
-There are two ways to solve this issue:
+This issue can be solved by extracing the mentioned arrow function into a separate function, and making sure that it's exported.
 
-- The preferred solution is to add the `@dynamic` tag to the comment describing the static method (or, if this should not work, the class containing the static method). Then, the Angular Compiler will make an exception for this code.
-- The alternative way is to set the `strictMetadataEmit` option in the `angularCompilerOptions` object to `false`. Then, however, other metadata validation issues will no longer be visible.
+> Also see **[this Angular issue on GitHub](https://github.com/angular/angular/issues/11262)**.
 
-> For more information on this issue and its solutions, see **[this Angular GitHub issue](https://github.com/angular/angular/issues/19698)**.
+<br>
+
+### Angular metadata validation errors
+
+Rarely, and only when using arrow functions within static classes and / or methods, an error like `Function call not supported` might occur.
+
+#### Solution
+
+This issue can be solved in two ways:
+
+- Prefered: Add the `@dynamic`JSdoc tag to the comment describing the static method (or, if this should not work, the class containing the
+  static method). Then, the Angular Compiler will make an exception for this piece of code when validating the generated metadata.
+- Alternative: Set the `strictMetadataEmit` option in the `angularCompilerOptions` object to `false`. Then, however, other metadata
+  validation issues will no longer be visible.
+
+> Also see **[this Angular issue on GitHub](https://github.com/angular/angular/issues/19698)**.
 
 <br>
 
