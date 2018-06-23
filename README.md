@@ -263,7 +263,7 @@ this kind of information. Forbidden are (amongst other things):
 
 If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain:
 
-![Angular Package Builder Preview](/docs/error-tsickle-jsdoc.png?raw=true)
+![Angular Package Builder Preview](/docs/error-jsdoc.png?raw=true)
 
 #### Solution
 
