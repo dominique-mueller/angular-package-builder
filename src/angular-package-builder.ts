@@ -47,7 +47,7 @@ export class AngularPackageBuilder {
             AngularPackageLogger.logTaskStart( 'Apply transformations' );
             await angularPackageTransformer.transform();
             AngularPackageLogger.logTaskSuccess();
-        } catch( error ) {
+        } catch ( error ) {
             AngularPackageLogger.logTaskError();
             throw new Error();
         }
@@ -121,7 +121,11 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolves when done
      */
     private static async cleanupOutputFolder( angularPackage: AngularPackage ): Promise<void> {
-        await del( [ path.join( angularPackage.root, angularPackage.outDir, '**' ) ] ); // The '**' is important!
+        try {
+            await del( [ path.join( angularPackage.root, angularPackage.outDir, '**' ) ] ); // The '**' is important!
+        } catch ( error ) {
+            throw new Error( `An error occured while deleting the output folder at "${ angularPackage.outDir }".` );
+        }
     }
 
     /**
@@ -131,7 +135,11 @@ export class AngularPackageBuilder {
      * @returns                Promise, resolves when done
      */
     private static async cleanupTemporaryOutputFolder( angularPackage: AngularPackage ): Promise<void> {
-        await del( [ path.join( angularPackage.root, angularPackage.outDir, 'temp', '**' ) ] ); // The '**' is important!
-	}
+        try {
+            await del( [ path.join( angularPackage.root, angularPackage.outDir, 'temp', '**' ) ] ); // The '**' is important!
+        } catch ( error ) {
+            throw new Error( `An error occured while deleting the temporary output folder at "${ angularPackage.outDir }/temp".` );
+        }
+    }
 
 }
