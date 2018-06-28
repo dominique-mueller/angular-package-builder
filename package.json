@@ -84,7 +84,7 @@
 		"@types/semver": "5.5.x",
 		"automatic-release": "1.1.x",
 		"copyfiles": "2.0.x",
-		"jest": "23.1.x",
+		"jest": "23.2.x",
 		"moment": "2.22.x",
 		"rimraf": "2.6.x",
 		"rxjs": "6.2.x",
