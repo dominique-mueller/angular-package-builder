@@ -2,7 +2,7 @@
 
 # angular-package-builder
 
-**Packages your Angular 5+ library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).**
+**Packages your Angular 4+ library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).**
 
 [![npm version](https://img.shields.io/npm/v/angular-package-builder.svg?maxAge=3600&style=flat)](https://www.npmjs.com/package/angular-package-builder)
 [![dependency status](https://img.shields.io/david/dominique-mueller/angular-package-builder.svg?maxAge=3600&style=flat)](https://david-dm.org/dominique-mueller/angular-package-builder)
@@ -15,33 +15,44 @@
 
 ## What it does
 
-These days, setting up build chains for frontend projects requires lots of knowledge and time. Especially when developing libraries for the **Angular ecosystem**, there is a fair amount of things to do to get an Angular library published just right.
+These days, setting up build chains for frontend projects requires lots of knowledge and time. When working with Angular, in particular, there is a fair amount of things to do in order to get an Angular library published just right.
 
-The **Angular Package Builder** is here to help. Once setup, this NodeJS-based command line tool will build your Angular library by using a single command, allowing developers to focus on the important things - developing! Under the hood, the **Angular Package Builder** will do tasks such as:
+The **Angular Package Builder** is here to help! Once set up, this NodeJS-based command line tool will build your Angular libraries with a single command, allowing developers to focus on the important things - developing!
 
-- inlining (and compiling) external resources (HTML, CSS, SASS)
-- compiling TypeScript sources into JavaScript (ES2015, ES5)
-- generating JavaScript bundles (ESM2015, ESM5, UMD)
+Features include:
 
-> Please note that the **Angular Package Builder** only builds libraries for **Angular version 5 and up**.
+- :pushpin: Support for primary and (multiple) secondary entry points
+- :gift: Support for multiple libraries (e.g. in a monorepo)
+- :page_facing_up: Inlining of external resources, such as templates (HTML) and styles (CSS, SASS)
+- :hammer: Custom configurations (Angular compiler options, TypeScipt compiler options, external dependencies)
 
-![Angular Package Builder Preview](/docs/preview.png?raw=true)
+The result is a package, following the official **[Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview)**:
+
+- :green_book: JavaScript build (ES2015, ES5)
+- :orange_book: JavaScript bundles (flat ES2015, flat ES5, UMD)
+- :blue_book: TypeScript type definition files
+- :closed_book: Angular AoT metadata file
+- :notebook_with_decorative_cover: `package.json` file, pointing to entry files
+
+![Angular Package Builder Preview](/docs/preview.gif?raw=true)
 
 <br><br><br>
 
 ## How to install
 
-You can get the **angular-package-builder** via **npm** by either adding it as a new *devDependency* to your `package.json` file and running
-`npm install`, or running the following command:
+You can get the **angular-package-builder** via **npm** by adding it as a new *devDependency* to your `package.json` file and running
+`npm install`. Alternatively, run the following command:
 
 ``` bash
 npm install angular-package-builder --save-dev
 ```
 
-### Requirements
+<br>
 
-The following is a list of the Angular version supported by the Angular Package Builder. The table also references the TypeScript and RxJS
-versions which are officially supported for each Angular version. Diverging from this matrix is surely possible yet might result to
+### Angular compatibility
+
+The following lists the Angular versions supported by the **Angular Package Builder**. The table also mentions the TypeScript and RxJS
+versions which are officially supported by each Angular version. Diverging from this matrix is surely possible yet might lead to
 unexpected issues. The last column defines the minimal required NodeJS version.
 
 | Angular                                 | TypeScript              | RxJS  | NodeJS     |
@@ -52,7 +63,7 @@ unexpected issues. The last column defines the minimal required NodeJS version.
 | `5.2.x`                                 | `2.4.x` `2.5.x` `2.6.x` | `5.x` | `>= 7.6.0` |
 | `6.0.x`                                 | `2.7.x`                 | `6.x` | `>= 8.0.0` |
 
-> Angular versions `2.x` are not supported.
+> Angular 2 is not supported. Angular versions newer than `6.0.x` might work, yet have not not been tested.
 
 <br><br><br>
 
@@ -60,78 +71,112 @@ unexpected issues. The last column defines the minimal required NodeJS version.
 
 In most cases, integrating **angular-package-builder** into a project is very straightforward.
 
-> The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
-
-> A list of public (exemplary) GitHub repositories using this tool is available **[right here](https://github.com/dominique-mueller/angular-package-builder/network/dependents)**.
-
-<br>
-
-### Step 1: Add `package.json` script
-
-First, make sure to run **angular-package-builder** within one of your `package.json` scripts. For instance:
-
-``` json
-{
-  "scripts": {
-    "build": "angular-package-builder"
-  }
-}
-```
-
-In addition, there are two (optional, and usually not needed) parameters available:
-
-- `--config <PATH>` allows you to define a custom path to your `.angular-package.json` file
-- `--debug` emits the output of intermediate build steps to the disk (into the `dist-angular-package-builder` folder)
-
-> You can always run `angular-package-builder --help` to get a full list of available command line parameters.
+> The **Angular Package Builder** only builds libraries from an Angular / JavaScript perspective. It's possible that you might have to setup
+> a few extra build steps, for instance in order to compile global SASS, or copy assets / other files.
 
 <br>
 
-### Step 2: Create `.angular-package.json` file
+### Step 1: Create `.angular-package.json` file
 
-Then, create a `.angular-package.json` file in your project's root folder, and place in your configuration. For instance:
+Now, every library requires a `.angular-package.json` file to be present, placed directly next to the `package.json` file of that library.
+Within that `.angular-package.json` file, you can place the build onfiguration for your library.
+
+A minimal configuration looks like the following:
 
 ``` json
 {
   "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
-  "entryFile": "./src/lib/index.ts",
+  "entryFile": "./index.ts",
   "outDir": "./dist"
 }
 ```
 
-The two options seen above are always required. In particular:
+The two options seen above are also the only required ones:
 
-- `entryFile` is the relative path to the entry file (usually an `index.ts`) file
-  - All further files that are part of the library must be placed into the same folder, or some place deeper in the folder tree (the Angular Package Format recommends a folder named `src` containing all other files)
-- `outDir` is the relative path to the build output directory
-  - Don't forget to add the outDir path to your `.gitignore` file
+- `entryFile` is the relative path to the primary entry file
+  - Usually, entry files are named `index.ts`
+  - All further files of the library must be within the same folder, or some place deeper in the directory
+- `outDir` is the relative path to the build output folder
+  - Usually, the build output folder is named `dist`
+  - Don't forget to add the `outDir` path to your `.gitignore` file
 
-<br>
+#### Directory structure
 
-### Step 3: Define `package.json` entry points
+The following directory structure is recommended:
 
-Finally, reference your build output by adding the following fields to your `package.json` (change file names and paths based on your package name and publish folder):
+``` javascript
+── dist/                  // Output
+   └── ...
+── src/                   // Source
+   └── ...
+── .angular-package.json  // Build config
+── index.ts               // Entry file
+── package.json           // Package
+```
+
+#### Secondary entry points
+
+Angular, for instance, has packages with multiple entry points: `@angular/core` as the primary, and `@angular/core/testing` as the (here
+only) secondary. Within the `.angular-package.json` file, you can define any number of secondary entry points using the `secondaryEntries`
+option. For instance:
 
 ``` json
 {
-  "typings": "./[package-name].d.ts",
-  "main": "./bundles/[package-name].umd.js",
-  "module": "./esm5/[package-name].js",
-  "es2015": "./esm2015/[package-name].js",
+  "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
+  "entryFile": "./index.ts",
+  "outDir": "./dist",
+  "secondaryEntries": [
+    {
+      "entryFile": "./testing/index.ts"
+    }
+  ]
 }
 ```
+
+<br>
+
+### Step 2: Add build script to `package.json`
+
+Now, run **angular-package-builder** within one of your `package.json` scripts. The command accepts an unordered list of paths to
+`.angular-package.json` files as parameters. For instance:
+
+``` json
+{
+  "scripts": {
+    "build": "angular-package-builder ./my-library/.angular-package.json"
+  }
+}
+```
+
+#### Multiple libraries
+
+Angular, again, consists of multiple packages, all united in a single Git repository (called monorepo). The **Angular Package Builder** is
+able to build multiple libraries using a single command. Building more libraries means adding more `.angular-package.json` files to the
+corresponding npm script. For example:
+
+``` json
+{
+  "scripts": {
+    "build": "angular-package-builder ./lib-one/.angular-package.json ./lib-two/.angular-package.json"
+  }
+}
+```
+
+> The order of the parameters does not matter as the **Angular Package Builder** will derive the build order independently.
 
 <br><br><br>
 
 ## Advanced configuration
 
-Usually, configuring the `entryFile` and `outDir` should be sufficient for most libraries. For more advanced use cases or requirements, you can extend your `.angular-package.json` file further.
+Usually, configuring the `entryFile` and `outDir` should be sufficient for most libraries. For more advanced use cases or requirements, you
+can extend the build configuration in your `.angular-package.json` file(s).
 
 <br>
 
 ### TypeScript compiler options
 
-One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`, `skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
+One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`,
+`skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
 
 ``` json
 {
@@ -141,15 +186,19 @@ One of the things you might want to configure specifically for your project is T
 }
 ```
 
-See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html)** for the full list of available options.
+See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html)** for the full
+list of available options.
 
-> The following options cannot be changed: `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`, `sourceRoot` and `target`.
+> The following options cannot be changed:<br>
+> `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`,
+> `sourceRoot` and `target`
 
 <br>
 
 ### Angular compiler options
 
-Furthermore, you might also decide to configure the Angular compiler differently. Common options are `annotateForClosureCompiler`, `preserveWhitespaces` and `strictMetadataEmit`. For instance:
+Furthermore, you might also decide to configure the Angular compiler differently. Common options are `annotateForClosureCompiler`,
+`preserveWhitespaces` and `strictMetadataEmit`. For instance:
 
 ``` json
 {
@@ -159,13 +208,15 @@ Furthermore, you might also decide to configure the Angular compiler differently
 }
 ```
 
-> The following options cannot be changed: `flatModuleId`, `flatModuleOutFile` and `skipTemplateCodegen`.
+> The following options cannot be changed:<br>
+> `flatModuleId`, `flatModuleOutFile` and `skipTemplateCodegen`
 
 <br>
 
 ### Dependencies
 
-By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is missing or you want to overwrite a dependency definition, you can declare them in the form of `package -> global constant`. For instance:
+By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is
+missing or you want to overwrite a dependency definition, you can declare them in the form of `package -> global constant`. For instance:
 
 ``` json
 {
@@ -179,7 +230,8 @@ By default, the **Angular Package Builder** will identify your libraries' depend
 
 ## Known pitfalls with solutions
 
-There are quite a few pitfalls when packaging an Angular library. Most of them are all but obvious, and the fix is not always clear. The following is a collection of known pitfally, plus tips on how to solve them.
+There are quite a few pitfalls when packaging an Angular library. Most of them are all but obvious, and the fix is not always clear. The
+following is a collection of known pitfally, plus tips on how to solve them.
 
 > Feel free to extend this list by **[creating an issue](https://github.com/dominique-mueller/angular-package-builder/issues/new)**!
 
@@ -187,79 +239,92 @@ There are quite a few pitfalls when packaging an Angular library. Most of them a
 
 ### Caution with barrels
 
-Usually, libraries are built in a way which allows them to be imported by a single import source (normalle the name of the module / package). This can be achieved by re-exporting the implementation (spread accross multiple files) with a so-called **[Barrel](https://angular.io/guide/glossary#barrel)**, in other word an `index.ts` file.
+Usually, libraries are built in a way that allows us to import them from a single source (normally the module name). This is achieved by
+re-exporting the implementation (spread accross multiple files) with a so-called
+**[Barrel](https://angular.io/guide/glossary#barrel)** (normally `index.ts`).
 
-While this very common technique works like a charm for the top barrel, *issues might occur when - somewhere within the library - two barrels meet each other*. Funnily enough, should such a constellation lead to any issues, it won't be appeatant right away; chances are good that the Angular Package Builder will succeed, and the compilation output will probably look correct. However, when trying to import the library into an Angular application later on,an error will be thrown (e.g. "injected dependencies cannot be resolved").
+Now, *issues might occur when - somewhere within the library - two barrels meet each other*. Funnily enough, should such a constellation
+lead to any issues, it won't be appearant right away: Chances are good that the **Angular Package Builder** will succeed, and the
+compilation output might also look correct. At the latest, when trying to import the library into an Angular application, an error will be
+thrown (something like "injected dependencies cannot be resolved").
 
 #### Solution
 
-We recommend to only use a single barrel / `index.ts` file at the root of you library, re-exporting all public functionality from that place.
+We recommend to only use a single barrel / `index.ts` file at the root of you library, re-exporting all public functionality from that
+single place.
 
 <br>
 
 ### Forbidden JSDoc tags
 
-When building a library with the `annotateForClosureCompiler` option enabled - which it is by default - not all JSDoc tags are allowed. In particular, any tag which describes the type of classes, methods or variables is not allowed because redundant (the TypeScript code already contains this kind of information). If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain. The list of forbidden tags include:
+The usage of type-related JSDoc tags / information within JSdoc tags is disallowed, reason being that the TypeScript syntax already exposes
+this kind of information. Forbidden are (amongst other things):
 
-- types in parameters (e.g. `@param {string} myOption`)
-- type tags on variables (e.g. `@type {string}`)
-- class or function tags such as `@constructor` or `@class`.
+- type information in parameter tags (e.g. `@param {string} myOption`)
+- type-related tags on variables, functions, classes (e.g. `@type`, `@constructor`, `@function`, `@class`)
+- tags regarding visibility (e.g. `@private`, `@public`)
+- further redundant tags such as `@static`, `@extends`, `@implements`
 
-> The full list of allowed JSDoc tags can be found **[in the tsickle source](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
+> The full list of allowed / disallowed JSDoc tags can be found
+**[in the tsickle source](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
 
-``` text
-ERROR: An error occured while trying to compile the TypeScript sources using the Angular Compiler.
-       [tsickle] XXX: warning TS0: the type annotation on @param is redundant with its TypeScript type,
-                 remove the {...} part
-```
+If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain:
+
+![Angular Package Builder - forbidden JSdoc error](/docs/error-jsdoc.png?raw=true)
 
 #### Solution
 
-Preferably, remove all redundant JSDoc tags until the Angular Compiler is happy. As an alternative, you could also set the `annotateForClosureCompiler` option in the `angularCompilerOptions` to `false` - but we don't recommend it.
-
-> For bigger libraries, removing those JSDoc tags manually is quite a paint and might actually take a very long time. We recommend an IDE or code editor with a search-and-replace functionality that can work with regular expressions to speed up this process (e.g. **[Visual Studio Code](https://code.visualstudio.com/)**).
+Preferably, remove all redundant JSDoc tags until the Angular Compiler is happy. As an alternative, one could also set the
+`annotateForClosureCompiler` option in the `angularCompilerOptions` to `false` - but it's not recommended. Read the **[Angular annotateForClosureCompiler documentation](https://angular.io/guide/aot-compiler#annotateforclosurecompiler)** for further information.
 
 <br>
 
-### Metadata validation errors
+### Angular metadata generation errors
 
-If your library contains custom validators or utilities, you might run into an issue where - at compilation time - the `Angular Compiler CLI` throws an error while validating the generated `metadata.json` file. In particular, the error occurs when using closures (e.g. arrow functions) within static class methods.
+Especially when writing custom factories for `NgModules`, one might run into Angular metadata generation issues, usually resulting in errors
+like `Lambda not supported` or `Reference to a non-exported function`.
 
-``` text
-ERROR: An error occured while trying to compile the TypeScript sources using the Angular Compiler.
-       [TypeScript] Error: XXX Error encountered in metadata generated for exported symbol XXX
-       [TypeScript] XXX Metadata collected contains an error that will be reported at runtime: Function
-                    calls are not supported. Consider replacing the function or lambda with a reference
-                    to an exported function.
-       [TypeScript] {"__symbolic":"error","message":"Function call not supported","line":XX,"character":XX}
-```
+![Angular Package Builder - metadata generation error](/docs/error-lambda.png?raw=true)
 
 #### Solution
 
-There are two ways to solve this issue:
+This issue can be solved by extracing the mentioned arrow function into a separate function, and making sure that it's exported.
 
-- The preferred solution is to add the `@dynamic` tag to the comment describing the static method (or, if this should not work, the class containing the static method). Then, the Angular Compiler will make an exception for this code.
-- The alternative way is to set the `strictMetadataEmit` option in the `angularCompilerOptions` object to `false`. Then, however, other metadata validation issues will no longer be visible.
+> Also see **[this Angular issue on GitHub](https://github.com/angular/angular/issues/11262)**.
 
-> For more information on this issue and its solutions, see **[this Angular GitHub issue](https://github.com/angular/angular/issues/19698)**.
+<br>
+
+### Angular metadata validation errors
+
+Rarely, and only when using arrow functions within static classes and / or methods, an error like `Function call not supported` might occur.
+
+#### Solution
+
+This issue can be solved in two ways:
+
+- Prefered: Add the `@dynamic`JSdoc tag to the comment describing the static method (or, if this should not work, the class containing the
+  static method). Then, the Angular Compiler will make an exception for this piece of code when validating the generated metadata.
+- Alternative: Set the `strictMetadataEmit` option in the `angularCompilerOptions` object to `false`. Then, however, other metadata
+  validation issues will no longer be visible. Read the
+  **[Angular strictMetadataEmit documentation](https://angular.io/guide/aot-compiler#strictmetadataemit)** for further information.
+
+> Also see **[this Angular issue on GitHub](https://github.com/angular/angular/issues/19698)**.
 
 <br>
 
 ### Synthetic imports
 
-Often, we integrate long-existing libraries into our Angular projects. **[Moment.js](https://momentjs.com/)**, for example, is one of the
-libraries often used when working with dates. Due to its age, it's published as a single-entry ES5 module - which means people usually write
-the following TypeScript code to import Moment.js into a file:
+Often, we integrate long-existing libraries into our Angular projects. **[Moment.js](https://momentjs.com/)**, for instance, is one of *the*
+libraries used when working with dates. Due to its age, however, it's still published as a single-entry ES5 module - which means people
+usually write the following TypeScript code to import the library:
 
 ``` typescript
 import * as moment from 'moment';
 ```
 
-When trying to package an Angular library using the import statement above, an error will be thrown. In particular:
+When trying to package an Angular library using the import statement above, an error will be thrown:
 
-``` text
-ERROR: Error: Cannot call a namespace ('moment')
-```
+![Angular Package Builder - synthetic imports](/docs/error-synthetic.png?raw=true)
 
 #### Solution
 
@@ -280,6 +345,11 @@ Then, change the affected import statements to default import statements. For in
 ``` typescript
 import moment from 'moment';
 ```
+
+Alternatively, you could also consider **[Moment ES6](https://github.com/Agamnentzar/moment-es6)** - it wraps around Moment.js and exports
+it in an ES6-compatible (and thus TypeScript-compatible) way.
+
+> Also see **[this Moment.js issue on GitHub](https://github.com/moment/moment/issues/3748)**.
 
 <br><br><br>
 

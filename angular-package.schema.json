@@ -1,7 +1,6 @@
 {
 	"title": "JSON schema for the Angular Package Builder configuration file",
 	"$schema": "http://json-schema.org/draft-04/schema#",
-
 	"type": "object",
 	"properties": {
 		"$schema": {
