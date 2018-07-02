@@ -88,6 +88,6 @@
 		"moment": "2.22.x",
 		"rimraf": "2.6.x",
 		"rxjs": "6.2.x",
-		"ts-jest": "22.4.x"
+		"ts-jest": "23.0.x"
 	}
 }
