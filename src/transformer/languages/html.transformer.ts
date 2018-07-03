@@ -26,8 +26,8 @@ export class HTMLTransformer {
                     // Inspired by: https://github.com/angular/material2/blob/master/tools/package-tools/inline-resources.ts#L55
                     .replace( /[\n\r]\s*/gm, ' ' )
 
-                    // Escape backticks, because they're getting used as the overall quotemarks
-                    .replace( /`/g, "\`" );
+                    // Escape single quotemarks, because they're getting used as the overall quotemarks
+                    .replace( /'/g, "\'" );
 
             } catch( error ) {
                 // Static message, as the actual error message does not contain any useful information

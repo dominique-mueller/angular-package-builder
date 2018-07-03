@@ -20,7 +20,7 @@ export class AngularExternalTemplatesFileTransformer {
 
         // Rewrite assignment
         externalTemplate.node.replaceWithText( 'template' );
-        externalTemplate.template.node.replaceWithText( `\`${ preparedTemplate }\`` );
+        externalTemplate.template.node.replaceWithText( `'${ preparedTemplate }'` );
 
     }
 
