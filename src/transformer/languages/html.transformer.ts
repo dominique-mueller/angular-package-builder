@@ -18,7 +18,17 @@ export class HTMLTransformer {
             return '';
         } else {
             try {
-                return minify( htmlContent, htmlMinifierConfiguration );
+
+                return minify( htmlContent, htmlMinifierConfiguration )
+
+                    // Remove any left-over line-breaks including indentation
+                    // Example: Minify breaking attribute values such as very long SVG paths
+                    // Inspired by: https://github.com/angular/material2/blob/master/tools/package-tools/inline-resources.ts#L55
+                    .replace( /[\n\r]\s*/gm, '' )
+
+                    // Escape backticks, because they're getting used as the overall quotemarks
+                    .replace( /`/g, "\`" );
+
             } catch( error ) {
                 // Static message, as the actual error message does not contain any useful information
                 throw new Error( 'HTML Parser: Parse error, the HTML seems to be invalid.' );

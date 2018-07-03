@@ -13,7 +13,7 @@ describe( 'External resources', () => {
 			'library-template-html',
 			'src/input/input.component',
 			'LibraryInputComponent',
-			'<label class="ui-input__container"><span class="ui-input__label">{{ label }}</span><input #input (change)="onChange( input.value )" [value]="model" class="ui-input__field"></label>'
+			'<label class="ui-input__container"><svg height="210" width="400"><path d="M150 0 L75 200 L225 200 Z" /></svg><span class="ui-input__label">{{ label }}</span><input class="ui-input__field" #input type="text" [value]="model" (change)="onChange( input.value )"></label>'
 		);
 
 	} );

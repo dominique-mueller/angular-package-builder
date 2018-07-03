@@ -23,7 +23,7 @@ export class AngularExternalStylesTransformer {
 
         // Rewrite assignment
         externalStyles.node.replaceWithText( 'styles' );
-        externalStyle.node.replaceWithText( `'${ preparedStyle }'` );
+        externalStyle.node.replaceWithText( `\`${ preparedStyle }\`` );
 
     }
 
