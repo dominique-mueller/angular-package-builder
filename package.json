@@ -31,7 +31,7 @@
 		"angular-package-builder": "bin/angular-package-builder.js"
 	},
 	"scripts": {
-		"build": "tsc -p tsconfig.json && copyfiles \"bin/**\" angular-package.schema.json package.json dist",
+		"build": "tsc -p tsconfig.json && copyfiles \"bin/**\" angular-package.schema.json dist",
 		"clean": "rimraf -r dist/**",
 		"release": "automatic-release && copyfiles \"docs/**\" package.json CHANGELOG.md LICENSE README.md dist",
 		"test:package": "jest --config jest.config.json --runInBand --no-cache"
