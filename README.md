@@ -32,7 +32,7 @@ The result is a package, following the official **[Angular Package Format](https
 - :orange_book: JavaScript bundles (flat ES2015, flat ES5, UMD)
 - :blue_book: TypeScript type definition files
 - :closed_book: Angular AoT metadata file
-- :notebook_with_decorative_cover: `package.json` file, pointing to entry files
+- :notebook_with_decorative_cover: package.json file with references to entry files
 
 ![Angular Package Builder Preview](/docs/preview.gif?raw=true)
 
@@ -104,7 +104,7 @@ The two options seen above are also the only required ones:
 
 The following directory structure is recommended:
 
-``` javascript
+``` typescript
 ── dist/                  // Output
    └── ...
 ── src/                   // Source
@@ -113,6 +113,9 @@ The following directory structure is recommended:
 ── index.ts               // Entry file
 ── package.json           // Package
 ```
+
+> Note: The build process will create additional files at the root level (where the entry files is placed). Thus, it's highly recommended
+> to place all other files in a subfolder - usually that's the `src` folder.
 
 #### Secondary entry points
 
