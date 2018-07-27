@@ -108,8 +108,8 @@ export class TypeScriptConfigurationBuilder {
 	 */
 	public setCustomTypescriptCompilerOptions( typescriptCompilerOptions: { [ option: string ]: any } ): TypeScriptConfigurationBuilder {
 		this.typescriptCompilerOptions = deepmerge(
-			typescriptCompilerOptions,
-			this.typescriptCompilerOptions
+			this.typescriptCompilerOptions,
+			typescriptCompilerOptions
 		);
 		return this;
 	}
@@ -122,8 +122,8 @@ export class TypeScriptConfigurationBuilder {
 	 */
 	public setCustomAngularCompilerOptions( angularCompilerOptions: { [ option: string ]: any } ): TypeScriptConfigurationBuilder {
 		this.angularCompilerOptions = deepmerge(
-			angularCompilerOptions,
-			this.angularCompilerOptions
+			this.angularCompilerOptions,
+			angularCompilerOptions
 		);
 		return this;
 	}
