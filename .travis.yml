@@ -15,8 +15,7 @@ branches:
 # Build stages
 stages:
   - name: build
-  - name: test (package)
-  - name: logging
+  - name: test
   - name: release
     if: branch = master
 
@@ -31,7 +30,8 @@ jobs:
         - npm run build
 
     # Test: Angular 4.0
-    - stage: test (package)
+    - stage: test
+      name: Angular 4.0.x (TypeScript 2.1.x)
       env:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.1.x
@@ -48,6 +48,7 @@ jobs:
         - rm -rf ./test/node_modules && npm ci
         - npm run test:package
     -
+      name: Angular 4.0.x (TypeScript 2.2.x)
       env:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.2.x
@@ -64,6 +65,7 @@ jobs:
         - rm -rf ./test/node_modules && npm ci
         - npm run test:package
     -
+      name: Angular 4.0.x (TypeScript 2.3.x)
       env:
         - ANGULAR=4.0.x
         - TYPESCRIPT=2.3.x
@@ -82,6 +84,7 @@ jobs:
 
     # Test: Angular 5.0
     -
+      name: Angular 5.0.x (TypeScript 2.4.x)
       env:
         - ANGULAR=5.0.x
         - TYPESCRIPT=2.4.x
@@ -100,6 +103,7 @@ jobs:
 
     # Test: Angular 5.1
     -
+      name: Angular 5.1.x (TypeScript 2.4.x)
       env:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.4.x
@@ -116,6 +120,7 @@ jobs:
         - rm -rf ./test/node_modules && npm ci
         - npm run test:package
     -
+      name: Angular 5.1.x (TypeScript 2.5.x)
       env:
         - ANGULAR=5.1.x
         - TYPESCRIPT=2.5.x
@@ -134,6 +139,7 @@ jobs:
 
     # Test: Angular 5.2
     -
+      name: Angular 5.2.x (TypeScript 2.4.x)
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.4.x
@@ -150,6 +156,7 @@ jobs:
         - rm -rf ./test/node_modules && npm ci
         - npm run test:package
     -
+      name: Angular 5.2.x (TypeScript 2.5.x)
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.5.x
@@ -166,6 +173,7 @@ jobs:
         - rm -rf ./test/node_modules && npm ci
         - npm run test:package
     -
+      name: Angular 5.2.x (TypeScript 2.6.x)
       env:
         - ANGULAR=5.2.x
         - TYPESCRIPT=2.6.x
@@ -184,6 +192,7 @@ jobs:
 
     # Test: Angular 6.0
     -
+      name: Angular 6.0.x (TypeScript 2.7.x)
       env:
         - ANGULAR=6.0.x
         - TYPESCRIPT=2.7.x
@@ -200,7 +209,61 @@ jobs:
         - rm -rf ./test/node_modules && npm ci
         - npm run test:package
 
+      # Test: Angular 6.1
+    -
+      name: Angular 6.1.x (TypeScript 2.7.x)
+      env:
+        - ANGULAR=6.1.x
+        - TYPESCRIPT=2.7.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@6.x --no-save --no-package-lock
+        - node ./test/single-library/build.js
+        - node ./test/single-library-custom-paths/build.js
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    -
+      name: Angular 6.1.x (TypeScript 2.8.x)
+      env:
+        - ANGULAR=6.1.x
+        - TYPESCRIPT=2.8.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@6.x --no-save --no-package-lock
+        - node ./test/single-library/build.js
+        - node ./test/single-library-custom-paths/build.js
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+    -
+      name: Angular 6.1.x (TypeScript 2.9.x)
+      env:
+        - ANGULAR=6.1.x
+        - TYPESCRIPT=2.9.x
+      install:
+        - npm ci
+      script:
+        - npm run build
+        - rm -rf node_modules && npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@$ANGULAR @angular/compiler@$ANGULAR @angular/compiler-cli@$ANGULAR @angular/common@$ANGULAR @angular/platform-browser@$ANGULAR typescript@$TYPESCRIPT rxjs@6.x --no-save --no-package-lock
+        - node ./test/single-library/build.js
+        - node ./test/single-library-custom-paths/build.js
+        - node ./test/multiple-libraries/build.js
+        - node ./test/external-resources/build.js
+        - node ./test/errors/build.js
+        - rm -rf ./test/node_modules && npm ci
+        - npm run test:package
+
     - stage: release
+      name: Release & Deploy (npm)
       before_install:
         # Clone the whole repository because we also need the develop branch for releasing (Travis only gives us the master by default)
         - git clone "https://github.com/$TRAVIS_REPO_SLUG.git" "$TRAVIS_REPO_SLUG";
