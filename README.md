@@ -62,8 +62,9 @@ unexpected issues. The last column defines the minimal required NodeJS version.
 | `5.1.x`                                 | `2.4.x` `2.5.x`         | `5.x` | `>= 7.6.0` |
 | `5.2.x`                                 | `2.4.x` `2.5.x` `2.6.x` | `5.x` | `>= 7.6.0` |
 | `6.0.x`                                 | `2.7.x`                 | `6.x` | `>= 8.0.0` |
+| `6.1.x`                                 | `2.7.x` `2.8.x` `2.9.x` | `6.x` | `>= 8.0.0` |
 
-> Angular 2 is not supported. Angular versions newer than `6.0.x` might work, yet have not not been tested.
+> Angular 2 is not supported. Angular versions newer than `6.1.x` might work, yet have not not been tested.
 
 <br><br><br>
 
