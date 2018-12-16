@@ -59,7 +59,7 @@
 		"rollup-plugin-commonjs": "9.1.x",
 		"rollup-plugin-node-resolve": "3.3.x",
 		"rollup-plugin-sourcemaps": "0.4.x",
-		"rollup": "0.65.x",
+		"rollup": "0.68.x",
 		"semver": "5.5.x",
 		"ts-simple-ast": "14.4.x",
 		"typescript": "2.9.x"
