@@ -46,7 +46,7 @@
 	},
 	"dependencies": {
 		"chalk": "2.4.x",
-		"clean-css": "4.1.x",
+		"clean-css": "4.2.x",
 		"cpx": "1.5.x",
 		"deepmerge": "2.1.x",
 		"del": "3.0.x",
@@ -71,7 +71,7 @@
 		"@angular/core": "6.1.x",
 		"@angular/platform-browser": "6.1.x",
 		"@types/acorn": "4.0.x",
-		"@types/clean-css": "3.4.x",
+		"@types/clean-css": "4.2.x",
 		"@types/cpx": "1.5.x",
 		"@types/deepmerge": "2.1.x",
 		"@types/del": "3.0.x",
