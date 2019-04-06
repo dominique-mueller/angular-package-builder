@@ -57,7 +57,7 @@
 		"log-update": "2.3.0",
 		"node-sass-tilde-importer": "1.0.x",
 		"rollup-plugin-commonjs": "9.1.x",
-		"rollup-plugin-node-resolve": "3.3.x",
+		"rollup-plugin-node-resolve": "4.2.x",
 		"rollup-plugin-sourcemaps": "0.4.x",
 		"rollup": "0.65.x",
 		"semver": "5.5.x",
