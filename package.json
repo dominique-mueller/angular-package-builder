@@ -80,7 +80,7 @@
 		"@types/globby": "8.0.x",
 		"@types/log-update": "2.0.x",
 		"@types/node-sass": "3.10.x",
-		"@types/node": "10.5.x",
+		"@types/node": "10.17.x",
 		"@types/semver": "5.5.x",
 		"automatic-release": "1.1.x",
 		"copyfiles": "2.0.x",
