@@ -86,7 +86,7 @@
 		"copyfiles": "2.0.x",
 		"jest": "23.2.x",
 		"moment": "2.22.x",
-		"rimraf": "2.6.x",
+		"rimraf": "2.7.x",
 		"rxjs": "6.3.x",
 		"ts-jest": "23.0.x"
 	}
