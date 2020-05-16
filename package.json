@@ -62,7 +62,7 @@
 		"rollup": "0.65.x",
 		"semver": "5.5.x",
 		"ts-simple-ast": "14.4.x",
-		"typescript": "2.9.x"
+		"typescript": "3.9.x"
 	},
 	"devDependencies": {
 		"@angular/common": "6.1.x",
