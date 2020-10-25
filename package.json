@@ -65,11 +65,11 @@
 		"typescript": "2.9.x"
 	},
 	"devDependencies": {
-		"@angular/common": "6.1.x",
-		"@angular/compiler-cli": "6.1.x",
-		"@angular/compiler": "6.1.x",
-		"@angular/core": "6.1.x",
-		"@angular/platform-browser": "6.1.x",
+		"@angular/common": "10.2.x",
+		"@angular/compiler-cli": "10.2.x",
+		"@angular/compiler": "10.2.x",
+		"@angular/core": "10.2.x",
+		"@angular/platform-browser": "10.2.x",
 		"@types/acorn": "4.0.x",
 		"@types/clean-css": "3.4.x",
 		"@types/cpx": "1.5.x",
