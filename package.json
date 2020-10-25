@@ -83,7 +83,7 @@
 		"@types/node": "10.5.x",
 		"@types/semver": "5.5.x",
 		"automatic-release": "1.1.x",
-		"copyfiles": "2.0.x",
+		"copyfiles": "2.4.x",
 		"jest": "23.2.x",
 		"moment": "2.22.x",
 		"rimraf": "2.6.x",
