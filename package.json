@@ -53,7 +53,7 @@
 		"fs-extra": "6.0.x",
 		"html-minifier": "3.5.x",
 		"jsonschema": "1.2.x",
-		"globby": "8.0.x",
+		"globby": "10.0.0",
 		"log-update": "2.3.0",
 		"node-sass-tilde-importer": "1.0.x",
 		"rollup-plugin-commonjs": "9.1.x",
