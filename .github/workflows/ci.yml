@@ -26,22 +26,21 @@ jobs:
     name: Test
     needs: build
     strategy:
-      fail-fast: true
       matrix:
         env:
-          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.1.x, RXJS: 5.x }
-          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.2.x, RXJS: 5.x }
-          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.3.x, RXJS: 5.x }
-          - { ANGULAR: 5.0.x, TYPESCRIPT: 2.4.x, RXJS: 5.x }
-          - { ANGULAR: 5.1.x, TYPESCRIPT: 2.4.x, RXJS: 5.x }
-          - { ANGULAR: 5.1.x, TYPESCRIPT: 2.5.x, RXJS: 5.x }
-          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.4.x, RXJS: 5.x }
-          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.5.x, RXJS: 5.x }
-          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.6.x, RXJS: 5.x }
-          - { ANGULAR: 6.0.x, TYPESCRIPT: 2.7.x, RXJS: 5.x }
-          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.7.x, RXJS: 5.x }
-          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.8.x, RXJS: 5.x }
-          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.9.x, RXJS: 5.x }
+          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.1.x, RXJS: 5.5.x }
+          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.2.x, RXJS: 5.5.x }
+          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.3.x, RXJS: 5.5.x }
+          - { ANGULAR: 5.0.x, TYPESCRIPT: 2.4.x, RXJS: 5.5.x }
+          - { ANGULAR: 5.1.x, TYPESCRIPT: 2.4.x, RXJS: 5.5.x }
+          - { ANGULAR: 5.1.x, TYPESCRIPT: 2.5.x, RXJS: 5.5.x }
+          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.4.x, RXJS: 5.5.x }
+          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.5.x, RXJS: 5.5.x }
+          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.6.x, RXJS: 5.5.x }
+          - { ANGULAR: 6.0.x, TYPESCRIPT: 2.7.x, RXJS: 6.3.x }
+          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.7.x, RXJS: 6.3.x }
+          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.8.x, RXJS: 6.3.x }
+          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.9.x, RXJS: 6.3.x }
     runs-on: ubuntu-20.04
     env:
       ANGULAR: 4.0.x
