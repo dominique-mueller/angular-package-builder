@@ -25,7 +25,27 @@ jobs:
   test:
     name: Test
     needs: build
+    strategy:
+      fail-fast: true
+      matrix:
+        env:
+          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.1.x, RXJS: 5.x }
+          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.2.x, RXJS: 5.x }
+          - { ANGULAR: 4.0.x, TYPESCRIPT: 2.3.x, RXJS: 5.x }
+          - { ANGULAR: 5.0.x, TYPESCRIPT: 2.4.x, RXJS: 5.x }
+          - { ANGULAR: 5.1.x, TYPESCRIPT: 2.4.x, RXJS: 5.x }
+          - { ANGULAR: 5.1.x, TYPESCRIPT: 2.5.x, RXJS: 5.x }
+          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.4.x, RXJS: 5.x }
+          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.5.x, RXJS: 5.x }
+          - { ANGULAR: 5.2.x, TYPESCRIPT: 2.6.x, RXJS: 5.x }
+          - { ANGULAR: 6.0.x, TYPESCRIPT: 2.7.x, RXJS: 6.x }
+          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.7.x, RXJS: 6.x }
+          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.8.x, RXJS: 6.x }
+          - { ANGULAR: 6.1.x, TYPESCRIPT: 2.9.x, RXJS: 6.x }
     runs-on: ubuntu-20.04
+    env:
+      ANGULAR: 4.0.x
+      TYPESCRIPT: 2.1.x
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -33,6 +53,23 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.15.x
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Delete dependencies
+        run: rm -rf node_modules
+      - name: Install specific Angular & TypeScript versions
+        run: npm install --prefix test $( npm pack ./dist | tail -1 ) @angular/core@${{ matrix.env.ANGULAR }} @angular/compiler@${{ matrix.env.ANGULAR }} @angular/compiler-cli@${{ matrix.env.ANGULAR }} @angular/common@${{ matrix.env.ANGULAR }} @angular/platform-browser@${{ matrix.env.ANGULAR }} typescript@${{ matrix.env.TYPESCRIPT }} rxjs@${{ matrix.env.RXJS }} --no-save --no-package-lock
+      - name: Build test packages
+        run: |
+          node ./test/single-library/build.js
+          node ./test/single-library-custom-paths/build.js
+          node ./test/multiple-libraries/build.js
+          node ./test/external-resources/build.js
+          node ./test/errors/build.js
+      - name: Delete dependencies
+        run: rm -rf node_modules
       - name: Install dependencies
         run: npm ci
       - name: Test
