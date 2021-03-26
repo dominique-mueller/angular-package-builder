@@ -1,13 +1,23 @@
+<br>
+
+---
+
+**DEPRECATION NOTICE**
+
+This library is now deprecated because the **[Angular CLI](https://cli.angular.io/)** has finally added official support for creating,
+building and publishing Angular libraries.
+
+Read more: **[https://angular.io/guide/creating-libraries](https://angular.io/guide/creating-libraries)**.
+
+---
+
+<br><br>
+
 <div align="center">
 
 # angular-package-builder
 
 **Packages your Angular 4+ library based on the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview).**
-
-[![npm version](https://img.shields.io/npm/v/angular-package-builder.svg?maxAge=3600&style=flat)](https://www.npmjs.com/package/angular-package-builder)
-[![dependency status](https://img.shields.io/david/dominique-mueller/angular-package-builder.svg?maxAge=3600&style=flat)](https://david-dm.org/dominique-mueller/angular-package-builder)
-[![travis ci build status](https://img.shields.io/travis/dominique-mueller/angular-package-builder/master.svg?maxAge=3600&style=flat)](https://travis-ci.org/dominique-mueller/angular-package-builder)
-[![license](https://img.shields.io/npm/l/angular-package-builder.svg?maxAge=3600&style=flat)](https://github.com/dominique-mueller/automatic-release/LICENSE)
 
 </div>
 
@@ -40,10 +50,10 @@ The result is a package, following the official **[Angular Package Format](https
 
 ## How to install
 
-You can get the **angular-package-builder** via **npm** by adding it as a new *devDependency* to your `package.json` file and running
+You can get the **angular-package-builder** via **npm** by adding it as a new _devDependency_ to your `package.json` file and running
 `npm install`. Alternatively, run the following command:
 
-``` bash
+```bash
 npm install angular-package-builder --save-dev
 ```
 
@@ -84,7 +94,7 @@ Within that `.angular-package.json` file, you can place the build onfiguration f
 
 A minimal configuration looks like the following:
 
-``` json
+```json
 {
   "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
   "entryFile": "./index.ts",
@@ -105,7 +115,7 @@ The two options seen above are also the only required ones:
 
 The following directory structure is recommended:
 
-``` typescript
+```typescript
 ── dist/                  // Output
    └── ...
 ── src/                   // Source
@@ -124,7 +134,7 @@ Angular, for instance, has packages with multiple entry points: `@angular/core` 
 only) secondary. Within the `.angular-package.json` file, you can define any number of secondary entry points using the `secondaryEntries`
 option. For instance:
 
-``` json
+```json
 {
   "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
   "entryFile": "./index.ts",
@@ -144,7 +154,7 @@ option. For instance:
 Now, run **angular-package-builder** within one of your `package.json` scripts. The command accepts an unordered list of paths to
 `.angular-package.json` files as parameters. For instance:
 
-``` json
+```json
 {
   "scripts": {
     "build": "angular-package-builder ./my-library/.angular-package.json"
@@ -158,7 +168,7 @@ Angular, again, consists of multiple packages, all united in a single Git reposi
 able to build multiple libraries using a single command. Building more libraries means adding more `.angular-package.json` files to the
 corresponding npm script. For example:
 
-``` json
+```json
 {
   "scripts": {
     "build": "angular-package-builder ./lib-one/.angular-package.json ./lib-two/.angular-package.json"
@@ -182,7 +192,7 @@ can extend the build configuration in your `.angular-package.json` file(s).
 One of the things you might want to configure specifically for your project is TypeScript. Popular options include `strictNullChecks`,
 `skipLibCheck` and `allowSyntheticDefaultImports`. For instance:
 
-``` json
+```json
 {
   "typescriptCompilerOptions": {
     "strictNullChecks": true
@@ -193,8 +203,7 @@ One of the things you might want to configure specifically for your project is T
 See the **[TypeScript Compiler Options Documentation](https://www.typescriptlang.org/docs/handbook/compiler-options.html)** for the full
 list of available options.
 
-> The following options cannot be changed:<br>
-> `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`,
+> The following options cannot be changed:<br> > `declaration`, `emitDecoratorMetadata`, `experimentalDecorators`, `module`, `moduleResolution`, `newLine`, `outDir`, `rootDir`,
 > `sourceRoot` and `target`
 
 <br>
@@ -204,7 +213,7 @@ list of available options.
 Furthermore, you might also decide to configure the Angular compiler differently. Common options are `annotateForClosureCompiler`,
 `preserveWhitespaces` and `strictMetadataEmit`. For instance:
 
-``` json
+```json
 {
   "angularCompilerOptions": {
     "annotateForClosureCompiler": false
@@ -212,8 +221,7 @@ Furthermore, you might also decide to configure the Angular compiler differently
 }
 ```
 
-> The following options cannot be changed:<br>
-> `flatModuleId`, `flatModuleOutFile` and `skipTemplateCodegen`
+> The following options cannot be changed:<br> > `flatModuleId`, `flatModuleOutFile` and `skipTemplateCodegen`
 
 <br>
 
@@ -222,7 +230,7 @@ Furthermore, you might also decide to configure the Angular compiler differently
 By default, the **Angular Package Builder** will identify your libraries' dependencies automatically. If, for some reason, a dependency is
 missing or you want to overwrite a dependency definition, you can declare them in the form of `package -> global constant`. For instance:
 
-``` json
+```json
 {
   "dependencies": {
     "@ngx-translate/core": "ngxTranslate.core"
@@ -247,7 +255,7 @@ Usually, libraries are built in a way that allows us to import them from a singl
 re-exporting the implementation (spread accross multiple files) with a so-called
 **[Barrel](https://angular.io/guide/glossary#barrel)** (normally `index.ts`).
 
-Now, *issues might occur when - somewhere within the library - two barrels meet each other*. Funnily enough, should such a constellation
+Now, _issues might occur when - somewhere within the library - two barrels meet each other_. Funnily enough, should such a constellation
 lead to any issues, it won't be appearant right away: Chances are good that the **Angular Package Builder** will succeed, and the
 compilation output might also look correct. At the latest, when trying to import the library into an Angular application, an error will be
 thrown (something like "injected dependencies cannot be resolved").
@@ -270,7 +278,7 @@ this kind of information. Forbidden are (amongst other things):
 - further redundant tags such as `@static`, `@extends`, `@implements`
 
 > The full list of allowed / disallowed JSDoc tags can be found
-**[in the tsickle source](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
+> **[in the tsickle source](https://github.com/angular/tsickle/blob/d24b139b71a3f86bf25d6eecf4d4dcdad3b379e4/src/jsdoc.ts#L48)**.
 
 If any of those tags are being used anyway, the Angular Compiler (`tsickle` to be specific) will complain:
 
@@ -318,11 +326,11 @@ This issue can be solved in two ways:
 
 ### Synthetic imports
 
-Often, we integrate long-existing libraries into our Angular projects. **[Moment.js](https://momentjs.com/)**, for instance, is one of *the*
+Often, we integrate long-existing libraries into our Angular projects. **[Moment.js](https://momentjs.com/)**, for instance, is one of _the_
 libraries used when working with dates. Due to its age, however, it's still published as a single-entry ES5 module - which means people
 usually write the following TypeScript code to import the library:
 
-``` typescript
+```typescript
 import * as moment from 'moment';
 ```
 
@@ -338,7 +346,7 @@ a technique which does allow TypeScript to make default import from modules that
 First, enable synthetic default import support in the TypeScript configuration by adding the following line to the
 `typescriptCompilerOptions` within your `.angular-package.json` file:
 
-``` json
+```json
 "typescriptCompilerOptions": {
   "allowSyntheticDefaultImports": true
 }
@@ -346,7 +354,7 @@ First, enable synthetic default import support in the TypeScript configuration b
 
 Then, change the affected import statements to default import statements. For instance:
 
-``` typescript
+```typescript
 import moment from 'moment';
 ```
 
@@ -354,13 +362,3 @@ Alternatively, you could also consider **[Moment ES6](https://github.com/Agamnen
 it in an ES6-compatible (and thus TypeScript-compatible) way.
 
 > Also see **[this Moment.js issue on GitHub](https://github.com/moment/moment/issues/3748)**.
-
-<br><br><br>
-
-## Creator
-
-**Dominique Müller**
-
-- E-Mail: **[dominique.m.mueller@gmail.com](mailto:dominique.m.mueller@gmail.com)**
-- Website: **[www.devdom.io](https://www.devdom.io/)**
-- Twitter: **[@itsdevdom](https://twitter.com/itsdevdom)**
