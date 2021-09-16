@@ -43,7 +43,7 @@
     "html-minifier": "3.5.x",
     "jsonschema": "1.2.x",
     "globby": "8.0.x",
-    "log-update": "2.3.0",
+    "log-update": "4.0.0",
     "node-sass-tilde-importer": "1.0.x",
     "rollup-plugin-commonjs": "9.1.x",
     "rollup-plugin-node-resolve": "3.3.x",
